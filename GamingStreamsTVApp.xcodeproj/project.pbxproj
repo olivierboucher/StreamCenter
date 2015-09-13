@@ -1,0 +1,313 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		090AB8E71BA5BFDF00CDB05D /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 090AB8E51BA5BFDF00CDB05D /* Main.storyboard */; };
+		090AB8E91BA5BFDF00CDB05D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 090AB8E81BA5BFDF00CDB05D /* Assets.xcassets */; };
+		090AB8FD1BA616A900CDB05D /* TwitchApi.swift in Sources */ = {isa = PBXBuildFile; fileRef = 090AB8F11BA5C80700CDB05D /* TwitchApi.swift */; };
+		090AB8FE1BA616A900CDB05D /* TwitchGame.swift in Sources */ = {isa = PBXBuildFile; fileRef = 090AB8F71BA5F56900CDB05D /* TwitchGame.swift */; };
+		090AB8FF1BA616A900CDB05D /* TwitchChannel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 090AB8FB1BA6049000CDB05D /* TwitchChannel.swift */; };
+		090AB9001BA616A900CDB05D /* TwitchStream.swift in Sources */ = {isa = PBXBuildFile; fileRef = 090AB8F91BA5FEB800CDB05D /* TwitchStream.swift */; };
+		090AB9011BA616A900CDB05D /* TwitchStreamVideo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 090AB8F51BA5DD6300CDB05D /* TwitchStreamVideo.swift */; };
+		090AB9021BA616A900CDB05D /* M3UParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 090AB8F31BA5DA1400CDB05D /* M3UParser.swift */; };
+		090AB9031BA616A900CDB05D /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 090AB8E11BA5BFDF00CDB05D /* AppDelegate.swift */; };
+		090AB9041BA616A900CDB05D /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 090AB8E31BA5BFDF00CDB05D /* ViewController.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		090AB8DE1BA5BFDF00CDB05D /* GamingStreamsTVApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GamingStreamsTVApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		090AB8E11BA5BFDF00CDB05D /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		090AB8E31BA5BFDF00CDB05D /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		090AB8E61BA5BFDF00CDB05D /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		090AB8E81BA5BFDF00CDB05D /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		090AB8EA1BA5BFDF00CDB05D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		090AB8F11BA5C80700CDB05D /* TwitchApi.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TwitchApi.swift; sourceTree = "<group>"; };
+		090AB8F31BA5DA1400CDB05D /* M3UParser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = M3UParser.swift; sourceTree = "<group>"; };
+		090AB8F51BA5DD6300CDB05D /* TwitchStreamVideo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TwitchStreamVideo.swift; sourceTree = "<group>"; };
+		090AB8F71BA5F56900CDB05D /* TwitchGame.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TwitchGame.swift; sourceTree = "<group>"; };
+		090AB8F91BA5FEB800CDB05D /* TwitchStream.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TwitchStream.swift; sourceTree = "<group>"; };
+		090AB8FB1BA6049000CDB05D /* TwitchChannel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TwitchChannel.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		090AB8DB1BA5BFDF00CDB05D /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		090AB8D51BA5BFDF00CDB05D = {
+			isa = PBXGroup;
+			children = (
+				090AB8E01BA5BFDF00CDB05D /* GamingStreamsTVApp */,
+				090AB8DF1BA5BFDF00CDB05D /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		090AB8DF1BA5BFDF00CDB05D /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				090AB8DE1BA5BFDF00CDB05D /* GamingStreamsTVApp.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		090AB8E01BA5BFDF00CDB05D /* GamingStreamsTVApp */ = {
+			isa = PBXGroup;
+			children = (
+				090AB8F01BA5C7EC00CDB05D /* TwitchAPI */,
+				090AB8E11BA5BFDF00CDB05D /* AppDelegate.swift */,
+				090AB8E31BA5BFDF00CDB05D /* ViewController.swift */,
+				090AB8E51BA5BFDF00CDB05D /* Main.storyboard */,
+				090AB8E81BA5BFDF00CDB05D /* Assets.xcassets */,
+				090AB8EA1BA5BFDF00CDB05D /* Info.plist */,
+			);
+			path = GamingStreamsTVApp;
+			sourceTree = "<group>";
+		};
+		090AB8F01BA5C7EC00CDB05D /* TwitchAPI */ = {
+			isa = PBXGroup;
+			children = (
+				090AB8F11BA5C80700CDB05D /* TwitchApi.swift */,
+				090AB8F71BA5F56900CDB05D /* TwitchGame.swift */,
+				090AB8FB1BA6049000CDB05D /* TwitchChannel.swift */,
+				090AB8F91BA5FEB800CDB05D /* TwitchStream.swift */,
+				090AB8F51BA5DD6300CDB05D /* TwitchStreamVideo.swift */,
+				090AB8F31BA5DA1400CDB05D /* M3UParser.swift */,
+			);
+			name = TwitchAPI;
+			path = ../GamingStreamsTVApp;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		090AB8DD1BA5BFDF00CDB05D /* GamingStreamsTVApp */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 090AB8ED1BA5BFDF00CDB05D /* Build configuration list for PBXNativeTarget "GamingStreamsTVApp" */;
+			buildPhases = (
+				090AB8DA1BA5BFDF00CDB05D /* Sources */,
+				090AB8DB1BA5BFDF00CDB05D /* Frameworks */,
+				090AB8DC1BA5BFDF00CDB05D /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = GamingStreamsTVApp;
+			productName = TestTVApp;
+			productReference = 090AB8DE1BA5BFDF00CDB05D /* GamingStreamsTVApp.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		090AB8D61BA5BFDF00CDB05D /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0710;
+				ORGANIZATIONNAME = "Rivus Media Inc";
+				TargetAttributes = {
+					090AB8DD1BA5BFDF00CDB05D = {
+						CreatedOnToolsVersion = 7.1;
+					};
+				};
+			};
+			buildConfigurationList = 090AB8D91BA5BFDF00CDB05D /* Build configuration list for PBXProject "GamingStreamsTVApp" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 090AB8D51BA5BFDF00CDB05D;
+			productRefGroup = 090AB8DF1BA5BFDF00CDB05D /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				090AB8DD1BA5BFDF00CDB05D /* GamingStreamsTVApp */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		090AB8DC1BA5BFDF00CDB05D /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				090AB8E91BA5BFDF00CDB05D /* Assets.xcassets in Resources */,
+				090AB8E71BA5BFDF00CDB05D /* Main.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		090AB8DA1BA5BFDF00CDB05D /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				090AB8FD1BA616A900CDB05D /* TwitchApi.swift in Sources */,
+				090AB8FE1BA616A900CDB05D /* TwitchGame.swift in Sources */,
+				090AB8FF1BA616A900CDB05D /* TwitchChannel.swift in Sources */,
+				090AB9001BA616A900CDB05D /* TwitchStream.swift in Sources */,
+				090AB9011BA616A900CDB05D /* TwitchStreamVideo.swift in Sources */,
+				090AB9021BA616A900CDB05D /* M3UParser.swift in Sources */,
+				090AB9031BA616A900CDB05D /* AppDelegate.swift in Sources */,
+				090AB9041BA616A900CDB05D /* ViewController.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		090AB8E51BA5BFDF00CDB05D /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				090AB8E61BA5BFDF00CDB05D /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		090AB8EB1BA5BFDF00CDB05D /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = appletvos;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				TARGETED_DEVICE_FAMILY = 3;
+				TVOS_DEPLOYMENT_TARGET = 9.0;
+			};
+			name = Debug;
+		};
+		090AB8EC1BA5BFDF00CDB05D /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = appletvos;
+				TARGETED_DEVICE_FAMILY = 3;
+				TVOS_DEPLOYMENT_TARGET = 9.0;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		090AB8EE1BA5BFDF00CDB05D /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = "App Icon & Top Shelf Image";
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				INFOPLIST_FILE = GamingStreamsTVApp/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.rivusmedia.GamingStreamsTVApp;
+				PRODUCT_NAME = GamingStreamsTVApp;
+			};
+			name = Debug;
+		};
+		090AB8EF1BA5BFDF00CDB05D /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = "App Icon & Top Shelf Image";
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				INFOPLIST_FILE = GamingStreamsTVApp/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.rivusmedia.GamingStreamsTVApp;
+				PRODUCT_NAME = GamingStreamsTVApp;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		090AB8D91BA5BFDF00CDB05D /* Build configuration list for PBXProject "GamingStreamsTVApp" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				090AB8EB1BA5BFDF00CDB05D /* Debug */,
+				090AB8EC1BA5BFDF00CDB05D /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		090AB8ED1BA5BFDF00CDB05D /* Build configuration list for PBXNativeTarget "GamingStreamsTVApp" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				090AB8EE1BA5BFDF00CDB05D /* Debug */,
+				090AB8EF1BA5BFDF00CDB05D /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 090AB8D61BA5BFDF00CDB05D /* Project object */;
+}
