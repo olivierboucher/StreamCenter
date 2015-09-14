@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		090AB8E71BA5BFDF00CDB05D /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 090AB8E51BA5BFDF00CDB05D /* Main.storyboard */; };
 		090AB8E91BA5BFDF00CDB05D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 090AB8E81BA5BFDF00CDB05D /* Assets.xcassets */; };
 		090AB8FD1BA616A900CDB05D /* TwitchApi.swift in Sources */ = {isa = PBXBuildFile; fileRef = 090AB8F11BA5C80700CDB05D /* TwitchApi.swift */; };
 		090AB8FE1BA616A900CDB05D /* TwitchGame.swift in Sources */ = {isa = PBXBuildFile; fileRef = 090AB8F71BA5F56900CDB05D /* TwitchGame.swift */; };
@@ -16,14 +15,14 @@
 		090AB9011BA616A900CDB05D /* TwitchStreamVideo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 090AB8F51BA5DD6300CDB05D /* TwitchStreamVideo.swift */; };
 		090AB9021BA616A900CDB05D /* M3UParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 090AB8F31BA5DA1400CDB05D /* M3UParser.swift */; };
 		090AB9031BA616A900CDB05D /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 090AB8E11BA5BFDF00CDB05D /* AppDelegate.swift */; };
-		090AB9041BA616A900CDB05D /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 090AB8E31BA5BFDF00CDB05D /* ViewController.swift */; };
+		090AB9041BA616A900CDB05D /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 090AB8E31BA5BFDF00CDB05D /* MainViewController.swift */; };
+		090AB9071BA6369300CDB05D /* GameCellView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 090AB9061BA6369300CDB05D /* GameCellView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		090AB8DE1BA5BFDF00CDB05D /* GamingStreamsTVApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GamingStreamsTVApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		090AB8E11BA5BFDF00CDB05D /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		090AB8E31BA5BFDF00CDB05D /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
-		090AB8E61BA5BFDF00CDB05D /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		090AB8E31BA5BFDF00CDB05D /* MainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
 		090AB8E81BA5BFDF00CDB05D /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		090AB8EA1BA5BFDF00CDB05D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		090AB8F11BA5C80700CDB05D /* TwitchApi.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TwitchApi.swift; sourceTree = "<group>"; };
@@ -32,6 +31,7 @@
 		090AB8F71BA5F56900CDB05D /* TwitchGame.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TwitchGame.swift; sourceTree = "<group>"; };
 		090AB8F91BA5FEB800CDB05D /* TwitchStream.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TwitchStream.swift; sourceTree = "<group>"; };
 		090AB8FB1BA6049000CDB05D /* TwitchChannel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TwitchChannel.swift; sourceTree = "<group>"; };
+		090AB9061BA6369300CDB05D /* GameCellView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GameCellView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -64,10 +64,10 @@
 		090AB8E01BA5BFDF00CDB05D /* GamingStreamsTVApp */ = {
 			isa = PBXGroup;
 			children = (
+				090AB9051BA6366500CDB05D /* Views */,
 				090AB8F01BA5C7EC00CDB05D /* TwitchAPI */,
 				090AB8E11BA5BFDF00CDB05D /* AppDelegate.swift */,
-				090AB8E31BA5BFDF00CDB05D /* ViewController.swift */,
-				090AB8E51BA5BFDF00CDB05D /* Main.storyboard */,
+				090AB8E31BA5BFDF00CDB05D /* MainViewController.swift */,
 				090AB8E81BA5BFDF00CDB05D /* Assets.xcassets */,
 				090AB8EA1BA5BFDF00CDB05D /* Info.plist */,
 			);
@@ -86,6 +86,14 @@
 			);
 			name = TwitchAPI;
 			path = ../GamingStreamsTVApp;
+			sourceTree = "<group>";
+		};
+		090AB9051BA6366500CDB05D /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				090AB9061BA6369300CDB05D /* GameCellView.swift */,
+			);
+			name = Views;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -146,7 +154,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				090AB8E91BA5BFDF00CDB05D /* Assets.xcassets in Resources */,
-				090AB8E71BA5BFDF00CDB05D /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -164,22 +171,12 @@
 				090AB9011BA616A900CDB05D /* TwitchStreamVideo.swift in Sources */,
 				090AB9021BA616A900CDB05D /* M3UParser.swift in Sources */,
 				090AB9031BA616A900CDB05D /* AppDelegate.swift in Sources */,
-				090AB9041BA616A900CDB05D /* ViewController.swift in Sources */,
+				090AB9071BA6369300CDB05D /* GameCellView.swift in Sources */,
+				090AB9041BA616A900CDB05D /* MainViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
-
-/* Begin PBXVariantGroup section */
-		090AB8E51BA5BFDF00CDB05D /* Main.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				090AB8E61BA5BFDF00CDB05D /* Base */,
-			);
-			name = Main.storyboard;
-			sourceTree = "<group>";
-		};
-/* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
 		090AB8EB1BA5BFDF00CDB05D /* Debug */ = {
@@ -306,6 +303,7 @@
 				090AB8EF1BA5BFDF00CDB05D /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

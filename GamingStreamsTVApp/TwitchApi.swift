@@ -10,7 +10,7 @@ import Foundation
 
 class TwitchApi {
     
-    func getStreamsForChannel(channel : String, completionHandler: (streams: NSArray?, error: NSError?) -> ()){
+    static func getStreamsForChannel(channel : String, completionHandler: (streams: NSArray?, error: NSError?) -> ()){
         //First we build the url according to the channel we desire to get stream link
         let accessUrlString = String(format: "https://api.twitch.tv/api/channels/%@/access_token", channel);
         let acessTokenUrl = NSURL(string: accessUrlString);
@@ -122,7 +122,7 @@ class TwitchApi {
         task.resume()
     }
     
-    func getTopGamesWithOffset(offset : Int, limit : Int, completionHandler: (games: NSArray?, error: NSError?) -> ()) {
+    static func getTopGamesWithOffset(offset : Int, limit : Int, completionHandler: (games: NSArray?, error: NSError?) -> ()) {
         //First we build the url according to the game we desire to get infos
         let gamesUrlString = "https://api.twitch.tv/kraken/games/top?limit=\(limit)&offset=\(offset)";
         let gamesUrl = NSURL(string: gamesUrlString);
@@ -193,7 +193,7 @@ class TwitchApi {
         task.resume();
     }
     
-    func getTopStreamsForGameWithOffset(game : String, offset : Int, limit : Int, completionHandler: (streams: NSArray?, error: NSError?) -> ()) {
+    static func getTopStreamsForGameWithOffset(game : String, offset : Int, limit : Int, completionHandler: (streams: NSArray?, error: NSError?) -> ()) {
         //First we build the url according to the game we desire to get infos
         let streamsUrlString = "https://api.twitch.tv/kraken/streams?game=\(game)&limit=\(limit)&offset=\(offset)"
             .stringByAddingPercentEncodingWithAllowedCharacters(NSCharacterSet.URLQueryAllowedCharacterSet());
