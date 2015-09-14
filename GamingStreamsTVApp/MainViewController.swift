@@ -61,6 +61,15 @@ class MainViewController: UIViewController {
         
         self.view.addSubview(self._collectionView!);
     }
+    
+    override func didUpdateFocusInContext(context: UIFocusUpdateContext, withAnimationCoordinator coordinator: UIFocusAnimationCoordinator) {
+        super.didUpdateFocusInContext(context, withAnimationCoordinator: coordinator)
+        
+        let view1 = context.previouslyFocusedView as? GameCellView
+        let view2 = context.nextFocusedView as! GameCellView
+        let ggg = 0;
+        //NSLog("Prev focus: %@. Next focus: %@", (view1!.getGame()?.getName())!, (view2!.getGame()?.getName())!)
+    }
 
 }
 

@@ -19,6 +19,8 @@ class GameCellView : UICollectionViewCell {
         //_imageView = UIImageView(frame: frame);
         super.init(frame: frame);
         self.backgroundColor = UIColor.whiteColor();
+        self._imageView = UIImageView(frame: self.bounds);
+        //TODO : Set loading image
     }
     convenience init() {
         self.init();
@@ -37,6 +39,9 @@ class GameCellView : UICollectionViewCell {
         _game = game;
         self.assignImageAndDisplay();
     }
+    func getGame() -> TwitchGame? {
+        return self._game;
+    }
     
     private func assignImageAndDisplay() {
         
@@ -52,7 +57,6 @@ class GameCellView : UICollectionViewCell {
             }
             
             dispatch_async(dispatch_get_main_queue(),{
-                self._imageView = UIImageView(frame: self.bounds);
                 self._imageView!.image = self._image;
                 self.addSubview(self._imageView!);
             })
