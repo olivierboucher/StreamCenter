@@ -16,7 +16,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         let window = UIWindow.init(frame: UIScreen.mainScreen().bounds);
-        window.rootViewController = MainViewController();
+        window.rootViewController = GamesViewController();
         window.makeKeyAndVisible();
         self.window = window;
         

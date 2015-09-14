@@ -24,4 +24,12 @@ class TwitchStream {
         _preview = preview;
         _channel = channel;
     }
+    
+    func getPreviews() ->NSDictionary {
+        return self._preview
+    }
+    
+    func getChannel() -> TwitchChannel {
+        return self._channel
+    }
 }

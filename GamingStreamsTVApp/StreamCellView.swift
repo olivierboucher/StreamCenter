@@ -1,46 +1,44 @@
 //
-//  GameCellView.swift
+//  StreamCellView.swift
 //  GamingStreamsTVApp
 //
-//  Created by Olivier Boucher on 2015-09-13.
+//  Created by Olivier Boucher on 2015-09-14.
 //  Copyright © 2015 Rivus Media Inc. All rights reserved.
 //
-import UIKit;
+import UIKit
 import Foundation
 
-class GameCellView : UICollectionViewCell {
-    static let cellIdentifier : String = "kGameCellView";
+class StreamCellView : UICollectionViewCell {
+    static let cellIdentifier : String = "kStreamCellView"
     
-    private var _game : TwitchGame?;
-    private var _image : UIImage?;
-    private var _imageView : UIImageView?;
+    private var _stream : TwitchStream?
+    private var _image : UIImage?
+    private var _imageView : UIImageView?
     
     override init(frame: CGRect) {
-        super.init(frame: frame);
-        self._imageView = UIImageView(frame: self.bounds);
-        self._imageView!.adjustsImageWhenAncestorFocused = true;
+        super.init(frame: frame)
+        self._imageView = UIImageView(frame: self.bounds)
+        self._imageView!.adjustsImageWhenAncestorFocused = true
+        self._imageView!.backgroundColor = UIColor.blackColor()
         //TODO : Set loading image
         self.addSubview(self._imageView!);
     }
     convenience init() {
-        self.init();
+        self.init()
     }
     
-    convenience init(game : TwitchGame) {
+    convenience init(stream : TwitchStream) {
         self.init();
-        _game = game;
+        _stream = stream
     }
-
+    
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func setGame(game : TwitchGame) {
-        _game = game;
-        self.assignImageAndDisplay();
-    }
-    func getGame() -> TwitchGame? {
-        return self._game;
+    func setStream(stream : TwitchStream) {
+        self._stream = stream
+        self.assignImageAndDisplay()
     }
     
     private func assignImageAndDisplay() {
@@ -65,7 +63,7 @@ class GameCellView : UICollectionViewCell {
     
     private func downloadImageWithSize(size : CGSize, completionHandler : (image : UIImage?, error : NSError?) -> ()) {
         
-        if let imgUrlTemplate = _game?.getThumbnails()["template"] as? String {
+        if let imgUrlTemplate = _stream?.getPreviews()["template"] as? String {
             if let imgUrlString : String? = imgUrlTemplate.stringByReplacingOccurrencesOfString("{width}", withString: "\(Int(size.width))")
                 .stringByReplacingOccurrencesOfString("{height}", withString: "\(Int(size.height))") {
                     //Now that we have our correct template, we download the image
@@ -76,10 +74,6 @@ class GameCellView : UICollectionViewCell {
                             completionHandler(image : nil, error : error);
                             return
                         }
-//                        if(response!.isKindOfClass(NSHTTPURLResponse.classForCoder())){
-//                            let httpResponse = response as! NSHTTPURLResponse;
-//                            NSLog("Status code for image : %d", httpResponse.statusCode);
-//                        }
                         let image = UIImage(data: data!);
                         completionHandler(image: image, error: nil);
                     };
@@ -87,6 +81,5 @@ class GameCellView : UICollectionViewCell {
             }
         }
     }
+
 }
-
-

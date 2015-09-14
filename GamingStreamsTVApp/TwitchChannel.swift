@@ -17,14 +17,14 @@ class TwitchChannel {
     private var _broadcasterLanguage : String;
     private var _language : String;
     private var _gameName : String;
-    private var _logo : String;
+    private var _logo : String?;
     private var _status : String;
-    private var _videoBanner : String;
+    private var _videoBanner : String?;
     private var _lastUpdate : NSDate;
     private var _followers : Int;
     private var _views : Int;
     
-    init(id : Int, name : String, displayName : String, links : NSDictionary, broadcasterLanguage : String, language : String, gameName : String, logo : String, status : String, videoBanner : String, lastUpdate : NSDate, followers : Int, views : Int) {
+    init(id : Int, name : String, displayName : String, links : NSDictionary, broadcasterLanguage : String, language : String, gameName : String, logo : String?, status : String, videoBanner : String?, lastUpdate : NSDate, followers : Int, views : Int) {
         _id = id;
         _name = name;
         _displayName = displayName;
@@ -38,5 +38,9 @@ class TwitchChannel {
         _lastUpdate = lastUpdate;
         _followers = followers;
         _views = views;
+    }
+    
+    func getName() -> String {
+        return self._name
     }
 }

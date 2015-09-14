@@ -235,7 +235,7 @@ class TwitchApi {
                         
                         let streams = NSMutableArray();
                         let dateFormatter = NSDateFormatter();
-                        dateFormatter.dateFormat = "yyyy-MM-ddTHH:mm:ssZ";
+                        dateFormatter.dateFormat = "yyyy'-'MM'-'dd'T'HH':'mm':'ssXXX";
                         
                         for streamRaw in streamsInfoDict["streams"] as! NSArray {
                             if let streamDict = streamRaw as? NSDictionary {
@@ -247,22 +247,22 @@ class TwitchApi {
                                         name : channelDict["name"] as! String,
                                         displayName : channelDict["display_name"] as! String,
                                         links : channelDict["_links"] as! NSDictionary,
-                                        broadcasterLanguage : channelDict[""] as! String,
-                                        language: channelDict[""] as! String,
-                                        gameName : channelDict[""] as! String,
-                                        logo : channelDict[""] as! String,
-                                        status : channelDict[""] as! String,
-                                        videoBanner : channelDict[""] as! String,
-                                        lastUpdate : dateFormatter.dateFromString(channelDict[""] as! String)!,
-                                        followers : channelDict[""] as! Int,
-                                        views : channelDict[""] as! Int
+                                        broadcasterLanguage : channelDict["broadcaster_language"] as! String,
+                                        language: channelDict["language"] as! String,
+                                        gameName : channelDict["game"] as! String,
+                                        logo : channelDict["logo"] as? String!,
+                                        status : channelDict["status"] as! String,
+                                        videoBanner : channelDict["video_banner"] as? String!,
+                                        lastUpdate : dateFormatter.dateFromString(channelDict["updated_at"] as! String)!,
+                                        followers : channelDict["followers"] as! Int,
+                                        views : channelDict["views"] as! Int
                                     );
                                     streams.addObject(TwitchStream(
-                                        id : streamDict[""] as! Int,
-                                        gameName : streamDict[""] as! String,
-                                        viewers : streamDict[""] as! Int,
-                                        videoHeight : streamDict[""] as! Int,
-                                        preview : streamDict[""] as! NSDictionary,
+                                        id : streamDict["_id"] as! Int,
+                                        gameName : streamDict["game"] as! String,
+                                        viewers : streamDict["viewers"] as! Int,
+                                        videoHeight : streamDict["video_height"] as! Int,
+                                        preview : streamDict["preview"] as! NSDictionary,
                                         channel : channel!
                                         ));
                                 }
@@ -289,7 +289,6 @@ class TwitchApi {
                         completionHandler(streams: nil, error: NSError(domain: "TwitchAPI", code: 3, userInfo: userInfo));
                         return
                     }
-                    break;
                     
                 default:
                     let userInfo = [
