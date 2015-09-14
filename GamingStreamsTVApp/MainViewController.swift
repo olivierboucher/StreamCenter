@@ -15,7 +15,7 @@ class MainViewController: UIViewController {
     
     convenience init(){
         self.init(nibName: nil, bundle: nil);
-        TwitchApi.getTopGamesWithOffset(0, limit: 10) {
+        TwitchApi.getTopGamesWithOffset(0, limit: 17) {
             (games, error) in
             
             if(error != nil){
@@ -31,7 +31,6 @@ class MainViewController: UIViewController {
         }
         
         self.view.backgroundColor = UIColor.greenColor();
-        //self.displayCollectionView();
     }
 
     override func viewDidLoad() {
@@ -95,18 +94,18 @@ extension MainViewController : UICollectionViewDataSource {
     
     func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         if((section+1) * NUM_COLUMNS <= _games!.count){
-            NSLog("count for section #%d : %d", section, NUM_COLUMNS);
+            //NSLog("count for section #%d : %d", section, NUM_COLUMNS);
             return NUM_COLUMNS;
         }
         else {
-            NSLog("count for section #%d : %d", section, _games!.count - ((section) * NUM_COLUMNS));
+            //NSLog("count for section #%d : %d", section, _games!.count - ((section) * NUM_COLUMNS));
             return _games!.count - ((section) * NUM_COLUMNS)
         }
     }
     
     func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
         let cell : GameCellView = collectionView.dequeueReusableCellWithReuseIdentifier(GameCellView.cellIdentifier, forIndexPath: indexPath) as! GameCellView;
-        NSLog("Indexpath => section:%d row:%d", indexPath.section, indexPath.row);
+        //NSLog("Indexpath => section:%d row:%d", indexPath.section, indexPath.row);
         cell.setGame(_games!.objectAtIndex((indexPath.section * NUM_COLUMNS) +  indexPath.row) as! TwitchGame);
         return cell;
     }

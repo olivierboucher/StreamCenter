@@ -38,6 +38,7 @@ class TwitchApi {
                                     NSLocalizedRecoverySuggestionErrorKey: String("Please ensure that the provided channel is valid")
                                 ];
                                 completionHandler(streams: nil, error: NSError(domain: "TwitchAPI", code: 2, userInfo: userInfo));
+                                return
                             }
                         if let accessInfoDict = parsedObject as? NSDictionary {
                             if let sig : String = accessInfoDict["sig"] as? String {
@@ -62,7 +63,7 @@ class TwitchApi {
                                                     //We parse the M3U8 file and return the stream object array
                                                     let streams = M3UParser.parseToDict(String(data: data!, encoding: NSUTF8StringEncoding)!);
                                                     completionHandler(streams: streams, error: nil);
-                                                    break;
+                                                    return
                                                 default:
                                                     let userInfo = [
                                                         NSLocalizedDescriptionKey : String("Operation was unsuccessful."),
@@ -70,7 +71,7 @@ class TwitchApi {
                                                         NSLocalizedRecoverySuggestionErrorKey: String("Please ensure that the provided channel is valid")
                                                     ];
                                                     completionHandler(streams: nil, error: NSError(domain: "TwitchAPI", code: 1, userInfo: userInfo));
-                                                    break;
+                                                    return
                                             }
                                         }
                                     }
@@ -85,6 +86,7 @@ class TwitchApi {
                                         NSLocalizedRecoverySuggestionErrorKey: String("Please ensure that the provided channel is valid")
                                     ];
                                     completionHandler(streams: nil, error: NSError(domain: "TwitchAPI", code: 5, userInfo: userInfo));
+                                    return
                                 }
                             }
                             else {
@@ -94,6 +96,7 @@ class TwitchApi {
                                     NSLocalizedRecoverySuggestionErrorKey: String("Please ensure that the provided channel is valid")
                                 ];
                                 completionHandler(streams: nil, error: NSError(domain: "TwitchAPI", code: 4, userInfo: userInfo));
+                                return
                             }
                             
                         }
@@ -104,6 +107,7 @@ class TwitchApi {
                                 NSLocalizedRecoverySuggestionErrorKey: String("Please ensure that the provided channel is valid")
                             ];
                             completionHandler(streams: nil, error: NSError(domain: "TwitchAPI", code: 3, userInfo: userInfo));
+                            return
                         }
                         break;
                     
@@ -114,7 +118,7 @@ class TwitchApi {
                             NSLocalizedRecoverySuggestionErrorKey: String("Please ensure that the provided channel is valid")
                         ];
                         completionHandler(streams: nil, error: NSError(domain: "TwitchAPI", code: 1, userInfo: userInfo));
-                        break;
+                        return
                 }
             }
         }
@@ -150,6 +154,7 @@ class TwitchApi {
                             NSLocalizedRecoverySuggestionErrorKey: String("Please ensure that the provided url is valid")
                         ];
                         completionHandler(games: nil, error: NSError(domain: "TwitchAPI", code: 2, userInfo: userInfo));
+                        return
                     }
                     if let gamesInfoDict = parsedObject as? NSDictionary {
                         let games = NSMutableArray();
@@ -167,6 +172,7 @@ class TwitchApi {
                             }
                         }
                         completionHandler(games: games, error: nil);
+                        return
                     }
                     else {
                         let userInfo = [
@@ -175,6 +181,7 @@ class TwitchApi {
                             NSLocalizedRecoverySuggestionErrorKey: String("Please ensure that the provided url is valid")
                         ];
                         completionHandler(games: nil, error: NSError(domain: "TwitchAPI", code: 3, userInfo: userInfo));
+                        return
                     }
                     break;
                     
@@ -185,7 +192,7 @@ class TwitchApi {
                         NSLocalizedRecoverySuggestionErrorKey: String("Please ensure that the provided url is valid")
                     ];
                     completionHandler(games: nil, error: NSError(domain: "TwitchAPI", code: 1, userInfo: userInfo));
-                    break;
+                    return
                 }
             }
         }
@@ -222,6 +229,7 @@ class TwitchApi {
                             NSLocalizedRecoverySuggestionErrorKey: String("Please ensure that the provided game is valid")
                         ];
                         completionHandler(streams: nil, error: NSError(domain: "TwitchAPI", code: 2, userInfo: userInfo));
+                        return
                     }
                     if let streamsInfoDict = parsedObject as? NSDictionary {
                         
@@ -265,10 +273,12 @@ class TwitchApi {
                                         NSLocalizedRecoverySuggestionErrorKey: String("Please ensure that the provided game is valid")
                                     ];
                                     completionHandler(streams: nil, error: NSError(domain: "TwitchAPI", code: 3, userInfo: userInfo));
+                                    return
                                 }
                             }
                         }
                         completionHandler(streams: streams, error: nil);
+                        return
                     }
                     else {
                         let userInfo = [
@@ -277,6 +287,7 @@ class TwitchApi {
                             NSLocalizedRecoverySuggestionErrorKey: String("Please ensure that the provided game is valid")
                         ];
                         completionHandler(streams: nil, error: NSError(domain: "TwitchAPI", code: 3, userInfo: userInfo));
+                        return
                     }
                     break;
                     
@@ -287,7 +298,7 @@ class TwitchApi {
                         NSLocalizedRecoverySuggestionErrorKey: String("Please ensure that the provided game is valid")
                     ];
                     completionHandler(streams: nil, error: NSError(domain: "TwitchAPI", code: 1, userInfo: userInfo));
-                    break;
+                    return
                 }
             }
         }
