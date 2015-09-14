@@ -20,6 +20,7 @@ class GameCellView : UICollectionViewCell {
         super.init(frame: frame);
         self.backgroundColor = UIColor.whiteColor();
         self._imageView = UIImageView(frame: self.bounds);
+        self._imageView!.adjustsImageWhenAncestorFocused = true;
         //TODO : Set loading image
     }
     convenience init() {

@@ -10,6 +10,8 @@ import UIKit
 
 class MainViewController: UIViewController {
     private let NUM_COLUMNS = 5;
+    private let ITEMS_INSETS_X : CGFloat = 25;
+    private let ITEMS_INSETS_Y : CGFloat = 40;
     private var _collectionView : UICollectionView?;
     private var _games : NSArray?;
     
@@ -58,6 +60,7 @@ class MainViewController: UIViewController {
         self._collectionView!.dataSource = self;
         self._collectionView!.delegate = self;
         self._collectionView?.backgroundColor = UIColor.blueColor();
+        self._collectionView!.contentInset = UIEdgeInsets(top: ITEMS_INSETS_Y + 10, left: ITEMS_INSETS_X, bottom: ITEMS_INSETS_Y, right: ITEMS_INSETS_X)
         
         self.view.addSubview(self._collectionView!);
     }
@@ -66,9 +69,14 @@ class MainViewController: UIViewController {
         super.didUpdateFocusInContext(context, withAnimationCoordinator: coordinator)
         
         let view1 = context.previouslyFocusedView as? GameCellView
-        let view2 = context.nextFocusedView as! GameCellView
-        let ggg = 0;
-        //NSLog("Prev focus: %@. Next focus: %@", (view1!.getGame()?.getName())!, (view2!.getGame()?.getName())!)
+        let view2 = context.nextFocusedView as? GameCellView
+
+        if(view1 != nil) {
+            NSLog("Prev : %@", (view1!.getGame()?.getName())!)
+        }
+        if(view2 != nil) {
+            NSLog("Next : %@", (view2!.getGame()?.getName())!)
+        }
     }
 
 }
@@ -78,7 +86,7 @@ extension MainViewController : UICollectionViewDelegateFlowLayout {
     func collectionView(collectionView: UICollectionView,
         layout collectionViewLayout: UICollectionViewLayout,
         sizeForItemAtIndexPath indexPath: NSIndexPath) -> CGSize {
-            let width = self.view.bounds.width / CGFloat(NUM_COLUMNS) - 20;
+            let width = self.view.bounds.width / CGFloat(NUM_COLUMNS) - CGFloat(ITEMS_INSETS_X * 2);
             let height = width * 1.397;
             
         return CGSize(width: width, height: height)
@@ -87,7 +95,8 @@ extension MainViewController : UICollectionViewDelegateFlowLayout {
     func collectionView(collectionView: UICollectionView,
         layout collectionViewLayout: UICollectionViewLayout,
         insetForSectionAtIndex section: Int) -> UIEdgeInsets {
-            return UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10);
+            let topInset = (section == 0) ? 0 : ITEMS_INSETS_X
+            return UIEdgeInsets(top: topInset, left: ITEMS_INSETS_X, bottom: ITEMS_INSETS_Y, right: ITEMS_INSETS_X);
     }
 }
 
