@@ -185,7 +185,6 @@ class TwitchApi {
                         completionHandler(games: nil, error: NSError(domain: "TwitchAPI", code: 3, userInfo: userInfo));
                         return
                     }
-                    break;
                     
                 default:
                     let userInfo = [

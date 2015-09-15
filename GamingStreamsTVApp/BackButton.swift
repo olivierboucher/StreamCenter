@@ -12,35 +12,36 @@ import Foundation
 
 class BackButton : UIView {
     
+    private var _label : UILabel?
+    private var _imageView : UIImageView?
+    
     init(frame : CGRect, withTitle title : NSString) {
         super.init(frame: frame)
         
         let font = UIFont(name: "Helvetica", size: 30)
         let maxLabelSize = CGSize(width: frame.width * 0.9, height: frame.height)
-        let drawingOptions = NSStringDrawingOptions.TruncatesLastVisibleLine
-        let attributes = [NSFontAttributeName : font!]
-        let labelBounds = title.boundingRectWithSize(maxLabelSize, options: drawingOptions, attributes: attributes, context: nil)
+        let labelBounds = CGRect(origin: CGPoint(x: 0,y: 0), size: maxLabelSize)
         
-        let label = UILabel(frame: labelBounds)
-        label.font = font
-        label.text = title as String
-        label.textColor = UIColor.whiteColor()
-        label.textAlignment = NSTextAlignment.Left
+        _label = UILabel(frame: labelBounds)
+        _label!.font = font
+        _label!.text = title as String
+        _label!.textColor = UIColor.whiteColor()
+        _label!.textAlignment = NSTextAlignment.Left
         //label.layer.borderColor = UIColor.redColor().CGColor;
         //label.layer.borderWidth = 1;
         
-        let imageView = UIImageView(frame: CGRect(x: 0,y: 0, width: frame.width * 0.1, height: frame.height))
-        imageView.contentMode = UIViewContentMode.ScaleAspectFit
-        imageView.image = self.getBackImageOfColor(UIColor.whiteColor())
+        _imageView = UIImageView(frame: CGRect(x: 0,y: 0, width: frame.width * 0.1, height: frame.height))
+        _imageView!.contentMode = UIViewContentMode.ScaleAspectFit
+        _imageView!.image = self.getBackImageOfColor(UIColor.whiteColor())
         //imageView.layer.borderColor = UIColor.greenColor().CGColor;
         //imageView.layer.borderWidth = 1;
         
-        imageView.center = CGPoint(x: imageView.bounds.width/2, y: frame.origin.y)
-        label.center = CGPoint(x: imageView.bounds.width + label.bounds.width/2, y: frame.origin.y)
+        _imageView!.center = CGPoint(x: _imageView!.bounds.width/2, y: frame.origin.y)
         
-        self.addSubview(imageView)
-        self.addSubview(label)
+        _label!.center = CGPoint(x: _imageView!.bounds.width + _label!.bounds.width/2, y: frame.origin.y)
         
+        self.addSubview(_imageView!)
+        self.addSubview(_label!)
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -73,5 +74,45 @@ class BackButton : UIView {
         UIGraphicsEndImageContext();
         
         return img;
+    }
+    
+    override func canBecomeFocused() -> Bool {
+        return true;
+    }
+    
+    override func didUpdateFocusInContext(context: UIFocusUpdateContext, withAnimationCoordinator coordinator: UIFocusAnimationCoordinator) {
+        super.didUpdateFocusInContext(context, withAnimationCoordinator: coordinator)
+        if(context.nextFocusedView == self){
+            coordinator.addCoordinatedAnimations({
+                self._label!.textColor = UIColor.blackColor()
+                self._imageView!.image = self.getBackImageOfColor(UIColor.blackColor())
+                
+                self._label!.font = self._label!.font.fontWithSize(40)
+                self._imageView!.frame = CGRect(x: 0, y: 0, width: self._imageView!.bounds.width * 1.25, height: self._imageView!.bounds.height * 1.25)
+                self._imageView!.center = CGPoint(x: self._imageView!.bounds.width/2, y: self.frame.origin.y)
+                self._label!.center = CGPoint(x: self._imageView!.bounds.width + self._label!.bounds.width/2, y: self.frame.origin.y)
+                
+                self.layoutIfNeeded()
+                
+                },
+                completion: nil
+            )
+        }
+        else if(context.previouslyFocusedView == self) {
+            coordinator.addCoordinatedAnimations({
+                self._label!.textColor = UIColor.whiteColor()
+                self._imageView!.image = self.getBackImageOfColor(UIColor.whiteColor())
+                
+                self._label!.font = self._label!.font.fontWithSize(30)
+                self._imageView!.frame = CGRect(x: 0, y: 0, width: self._imageView!.bounds.width / 1.25, height: self._imageView!.bounds.height / 1.25)
+                self._imageView!.center = CGPoint(x: self._imageView!.bounds.width/2, y: self.frame.origin.y)
+                self._label!.center = CGPoint(x: self._imageView!.bounds.width + self._label!.bounds.width/2, y: self.frame.origin.y)
+                
+                self.layoutIfNeeded()
+                },
+                completion: nil
+            )
+        }
+        
     }
 }
