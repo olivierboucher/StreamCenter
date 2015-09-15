@@ -24,6 +24,10 @@ class StreamsViewController : UIViewController {
     convenience init(game : TwitchGame){
         self.init(nibName: nil, bundle: nil);
         self._game = game;
+    }
+    
+    override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(animated)
         
         TwitchApi.getTopStreamsForGameWithOffset(self._game!.getName(), offset: 0, limit: 20) {
             (streams, error) in
@@ -39,44 +43,48 @@ class StreamsViewController : UIViewController {
             }
         }
         
-        let topBarBounds = CGRect(x: self.view.bounds.origin.x, y: self.view.bounds.origin.y, width: self.view.bounds.size.width, height: TOP_BAR_HEIGHT)
-        self._topBar = TopBarView(frame: topBarBounds, withMainTitle: "Live Streams - \(_game!.getName())", backButtonTitle : "Games") {
-            //This is the callback that gets called on back button exit
-            self.dismissViewControllerAnimated(true, completion: nil)
+        if((_topBar == nil) || !(_topBar!.isDescendantOfView(self.view))) {
+            let topBarBounds = CGRect(x: self.view.bounds.origin.x, y: self.view.bounds.origin.y, width: self.view.bounds.size.width, height: TOP_BAR_HEIGHT)
+            self._topBar = TopBarView(frame: topBarBounds, withMainTitle: "Live Streams - \(_game!.getName())", backButtonTitle : "Games") {
+                //This is the callback that gets called on back button exit
+                self.dismissViewControllerAnimated(true, completion: nil)
+            }
+            self._topBar?.backgroundColor = UIColor.init(white: 0.5, alpha: 1)
+            
+            self.view.addSubview(self._topBar!)
         }
-        self._topBar?.backgroundColor = UIColor.init(white: 0.5, alpha: 1)
         
-        self.view.addSubview(self._topBar!)
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view, typically from a nib.
-        
     }
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
     }
     
     private func displayCollectionView() {
-        let layout : UICollectionViewFlowLayout = UICollectionViewFlowLayout();
-        layout.scrollDirection = UICollectionViewScrollDirection.Vertical;
-        layout.minimumInteritemSpacing = 10;
-        layout.minimumLineSpacing = 10;
-        
-        self._collectionView = UICollectionView(frame: self.view.bounds, collectionViewLayout: layout);
-        
-        self._collectionView!.registerClass(StreamCellView.classForCoder(), forCellWithReuseIdentifier: StreamCellView.cellIdentifier);
-        self._collectionView!.dataSource = self;
-        self._collectionView!.delegate = self;
-        self._collectionView!.contentInset = UIEdgeInsets(top: ITEMS_INSETS_Y + 10, left: ITEMS_INSETS_X, bottom: ITEMS_INSETS_Y, right: ITEMS_INSETS_X)
-        
-        self.view.addSubview(self._collectionView!);
-        self.view.bringSubviewToFront(self._topBar!)
+        if((_collectionView == nil) || !(_collectionView!.isDescendantOfView(self.view))) {
+            let layout : UICollectionViewFlowLayout = UICollectionViewFlowLayout();
+            layout.scrollDirection = UICollectionViewScrollDirection.Vertical;
+            layout.minimumInteritemSpacing = 10;
+            layout.minimumLineSpacing = 10;
+            
+            self._collectionView = UICollectionView(frame: self.view.bounds, collectionViewLayout: layout);
+            
+            self._collectionView!.registerClass(StreamCellView.classForCoder(), forCellWithReuseIdentifier: StreamCellView.cellIdentifier);
+            self._collectionView!.dataSource = self;
+            self._collectionView!.delegate = self;
+            self._collectionView!.contentInset = UIEdgeInsets(top: ITEMS_INSETS_Y + 10, left: ITEMS_INSETS_X, bottom: ITEMS_INSETS_Y, right: ITEMS_INSETS_X)
+            
+            self.view.addSubview(self._collectionView!);
+            self.view.bringSubviewToFront(self._topBar!)
+        }
+        else {
+            self._collectionView!.reloadData()
+        }
     }
-
 }
 
 extension StreamsViewController : UICollectionViewDelegate {
