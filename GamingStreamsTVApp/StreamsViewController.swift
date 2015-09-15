@@ -14,8 +14,10 @@ class StreamsViewController : UIViewController {
     private let NUM_COLUMNS = 5;
     private let ITEMS_INSETS_X : CGFloat = 25;
     private let ITEMS_INSETS_Y : CGFloat = 40;
+    private let TOP_BAR_HEIGHT : CGFloat = 100;
     
     private var _game : TwitchGame?
+    private var _topBar : TopBarView?
     private var _collectionView : UICollectionView?;
     private var _streams : NSArray?;
     
@@ -36,6 +38,12 @@ class StreamsViewController : UIViewController {
                 })
             }
         }
+        
+        let topBarBounds = CGRect(x: self.view.bounds.origin.x, y: self.view.bounds.origin.y, width: self.view.bounds.size.width, height: TOP_BAR_HEIGHT)
+        self._topBar = TopBarView(frame: topBarBounds, withMainTitle: "Live Streams - \(_game!.getName())", andBackButtonTitle : "Games")
+        self._topBar?.backgroundColor = UIColor.init(white: 0.5, alpha: 1)
+        
+        self.view.addSubview(self._topBar!)
     }
     
     override func viewDidLoad() {
@@ -63,6 +71,7 @@ class StreamsViewController : UIViewController {
         self._collectionView!.contentInset = UIEdgeInsets(top: ITEMS_INSETS_Y + 10, left: ITEMS_INSETS_X, bottom: ITEMS_INSETS_Y, right: ITEMS_INSETS_X)
         
         self.view.addSubview(self._collectionView!);
+        self.view.bringSubviewToFront(self._topBar!)
     }
 
 }
@@ -92,7 +101,7 @@ extension StreamsViewController : UICollectionViewDelegateFlowLayout {
     func collectionView(collectionView: UICollectionView,
         layout collectionViewLayout: UICollectionViewLayout,
         insetForSectionAtIndex section: Int) -> UIEdgeInsets {
-            let topInset = (section == 0) ? 0 : ITEMS_INSETS_X
+            let topInset = (section == 0) ? TOP_BAR_HEIGHT : ITEMS_INSETS_X
             return UIEdgeInsets(top: topInset, left: ITEMS_INSETS_X, bottom: ITEMS_INSETS_Y, right: ITEMS_INSETS_X);
     }
 }
