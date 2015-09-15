@@ -19,6 +19,7 @@ class TwitchApi {
             //First we check for any error
             if(error != nil){
                 completionHandler(streams: nil, error: error);
+                return
             }
             //We want the request to be a NSHTTPURLResponse since we want the status code
             if(response!.isKindOfClass(NSHTTPURLResponse.classForCoder())){
@@ -135,6 +136,7 @@ class TwitchApi {
             //First we check for any error
             if(error != nil){
                 completionHandler(games: nil, error: error);
+                return
             }
             //We want the request to be a NSHTTPURLResponse since we want the status code
             if(response!.isKindOfClass(NSHTTPURLResponse.classForCoder())){
@@ -210,6 +212,7 @@ class TwitchApi {
             //First we check for any error
             if(error != nil){
                 completionHandler(streams: nil, error: error);
+                return
             }
             //We want the request to be a NSHTTPURLResponse since we want the status code
             if(response!.isKindOfClass(NSHTTPURLResponse.classForCoder())){

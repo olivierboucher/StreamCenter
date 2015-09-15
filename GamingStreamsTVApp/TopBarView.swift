@@ -9,7 +9,7 @@ import UIKit
 import Foundation
 
 class TopBarView : UIView {
-    private var _backButton : UIButton?
+    private var _backButton : BackButton?
     private var _titleLabel : UILabel?
     
     init (frame : CGRect, withMainTitle title : String, andBackButtonTitle backButtonTitle : String) {
@@ -27,14 +27,10 @@ class TopBarView : UIView {
         self.addSubview(self._titleLabel!)
         
         //Place button
-        let buttonBounds = CGRect(x: 0, y: 0, width : frame.size.width/6, height: frame.size.height)
-        self._backButton = UIButton(frame: buttonBounds)
-        self._backButton?.setTitle(backButtonTitle, forState: UIControlState.Normal)
-        self._backButton?.titleLabel?.font = UIFont(name: "Helvetica", size: 30)
-        self._backButton?.titleLabel?.textColor = UIColor.whiteColor()
-        self._backButton?.titleLabel?.textAlignment = NSTextAlignment.Center
-        self._backButton?.sizeToFit()
-        self._backButton?.center = CGPoint(x: (_backButton?.bounds.width)!/2 + 20, y: frame.size.height/2)
+        let buttonBounds = CGRect(x: 20, y: frame.height/4, width : frame.size.width/4, height: frame.size.height/2)
+        self._backButton = BackButton(frame: buttonBounds, withTitle: backButtonTitle)
+        //self._backButton?.layer.borderColor = UIColor.redColor().CGColor;
+        //self._backButton?.layer.borderWidth = 1;
         
         self.addSubview(self._backButton!)
     }

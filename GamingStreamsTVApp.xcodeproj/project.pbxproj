@@ -18,6 +18,7 @@
 		090AB9041BA616A900CDB05D /* GamesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 090AB8E31BA5BFDF00CDB05D /* GamesViewController.swift */; };
 		090AB9071BA6369300CDB05D /* GameCellView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 090AB9061BA6369300CDB05D /* GameCellView.swift */; };
 		090AB9091BA8454500CDB05D /* TopBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 090AB9081BA8454500CDB05D /* TopBarView.swift */; };
+		090AB90B1BA85B2000CDB05D /* BackButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 090AB90A1BA85B2000CDB05D /* BackButton.swift */; };
 		09D098251BA7666200E7E6FC /* StreamsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09D098241BA7666200E7E6FC /* StreamsViewController.swift */; };
 		09D098271BA76BFD00E7E6FC /* StreamCellView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09D098261BA76BFD00E7E6FC /* StreamCellView.swift */; };
 		09D098291BA77FAB00E7E6FC /* VideoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09D098281BA77FAB00E7E6FC /* VideoViewController.swift */; };
@@ -38,6 +39,7 @@
 		090AB8FB1BA6049000CDB05D /* TwitchChannel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TwitchChannel.swift; sourceTree = "<group>"; };
 		090AB9061BA6369300CDB05D /* GameCellView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GameCellView.swift; sourceTree = "<group>"; };
 		090AB9081BA8454500CDB05D /* TopBarView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TopBarView.swift; sourceTree = "<group>"; };
+		090AB90A1BA85B2000CDB05D /* BackButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BackButton.swift; sourceTree = "<group>"; };
 		09D098241BA7666200E7E6FC /* StreamsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StreamsViewController.swift; sourceTree = "<group>"; };
 		09D098261BA76BFD00E7E6FC /* StreamCellView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StreamCellView.swift; sourceTree = "<group>"; };
 		09D098281BA77FAB00E7E6FC /* VideoViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VideoViewController.swift; sourceTree = "<group>"; };
@@ -105,6 +107,7 @@
 				09D098261BA76BFD00E7E6FC /* StreamCellView.swift */,
 				09D0982A1BA782C800E7E6FC /* VideoView.swift */,
 				090AB9081BA8454500CDB05D /* TopBarView.swift */,
+				090AB90A1BA85B2000CDB05D /* BackButton.swift */,
 			);
 			name = Views;
 			sourceTree = "<group>";
@@ -201,6 +204,7 @@
 				09D098251BA7666200E7E6FC /* StreamsViewController.swift in Sources */,
 				090AB9041BA616A900CDB05D /* GamesViewController.swift in Sources */,
 				09D0982B1BA782C800E7E6FC /* VideoView.swift in Sources */,
+				090AB90B1BA85B2000CDB05D /* BackButton.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
