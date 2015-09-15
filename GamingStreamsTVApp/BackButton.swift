@@ -12,12 +12,15 @@ import Foundation
 
 class BackButton : UIView {
     
+    private var _gestureRecognizer : UIGestureRecognizer?
     private var _label : UILabel?
     private var _imageView : UIImageView?
+    private var _callback : (() -> ())?
     
-    init(frame : CGRect, withTitle title : NSString) {
+    init(frame : CGRect, withTitle title : NSString, andCallback callback : (() -> ())) {
         super.init(frame: frame)
         
+        //UI Configuration
         let font = UIFont(name: "Helvetica", size: 30)
         let maxLabelSize = CGSize(width: frame.width * 0.9, height: frame.height)
         let labelBounds = CGRect(origin: CGPoint(x: 0,y: 0), size: maxLabelSize)
@@ -37,8 +40,14 @@ class BackButton : UIView {
         //imageView.layer.borderWidth = 1;
         
         _imageView!.center = CGPoint(x: _imageView!.bounds.width/2, y: frame.origin.y)
-        
         _label!.center = CGPoint(x: _imageView!.bounds.width + _label!.bounds.width/2, y: frame.origin.y)
+        
+        //Gestures configuration
+        self._gestureRecognizer = UIGestureRecognizer(target: self, action: "tapped:")
+        self._gestureRecognizer!.allowedPressTypes = [NSNumber(integer: UIPressType.Select.rawValue)];
+        self.addGestureRecognizer(self._gestureRecognizer!)
+        //Callback attribution
+        self._callback = callback
         
         self.addSubview(_imageView!)
         self.addSubview(_label!)
@@ -114,5 +123,16 @@ class BackButton : UIView {
             )
         }
         
+    }
+    
+    override func pressesEnded(presses: Set<UIPress>, withEvent event: UIPressesEvent?) {
+        for item in presses
+        {
+            if item.type == UIPressType.Select
+            {
+                self._callback!()
+                break;
+            }
+        }
     }
 }

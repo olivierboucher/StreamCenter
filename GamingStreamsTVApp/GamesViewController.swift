@@ -21,6 +21,12 @@ class GamesViewController : UIViewController {
     
     convenience init(){
         self.init(nibName: nil, bundle: nil);
+    }
+    
+    //We want the latest data to be fetched each time
+    override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(animated)
+        
         TwitchApi.getTopGamesWithOffset(0, limit: 17) {
             (games, error) in
             
@@ -35,12 +41,13 @@ class GamesViewController : UIViewController {
                 })
             }
         }
-        
-        let topBarBounds = CGRect(x: self.view.bounds.origin.x, y: self.view.bounds.origin.y, width: self.view.bounds.size.width, height: TOP_BAR_HEIGHT)
-        self._topBar = TopBarView(frame: topBarBounds, withMainTitle: "Top Games", andBackButtonTitle : "Quit")
-        self._topBar?.backgroundColor = UIColor.init(white: 0.5, alpha: 1)
-        
-        self.view.addSubview(self._topBar!)
+        if((_topBar == nil) || !(_topBar!.isDescendantOfView(self.view))) {
+            let topBarBounds = CGRect(x: self.view.bounds.origin.x, y: self.view.bounds.origin.y, width: self.view.bounds.size.width, height: TOP_BAR_HEIGHT)
+            self._topBar = TopBarView(frame: topBarBounds, withMainTitle: "Top Games")
+            self._topBar?.backgroundColor = UIColor.init(white: 0.5, alpha: 1)
+            
+            self.view.addSubview(self._topBar!)
+        }
     }
 
     override func viewDidLoad() {
@@ -56,23 +63,28 @@ class GamesViewController : UIViewController {
     
     private func displayCollectionView() {
         
-        let layout : UICollectionViewFlowLayout = UICollectionViewFlowLayout();
-        layout.scrollDirection = UICollectionViewScrollDirection.Vertical;
-        layout.minimumInteritemSpacing = 10;
-        layout.minimumLineSpacing = 10;
-        
-        let collectionViewBounds = CGRect(x: self.view.bounds.origin.x, y: self.view.bounds.origin.y, width: self.view.bounds.size.width, height: self.view.bounds.size.height)
-        
-        self._collectionView = UICollectionView(frame: collectionViewBounds, collectionViewLayout: layout);
-        
-        self._collectionView!.registerClass(GameCellView.classForCoder(), forCellWithReuseIdentifier: GameCellView.cellIdentifier);
-        self._collectionView!.dataSource = self;
-        self._collectionView!.delegate = self;
-        //self._collectionView?.backgroundColor = UIColor.blueColor();
-        self._collectionView!.contentInset = UIEdgeInsets(top: ITEMS_INSETS_Y + 10, left: ITEMS_INSETS_X, bottom: ITEMS_INSETS_Y, right: ITEMS_INSETS_X)
-        
-        self.view.addSubview(self._collectionView!)
-        self.view.bringSubviewToFront(self._topBar!)
+        if((_collectionView == nil) || !(_collectionView!.isDescendantOfView(self.view))) {
+            let layout : UICollectionViewFlowLayout = UICollectionViewFlowLayout();
+            layout.scrollDirection = UICollectionViewScrollDirection.Vertical;
+            layout.minimumInteritemSpacing = 10;
+            layout.minimumLineSpacing = 10;
+            
+            let collectionViewBounds = CGRect(x: self.view.bounds.origin.x, y: self.view.bounds.origin.y, width: self.view.bounds.size.width, height: self.view.bounds.size.height)
+            
+            self._collectionView = UICollectionView(frame: collectionViewBounds, collectionViewLayout: layout);
+            
+            self._collectionView!.registerClass(GameCellView.classForCoder(), forCellWithReuseIdentifier: GameCellView.cellIdentifier);
+            self._collectionView!.dataSource = self;
+            self._collectionView!.delegate = self;
+            //self._collectionView?.backgroundColor = UIColor.blueColor();
+            self._collectionView!.contentInset = UIEdgeInsets(top: ITEMS_INSETS_Y + 10, left: ITEMS_INSETS_X, bottom: ITEMS_INSETS_Y, right: ITEMS_INSETS_X)
+            
+            self.view.addSubview(self._collectionView!)
+            self.view.bringSubviewToFront(self._topBar!)
+        }
+        else {
+            _collectionView?.reloadData()
+        }
     }
     
 //    override func didUpdateFocusInContext(context: UIFocusUpdateContext, withAnimationCoordinator coordinator: UIFocusAnimationCoordinator) {

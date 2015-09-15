@@ -11,7 +11,7 @@ import Foundation
 
 class StreamsViewController : UIViewController {
     
-    private let NUM_COLUMNS = 5;
+    private let NUM_COLUMNS = 4;
     private let ITEMS_INSETS_X : CGFloat = 25;
     private let ITEMS_INSETS_Y : CGFloat = 40;
     private let TOP_BAR_HEIGHT : CGFloat = 100;
@@ -40,7 +40,10 @@ class StreamsViewController : UIViewController {
         }
         
         let topBarBounds = CGRect(x: self.view.bounds.origin.x, y: self.view.bounds.origin.y, width: self.view.bounds.size.width, height: TOP_BAR_HEIGHT)
-        self._topBar = TopBarView(frame: topBarBounds, withMainTitle: "Live Streams - \(_game!.getName())", andBackButtonTitle : "Games")
+        self._topBar = TopBarView(frame: topBarBounds, withMainTitle: "Live Streams - \(_game!.getName())", backButtonTitle : "Games") {
+            //This is the callback that gets called on back button exit
+            self.dismissViewControllerAnimated(true, completion: nil)
+        }
         self._topBar?.backgroundColor = UIColor.init(white: 0.5, alpha: 1)
         
         self.view.addSubview(self._topBar!)
