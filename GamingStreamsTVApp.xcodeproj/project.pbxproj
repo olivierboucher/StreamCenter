@@ -17,6 +17,7 @@
 		090AB9031BA616A900CDB05D /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 090AB8E11BA5BFDF00CDB05D /* AppDelegate.swift */; };
 		090AB9041BA616A900CDB05D /* GamesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 090AB8E31BA5BFDF00CDB05D /* GamesViewController.swift */; };
 		090AB9071BA6369300CDB05D /* GameCellView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 090AB9061BA6369300CDB05D /* GameCellView.swift */; };
+		090AB9091BA8454500CDB05D /* TopBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 090AB9081BA8454500CDB05D /* TopBarView.swift */; };
 		09D098251BA7666200E7E6FC /* StreamsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09D098241BA7666200E7E6FC /* StreamsViewController.swift */; };
 		09D098271BA76BFD00E7E6FC /* StreamCellView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09D098261BA76BFD00E7E6FC /* StreamCellView.swift */; };
 		09D098291BA77FAB00E7E6FC /* VideoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09D098281BA77FAB00E7E6FC /* VideoViewController.swift */; };
@@ -36,6 +37,7 @@
 		090AB8F91BA5FEB800CDB05D /* TwitchStream.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TwitchStream.swift; sourceTree = "<group>"; };
 		090AB8FB1BA6049000CDB05D /* TwitchChannel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TwitchChannel.swift; sourceTree = "<group>"; };
 		090AB9061BA6369300CDB05D /* GameCellView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GameCellView.swift; sourceTree = "<group>"; };
+		090AB9081BA8454500CDB05D /* TopBarView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TopBarView.swift; sourceTree = "<group>"; };
 		09D098241BA7666200E7E6FC /* StreamsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StreamsViewController.swift; sourceTree = "<group>"; };
 		09D098261BA76BFD00E7E6FC /* StreamCellView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StreamCellView.swift; sourceTree = "<group>"; };
 		09D098281BA77FAB00E7E6FC /* VideoViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VideoViewController.swift; sourceTree = "<group>"; };
@@ -102,6 +104,7 @@
 				090AB9061BA6369300CDB05D /* GameCellView.swift */,
 				09D098261BA76BFD00E7E6FC /* StreamCellView.swift */,
 				09D0982A1BA782C800E7E6FC /* VideoView.swift */,
+				090AB9081BA8454500CDB05D /* TopBarView.swift */,
 			);
 			name = Views;
 			sourceTree = "<group>";
@@ -188,6 +191,7 @@
 				090AB8FE1BA616A900CDB05D /* TwitchGame.swift in Sources */,
 				09D098291BA77FAB00E7E6FC /* VideoViewController.swift in Sources */,
 				090AB8FF1BA616A900CDB05D /* TwitchChannel.swift in Sources */,
+				090AB9091BA8454500CDB05D /* TopBarView.swift in Sources */,
 				09D098271BA76BFD00E7E6FC /* StreamCellView.swift in Sources */,
 				090AB9001BA616A900CDB05D /* TwitchStream.swift in Sources */,
 				090AB9011BA616A900CDB05D /* TwitchStreamVideo.swift in Sources */,

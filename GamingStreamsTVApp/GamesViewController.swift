@@ -13,9 +13,11 @@ class GamesViewController : UIViewController {
     private let NUM_COLUMNS = 5;
     private let ITEMS_INSETS_X : CGFloat = 25;
     private let ITEMS_INSETS_Y : CGFloat = 40;
+    private let TOP_BAR_HEIGHT : CGFloat = 100;
     
-    private var _collectionView : UICollectionView?;
-    private var _games : NSArray?;
+    private var _topBar : TopBarView?
+    private var _collectionView : UICollectionView?
+    private var _games : NSArray?
     
     convenience init(){
         self.init(nibName: nil, bundle: nil);
@@ -34,7 +36,11 @@ class GamesViewController : UIViewController {
             }
         }
         
-        //self.view.backgroundColor = UIColor.greenColor();
+        let topBarBounds = CGRect(x: self.view.bounds.origin.x, y: self.view.bounds.origin.y, width: self.view.bounds.size.width, height: TOP_BAR_HEIGHT)
+        self._topBar = TopBarView(frame: topBarBounds, withMainTitle: "Top Games", andBackButtonTitle : "Quit")
+        self._topBar?.backgroundColor = UIColor.init(white: 0.5, alpha: 1)
+        
+        self.view.addSubview(self._topBar!)
     }
 
     override func viewDidLoad() {
@@ -55,8 +61,9 @@ class GamesViewController : UIViewController {
         layout.minimumInteritemSpacing = 10;
         layout.minimumLineSpacing = 10;
         
-        self._collectionView = UICollectionView(frame: self.view.bounds, collectionViewLayout: layout);
-        NSLog("Bounds=> x:%f y:%f w:%f h:%f", self.view.bounds.origin.x, self.view.bounds.origin.y, self.view.bounds.size.width, self.view.bounds.height);
+        let collectionViewBounds = CGRect(x: self.view.bounds.origin.x, y: self.view.bounds.origin.y, width: self.view.bounds.size.width, height: self.view.bounds.size.height)
+        
+        self._collectionView = UICollectionView(frame: collectionViewBounds, collectionViewLayout: layout);
         
         self._collectionView!.registerClass(GameCellView.classForCoder(), forCellWithReuseIdentifier: GameCellView.cellIdentifier);
         self._collectionView!.dataSource = self;
@@ -64,7 +71,8 @@ class GamesViewController : UIViewController {
         //self._collectionView?.backgroundColor = UIColor.blueColor();
         self._collectionView!.contentInset = UIEdgeInsets(top: ITEMS_INSETS_Y + 10, left: ITEMS_INSETS_X, bottom: ITEMS_INSETS_Y, right: ITEMS_INSETS_X)
         
-        self.view.addSubview(self._collectionView!);
+        self.view.addSubview(self._collectionView!)
+        self.view.bringSubviewToFront(self._topBar!)
     }
     
 //    override func didUpdateFocusInContext(context: UIFocusUpdateContext, withAnimationCoordinator coordinator: UIFocusAnimationCoordinator) {
@@ -107,7 +115,7 @@ extension GamesViewController : UICollectionViewDelegateFlowLayout {
     func collectionView(collectionView: UICollectionView,
         layout collectionViewLayout: UICollectionViewLayout,
         insetForSectionAtIndex section: Int) -> UIEdgeInsets {
-            let topInset = (section == 0) ? 0 : ITEMS_INSETS_X
+            let topInset = (section == 0) ? TOP_BAR_HEIGHT : ITEMS_INSETS_X
             return UIEdgeInsets(top: topInset, left: ITEMS_INSETS_X, bottom: ITEMS_INSETS_Y, right: ITEMS_INSETS_X);
     }
 }
