@@ -14,13 +14,20 @@ class StreamCellView : UICollectionViewCell {
     private var _stream : TwitchStream?
     private var _image : UIImage?
     private var _imageView : UIImageView?
+    private var _activityIndicator : UIActivityIndicatorView?
     
     override init(frame: CGRect) {
         super.init(frame: frame)
         self._imageView = UIImageView(frame: self.bounds)
         self._imageView!.adjustsImageWhenAncestorFocused = true
-        self._imageView!.backgroundColor = UIColor.blackColor()
-        //TODO : Set loading image
+        self._imageView!.layer.cornerRadius = 10
+        self._imageView!.backgroundColor = UIColor(white: 0.25, alpha: 0.7)
+        
+        self._activityIndicator = UIActivityIndicatorView(frame: self.bounds)
+        self._activityIndicator?.activityIndicatorViewStyle = UIActivityIndicatorViewStyle.WhiteLarge
+        self._activityIndicator?.startAnimating()
+        
+        self._imageView?.addSubview(self._activityIndicator!)
         self.addSubview(self._imageView!);
     }
     convenience init() {
@@ -55,6 +62,10 @@ class StreamCellView : UICollectionViewCell {
             }
             
             dispatch_async(dispatch_get_main_queue(),{
+                if((self._activityIndicator != nil) && (self._activityIndicator!.isDescendantOfView(self._imageView!))) {
+                    self._activityIndicator?.removeFromSuperview()
+                    self._activityIndicator = nil
+                }
                 self._imageView!.image = self._image;
             })
             
