@@ -17,6 +17,7 @@ class GamesViewController : UIViewController {
     
     private var _topBar : TopBarView?
     private var _collectionView : UICollectionView?
+    private var _loadingView : LoadingView?
     private var _games : NSArray?
     
     convenience init(){
@@ -27,26 +28,35 @@ class GamesViewController : UIViewController {
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
         
+        self._loadingView = LoadingView(frame: CGRect(x: 0, y: 0, width: self.view.bounds.width/5, height: self.view.bounds.height/5))
+        self._loadingView?.center = CGPoint(x: self.view.bounds.width/2, y: self.view.bounds.height/2)
+        self.view.addSubview(_loadingView!)
+        
         TwitchApi.getTopGamesWithOffset(0, limit: 17) {
             (games, error) in
             
             if(error != nil){
                 NSLog("Error loading top games");
+                //TODO : Display error message
             }
             
             if(games != nil){
                 self._games = games!;
                 dispatch_async(dispatch_get_main_queue(),{
+                    if((self._topBar == nil) || !(self._topBar!.isDescendantOfView(self.view))) {
+                        let topBarBounds = CGRect(x: self.view.bounds.origin.x, y: self.view.bounds.origin.y, width: self.view.bounds.size.width, height: self.TOP_BAR_HEIGHT)
+                        self._topBar = TopBarView(frame: topBarBounds, withMainTitle: "Top Games")
+                        self._topBar?.backgroundColor = UIColor.init(white: 0.5, alpha: 1)
+                        
+                        self.view.addSubview(self._topBar!)
+                    }
+                    if((self._loadingView != nil) && (self._loadingView!.isDescendantOfView(self.view))){
+                        self._loadingView?.removeFromSuperview()
+                        self._loadingView = nil
+                    }
                     self.displayCollectionView();
                 })
             }
-        }
-        if((_topBar == nil) || !(_topBar!.isDescendantOfView(self.view))) {
-            let topBarBounds = CGRect(x: self.view.bounds.origin.x, y: self.view.bounds.origin.y, width: self.view.bounds.size.width, height: TOP_BAR_HEIGHT)
-            self._topBar = TopBarView(frame: topBarBounds, withMainTitle: "Top Games")
-            self._topBar?.backgroundColor = UIColor.init(white: 0.5, alpha: 1)
-            
-            self.view.addSubview(self._topBar!)
         }
     }
 

@@ -249,7 +249,7 @@ class TwitchApi {
                                         name : channelDict["name"] as! String,
                                         displayName : channelDict["display_name"] as! String,
                                         links : channelDict["_links"] as! NSDictionary,
-                                        broadcasterLanguage : channelDict["broadcaster_language"] as! String,
+                                        broadcasterLanguage : channelDict["broadcaster_language"] as? String!,
                                         language: channelDict["language"] as! String,
                                         gameName : channelDict["game"] as! String,
                                         logo : channelDict["logo"] as? String!,

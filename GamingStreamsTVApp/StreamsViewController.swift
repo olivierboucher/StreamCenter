@@ -19,6 +19,7 @@ class StreamsViewController : UIViewController {
     private var _game : TwitchGame?
     private var _topBar : TopBarView?
     private var _collectionView : UICollectionView?;
+    private var _loadingView : LoadingView?
     private var _streams : NSArray?;
     
     convenience init(game : TwitchGame){
@@ -29,6 +30,10 @@ class StreamsViewController : UIViewController {
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
         
+        self._loadingView = LoadingView(frame: CGRect(x: 0, y: 0, width: self.view.bounds.width/5, height: self.view.bounds.height/5))
+        self._loadingView?.center = CGPoint(x: self.view.bounds.width/2, y: self.view.bounds.height/2)
+        self.view.addSubview(_loadingView!)
+        
         TwitchApi.getTopStreamsForGameWithOffset(self._game!.getName(), offset: 0, limit: 20) {
             (streams, error) in
             
@@ -38,22 +43,24 @@ class StreamsViewController : UIViewController {
             if(streams != nil) {
                 self._streams = streams!
                 dispatch_async(dispatch_get_main_queue(),{
+                    if((self._topBar == nil) || !(self._topBar!.isDescendantOfView(self.view))) {
+                        let topBarBounds = CGRect(x: self.view.bounds.origin.x, y: self.view.bounds.origin.y, width: self.view.bounds.size.width, height: self.TOP_BAR_HEIGHT)
+                        self._topBar = TopBarView(frame: topBarBounds, withMainTitle: "Live Streams - \(self._game!.getName())", backButtonTitle : "Games") {
+                            //This is the callback that gets called on back button exit
+                            self.dismissViewControllerAnimated(true, completion: nil)
+                        }
+                        self._topBar?.backgroundColor = UIColor.init(white: 0.5, alpha: 1)
+                        
+                        self.view.addSubview(self._topBar!)
+                    }
+                    if((self._loadingView != nil) && (self._loadingView!.isDescendantOfView(self.view))){
+                        self._loadingView?.removeFromSuperview()
+                        self._loadingView = nil
+                    }
                     self.displayCollectionView();
                 })
             }
         }
-        
-        if((_topBar == nil) || !(_topBar!.isDescendantOfView(self.view))) {
-            let topBarBounds = CGRect(x: self.view.bounds.origin.x, y: self.view.bounds.origin.y, width: self.view.bounds.size.width, height: TOP_BAR_HEIGHT)
-            self._topBar = TopBarView(frame: topBarBounds, withMainTitle: "Live Streams - \(_game!.getName())", backButtonTitle : "Games") {
-                //This is the callback that gets called on back button exit
-                self.dismissViewControllerAnimated(true, completion: nil)
-            }
-            self._topBar?.backgroundColor = UIColor.init(white: 0.5, alpha: 1)
-            
-            self.view.addSubview(self._topBar!)
-        }
-        
     }
     
     override func viewDidLoad() {

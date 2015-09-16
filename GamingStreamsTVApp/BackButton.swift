@@ -21,7 +21,7 @@ class BackButton : UIView {
         super.init(frame: frame)
         
         //UI Configuration
-        let font = UIFont(name: "Helvetica", size: 30)
+        let font = UIFont.systemFontOfSize(30)
         let maxLabelSize = CGSize(width: frame.width * 0.9, height: frame.height)
         let labelBounds = CGRect(origin: CGPoint(x: 0,y: 0), size: maxLabelSize)
         
