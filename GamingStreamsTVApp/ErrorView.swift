@@ -85,7 +85,7 @@ class ErrorView : UIView {
         CGPathAddLineToPoint(pathRef, nil, 24.575, 31.95)
         CGPathCloseSubpath(pathRef)
         
-        CGContextSetRGBFillColor(ctx, 0, 0, 0, 1)
+        CGContextSetFillColorWithColor(ctx, color.CGColor);
         CGContextAddPath(ctx, pathRef)
         CGContextFillPath(ctx)
         
