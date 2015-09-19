@@ -15,10 +15,13 @@ class GameCellView : UICollectionViewCell {
     private var _image : UIImage?
     private var _imageView : UIImageView?
     private var _activityIndicator : UIActivityIndicatorView?
+    private var _gameNameLabel : UILabel?
+    private var _viewCountLabel : UILabel?
     
     override init(frame: CGRect) {
         super.init(frame: frame);
-        self._imageView = UIImageView(frame: self.bounds);
+        let imageViewFrame = CGRect(x: 0, y: 0, width: self.bounds.width, height: self.bounds.height-80)
+        self._imageView = UIImageView(frame: imageViewFrame);
         self._imageView!.adjustsImageWhenAncestorFocused = true;
         self._imageView!.layer.cornerRadius = 10
         self._imageView!.backgroundColor = UIColor(white: 0.25, alpha: 0.7)
@@ -27,16 +30,19 @@ class GameCellView : UICollectionViewCell {
         self._activityIndicator?.activityIndicatorViewStyle = UIActivityIndicatorViewStyle.WhiteLarge
         self._activityIndicator?.startAnimating()
         
+        self._gameNameLabel = UILabel(frame: CGRect(x: 0,y: self.bounds.height-80, width: self.bounds.size.width, height: 40))
+        self._viewCountLabel = UILabel(frame: CGRect(x: 0,y: self.bounds.height-40, width: self.bounds.size.width, height: 40))
+        self._gameNameLabel?.alpha = 0;
+        self._viewCountLabel?.alpha = 0;
+        self._gameNameLabel?.font = UIFont.systemFontOfSize(30, weight: UIFontWeightSemibold)
+        self._viewCountLabel?.font = UIFont.systemFontOfSize(30, weight: UIFontWeightThin)
+        self._gameNameLabel?.textColor = UIColor.whiteColor()
+        self._viewCountLabel?.textColor = UIColor.whiteColor()
+        
         self._imageView?.addSubview(self._activityIndicator!)
-        self.addSubview(self._imageView!);
-    }
-    convenience init() {
-        self.init();
-    }
-    
-    convenience init(game : TwitchGame) {
-        self.init();
-        _game = game;
+        self.contentView.addSubview(self._imageView!)
+        self.contentView.addSubview(_gameNameLabel!)
+        self.contentView.addSubview(_viewCountLabel!)
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -45,6 +51,8 @@ class GameCellView : UICollectionViewCell {
     
     func setGame(game : TwitchGame) {
         _game = game;
+        _gameNameLabel!.text = game.name
+        _viewCountLabel?.text = "\(game.viewers) viewers"
         self.assignImageAndDisplay();
     }
     func getGame() -> TwitchGame? {
@@ -53,7 +61,7 @@ class GameCellView : UICollectionViewCell {
     
     private func assignImageAndDisplay() {
         
-        self.downloadImageWithSize(self.frame.size) {
+        self.downloadImageWithSize(self._imageView!.bounds.size) {
             (image, error) in
             
             if(error != nil || image == nil) {
@@ -98,6 +106,34 @@ class GameCellView : UICollectionViewCell {
                     task.resume();
             }
         }
+    }
+    
+    override func didUpdateFocusInContext(context: UIFocusUpdateContext, withAnimationCoordinator coordinator: UIFocusAnimationCoordinator) {
+        super.didUpdateFocusInContext(context, withAnimationCoordinator: coordinator)
+        if(context.nextFocusedView == self){
+            coordinator.addCoordinatedAnimations({
+                self._gameNameLabel?.center.y += 40
+                self._viewCountLabel?.center.y += 40
+                self._gameNameLabel?.alpha = 1;
+                self._viewCountLabel?.alpha = 1;
+                self.layoutIfNeeded()
+                
+                },
+                completion: nil
+            )
+        }
+        else if(context.previouslyFocusedView == self) {
+            coordinator.addCoordinatedAnimations({
+                self._gameNameLabel?.center.y -= 40
+                self._viewCountLabel?.center.y -= 40
+                self._gameNameLabel?.alpha = 0;
+                self._viewCountLabel?.alpha = 0;
+                self.layoutIfNeeded()
+                },
+                completion: nil
+            )
+        }
+        
     }
 }
 

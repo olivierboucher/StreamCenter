@@ -131,7 +131,7 @@ extension GamesViewController : UICollectionViewDelegateFlowLayout {
         layout collectionViewLayout: UICollectionViewLayout,
         sizeForItemAtIndexPath indexPath: NSIndexPath) -> CGSize {
             let width = self.view.bounds.width / CGFloat(NUM_COLUMNS) - CGFloat(ITEMS_INSETS_X * 2);
-            let height = width * 1.39705882353;
+            let height = (width * 1.39705882353) + 80;
             
         return CGSize(width: width, height: height)
     }
