@@ -74,7 +74,7 @@ class StreamCellView : UICollectionViewCell {
     
     private func downloadImageWithSize(size : CGSize, completionHandler : (image : UIImage?, error : NSError?) -> ()) {
         
-        if let imgUrlTemplate = _stream?.getPreviews()["template"] as? String {
+        if let imgUrlTemplate = _stream?.preview["template"] as? String {
             if let imgUrlString : String? = imgUrlTemplate.stringByReplacingOccurrencesOfString("{width}", withString: "\(Int(size.width))")
                 .stringByReplacingOccurrencesOfString("{height}", withString: "\(Int(size.height))") {
                     //Now that we have our correct template, we download the image

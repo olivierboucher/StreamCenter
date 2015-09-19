@@ -18,7 +18,7 @@ class VideoViewController : UIViewController {
         self.init(nibName: nil, bundle: nil);
         self._stream = stream;
         
-        TwitchApi.getStreamsForChannel(_stream!.getChannel().getName()) {
+        TwitchApi.getStreamsForChannel(_stream!.channel.name) {
             (streams, error) in
             
             if(error != nil) {
@@ -27,7 +27,7 @@ class VideoViewController : UIViewController {
             
             if(streams != nil) {
                 let streamObject = streams?.objectAtIndex(0) as! TwitchStreamVideo
-                let streamAsset = AVURLAsset(URL: streamObject.getUrl()!)
+                let streamAsset = AVURLAsset(URL: streamObject.url!)
                 let streamItem = AVPlayerItem(asset: streamAsset)
                 
                 self._videoPlayer = AVPlayer(playerItem: streamItem)

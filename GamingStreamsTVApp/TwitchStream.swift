@@ -9,27 +9,19 @@
 import Foundation
 
 class TwitchStream {
-    private var _id : Int;
-    private var _gameName : String;
-    private var _viewers : Int;
-    private var _videoHeight : Int;
-    private var _preview : NSDictionary;
-    private var _channel : TwitchChannel;
+    private(set) var id : Int;
+    private(set) var gameName : String;
+    private(set) var viewers : Int;
+    private(set) var videoHeight : Int;
+    private(set) var preview : NSDictionary;
+    private(set) var channel : TwitchChannel;
     
     init(id : Int, gameName : String, viewers : Int, videoHeight : Int, preview : NSDictionary, channel : TwitchChannel) {
-        _id = id;
-        _gameName = gameName;
-        _viewers = viewers;
-        _videoHeight = videoHeight;
-        _preview = preview;
-        _channel = channel;
-    }
-    
-    func getPreviews() ->NSDictionary {
-        return self._preview
-    }
-    
-    func getChannel() -> TwitchChannel {
-        return self._channel
+        self.id = id;
+        self.gameName = gameName;
+        self.viewers = viewers;
+        self.videoHeight = videoHeight;
+        self.preview = preview;
+        self.channel = channel;
     }
 }

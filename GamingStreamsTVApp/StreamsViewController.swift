@@ -36,7 +36,7 @@ class StreamsViewController : UIViewController {
             self.view.addSubview(_loadingView!)
         }
         
-        TwitchApi.getTopStreamsForGameWithOffset(self._game!.getName(), offset: 0, limit: 20) {
+        TwitchApi.getTopStreamsForGameWithOffset(self._game!.name, offset: 0, limit: 20) {
             (streams, error) in
             
             if(error != nil){
@@ -47,7 +47,7 @@ class StreamsViewController : UIViewController {
                 dispatch_async(dispatch_get_main_queue(),{
                     if((self._topBar == nil) || !(self._topBar!.isDescendantOfView(self.view))) {
                         let topBarBounds = CGRect(x: self.view.bounds.origin.x, y: self.view.bounds.origin.y, width: self.view.bounds.size.width, height: self.TOP_BAR_HEIGHT)
-                        self._topBar = TopBarView(frame: topBarBounds, withMainTitle: "Live Streams - \(self._game!.getName())", backButtonTitle : "Games") {
+                        self._topBar = TopBarView(frame: topBarBounds, withMainTitle: "Live Streams - \(self._game!.name)", backButtonTitle : "Games") {
                             //This is the callback that gets called on back button exit
                             self.dismissViewControllerAnimated(true, completion: nil)
                         }

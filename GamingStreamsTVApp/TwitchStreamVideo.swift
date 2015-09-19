@@ -10,25 +10,13 @@ import Foundation
 
 class TwitchStreamVideo {
     
-    private var _quality : String?;
-    private var _url : NSURL?;
-    private var _codecs : String?;
+    private(set) var quality : String?;
+    private(set) var url : NSURL?;
+    private(set) var codecs : String?;
     
     init(quality : String, url : NSURL, codecs : String) {
-        _quality = quality;
-        _url = url;
-        _codecs = codecs;
-    }
-    
-    func getQuality() -> String? {
-        return _quality;
-    }
-    
-    func getUrl() -> NSURL? {
-        return _url;
-    }
-    
-    func getCodecs() -> String? {
-        return _codecs;
+        self.quality = quality;
+        self.url = url;
+        self.codecs = codecs;
     }
 }

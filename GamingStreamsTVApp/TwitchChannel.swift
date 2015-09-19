@@ -10,37 +10,35 @@ import Foundation
 
 
 class TwitchChannel {
-    private var _id : Int;
-    private var _name : String;
-    private var _displayName : String
-    private var _links : NSDictionary;
-    private var _broadcasterLanguage : String?;
-    private var _language : String;
-    private var _gameName : String;
-    private var _logo : String?;
-    private var _status : String;
-    private var _videoBanner : String?;
-    private var _lastUpdate : NSDate;
-    private var _followers : Int;
-    private var _views : Int;
+    private(set) var id : Int;
+    private(set) var name : String;
+    private(set) var displayName : String
+    private(set) var links : NSDictionary;
+    private(set) var broadcasterLanguage : String?;
+    private(set) var language : String;
+    private(set) var gameName : String;
+    private(set) var logo : String?;
+    private(set) var status : String;
+    private(set) var videoBanner : String?;
+    private(set) var lastUpdate : NSDate;
+    private(set) var followers : Int;
+    private(set) var views : Int;
     
-    init(id : Int, name : String, displayName : String, links : NSDictionary, broadcasterLanguage : String?, language : String, gameName : String, logo : String?, status : String, videoBanner : String?, lastUpdate : NSDate, followers : Int, views : Int) {
-        _id = id;
-        _name = name;
-        _displayName = displayName;
-        _links = links;
-        _broadcasterLanguage = broadcasterLanguage;
-        _language = language;
-        _gameName = gameName;
-        _logo = logo;
-        _status = status;
-        _videoBanner = videoBanner;
-        _lastUpdate = lastUpdate;
-        _followers = followers;
-        _views = views;
-    }
-    
-    func getName() -> String {
-        return self._name
+    init(id : Int, name : String, displayName : String, links : NSDictionary, broadcasterLanguage : String?,
+        language : String, gameName : String, logo : String?, status : String, videoBanner : String?,
+        lastUpdate : NSDate, followers : Int, views : Int) {
+        self.id = id;
+        self.name = name;
+        self.displayName = displayName;
+        self.links = links;
+        self.broadcasterLanguage = broadcasterLanguage;
+        self.language = language;
+        self.gameName = gameName;
+        self.logo = logo;
+        self.status = status;
+        self.videoBanner = videoBanner;
+        self.lastUpdate = lastUpdate;
+        self.followers = followers;
+        self.views = views;
     }
 }
