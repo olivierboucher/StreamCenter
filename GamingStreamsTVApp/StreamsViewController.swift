@@ -20,6 +20,7 @@ class StreamsViewController : UIViewController {
     private var _topBar : TopBarView?
     private var _collectionView : UICollectionView?;
     private var _loadingView : LoadingView?
+    private var _errorView : ErrorView?
     private var _streams : NSArray?;
     
     convenience init(game : TwitchGame){
@@ -39,10 +40,21 @@ class StreamsViewController : UIViewController {
         TwitchApi.getTopStreamsForGameWithOffset(self._game!.name, offset: 0, limit: 20) {
             (streams, error) in
             
-            if(error != nil){
-                NSLog("Error loading top streams for game");
+            if(error != nil || streams == nil){
+                dispatch_async(dispatch_get_main_queue(),{
+                    if(self._errorView == nil){
+                        if((self._loadingView != nil) && (self._loadingView!.isDescendantOfView(self.view))){
+                            self._loadingView?.removeFromSuperview()
+                            self._loadingView = nil
+                        }
+                        let errorViewFrame = CGRect(x: 0, y: 0, width: 300, height: 300)
+                        self._errorView = ErrorView(frame: errorViewFrame, andTitle: "Error loading streams list.\nPlease check your internet connection.")
+                        self._errorView?.center = CGPoint(x: self.view.bounds.width/2, y: self.view.bounds.height/2)
+                        self.view.addSubview(self._errorView!)
+                    }
+                });
             }
-            if(streams != nil) {
+            else {
                 self._streams = streams!
                 dispatch_async(dispatch_get_main_queue(),{
                     if((self._topBar == nil) || !(self._topBar!.isDescendantOfView(self.view))) {
@@ -58,6 +70,10 @@ class StreamsViewController : UIViewController {
                     if((self._loadingView != nil) && (self._loadingView!.isDescendantOfView(self.view))){
                         self._loadingView?.removeFromSuperview()
                         self._loadingView = nil
+                    }
+                    if((self._errorView != nil) && (self._errorView!.isDescendantOfView(self.view))){
+                        self._errorView?.removeFromSuperview()
+                        self._errorView = nil
                     }
                     self.displayCollectionView();
                 })

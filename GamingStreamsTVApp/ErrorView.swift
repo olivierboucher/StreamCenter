@@ -10,8 +10,27 @@ import Foundation
 
 class ErrorView : UIView {
     
-    override init(frame: CGRect) {
+    private var _imageView : UIImageView?
+    private var _label : UILabel?
+    
+    init(frame: CGRect, andTitle title : String) {
         super.init(frame: frame)
+        
+        let imageViewBounds = CGRect(x: 0, y: 0, width: self.bounds.width, height: self.bounds.width/1.333333333)
+        _imageView = UIImageView(frame: imageViewBounds)
+        _imageView?.image = getErrorImageOfColor(UIColor.whiteColor())
+        
+        let labelBounds = CGRect(x: 0, y: imageViewBounds.height, width: imageViewBounds.width, height: self.bounds.height - imageViewBounds.height)
+        _label = UILabel(frame: labelBounds)
+        _label?.text = title
+        _label?.textColor = UIColor.whiteColor()
+        _label?.textAlignment = NSTextAlignment.Center
+        _label?.lineBreakMode = NSLineBreakMode.ByWordWrapping
+        _label?.numberOfLines = 0
+        _label?.font = _label?.font.fontWithSize(25)
+        
+        self.addSubview(_imageView!)
+        self.addSubview(_label!)
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -20,78 +39,58 @@ class ErrorView : UIView {
     
     private func getErrorImageOfColor(color : UIColor) -> UIImage {
         
-        let size = CGSizeMake(51, 38)
+        let size = CGSizeMake(300, 225)
         UIGraphicsBeginImageContextWithOptions(size, false, 0)
         let ctx = UIGraphicsGetCurrentContext()
-        
+
         let pathRef = CGPathCreateMutable()
-        CGPathMoveToPoint(pathRef, nil, 17.848, 30.1)
-        CGPathAddLineToPoint(pathRef, nil, 9.78, 30.1)
-        CGPathAddCurveToPoint(pathRef, nil, 5.701, 30.1, 2.375, 26.787, 2.375, 22.7)
-        CGPathAddCurveToPoint(pathRef, nil, 2.375, 19.194, 4.826, 16.247, 8.112, 15.489)
-        CGPathAddLineToPoint(pathRef, nil, 8.112, 15.489)
-        CGPathAddCurveToPoint(pathRef, nil, 7.989, 14.828, 7.925, 14.147, 7.925, 13.45)
-        CGPathAddCurveToPoint(pathRef, nil, 7.925, 7.32, 12.895, 2.35, 19.025, 2.35)
-        CGPathAddCurveToPoint(pathRef, nil, 23.864, 2.35, 27.979, 5.446, 29.499, 9.765)
-        CGPathAddCurveToPoint(pathRef, nil, 30.931, 8.599, 32.759, 7.9, 34.75, 7.9)
-        CGPathAddCurveToPoint(pathRef, nil, 39.113, 7.9, 42.692, 11.256, 43.046, 15.528)
-        CGPathAddLineToPoint(pathRef, nil, 43.046, 15.528)
-        CGPathAddCurveToPoint(pathRef, nil, 46.247, 16.342, 48.625, 19.244, 48.625, 22.7)
-        CGPathAddCurveToPoint(pathRef, nil, 48.625, 26.779, 45.31, 30.1, 41.22, 30.1)
-        CGPathAddLineToPoint(pathRef, nil, 33.152, 30.1)
-        CGPathAddLineToPoint(pathRef, nil, 25.5, 17.15)
-        CGPathAddLineToPoint(pathRef, nil, 17.848, 30.1)
-        CGPathAddLineToPoint(pathRef, nil, 17.848, 30.1)
-        CGPathAddLineToPoint(pathRef, nil, 17.848, 30.1)
+        CGPathMoveToPoint(pathRef, nil, 215.577, 189.5)
+        CGPathAddLineToPoint(pathRef, nil, 243.506, 189.5)
+        CGPathAddCurveToPoint(pathRef, nil, 273.878, 189.5, 298.5, 164.814, 298.5, 134.5)
+        CGPathAddCurveToPoint(pathRef, nil, 298.5, 111.439, 284.346, 91.694, 264.211, 83.521)
+        CGPathAddLineToPoint(pathRef, nil, 264.211, 83.521)
+        CGPathAddCurveToPoint(pathRef, nil, 258.46, 56.095, 234.135, 35.5, 205, 35.5)
+        CGPathAddCurveToPoint(pathRef, nil, 195.508, 35.5, 186.527, 37.686, 178.532, 41.582)
+        CGPathAddCurveToPoint(pathRef, nil, 165.303, 18.246, 140.24, 2.5, 111.5, 2.5)
+        CGPathAddCurveToPoint(pathRef, nil, 68.974, 2.5, 34.5, 36.974, 34.5, 79.5)
+        CGPathAddCurveToPoint(pathRef, nil, 34.5, 81.02, 34.544, 82.529, 34.631, 84.027)
+        CGPathAddLineToPoint(pathRef, nil, 34.631, 84.027)
+        CGPathAddCurveToPoint(pathRef, nil, 15.136, 92.498, 1.5, 111.94, 1.5, 134.5)
+        CGPathAddCurveToPoint(pathRef, nil, 1.5, 164.876, 26.057, 189.5, 56.494, 189.5)
+        CGPathAddLineToPoint(pathRef, nil, 84.423, 189.5)
+        CGPathAddLineToPoint(pathRef, nil, 150, 79.5)
+        CGPathAddLineToPoint(pathRef, nil, 215.577, 189.5)
+        CGPathAddLineToPoint(pathRef, nil, 215.577, 189.5)
+        CGPathAddLineToPoint(pathRef, nil, 215.577, 189.5)
         CGPathCloseSubpath(pathRef)
-        CGPathMoveToPoint(pathRef, nil, 34.245, 31.95)
-        CGPathAddLineToPoint(pathRef, nil, 41.226, 31.95)
-        CGPathAddCurveToPoint(pathRef, nil, 46.334, 31.95, 50.475, 27.798, 50.475, 22.7)
-        CGPathAddCurveToPoint(pathRef, nil, 50.475, 18.822, 48.095, 15.501, 44.708, 14.126)
-        CGPathAddLineToPoint(pathRef, nil, 44.708, 14.126)
-        CGPathAddCurveToPoint(pathRef, nil, 43.741, 9.514, 39.65, 6.05, 34.75, 6.05)
-        CGPathAddCurveToPoint(pathRef, nil, 33.154, 6.05, 31.643, 6.418, 30.299, 7.073)
-        CGPathAddCurveToPoint(pathRef, nil, 28.074, 3.148, 23.859, 0.5, 19.025, 0.5)
-        CGPathAddCurveToPoint(pathRef, nil, 11.873, 0.5, 6.075, 6.298, 6.075, 13.45)
-        CGPathAddCurveToPoint(pathRef, nil, 6.075, 13.706, 6.082, 13.959, 6.097, 14.211)
-        CGPathAddLineToPoint(pathRef, nil, 6.097, 14.211)
-        CGPathAddCurveToPoint(pathRef, nil, 2.818, 15.636, 0.525, 18.906, 0.525, 22.7)
-        CGPathAddCurveToPoint(pathRef, nil, 0.525, 27.809, 4.655, 31.95, 9.774, 31.95)
-        CGPathAddLineToPoint(pathRef, nil, 16.755, 31.95)
-        CGPathAddLineToPoint(pathRef, nil, 13.475, 37.5)
-        CGPathAddLineToPoint(pathRef, nil, 37.525, 37.5)
-        CGPathAddLineToPoint(pathRef, nil, 34.245, 31.95)
-        CGPathAddLineToPoint(pathRef, nil, 34.245, 31.95)
-        CGPathAddLineToPoint(pathRef, nil, 34.245, 31.95)
+        CGPathMoveToPoint(pathRef, nil, 150, 101.5)
+        CGPathAddLineToPoint(pathRef, nil, 221.5, 222.5)
+        CGPathAddLineToPoint(pathRef, nil, 78.5, 222.5)
+        CGPathAddLineToPoint(pathRef, nil, 150, 101.5)
+        CGPathAddLineToPoint(pathRef, nil, 150, 101.5)
         CGPathCloseSubpath(pathRef)
-        CGPathMoveToPoint(pathRef, nil, 25.5, 20.85)
-        CGPathAddLineToPoint(pathRef, nil, 34.287, 35.65)
-        CGPathAddLineToPoint(pathRef, nil, 16.713, 35.65)
-        CGPathAddLineToPoint(pathRef, nil, 25.5, 20.85)
-        CGPathAddLineToPoint(pathRef, nil, 25.5, 20.85)
+        CGPathMoveToPoint(pathRef, nil, 144.5, 145.5)
+        CGPathAddLineToPoint(pathRef, nil, 144.5, 178.5)
+        CGPathAddLineToPoint(pathRef, nil, 155.5, 178.5)
+        CGPathAddLineToPoint(pathRef, nil, 155.5, 145.5)
+        CGPathAddLineToPoint(pathRef, nil, 144.5, 145.5)
+        CGPathAddLineToPoint(pathRef, nil, 144.5, 145.5)
         CGPathCloseSubpath(pathRef)
-        CGPathMoveToPoint(pathRef, nil, 24.575, 24.55)
-        CGPathAddLineToPoint(pathRef, nil, 24.575, 30.1)
-        CGPathAddLineToPoint(pathRef, nil, 26.425, 30.1)
-        CGPathAddLineToPoint(pathRef, nil, 26.425, 24.55)
-        CGPathAddLineToPoint(pathRef, nil, 24.575, 24.55)
-        CGPathAddLineToPoint(pathRef, nil, 24.575, 24.55)
-        CGPathCloseSubpath(pathRef)
-        CGPathMoveToPoint(pathRef, nil, 24.575, 31.95)
-        CGPathAddLineToPoint(pathRef, nil, 24.575, 33.8)
-        CGPathAddLineToPoint(pathRef, nil, 26.425, 33.8)
-        CGPathAddLineToPoint(pathRef, nil, 26.425, 31.95)
-        CGPathAddLineToPoint(pathRef, nil, 24.575, 31.95)
-        CGPathAddLineToPoint(pathRef, nil, 24.575, 31.95)
+        CGPathMoveToPoint(pathRef, nil, 144.5, 189.5)
+        CGPathAddLineToPoint(pathRef, nil, 144.5, 200.5)
+        CGPathAddLineToPoint(pathRef, nil, 155.5, 200.5)
+        CGPathAddLineToPoint(pathRef, nil, 155.5, 189.5)
+        CGPathAddLineToPoint(pathRef, nil, 144.5, 189.5)
+        CGPathAddLineToPoint(pathRef, nil, 144.5, 189.5)
         CGPathCloseSubpath(pathRef)
         
         CGContextSetFillColorWithColor(ctx, color.CGColor);
         CGContextAddPath(ctx, pathRef)
         CGContextFillPath(ctx)
         
-        let img = UIGraphicsGetImageFromCurrentImageContext();
-        UIGraphicsEndImageContext();
+        let img = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
         
-        return img;
+        return img
     }
 }

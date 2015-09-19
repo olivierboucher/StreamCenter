@@ -18,6 +18,7 @@ class GamesViewController : UIViewController {
     private var _topBar : TopBarView?
     private var _collectionView : UICollectionView?
     private var _loadingView : LoadingView?
+    private var _errorView : ErrorView?
     private var _games : NSArray?
     
     convenience init(){
@@ -37,12 +38,21 @@ class GamesViewController : UIViewController {
         TwitchApi.getTopGamesWithOffset(0, limit: 17) {
             (games, error) in
             
-            if(error != nil){
-                NSLog("Error loading top games");
-                //TODO : Display error message
+            if(error != nil || games == nil || true){
+                dispatch_async(dispatch_get_main_queue(),{
+                    if(self._errorView == nil){
+                        if((self._loadingView != nil) && (self._loadingView!.isDescendantOfView(self.view))){
+                            self._loadingView?.removeFromSuperview()
+                            self._loadingView = nil
+                        }
+                        let errorViewFrame = CGRect(x: 0, y: 0, width: 400, height: 400)
+                        self._errorView = ErrorView(frame: errorViewFrame, andTitle: "Error loading game list.\nPlease check your internet connection.")
+                        self._errorView?.center = CGPoint(x: self.view.bounds.width/2, y: self.view.bounds.height/2)
+                        self.view.addSubview(self._errorView!)
+                    }
+                });
             }
-            
-            if(games != nil){
+            else {
                 self._games = games!;
                 dispatch_async(dispatch_get_main_queue(),{
                     if((self._topBar == nil) || !(self._topBar!.isDescendantOfView(self.view))) {
@@ -56,18 +66,22 @@ class GamesViewController : UIViewController {
                         self._loadingView?.removeFromSuperview()
                         self._loadingView = nil
                     }
+                    if((self._errorView != nil) && (self._errorView!.isDescendantOfView(self.view))){
+                        self._errorView?.removeFromSuperview()
+                        self._errorView = nil
+                    }
                     self.displayCollectionView();
                 })
             }
         }
     }
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
         
     }
-
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
@@ -99,20 +113,20 @@ class GamesViewController : UIViewController {
         }
     }
     
-//    override func didUpdateFocusInContext(context: UIFocusUpdateContext, withAnimationCoordinator coordinator: UIFocusAnimationCoordinator) {
-//        super.didUpdateFocusInContext(context, withAnimationCoordinator: coordinator)
-//        
-//        let view1 = context.previouslyFocusedView as? GameCellView
-//        let view2 = context.nextFocusedView as? GameCellView
-//
-//        if(view1 != nil) {
-//            NSLog("Prev : %@", (view1!.getGame()?.getName())!)
-//        }
-//        if(view2 != nil) {
-//            NSLog("Next : %@", (view2!.getGame()?.getName())!)
-//        }
-//    }
-
+    //    override func didUpdateFocusInContext(context: UIFocusUpdateContext, withAnimationCoordinator coordinator: UIFocusAnimationCoordinator) {
+    //        super.didUpdateFocusInContext(context, withAnimationCoordinator: coordinator)
+    //
+    //        let view1 = context.previouslyFocusedView as? GameCellView
+    //        let view2 = context.nextFocusedView as? GameCellView
+    //
+    //        if(view1 != nil) {
+    //            NSLog("Prev : %@", (view1!.getGame()?.getName())!)
+    //        }
+    //        if(view2 != nil) {
+    //            NSLog("Next : %@", (view2!.getGame()?.getName())!)
+    //        }
+    //    }
+    
 }
 
 extension GamesViewController : UICollectionViewDelegate {
@@ -133,7 +147,7 @@ extension GamesViewController : UICollectionViewDelegateFlowLayout {
             let width = self.view.bounds.width / CGFloat(NUM_COLUMNS) - CGFloat(ITEMS_INSETS_X * 2);
             let height = (width * 1.39705882353) + 80;
             
-        return CGSize(width: width, height: height)
+            return CGSize(width: width, height: height)
     }
     
     func collectionView(collectionView: UICollectionView,
