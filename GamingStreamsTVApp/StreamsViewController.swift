@@ -30,9 +30,11 @@ class StreamsViewController : UIViewController {
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
         
-        self._loadingView = LoadingView(frame: CGRect(x: 0, y: 0, width: self.view.bounds.width/5, height: self.view.bounds.height/5))
-        self._loadingView?.center = CGPoint(x: self.view.bounds.width/2, y: self.view.bounds.height/2)
-        self.view.addSubview(_loadingView!)
+        if(self._collectionView == nil){
+            self._loadingView = LoadingView(frame: CGRect(x: 0, y: 0, width: self.view.bounds.width/5, height: self.view.bounds.height/5))
+            self._loadingView?.center = CGPoint(x: self.view.bounds.width/2, y: self.view.bounds.height/2)
+            self.view.addSubview(_loadingView!)
+        }
         
         TwitchApi.getTopStreamsForGameWithOffset(self._game!.getName(), offset: 0, limit: 20) {
             (streams, error) in
