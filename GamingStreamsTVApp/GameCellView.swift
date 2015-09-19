@@ -133,7 +133,6 @@ class GameCellView : UICollectionViewCell {
                 completion: nil
             )
         }
-        
     }
 }
 

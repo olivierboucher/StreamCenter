@@ -15,20 +15,39 @@ class StreamCellView : UICollectionViewCell {
     private var _image : UIImage?
     private var _imageView : UIImageView?
     private var _activityIndicator : UIActivityIndicatorView?
+    private var _streamStatusLabel : UILabel?
+    private var _viewersInfoLabel : UILabel?
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        self._imageView = UIImageView(frame: self.bounds)
+//        self.layer.borderColor = UIColor.redColor().CGColor
+//        self.layer.borderWidth = 1
+        let imageViewBounds = CGRect(x: 0, y: 40, width: self.bounds.width, height: self.bounds.height - 80)
+        self._imageView = UIImageView(frame: imageViewBounds)
         self._imageView!.adjustsImageWhenAncestorFocused = true
         self._imageView!.layer.cornerRadius = 10
         self._imageView!.backgroundColor = UIColor(white: 0.25, alpha: 0.7)
+        
+//        self._imageView!.layer.borderColor = UIColor.greenColor().CGColor
+//        self._imageView!.layer.borderWidth = 1
         
         self._activityIndicator = UIActivityIndicatorView(frame: self.bounds)
         self._activityIndicator?.activityIndicatorViewStyle = UIActivityIndicatorViewStyle.WhiteLarge
         self._activityIndicator?.startAnimating()
         
+        self._streamStatusLabel = UILabel(frame: CGRect(x: 0,y: 0, width: self.bounds.width, height: 40))
+        self._viewersInfoLabel = UILabel(frame: CGRect(x: 0,y: self.bounds.height-40, width: self.bounds.width, height: 40))
+        self._streamStatusLabel?.alpha = 0;
+        self._viewersInfoLabel?.alpha = 0;
+        self._streamStatusLabel?.font = UIFont.systemFontOfSize(30, weight: UIFontWeightSemibold)
+        self._viewersInfoLabel?.font = UIFont.systemFontOfSize(30, weight: UIFontWeightThin)
+        self._streamStatusLabel?.textColor = UIColor.blackColor()
+        self._viewersInfoLabel?.textColor = UIColor.whiteColor()
+        
         self._imageView?.addSubview(self._activityIndicator!)
-        self.addSubview(self._imageView!);
+        self.contentView.addSubview(self._imageView!)
+        self.contentView.addSubview(_streamStatusLabel!)
+        self.contentView.addSubview(_viewersInfoLabel!)
     }
     convenience init() {
         self.init()
@@ -45,12 +64,14 @@ class StreamCellView : UICollectionViewCell {
     
     func setStream(stream : TwitchStream) {
         self._stream = stream
+        self._streamStatusLabel?.text = stream.channel.status
+        self._viewersInfoLabel?.text = "\(stream.viewers) viewers on \(stream.channel.name)"
         self.assignImageAndDisplay()
     }
     
     private func assignImageAndDisplay() {
         
-        self.downloadImageWithSize(self.frame.size) {
+        self.downloadImageWithSize(self._imageView!.bounds.size) {
             (image, error) in
             
             if(error != nil || image == nil) {
@@ -90,6 +111,33 @@ class StreamCellView : UICollectionViewCell {
                     };
                     task.resume();
             }
+        }
+    }
+    
+    override func didUpdateFocusInContext(context: UIFocusUpdateContext, withAnimationCoordinator coordinator: UIFocusAnimationCoordinator) {
+        super.didUpdateFocusInContext(context, withAnimationCoordinator: coordinator)
+        if(context.nextFocusedView == self){
+            coordinator.addCoordinatedAnimations({
+                self._streamStatusLabel?.center.y -= 22
+                self._viewersInfoLabel?.center.y += 22
+                self._streamStatusLabel?.alpha = 1;
+                self._viewersInfoLabel?.alpha = 1;
+                self.layoutIfNeeded()
+                
+                },
+                completion: nil
+            )
+        }
+        else if(context.previouslyFocusedView == self) {
+            coordinator.addCoordinatedAnimations({
+                self._streamStatusLabel?.center.y += 22
+                self._viewersInfoLabel?.center.y -= 22
+                self._streamStatusLabel?.alpha = 0;
+                self._viewersInfoLabel?.alpha = 0;
+                self.layoutIfNeeded()
+                },
+                completion: nil
+            )
         }
     }
 

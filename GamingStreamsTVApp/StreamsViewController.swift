@@ -11,9 +11,9 @@ import Foundation
 
 class StreamsViewController : UIViewController {
     
-    private let NUM_COLUMNS = 4;
-    private let ITEMS_INSETS_X : CGFloat = 25;
-    private let ITEMS_INSETS_Y : CGFloat = 40;
+    private let NUM_COLUMNS = 3;
+    private let ITEMS_INSETS_X : CGFloat = 45;
+    private let ITEMS_INSETS_Y : CGFloat = 30;
     private let TOP_BAR_HEIGHT : CGFloat = 100;
     
     private var _game : TwitchGame?
@@ -113,7 +113,7 @@ extension StreamsViewController : UICollectionViewDelegateFlowLayout {
         layout collectionViewLayout: UICollectionViewLayout,
         sizeForItemAtIndexPath indexPath: NSIndexPath) -> CGSize {
             let width = self.view.bounds.width / CGFloat(NUM_COLUMNS) - CGFloat(ITEMS_INSETS_X * 2);
-            let height = width / 1.777777777;
+            let height = width / 1.777777777 + 80;
             
             return CGSize(width: width, height: height)
     }
