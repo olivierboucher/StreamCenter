@@ -38,7 +38,7 @@ class GamesViewController : UIViewController {
         TwitchApi.getTopGamesWithOffset(0, limit: 17) {
             (games, error) in
             
-            if(error != nil || games == nil || true){
+            if(error != nil || games == nil){
                 dispatch_async(dispatch_get_main_queue(),{
                     if(self._errorView == nil){
                         if((self._loadingView != nil) && (self._loadingView!.isDescendantOfView(self.view))){
