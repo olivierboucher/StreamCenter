@@ -21,6 +21,9 @@ class GamesViewController : UIViewController {
     private var _errorView : ErrorView?
     private var _games : NSArray?
     
+    private var _testChat : TwitchChatHandler?
+    
+    
     convenience init(){
         self.init(nibName: nil, bundle: nil);
     }
@@ -34,6 +37,22 @@ class GamesViewController : UIViewController {
             self._loadingView?.center = CGPoint(x: self.view.bounds.width/2, y: self.view.bounds.height/2)
             self.view.addSubview(_loadingView!)
         }
+//        //TESTS
+//        _testChat = TwitchChatHandler()
+//        
+//        _testChat?.recieveTextCallback =  {
+//            (prefix: String?, command: String , destination: String?, message: String?) in
+//            
+//            NSLog("S>C: P:\(prefix); C:\(command); D:\(destination); L:\(message)")
+//            
+//            return
+//        }
+//        _testChat?.doLoop()
+//        
+//        _testChat?.send("JOIN", destination: "#sodapoppin", message: nil)
+//        
+//        
+//        // TESTS END
         
         TwitchApi.getTopGamesWithOffset(0, limit: 17) {
             (games, error) in
