@@ -15,7 +15,7 @@ class TwitchChatHandler : IRCHandlerBase, TwitchChatMessageQueueDelegate {
     var messageQueue : TwitchChatMessageQueue?
     
     init() {
-        let queueAttr = dispatch_queue_attr_make_with_qos_class(DISPATCH_QUEUE_CONCURRENT, QOS_CLASS_BACKGROUND, 0)
+        let queueAttr = dispatch_queue_attr_make_with_qos_class(DISPATCH_QUEUE_SERIAL, QOS_CLASS_BACKGROUND, 0)
         opQueue = dispatch_queue_create("com.twitch.chathandler", queueAttr)
         
         super.init(host: "irc.twitch.tv", port: 6667, useSSL: false)
