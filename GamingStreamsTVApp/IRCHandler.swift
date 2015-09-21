@@ -86,7 +86,6 @@ class IRCHandlerBase: NSObject, NSStreamDelegate
             
             for string in inputStringLines
             {
-                NSLog(string)
                 var metadata : String?
                 var prefix: String?
                 var command: String = ""
@@ -107,27 +106,27 @@ class IRCHandlerBase: NSObject, NSStreamDelegate
                             let region = (string as NSString)
                             
                             let metadataRange = match.rangeAtIndex(1)
-                            if metadataRange.length > 0 {
+                            if metadataRange.length > 0 && (metadataRange.location + metadataRange.length) <= region.length {
                                 metadata = region.substringWithRange(metadataRange)
                             }
                             
                             let prefixRange = match.rangeAtIndex(2)
-                            if prefixRange.length > 0 {
+                            if prefixRange.length > 0 && (prefixRange.location + prefixRange.length) <= region.length {
                                 prefix = region.substringWithRange(prefixRange)
                             }
                             
                             let commandRange = match.rangeAtIndex(3)
-                            if commandRange.length > 0 {
+                            if commandRange.length > 0 && (commandRange.location + commandRange.length) <= region.length {
                                 command = region.substringWithRange(commandRange)
                             }
                             
                             let destinationRange = match.rangeAtIndex(4)
-                            if destinationRange.length > 0 {
+                            if destinationRange.length > 0 && (destinationRange.location + destinationRange.length) <= region.length {
                                 destination = region.substringWithRange(destinationRange)
                             }
                             
                             let messageRange = match.rangeAtIndex(5)
-                            if messageRange.length > 0 {
+                            if messageRange.length > 0 && (messageRange.location + messageRange.length) <= region.length {
                                 message = region.substringWithRange(messageRange)
                             }
                             

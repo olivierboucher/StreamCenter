@@ -13,6 +13,7 @@ protocol TwitchChatMessageQueueDelegate {
 }
 
 class TwitchChatMessageQueue {
+    let opQueue : dispatch_queue_t
     var processTimer : dispatch_source_t?
     let delegate : TwitchChatMessageQueueDelegate
     let messageQueue : NSQueue<TwitchChatMessage>
@@ -20,6 +21,8 @@ class TwitchChatMessageQueue {
     
     
     init(delegate : TwitchChatMessageQueueDelegate) {
+        let queueAttr = dispatch_queue_attr_make_with_qos_class(DISPATCH_QUEUE_SERIAL, QOS_CLASS_BACKGROUND, 1)
+        opQueue = dispatch_queue_create("com.twitch.chatmq", queueAttr)
         self.delegate = delegate
         self.messageQueue = NSQueue<TwitchChatMessage>()
         self.cachedEmotes = NSMutableDictionary()
