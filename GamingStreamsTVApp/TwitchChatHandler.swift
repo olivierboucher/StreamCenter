@@ -9,11 +9,15 @@
 import Foundation
 
 class TwitchChatHandler : IRCHandlerBase, TwitchChatMessageQueueDelegate {
+    var opQueue : dispatch_queue_t
     var loopTimer: dispatch_source_t?
     var isAnonymous : Bool = false
     var messageQueue : TwitchChatMessageQueue?
     
     init() {
+        let queueAttr = dispatch_queue_attr_make_with_qos_class(DISPATCH_QUEUE_CONCURRENT, QOS_CLASS_BACKGROUND, 0)
+        opQueue = dispatch_queue_create("com.twitch.chathandler", queueAttr)
+        
         super.init(host: "irc.twitch.tv", port: 6667, useSSL: false)
         
         self.messageQueue = TwitchChatMessageQueue(delegate: self)
@@ -43,7 +47,7 @@ class TwitchChatHandler : IRCHandlerBase, TwitchChatMessageQueueDelegate {
     }
     
     func startLoop() {
-        loopTimer = ConcurrencyHelpers.createDispatchTimer((1 * NSEC_PER_SEC)/2, leeway: (1 * NSEC_PER_SEC)/3, queue: dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), block: {
+        loopTimer = ConcurrencyHelpers.createDispatchTimer((1 * NSEC_PER_SEC)/2, leeway: (1 * NSEC_PER_SEC)/3, queue: opQueue, block: {
             super.doLoop()
         })
     }
