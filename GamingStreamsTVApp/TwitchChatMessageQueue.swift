@@ -13,6 +13,7 @@ protocol TwitchChatMessageQueueDelegate {
 }
 
 class TwitchChatMessageQueue {
+    var processTimer : dispatch_source_t?
     let delegate : TwitchChatMessageQueueDelegate
     let messageQueue : NSQueue<TwitchChatMessage>
     let cachedEmotes : NSMutableDictionary
@@ -26,6 +27,22 @@ class TwitchChatMessageQueue {
     
     func addNewMessage(message : TwitchChatMessage) {
         messageQueue.offer(message)
+    }
+    
+    func processAvailableMessages() {
+        
+    }
+    
+    func startProcessing() {
+        processTimer = ConcurrencyHelpers.createDispatchTimer((1 * NSEC_PER_SEC)/2, leeway: (1 * NSEC_PER_SEC)/2, queue: dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), block: {
+            self.processAvailableMessages()
+        })
+    }
+    
+    func stopProcessing() {
+        if processTimer != nil {
+            dispatch_suspend(self.processTimer!)
+        }
     }
     
 }
