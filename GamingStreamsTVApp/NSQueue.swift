@@ -9,21 +9,21 @@
 import Foundation
 
 class NSQueue<T : AnyObject> {
-    private let array : NSMutableArray
+    private var array : Array<T>
     
     init() {
-        array = NSMutableArray()
+        array = Array<T>()
     }
     
     func offer(element : T) {
-        array.addObject(element)
+        array.append(element)
     }
     
     func poll() -> AnyObject? {
         var element : AnyObject? = nil
         if array.count > 0 {
-            element = array.objectAtIndex(0)
-            array.removeObjectAtIndex(0)
+            element = array.first
+            array.removeFirst()
         }
 
         return element

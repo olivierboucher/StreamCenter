@@ -9,13 +9,15 @@
 import Foundation
 
 class TwitchChatMessage {
-    var rawSender : String
-    var rawMessage : String
-    var metadata : String
+    let rawSender : String
+    let rawMessage : String
+    let rawMetadata : String
+    
+    var emotes : Dictionary<String, [Range<Int>]> = Dictionary<String, [Range<Int>]>()
     
     init(rawMessage : String, rawSender : String, metadata : String) {
         self.rawMessage = rawMessage
         self.rawSender = rawSender
-        self.metadata = metadata
+        self.rawMetadata = metadata
     }
 }
