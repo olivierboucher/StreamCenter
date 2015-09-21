@@ -72,10 +72,10 @@ class StreamCellView : UICollectionViewCell {
     private func assignImageAndDisplay() {
         
         self.downloadImageWithSize(self._imageView!.bounds.size) {
-            (var image, error) in
-            image = nil
+            (image, error) in
             if(error != nil || image == nil) {
                 //TODO : Set error image, not available
+                NSLog("Error setting stream image")
             }
             else {
                 self._image = image!;

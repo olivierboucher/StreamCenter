@@ -8,33 +8,9 @@
 
 import Foundation
 
-protocol IRCHandlerProtocol
-{
-    var host: String { get }
-    var port: Int { get }
-    var useSSL: Bool { get }
-    var IRCBuffer: [UInt8] { get set }
-    
-    var commandHandlers: [String : IRCHandlerDelegate] { get set }
-    
-    var genericCredentials: (String? /* Password */, [String] /* Usernames to attempt */, String /* Computer username */, Bool /* Invisible */, String /* Real name */) { get }
-    
-    var loop: Bool { get set }
-    
-    var inputStream: NSInputStream? { get }
-    var onputStream: NSOutputStream? { get }
-    
-    func doLoop()
-    func send(command: String , destination: String?, message: String?)
-    
-    func connect()
-    func disconnect()
-    func receive(prefix: String?, command: String , destination: String?, message: String?)
-}
-
 protocol IRCHandlerDelegate
 {
-    func respond( target: IRCHandlerBase , prefix: String? , destination: String? , message: String? )
+    func respond(target: IRCHandlerBase , prefix: String? , destination: String? , message: String?, metadata: String?)
 }
 
 class IRCHandlerBase: NSObject, NSStreamDelegate
@@ -89,8 +65,7 @@ class IRCHandlerBase: NSObject, NSStreamDelegate
         outputStream!.write(&buffer, maxLength: fullCommand.utf8.count)
     }
     
-    func doLoop()
-    {
+    func doLoop(){
         if inputStream!.hasBytesAvailable
         {
             var inputStringLines : [String] = []
@@ -98,7 +73,7 @@ class IRCHandlerBase: NSObject, NSStreamDelegate
             {
                 let bytesRead = inputStream!.read(&IRCBuffer, maxLength: IRCBuffer.count)
                 
-                if(bytesRead >= 0){
+                if(bytesRead > 0){
                     let string = NSString(bytes: &IRCBuffer, length: IRCBuffer.count, encoding: NSUTF8StringEncoding)
                     let lines = string?.componentsSeparatedByString("\r\n")
                     inputStringLines.appendContentsOf(lines!)
@@ -106,14 +81,19 @@ class IRCHandlerBase: NSObject, NSStreamDelegate
                 
                 IRCBuffer = [UInt8](count: IRCBuffer.count, repeatedValue: 0)
             }
+            //Remove that fucking crap
+            inputStringLines.removeAtIndex(inputStringLines.count-1)
+            
             for string in inputStringLines
             {
+                NSLog(string)
+                var metadata : String?
                 var prefix: String?
                 var command: String = ""
                 var destination : String?
                 var message : String?
                 
-                let msgPattern = "([a-z0-9.@!_]+)?\\s([a-zA-Z0-9]+)?\\s(\\#*[a-z0-9]+)\\s:?(.+)?"
+                let msgPattern = "(.+\\s)?:([a-z0-9.@!_]+)?\\s([a-zA-Z0-9]+)?\\s(\\#*[a-z0-9]+)\\s:?(.+)?"
                 
                 var regex : NSRegularExpression?
                 do {
@@ -122,16 +102,37 @@ class IRCHandlerBase: NSObject, NSStreamDelegate
                     let matches = regex?.matchesInString(string, options: NSMatchingOptions.WithTransparentBounds, range: NSRange(location: 0, length: string.utf8.count))
                     if(matches != nil && matches?.count > 0){
                         let match = matches!.first!
-                        if(match.numberOfRanges == 5){
+
+                        if(match.numberOfRanges == 6){
                             let region = (string as NSString)
                             
-                            prefix = region.substringWithRange(match.rangeAtIndex(1))
-                            command = region.substringWithRange(match.rangeAtIndex(2))
-                            destination = region.substringWithRange(match.rangeAtIndex(3))
-                            message = region.substringWithRange(match.rangeAtIndex(4))
+                            let metadataRange = match.rangeAtIndex(1)
+                            if metadataRange.length > 0 {
+                                metadata = region.substringWithRange(metadataRange)
+                            }
+                            
+                            let prefixRange = match.rangeAtIndex(2)
+                            if prefixRange.length > 0 {
+                                prefix = region.substringWithRange(prefixRange)
+                            }
+                            
+                            let commandRange = match.rangeAtIndex(3)
+                            if commandRange.length > 0 {
+                                command = region.substringWithRange(commandRange)
+                            }
+                            
+                            let destinationRange = match.rangeAtIndex(4)
+                            if destinationRange.length > 0 {
+                                destination = region.substringWithRange(destinationRange)
+                            }
+                            
+                            let messageRange = match.rangeAtIndex(5)
+                            if messageRange.length > 0 {
+                                message = region.substringWithRange(messageRange)
+                            }
+                            
+                            receive(prefix, command: command , destination: destination, message: message, metadata : metadata)
                         }
-                        
-                        receive(prefix, command: command , destination: destination, message: message)
                     }
                     else {
                         //Check if it is a ping request
@@ -140,16 +141,16 @@ class IRCHandlerBase: NSObject, NSStreamDelegate
                             if let indexSemi = string.rangeOfString(":") {
                                 msg = string.substringFromIndex(indexSemi.startIndex)
                             }
-                            receive(nil, command: "PING", destination: nil, message: msg)
+                            receive(nil, command: "PING", destination: nil, message: msg, metadata: nil)
                         }
                     }
                     
                     
                 } catch let error as NSError {
+                    //TODO: Handling?
                     NSLog(error.localizedDescription)
                 }
             }
-            
         }
     }
     
@@ -189,13 +190,12 @@ class IRCHandlerBase: NSObject, NSStreamDelegate
         outputStream = nil
     }
     
-    func receive( prefix: String?, command: String , destination: String?, message: String?)
+    func receive( prefix: String?, command: String , destination: String?, message: String?, metadata: String?)
     {
         let handler = commandHandlers[command]
         if handler != nil
         {
-            handler!.respond(self, prefix: prefix, destination: destination , message: message)
+            handler!.respond(self, prefix: prefix, destination: destination , message: message, metadata: metadata)
         }
-
     }
 }

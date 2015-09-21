@@ -37,22 +37,23 @@ class GamesViewController : UIViewController {
             self._loadingView?.center = CGPoint(x: self.view.bounds.width/2, y: self.view.bounds.height/2)
             self.view.addSubview(_loadingView!)
         }
-//        //TESTS
-//        _testChat = TwitchChatHandler()
-//        
-//        _testChat?.recieveTextCallback =  {
-//            (prefix: String?, command: String , destination: String?, message: String?) in
-//            
-//            NSLog("S>C: P:\(prefix); C:\(command); D:\(destination); L:\(message)")
-//            
-//            return
-//        }
-//        _testChat?.doLoop()
-//        
-//        _testChat?.send("JOIN", destination: "#sodapoppin", message: nil)
-//        
-//        
-//        // TESTS END
+        //TESTS
+        
+        
+        //dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_LOW, 0), {
+            
+         //   });
+        self._testChat = TwitchChatHandler()
+        
+        self._testChat?.anonymousConnect()
+        self._testChat?.doLoop()
+        self._testChat?.send("JOIN", destination: "#sodapoppin", message: nil)
+        
+        //_testChat?.doLoop()
+        
+       
+        
+        // TESTS END
         
         TwitchApi.getTopGamesWithOffset(0, limit: 17) {
             (games, error) in
