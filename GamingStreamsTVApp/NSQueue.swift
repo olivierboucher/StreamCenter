@@ -15,11 +15,11 @@ class NSQueue<T : AnyObject> {
         array = NSMutableArray()
     }
     
-    func push(element : T) {
+    func offer(element : T) {
         array.addObject(element)
     }
     
-    func pop() -> AnyObject? {
+    func poll() -> AnyObject? {
         var element : AnyObject? = nil
         if array.count > 0 {
             element = array.objectAtIndex(0)

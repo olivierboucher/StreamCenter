@@ -8,19 +8,18 @@
 
 import Foundation
 
-class TwitchChatHandler : IRCHandlerBase {
+class TwitchChatHandler : IRCHandlerBase, TwitchChatMessageQueueDelegate {
     var loopTimer: NSTimer?
     var isAnonymous : Bool = false
+    var messageQueue : TwitchChatMessageQueue?
     
     init() {
         super.init(host: "irc.twitch.tv", port: 6667, useSSL: false)
         
-        //These commands use customized command handlers
-        commandHandlers["PRIVMSG"] = TwitchCharIRCDelegate_Message()
+        self.messageQueue = TwitchChatMessageQueue(delegate: self)
         
-        //Theses commands use base command handlers
+        commandHandlers["PRIVMSG"] = TwitchChatIRCDelegate_Message()
         commandHandlers["PING"] = TwitchChatIRCDelegate_PING()
-        //Errors
         commandHandlers["433"] = TwitchChatIRCDelegate_433()
         commandHandlers["466"] = TwitchChatIRCDelegate_466()
     }
@@ -50,26 +49,31 @@ class TwitchChatHandler : IRCHandlerBase {
             return
         }
         super.doLoop()
-        loopTimer = NSTimer.scheduledTimerWithTimeInterval(1 , target: self, selector: "doLoop", userInfo: nil, repeats: false)
-        loopTimer?.tolerance = 1
+        loopTimer = NSTimer.scheduledTimerWithTimeInterval(0.5 , target: self, selector: "doLoop", userInfo: nil, repeats: false)
+        loopTimer?.tolerance = 0.4
+    }
+    
+    func handleProcessedTwitchMessage(message: TwitchChatMessage) {
+        
     }
 }
 
 
-class TwitchCharIRCDelegate_Message : IRCHandlerDelegate {
+private class TwitchChatIRCDelegate_Message : IRCHandlerDelegate {
     func respond(target: IRCHandlerBase, prefix: String?, destination: String?, message: String?, metadata : String?) {
-        //NSLog("Prefix: \(prefix) | Deestination: \(destination) | Message: \(message)")
+        let twitchTarget = target as! TwitchChatHandler
         if let safePrefix = prefix {
             if let safeMessage = message {
                 if let safeMetadata = metadata {
                     let wrappedMessage = TwitchChatMessage(rawMessage: safeMessage, rawSender: safePrefix, metadata: safeMetadata)
+                    twitchTarget.messageQueue!.addNewMessage(wrappedMessage)
                 }
             }
         }
     }
 }
 
-class TwitchChatIRCDelegate_433: IRCHandlerDelegate {
+private class TwitchChatIRCDelegate_433: IRCHandlerDelegate {
     func respond(target: IRCHandlerBase, prefix: String?, destination: String?, message: String?, metadata : String?) {
         let twitchTarget = target as! TwitchChatHandler
         if(twitchTarget.isAnonymous){
@@ -85,7 +89,7 @@ class TwitchChatIRCDelegate_433: IRCHandlerDelegate {
     }
 }
 
-class TwitchChatIRCDelegate_466: IRCHandlerDelegate {
+private class TwitchChatIRCDelegate_466: IRCHandlerDelegate {
     func respond(target: IRCHandlerBase, prefix: String?, destination: String?, message: String?, metadata : String?) {
         target.send("QUIT", destination: nil , message: "Error 466")
         target.disconnect()
@@ -93,7 +97,7 @@ class TwitchChatIRCDelegate_466: IRCHandlerDelegate {
     }
 }
 
-class TwitchChatIRCDelegate_PING: IRCHandlerDelegate {
+private class TwitchChatIRCDelegate_PING: IRCHandlerDelegate {
     func respond(target: IRCHandlerBase, prefix: String?, destination: String?, message: String?, metadata : String?) {
         target.send("PONG", destination: nil , message: message)
     }

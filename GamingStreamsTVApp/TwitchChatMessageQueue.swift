@@ -8,20 +8,24 @@
 
 import Foundation
 
+protocol TwitchChatMessageQueueDelegate {
+    func handleProcessedTwitchMessage(message: TwitchChatMessage)
+}
+
 class TwitchChatMessageQueue {
-    //Queue
+    let delegate : TwitchChatMessageQueueDelegate
     let messageQueue : NSQueue<TwitchChatMessage>
-    //Cached emotes
     let cachedEmotes : NSMutableDictionary
     
     
-    init() {
-        messageQueue = NSQueue<TwitchChatMessage>()
-        cachedEmotes = NSMutableDictionary()
+    init(delegate : TwitchChatMessageQueueDelegate) {
+        self.delegate = delegate
+        self.messageQueue = NSQueue<TwitchChatMessage>()
+        self.cachedEmotes = NSMutableDictionary()
     }
     
     func addNewMessage(message : TwitchChatMessage) {
-        messageQueue.push(message)
+        messageQueue.offer(message)
     }
     
 }
