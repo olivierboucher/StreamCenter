@@ -28,6 +28,7 @@
 		09CE59861BAF55BD0054EB71 /* TwitchChatMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09CE59851BAF55BD0054EB71 /* TwitchChatMessage.swift */; };
 		09CE59881BAF55CE0054EB71 /* TwitchChatMessageQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09CE59871BAF55CE0054EB71 /* TwitchChatMessageQueue.swift */; };
 		09CE598A1BAF5F870054EB71 /* NSQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09CE59891BAF5F870054EB71 /* NSQueue.swift */; };
+		09CE598C1BAF963C0054EB71 /* ConcurrencyHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09CE598B1BAF963C0054EB71 /* ConcurrencyHelpers.swift */; };
 		09D098251BA7666200E7E6FC /* StreamsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09D098241BA7666200E7E6FC /* StreamsViewController.swift */; };
 		09D098271BA76BFD00E7E6FC /* StreamCellView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09D098261BA76BFD00E7E6FC /* StreamCellView.swift */; };
 		09D098291BA77FAB00E7E6FC /* VideoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09D098281BA77FAB00E7E6FC /* VideoViewController.swift */; };
@@ -130,6 +131,7 @@
 		09CE59851BAF55BD0054EB71 /* TwitchChatMessage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TwitchChatMessage.swift; sourceTree = "<group>"; };
 		09CE59871BAF55CE0054EB71 /* TwitchChatMessageQueue.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TwitchChatMessageQueue.swift; sourceTree = "<group>"; };
 		09CE59891BAF5F870054EB71 /* NSQueue.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NSQueue.swift; sourceTree = "<group>"; };
+		09CE598B1BAF963C0054EB71 /* ConcurrencyHelpers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConcurrencyHelpers.swift; sourceTree = "<group>"; };
 		09D098241BA7666200E7E6FC /* StreamsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StreamsViewController.swift; sourceTree = "<group>"; };
 		09D098261BA76BFD00E7E6FC /* StreamCellView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StreamCellView.swift; sourceTree = "<group>"; };
 		09D098281BA77FAB00E7E6FC /* VideoViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VideoViewController.swift; sourceTree = "<group>"; };
@@ -235,6 +237,7 @@
 				09CE597E1BAE08B10054EB71 /* IRCHandler.swift */,
 				090AB8F31BA5DA1400CDB05D /* M3UParser.swift */,
 				09CE59891BAF5F870054EB71 /* NSQueue.swift */,
+				09CE598B1BAF963C0054EB71 /* ConcurrencyHelpers.swift */,
 			);
 			name = Helpers;
 			sourceTree = "<group>";
@@ -409,6 +412,7 @@
 				09D0982B1BA782C800E7E6FC /* VideoView.swift in Sources */,
 				09CE59861BAF55BD0054EB71 /* TwitchChatMessage.swift in Sources */,
 				090AB90B1BA85B2000CDB05D /* BackButton.swift in Sources */,
+				09CE598C1BAF963C0054EB71 /* ConcurrencyHelpers.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

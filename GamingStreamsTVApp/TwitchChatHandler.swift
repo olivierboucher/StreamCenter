@@ -9,7 +9,7 @@
 import Foundation
 
 class TwitchChatHandler : IRCHandlerBase, TwitchChatMessageQueueDelegate {
-    var loopTimer: NSTimer?
+    var loopTimer: dispatch_source_t?
     var isAnonymous : Bool = false
     var messageQueue : TwitchChatMessageQueue?
     
@@ -42,15 +42,15 @@ class TwitchChatHandler : IRCHandlerBase, TwitchChatMessageQueueDelegate {
         self.send("JOIN", destination: "#"+channel.name, message: nil)
     }
     
-    override func doLoop() {
-        if !loop
-        {
-            NSLog("CHAT LOOP HALTED")
-            return
+    func startLoop() {
+        loopTimer = ConcurrencyHelpers.createDispatchTimer((1 * NSEC_PER_SEC)/2, leeway: (1 * NSEC_PER_SEC)/3, queue: dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), block: {
+            super.doLoop()
+        })
+    }
+    func stopLoop() {
+        if(self.loopTimer != nil) {
+            dispatch_suspend(self.loopTimer!)
         }
-        super.doLoop()
-        loopTimer = NSTimer.scheduledTimerWithTimeInterval(0.5 , target: self, selector: "doLoop", userInfo: nil, repeats: false)
-        loopTimer?.tolerance = 0.4
     }
     
     func handleProcessedTwitchMessage(message: TwitchChatMessage) {

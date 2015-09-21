@@ -42,7 +42,7 @@ class GamesViewController : UIViewController {
         self._testChat = TwitchChatHandler()
         
         self._testChat?.anonymousConnect()
-        self._testChat?.doLoop()
+        self._testChat?.startLoop()
         self._testChat?.send("JOIN", destination: "#sodapoppin", message: nil)
 
         // TESTS END
