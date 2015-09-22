@@ -43,7 +43,7 @@ class GamesViewController : UIViewController {
         
         self._testChat?.anonymousConnect()
         self._testChat?.startLoop()
-        self._testChat?.send("JOIN", destination: "#sodapoppin", message: nil)
+        self._testChat?.send("JOIN", destination: "#lirik", message: nil)
 
         // TESTS END
         

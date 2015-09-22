@@ -209,4 +209,8 @@ class TwitchApi {
                 }
         }
     }
+    
+    static func getEmoteUrlStringFromId(id : String) -> String {
+        return  "http://static-cdn.jtvnw.net/emoticons/v1/\(id)/1.0"
+    }
 }

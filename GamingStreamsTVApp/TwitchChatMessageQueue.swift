@@ -5,43 +5,45 @@
 //  Created by Olivier Boucher on 2015-09-20.
 //  Copyright © 2015 Rivus Media Inc. All rights reserved.
 //
-
+import Alamofire
 import Foundation
 
 protocol TwitchChatMessageQueueDelegate {
     func handleProcessedTwitchMessage(message: TwitchChatMessage)
     func handleNewEmoteDownloaded(id: String, data : NSData)
+    func hasEmoteInCache(id: String) -> Bool
 }
 
 class TwitchChatMessageQueue {
     let opQueue : dispatch_queue_t
     var processTimer : dispatch_source_t?
+    var timerPaused : Bool = true
     let delegate : TwitchChatMessageQueueDelegate
     let messageQueue : NSQueue<TwitchChatMessage>
     let mqMutex : dispatch_semaphore_t
-    let cachedEmotes : NSMutableDictionary
     
     
     init(delegate : TwitchChatMessageQueueDelegate) {
         self.mqMutex = dispatch_semaphore_create(1)
-        let queueAttr = dispatch_queue_attr_make_with_qos_class(DISPATCH_QUEUE_SERIAL, QOS_CLASS_UTILITY, 0)
+        let queueAttr = dispatch_queue_attr_make_with_qos_class(DISPATCH_QUEUE_SERIAL, QOS_CLASS_BACKGROUND, 0)
         self.opQueue = dispatch_queue_create("com.twitch.chatmq", queueAttr)
         self.delegate = delegate
         self.messageQueue = NSQueue<TwitchChatMessage>()
-        self.cachedEmotes = NSMutableDictionary()
     }
     
     func addNewMessage(message : TwitchChatMessage) {
         dispatch_semaphore_wait(self.mqMutex, DISPATCH_TIME_FOREVER);
+        //NSLog("Message added")
         messageQueue.offer(message)
         dispatch_semaphore_signal(self.mqMutex)
         
-        if processTimer == nil {
+        if processTimer == nil || self.timerPaused {
             self.startProcessing()
         }
     }
     
     func processAvailableMessages() {
+        //NSLog("Process batch start")
         var messagesArray = Array<TwitchChatMessage>()
         dispatch_semaphore_wait(self.mqMutex, DISPATCH_TIME_FOREVER);
         while(true){
@@ -55,6 +57,7 @@ class TwitchChatMessageQueue {
         dispatch_semaphore_signal(self.mqMutex)
         
         if messagesArray.count == 0 {
+            //NSLog("Process batch stop, nothing to poll from")
             self.stopProcessing()
             return
         }
@@ -68,6 +71,8 @@ class TwitchChatMessageQueue {
                 
                 if keyValue[0] == "emotes" && !keyValue[1].isEmpty  {
                     let emotesById = keyValue[1].containsString("/") ? keyValue[1].componentsSeparatedByString("/") : [keyValue[1]]
+                    
+                    let downloadGroup = dispatch_group_create()
                     
                     for emote in emotesById {
                         // id = [0] and values = [1]
@@ -89,26 +94,47 @@ class TwitchChatMessageQueue {
                             }
                             
                         }
-                        
-                        //If emote not in cache, request download
+
+                        if !self.delegate.hasEmoteInCache(emoteId){
+                            dispatch_group_enter(downloadGroup)
+                            Alamofire.request(.GET, TwitchApi.getEmoteUrlStringFromId(emoteId)).response() {
+                                (_, _, data, error) in
+                                if error != nil {
+                                    NSLog("Error downloading emote image")
+                                }
+                                else {
+                                    self.delegate.handleNewEmoteDownloaded(emoteId, data: data!)
+                                }
+                                dispatch_group_leave(downloadGroup)
+                            }
+                        }
                     }
+                    dispatch_group_wait(downloadGroup, DISPATCH_TIME_FOREVER)
                 }
             }
-            
             self.delegate.handleProcessedTwitchMessage(message)
         }
         
     }
     
     func startProcessing() {
-        self.processTimer = ConcurrencyHelpers.createDispatchTimer((1 * NSEC_PER_SEC)/2, leeway: (1 * NSEC_PER_SEC)/2, queue: opQueue, block: {
-            self.processAvailableMessages()
-        })
+        
+        if self.processTimer == nil && self.timerPaused {
+            self.timerPaused = false
+            self.processTimer = ConcurrencyHelpers.createDispatchTimer((1 * NSEC_PER_SEC)/2, leeway: (1 * NSEC_PER_SEC)/2, queue: opQueue, block: {
+                self.processAvailableMessages()
+            })
+        }
+        else if self.processTimer != nil && self.timerPaused {
+            self.timerPaused = false
+            dispatch_resume(self.processTimer!)
+        }
     }
     
     func stopProcessing() {
-        if processTimer != nil {
+        if processTimer != nil && !self.timerPaused {
             dispatch_suspend(self.processTimer!)
+            self.timerPaused = true
         }
     }
     
