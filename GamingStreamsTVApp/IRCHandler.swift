@@ -98,9 +98,7 @@ class IRCHandlerBase: NSObject, NSStreamDelegate
                 do {
                     //First we check for any type of command except anormal ones like PING
                     regex = try NSRegularExpression(pattern: msgPattern, options: .AllowCommentsAndWhitespace)
-                    let matches = regex?.matchesInString(string, options: NSMatchingOptions.WithTransparentBounds, range: NSRange(location: 0, length: string.utf8.count))
-                    if(matches != nil && matches?.count > 0){
-                        let match = matches!.first!
+                    if let match = regex?.firstMatchInString(string, options: NSMatchingOptions.WithTransparentBounds, range: NSRange(location: 0, length: string.characters.count)) {
 
                         if(match.numberOfRanges == 6){
                             let region = (string as NSString)
