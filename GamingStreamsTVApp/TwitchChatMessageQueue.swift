@@ -87,7 +87,7 @@ class TwitchChatMessageQueue {
                             let start = Int(startEnd[0])
                             let end = Int(startEnd[1])
                             
-                            let range = NSMakeRange(start!, end! - start!)
+                            let range = NSMakeRange(start!, end! - start! + 1)
                             if message.emotes[emoteId] == nil {
                                 message.emotes[emoteId] = [range]
                             }
@@ -156,23 +156,27 @@ class TwitchChatMessageQueue {
         
         let attrMsg = NSMutableAttributedString(string: message.sender! + ": " + message.rawMessage)
         
-//        if(message.emotes.count > 0) {
-//            for emote in message.emotes {
-//                let attachment = NSTextAttachment()
-//                attachment.image = UIImage(data: self.delegate.getEmoteDataFromCache(emote.0)!)
-//                
-//                let attachString = NSAttributedString(attachment: attachment)
-//                NSLog("MSG LENGTH: \(attrMsg.length)")
-//                NSLog("EMOTE LENGTH: \(attachString.length)")
-//                for (index, range) in emote.1.enumerate() {
-//                    NSLog("INITIAL RANGE START: \(range.location) to \(range.length)")
-//                    var fixedRange = range
-//                    fixedRange.location -= index+1
-//                    NSLog("FIXED RANGE START: \(fixedRange.location) to \(fixedRange.length)")
-//                    attrMsg.replaceCharactersInRange(fixedRange, withAttributedString: attachString)
-//                }
-//            }
-//        }
+        if(message.emotes.count > 0) {
+            var removedChars = -message.sender!.characters.count-2; //Because ranges are based on rawMessage
+            for emote in message.emotes {
+                let attachment = NSTextAttachment()
+                attachment.image = UIImage(data: self.delegate.getEmoteDataFromCache(emote.0)!)
+                
+                let attachString = NSAttributedString(attachment: attachment)
+                for range in emote.1{
+                    var fixedRange = range
+                    fixedRange.location -= removedChars
+                    
+                    let string = attrMsg.string
+                    
+                    let rmCount = string.substringWithRange(string.rangeFromNSRange(range)!).characters.count - attachString.length
+                    
+                    removedChars += rmCount
+                    
+                    attrMsg.replaceCharactersInRange(fixedRange, withAttributedString: attachString)
+                }
+            }
+        }
         
         attrMsg.addAttribute(NSForegroundColorAttributeName, value: UIColor.blackColor(), range: NSMakeRange(0, attrMsg.length))
         //attrMsg.addAttribute(NSBackgroundColorAttributeName, value: UIColor.whiteColor(), range: NSMakeRange(0, attrMsg.length))
