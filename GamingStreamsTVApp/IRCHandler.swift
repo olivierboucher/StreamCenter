@@ -25,13 +25,10 @@ class IRCHandlerBase: NSObject, NSStreamDelegate
     
     var currentNick: Int
     
-    var loop: Bool = true
-    
     var inputStream: NSInputStream?
     var outputStream: NSOutputStream?
     
-    init(host: String, port: Int, useSSL: Bool)
-    {
+    init(host: String, port: Int, useSSL: Bool) {
         self.host = host
         self.port = port
         self.useSSL = useSSL
@@ -39,14 +36,12 @@ class IRCHandlerBase: NSObject, NSStreamDelegate
         super.init()
     }
     
-    deinit
-    {
+    deinit {
         send("QUIT", destination: nil, message: "Closing connection")
         disconnect()
     }
     
-    func send(command: String , destination: String?, message: String?)
-    {
+    func send(command: String , destination: String?, message: String?) {
         var fullCommand : String = command
         
         if(destination != nil) {
@@ -151,8 +146,7 @@ class IRCHandlerBase: NSObject, NSStreamDelegate
         }
     }
     
-    func connect()
-    {
+    func connect() {
         NSStream.getStreamsToHostWithName(host, port: port,
             inputStream: &inputStream, outputStream: &outputStream)
         
@@ -170,13 +164,9 @@ class IRCHandlerBase: NSObject, NSStreamDelegate
             inputStream!.setProperty(NSStreamSocketSecurityLevelNegotiatedSSL, forKey: NSStreamSocketSecurityLevelKey)
             outputStream!.setProperty(NSStreamSocketSecurityLevelNegotiatedSSL, forKey: NSStreamSocketSecurityLevelKey)
         }
-        loop = true
     }
     
-    func disconnect()
-    {
-        loop = false
-        
+    func disconnect() {
         inputStream!.close()
         outputStream!.close()
         
@@ -187,8 +177,7 @@ class IRCHandlerBase: NSObject, NSStreamDelegate
         outputStream = nil
     }
     
-    func receive( prefix: String?, command: String , destination: String?, message: String?, metadata: String?)
-    {
+    func receive( prefix: String?, command: String , destination: String?, message: String?, metadata: String?) {
         let handler = commandHandlers[command]
         if handler != nil
         {

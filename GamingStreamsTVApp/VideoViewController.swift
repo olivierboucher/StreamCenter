@@ -10,16 +10,16 @@ import UIKit
 import Foundation
 
 class VideoViewController : UIViewController {
-    private var _videoView : VideoView?
-    private var _videoPlayer : AVPlayer?
-    private var _stream : TwitchStream?
+    private var videoView : VideoView?
+    private var videoPlayer : AVPlayer?
+    private var stream : TwitchStream?
     private var chatView : TwitchChatView?
     
     convenience init(stream : TwitchStream){
-        self.init(nibName: nil, bundle: nil);
-        self._stream = stream;
+        self.init(nibName: nil, bundle: nil)
+        self.stream = stream;
         
-        TwitchApi.getStreamsForChannel(_stream!.channel.name) {
+        TwitchApi.getStreamsForChannel(self.stream!.channel.name) {
             (streams, error) in
             
             if(error != nil) {
@@ -31,7 +31,7 @@ class VideoViewController : UIViewController {
                 let streamAsset = AVURLAsset(URL: streamObject.url!)
                 let streamItem = AVPlayerItem(asset: streamAsset)
                 
-                self._videoPlayer = AVPlayer(playerItem: streamItem)
+                self.videoPlayer = AVPlayer(playerItem: streamItem)
                 
                 dispatch_async(dispatch_get_main_queue(),{
                     self.initializePlayerView()
@@ -54,16 +54,16 @@ class VideoViewController : UIViewController {
     }
     
     func initializePlayerView() {
-        self._videoView = VideoView(frame: self.view.bounds)
-        self._videoView?.setPlayer(self._videoPlayer!)
-        self._videoView?.setVideoFillMode(AVLayerVideoGravityResizeAspect)
+        self.videoView = VideoView(frame: self.view.bounds)
+        self.videoView?.setPlayer(self.videoPlayer!)
+        self.videoView?.setVideoFillMode(AVLayerVideoGravityResizeAspect)
         
-        self.view.addSubview(self._videoView!);
-        self._videoPlayer?.play()
+        self.view.addSubview(self.videoView!)
+        self.videoPlayer?.play()
     }
     
     func initializeChatView() {
-        self.chatView = TwitchChatView(frame: CGRect(x: 0, y: 0, width: 400, height: self.view!.bounds.height), channel: self._stream!.channel)
+        self.chatView = TwitchChatView(frame: CGRect(x: 0, y: 0, width: 400, height: self.view!.bounds.height), channel: self.stream!.channel)
         self.chatView!.startDisplayingMessages()
         self.chatView?.backgroundColor = UIColor.whiteColor()
         self.view.addSubview(self.chatView!)
