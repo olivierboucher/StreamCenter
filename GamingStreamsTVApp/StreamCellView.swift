@@ -5,6 +5,7 @@
 //  Created by Olivier Boucher on 2015-09-14.
 //  Copyright © 2015 Rivus Media Inc. All rights reserved.
 //
+import Alamofire
 import UIKit
 import Foundation
 
@@ -93,18 +94,18 @@ class StreamCellView : UICollectionViewCell {
         if let imgUrlTemplate = _stream?.preview["template"] as? String {
             if let imgUrlString : String? = imgUrlTemplate.stringByReplacingOccurrencesOfString("{width}", withString: "\(Int(size.width))")
                 .stringByReplacingOccurrencesOfString("{height}", withString: "\(Int(size.height))") {
-                    //Now that we have our correct template, we download the image
-                    let imgUrl = NSURL(string: imgUrlString!);
-                    let task = NSURLSession.sharedSession().dataTaskWithURL(imgUrl!) {(data, response, error) in
-                        //We check for errors
-                        if(error != nil){
-                            completionHandler(image : nil, error : error);
+                    Alamofire.request(.GET, imgUrlString!).response() {
+                        (_, _, data, error) in
+                        if error != nil {
+                            //TODO: GET ERROR FROM ALAMOFIRE
+                            completionHandler(image : nil, error : nil);
                             return
                         }
-                        let image = UIImage(data: data!);
-                        completionHandler(image: image, error: nil);
-                    };
-                    task.resume();
+                        else {
+                            let image = UIImage(data: data!);
+                            completionHandler(image: image, error: nil);
+                        }
+                    }
             }
         }
     }

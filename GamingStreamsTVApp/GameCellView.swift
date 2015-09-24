@@ -5,6 +5,7 @@
 //  Created by Olivier Boucher on 2015-09-13.
 //  Copyright © 2015 Rivus Media Inc. All rights reserved.
 //
+import Alamofire
 import UIKit;
 import Foundation
 
@@ -88,22 +89,18 @@ class GameCellView : UICollectionViewCell {
         if let imgUrlTemplate = _game?.thumbnails["template"] as? String {
             if let imgUrlString : String? = imgUrlTemplate.stringByReplacingOccurrencesOfString("{width}", withString: "\(Int(size.width))")
                 .stringByReplacingOccurrencesOfString("{height}", withString: "\(Int(size.height))") {
-                    //Now that we have our correct template, we download the image
-                    let imgUrl = NSURL(string: imgUrlString!);
-                    let task = NSURLSession.sharedSession().dataTaskWithURL(imgUrl!) {(data, response, error) in
-                        //We check for errors
-                        if(error != nil){
-                            completionHandler(image : nil, error : error);
+                    Alamofire.request(.GET, imgUrlString!).response() {
+                        (_, _, data, error) in
+                        if error != nil {
+                            //TODO: GET ERROR FROM ALAMOFIRE
+                            completionHandler(image : nil, error : nil);
                             return
                         }
-//                        if(response!.isKindOfClass(NSHTTPURLResponse.classForCoder())){
-//                            let httpResponse = response as! NSHTTPURLResponse;
-//                            NSLog("Status code for image : %d", httpResponse.statusCode);
-//                        }
-                        let image = UIImage(data: data!);
-                        completionHandler(image: image, error: nil);
-                    };
-                    task.resume();
+                        else {
+                            let image = UIImage(data: data!);
+                            completionHandler(image: image, error: nil);
+                        }
+                    }
             }
         }
     }
