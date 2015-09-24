@@ -37,15 +37,15 @@ class GamesViewController : UIViewController {
             self._loadingView?.center = CGPoint(x: self.view.bounds.width/2, y: self.view.bounds.height/2)
             self.view.addSubview(_loadingView!)
         }
-        //TESTS
-
-        self._testChat = TwitchChatHandler()
-        
-        self._testChat?.anonymousConnect()
-        self._testChat?.startLoop()
-        self._testChat?.send("JOIN", destination: "#lirik", message: nil)
-
-        // TESTS END
+//        //TESTS
+//
+//        self._testChat = TwitchChatHandler()
+//        
+//        self._testChat?.anonymousConnect()
+//        self._testChat?.startLoop()
+//        self._testChat?.send("JOIN", destination: "#lirik", message: nil)
+//
+//        // TESTS END
         
         TwitchApi.getTopGamesWithOffset(0, limit: 17) {
             (games, error) in

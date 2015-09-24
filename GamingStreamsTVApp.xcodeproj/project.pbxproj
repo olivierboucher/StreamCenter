@@ -21,6 +21,8 @@
 		090AB90B1BA85B2000CDB05D /* BackButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 090AB90A1BA85B2000CDB05D /* BackButton.swift */; };
 		090AB90D1BA9B0F100CDB05D /* LoadingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 090AB90C1BA9B0F100CDB05D /* LoadingView.swift */; };
 		090AB90F1BA9BBE300CDB05D /* ErrorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 090AB90E1BA9BBE300CDB05D /* ErrorView.swift */; };
+		090AB9221BB3699700CDB05D /* TwitchChatView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 090AB9211BB3699700CDB05D /* TwitchChatView.swift */; };
+		090AB9241BB36BC100CDB05D /* TwitchChatMessageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 090AB9231BB36BC100CDB05D /* TwitchChatMessageView.swift */; };
 		09CE59791BADBBC70054EB71 /* Alamofire.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 09CE59761BADBBB90054EB71 /* Alamofire.framework */; };
 		09CE597A1BADBBC70054EB71 /* Alamofire.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 09CE59761BADBBB90054EB71 /* Alamofire.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		09CE597F1BAE08B10054EB71 /* IRCHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09CE597E1BAE08B10054EB71 /* IRCHandler.swift */; };
@@ -125,6 +127,8 @@
 		090AB90A1BA85B2000CDB05D /* BackButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BackButton.swift; sourceTree = "<group>"; };
 		090AB90C1BA9B0F100CDB05D /* LoadingView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoadingView.swift; sourceTree = "<group>"; };
 		090AB90E1BA9BBE300CDB05D /* ErrorView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ErrorView.swift; sourceTree = "<group>"; };
+		090AB9211BB3699700CDB05D /* TwitchChatView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TwitchChatView.swift; sourceTree = "<group>"; };
+		090AB9231BB36BC100CDB05D /* TwitchChatMessageView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TwitchChatMessageView.swift; sourceTree = "<group>"; };
 		09CE595C1BADBAFA0054EB71 /* Alamofire.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = Alamofire.xcodeproj; path = Thirdparty/Alamofire/Alamofire.xcodeproj; sourceTree = "<group>"; };
 		09CE597E1BAE08B10054EB71 /* IRCHandler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IRCHandler.swift; sourceTree = "<group>"; };
 		09CE59811BAE15280054EB71 /* TwitchChatHandler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TwitchChatHandler.swift; sourceTree = "<group>"; };
@@ -209,6 +213,15 @@
 			name = Views;
 			sourceTree = "<group>";
 		};
+		090AB91A1BB3698800CDB05D /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				090AB9211BB3699700CDB05D /* TwitchChatView.swift */,
+				090AB9231BB36BC100CDB05D /* TwitchChatMessageView.swift */,
+			);
+			name = Views;
+			sourceTree = "<group>";
+		};
 		09CE595D1BADBAFA0054EB71 /* Products */ = {
 			isa = PBXGroup;
 			children = (
@@ -245,6 +258,7 @@
 		09CE59841BAF559D0054EB71 /* Chat */ = {
 			isa = PBXGroup;
 			children = (
+				090AB91A1BB3698800CDB05D /* Views */,
 				09CE59811BAE15280054EB71 /* TwitchChatHandler.swift */,
 				09CE59851BAF55BD0054EB71 /* TwitchChatMessage.swift */,
 				09CE59871BAF55CE0054EB71 /* TwitchChatMessageQueue.swift */,
@@ -401,8 +415,10 @@
 				09CE597F1BAE08B10054EB71 /* IRCHandler.swift in Sources */,
 				09CE59881BAF55CE0054EB71 /* TwitchChatMessageQueue.swift in Sources */,
 				09D098271BA76BFD00E7E6FC /* StreamCellView.swift in Sources */,
+				090AB9241BB36BC100CDB05D /* TwitchChatMessageView.swift in Sources */,
 				090AB9001BA616A900CDB05D /* TwitchStream.swift in Sources */,
 				09CE598A1BAF5F870054EB71 /* NSQueue.swift in Sources */,
+				090AB9221BB3699700CDB05D /* TwitchChatView.swift in Sources */,
 				090AB9011BA616A900CDB05D /* TwitchStreamVideo.swift in Sources */,
 				090AB9021BA616A900CDB05D /* M3UParser.swift in Sources */,
 				090AB9031BA616A900CDB05D /* AppDelegate.swift in Sources */,

@@ -6,12 +6,14 @@
 //  Copyright © 2015 Rivus Media Inc. All rights reserved.
 //
 import Alamofire
+import UIKit
 import Foundation
 
 protocol TwitchChatMessageQueueDelegate {
     func handleProcessedTwitchMessage(message: TwitchChatMessage)
     func handleNewEmoteDownloaded(id: String, data : NSData)
     func hasEmoteInCache(id: String) -> Bool
+    func getEmoteDataFromCache(id: String) -> NSData?
 }
 
 class TwitchChatMessageQueue {
@@ -85,7 +87,7 @@ class TwitchChatMessageQueue {
                             let start = Int(startEnd[0])
                             let end = Int(startEnd[1])
                             
-                            let range = Range<Int>(start: start!, end: end!)
+                            let range = NSMakeRange(start!, end! - start!)
                             if message.emotes[emoteId] == nil {
                                 message.emotes[emoteId] = [range]
                             }
@@ -112,6 +114,9 @@ class TwitchChatMessageQueue {
                     dispatch_group_wait(downloadGroup, DISPATCH_TIME_FOREVER)
                 }
             }
+            
+            message.completeMessage = self.getAttributedStringForMessage(message)
+            
             self.delegate.handleProcessedTwitchMessage(message)
         }
         
@@ -136,6 +141,26 @@ class TwitchChatMessageQueue {
             dispatch_suspend(self.processTimer!)
             self.timerPaused = true
         }
+    }
+    
+    private func getAttributedStringForMessage(message : TwitchChatMessage) -> NSAttributedString {
+        
+        let attrMsg = NSMutableAttributedString(string: message.rawMessage)
+        
+        if(message.emotes.count > 0) {
+            for emote in message.emotes {
+                let attachment = NSTextAttachment()
+                attachment.image = UIImage(data: self.delegate.getEmoteDataFromCache(emote.0)!)
+                
+                let attachString = NSAttributedString(attachment: attachment)
+                
+                for range in emote.1 {
+                    attrMsg.replaceCharactersInRange(range, withAttributedString: attachString)
+                }
+            }
+        }
+        
+        return attrMsg
     }
     
 }

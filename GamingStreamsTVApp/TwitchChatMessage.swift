@@ -13,7 +13,8 @@ class TwitchChatMessage {
     let rawMessage : String
     let rawMetadata : String
     
-    var emotes : Dictionary<String, [Range<Int>]> = Dictionary<String, [Range<Int>]>()
+    var emotes : Dictionary<String, [NSRange]> = Dictionary<String, [NSRange]>()
+    var completeMessage : NSAttributedString?
     
     init(rawMessage : String, rawSender : String, metadata : String) {
         self.rawMessage = rawMessage
