@@ -99,7 +99,6 @@ class TwitchChatMessageQueue {
 
                         if !self.delegate.hasEmoteInCache(emoteId){
                             dispatch_group_enter(downloadGroup)
-                            let test = TwitchApi.getEmoteUrlStringFromId(emoteId)
                             Alamofire.request(.GET, TwitchApi.getEmoteUrlStringFromId(emoteId)).response() {
                                 (_, _, data, error) in
                                 if error != nil {
@@ -118,11 +117,18 @@ class TwitchChatMessageQueue {
                     //TODO: Sanitize IRC value
                     message.sender = keyValue[1]
                 }
+                else if keyValue[0] == "@color" && !keyValue[1].isEmpty  {
+                    message.senderDisplayColor = keyValue[1]
+                }
             }
             
             //SAFE CHECKS
             if message.sender == nil {
                 message.sender = message.rawSender.componentsSeparatedByString("!")[0]
+            }
+            
+            if message.senderDisplayColor == nil {
+                message.senderDisplayColor = "#555555"
             }
             
             message.completeMessage = self.getAttributedStringForMessage(message)
@@ -163,7 +169,6 @@ class TwitchChatMessageQueue {
             for emote in message.emotes {
                 let attachment = NSTextAttachment()
                 let emoteImage = UIImage(data: self.delegate.getEmoteDataFromCache(emote.0)!)
-                NSLog("Image size -> w:%f, h:%f", emoteImage!.size.width, emoteImage!.size.height)
                 attachment.image = emoteImage
                 
                 let attachString = NSAttributedString(attachment: attachment)
@@ -186,7 +191,7 @@ class TwitchChatMessageQueue {
         }
         
         attrMsg.addAttribute(NSForegroundColorAttributeName, value: UIColor.blackColor(), range: NSMakeRange(0, attrMsg.length))
-        //attrMsg.addAttribute(NSBackgroundColorAttributeName, value: UIColor.whiteColor(), range: NSMakeRange(0, attrMsg.length))
+        attrMsg.addAttribute(NSForegroundColorAttributeName, value: message.senderDisplayColor!.toUIColorFromHex()!, range: NSMakeRange(0, message.sender!.characters.count))
         attrMsg.addAttribute(NSFontAttributeName, value: UIFont.systemFontOfSize(18), range: NSMakeRange(0, attrMsg.length))
         
         return attrMsg

@@ -16,6 +16,7 @@ class TwitchChatMessage {
     //Clean data
     var sender : String?
     var emotes : Dictionary<String, [NSRange]> = Dictionary<String, [NSRange]>()
+    var senderDisplayColor : String?
     //Processed message
     var completeMessage : NSAttributedString?
     
