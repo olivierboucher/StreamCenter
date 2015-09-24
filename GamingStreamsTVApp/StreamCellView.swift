@@ -20,18 +20,14 @@ class StreamCellView : UICollectionViewCell {
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-//        self.layer.borderColor = UIColor.redColor().CGColor
-//        self.layer.borderWidth = 1
+
         let imageViewBounds = CGRect(x: 0, y: 40, width: self.bounds.width, height: self.bounds.height - 80)
         self._imageView = UIImageView(frame: imageViewBounds)
         self._imageView!.adjustsImageWhenAncestorFocused = true
         self._imageView!.layer.cornerRadius = 10
         self._imageView!.backgroundColor = UIColor(white: 0.25, alpha: 0.7)
         
-//        self._imageView!.layer.borderColor = UIColor.greenColor().CGColor
-//        self._imageView!.layer.borderWidth = 1
-        
-        self._activityIndicator = UIActivityIndicatorView(frame: self.bounds)
+        self._activityIndicator = UIActivityIndicatorView(frame: CGRect(x: 0, y: 0, width: self.bounds.width, height: self.bounds.height-80))
         self._activityIndicator?.activityIndicatorViewStyle = UIActivityIndicatorViewStyle.WhiteLarge
         self._activityIndicator?.startAnimating()
         

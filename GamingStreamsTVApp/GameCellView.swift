@@ -26,7 +26,7 @@ class GameCellView : UICollectionViewCell {
         self._imageView!.layer.cornerRadius = 10
         self._imageView!.backgroundColor = UIColor(white: 0.25, alpha: 0.7)
         
-        self._activityIndicator = UIActivityIndicatorView(frame: self.bounds)
+        self._activityIndicator = UIActivityIndicatorView(frame: imageViewFrame)
         self._activityIndicator?.activityIndicatorViewStyle = UIActivityIndicatorViewStyle.WhiteLarge
         self._activityIndicator?.startAnimating()
         
