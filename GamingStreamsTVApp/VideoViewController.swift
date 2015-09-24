@@ -13,6 +13,7 @@ class VideoViewController : UIViewController {
     private var _videoView : VideoView?
     private var _videoPlayer : AVPlayer?
     private var _stream : TwitchStream?
+    private var chatView : TwitchChatView?
     
     convenience init(stream : TwitchStream){
         self.init(nibName: nil, bundle: nil);
@@ -34,6 +35,7 @@ class VideoViewController : UIViewController {
                 
                 dispatch_async(dispatch_get_main_queue(),{
                     self.initializePlayerView()
+                    self.initializeChatView()
                 })
 
             }
@@ -58,5 +60,12 @@ class VideoViewController : UIViewController {
         
         self.view.addSubview(self._videoView!);
         self._videoPlayer?.play()
+    }
+    
+    func initializeChatView() {
+        self.chatView = TwitchChatView(frame: CGRect(x: 0, y: 0, width: 400, height: self.view!.bounds.height), channel: self._stream!.channel)
+        self.chatView!.startDisplayingMessages()
+        self.chatView?.backgroundColor = UIColor.whiteColor()
+        self.view.addSubview(self.chatView!)
     }
 }

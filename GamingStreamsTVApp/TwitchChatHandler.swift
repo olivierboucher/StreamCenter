@@ -8,12 +8,17 @@
 
 import Foundation
 
+protocol TwitchChatHandlerConsumer {
+    func messageReadyForDisplay(message: TwitchChatMessage)
+}
+
 class TwitchChatHandler : IRCHandlerBase, TwitchChatMessageQueueDelegate {
     var opQueue : dispatch_queue_t
     var loopTimer: dispatch_source_t?
     var isAnonymous : Bool = false
     var messageQueue : TwitchChatMessageQueue?
     var emotesDictionnary = Dictionary<String, NSData>() //Dictionnary that holds all the emotes (Acts as cache)
+    var consumer : TwitchChatHandlerConsumer?
     
     init() {
         let queueAttr = dispatch_queue_attr_make_with_qos_class(DISPATCH_QUEUE_SERIAL, QOS_CLASS_BACKGROUND, 0)
@@ -61,7 +66,7 @@ class TwitchChatHandler : IRCHandlerBase, TwitchChatMessageQueueDelegate {
         DELEGATE METHODS
     */
     func handleProcessedTwitchMessage(message: TwitchChatMessage) {
-        NSLog("m: \(message.rawMessage)")
+        self.consumer!.messageReadyForDisplay(message)
     }
     func handleNewEmoteDownloaded(id: String, data : NSData) {
         emotesDictionnary[id] = data

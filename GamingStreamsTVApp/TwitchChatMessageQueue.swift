@@ -119,6 +119,11 @@ class TwitchChatMessageQueue {
                 }
             }
             
+            //SAFE CHECKS
+            if message.sender == nil {
+                message.sender = message.rawSender.componentsSeparatedByString("!")[0]
+            }
+            
             message.completeMessage = self.getAttributedStringForMessage(message)
             
             self.delegate.handleProcessedTwitchMessage(message)
@@ -151,18 +156,27 @@ class TwitchChatMessageQueue {
         
         let attrMsg = NSMutableAttributedString(string: message.sender! + ": " + message.rawMessage)
         
-        if(message.emotes.count > 0) {
-            for emote in message.emotes {
-                let attachment = NSTextAttachment()
-                attachment.image = UIImage(data: self.delegate.getEmoteDataFromCache(emote.0)!)
-                
-                let attachString = NSAttributedString(attachment: attachment)
-                
-                for range in emote.1 {
-                    attrMsg.replaceCharactersInRange(range, withAttributedString: attachString)
-                }
-            }
-        }
+//        if(message.emotes.count > 0) {
+//            for emote in message.emotes {
+//                let attachment = NSTextAttachment()
+//                attachment.image = UIImage(data: self.delegate.getEmoteDataFromCache(emote.0)!)
+//                
+//                let attachString = NSAttributedString(attachment: attachment)
+//                NSLog("MSG LENGTH: \(attrMsg.length)")
+//                NSLog("EMOTE LENGTH: \(attachString.length)")
+//                for (index, range) in emote.1.enumerate() {
+//                    NSLog("INITIAL RANGE START: \(range.location) to \(range.length)")
+//                    var fixedRange = range
+//                    fixedRange.location -= index+1
+//                    NSLog("FIXED RANGE START: \(fixedRange.location) to \(fixedRange.length)")
+//                    attrMsg.replaceCharactersInRange(fixedRange, withAttributedString: attachString)
+//                }
+//            }
+//        }
+        
+        attrMsg.addAttribute(NSForegroundColorAttributeName, value: UIColor.blackColor(), range: NSMakeRange(0, attrMsg.length))
+        //attrMsg.addAttribute(NSBackgroundColorAttributeName, value: UIColor.whiteColor(), range: NSMakeRange(0, attrMsg.length))
+        attrMsg.addAttribute(NSFontAttributeName, value: UIFont.systemFontOfSize(18), range: NSMakeRange(0, attrMsg.length))
         
         return attrMsg
     }
