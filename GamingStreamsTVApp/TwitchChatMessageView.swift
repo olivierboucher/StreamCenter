@@ -31,19 +31,6 @@ class TwitchChatMessageView : UIView {
     
     override func drawRect(rect: CGRect) {
         super.drawRect(rect)
-        
-        let ctx = UIGraphicsGetCurrentContext()
-        
-        CGContextSetTextMatrix(ctx, CGAffineTransformIdentity);
-        CGContextTranslateCTM(ctx, 0, self.bounds.size.height);
-        CGContextScaleCTM(ctx, 1.0, -1.0);
-        
-        let path = CGPathCreateMutable()
-        CGPathAddRect(path, nil, self.bounds)
-        
-        let framesetter = CTFramesetterCreateWithAttributedString(self.completeMessage as CFAttributedStringRef)
-        let frame = CTFramesetterCreateFrame(framesetter, CFRangeMake(0, self.completeMessage.length), path, nil)
-        
-        CTFrameDraw(frame, ctx!)
+        completeMessage.drawInRect(rect)
     }
 }

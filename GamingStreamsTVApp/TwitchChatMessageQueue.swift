@@ -99,6 +99,7 @@ class TwitchChatMessageQueue {
 
                         if !self.delegate.hasEmoteInCache(emoteId){
                             dispatch_group_enter(downloadGroup)
+                            let test = TwitchApi.getEmoteUrlStringFromId(emoteId)
                             Alamofire.request(.GET, TwitchApi.getEmoteUrlStringFromId(emoteId)).response() {
                                 (_, _, data, error) in
                                 if error != nil {
@@ -156,11 +157,14 @@ class TwitchChatMessageQueue {
         
         let attrMsg = NSMutableAttributedString(string: message.sender! + ": " + message.rawMessage)
         
+        
         if(message.emotes.count > 0) {
             var removedChars = -message.sender!.characters.count-2; //Because ranges are based on rawMessage
             for emote in message.emotes {
                 let attachment = NSTextAttachment()
-                attachment.image = UIImage(data: self.delegate.getEmoteDataFromCache(emote.0)!)
+                let emoteImage = UIImage(data: self.delegate.getEmoteDataFromCache(emote.0)!)
+                NSLog("Image size -> w:%f, h:%f", emoteImage!.size.width, emoteImage!.size.height)
+                attachment.image = emoteImage
                 
                 let attachString = NSAttributedString(attachment: attachment)
                 for range in emote.1{
@@ -172,7 +176,10 @@ class TwitchChatMessageQueue {
                     let rmCount = string.substringWithRange(string.rangeFromNSRange(range)!).characters.count - attachString.length
                     
                     removedChars += rmCount
-                    
+//                    NSLog("Original range from: \(range.location) to \(range.location + range.length)")
+//                    NSLog("Original string lenght: \(message.rawMessage.characters.count)")
+//                    NSLog("Fixed range from: \(fixedRange.location) to \(fixedRange.location + range.length)")
+//                    NSLog("New string lenght: \(attrMsg.string.characters.count)")
                     attrMsg.replaceCharactersInRange(fixedRange, withAttributedString: attachString)
                 }
             }
