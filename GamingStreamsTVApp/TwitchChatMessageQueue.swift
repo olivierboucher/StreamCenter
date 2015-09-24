@@ -179,13 +179,10 @@ class TwitchChatMessageQueue {
                     let string = attrMsg.string
                     
                     let rmCount = string.substringWithRange(string.rangeFromNSRange(range)!).characters.count - attachString.length
-                    
-                    removedChars += rmCount
-//                    NSLog("Original range from: \(range.location) to \(range.location + range.length)")
-//                    NSLog("Original string lenght: \(message.rawMessage.characters.count)")
-//                    NSLog("Fixed range from: \(fixedRange.location) to \(fixedRange.location + range.length)")
-//                    NSLog("New string lenght: \(attrMsg.string.characters.count)")
-                    attrMsg.replaceCharactersInRange(fixedRange, withAttributedString: attachString)
+                    if fixedRange.location + fixedRange.length <= attrMsg.length {
+                        removedChars += rmCount
+                        attrMsg.replaceCharactersInRange(fixedRange, withAttributedString: attachString)
+                    }
                 }
             }
         }
