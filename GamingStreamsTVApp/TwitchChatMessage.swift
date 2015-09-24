@@ -9,11 +9,14 @@
 import Foundation
 
 class TwitchChatMessage {
+    //Raw Data
     let rawSender : String
     let rawMessage : String
     let rawMetadata : String
-    
+    //Clean data
+    var sender : String?
     var emotes : Dictionary<String, [NSRange]> = Dictionary<String, [NSRange]>()
+    //Processed message
     var completeMessage : NSAttributedString?
     
     init(rawMessage : String, rawSender : String, metadata : String) {

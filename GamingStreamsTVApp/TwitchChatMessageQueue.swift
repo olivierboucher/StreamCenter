@@ -113,6 +113,10 @@ class TwitchChatMessageQueue {
                     }
                     dispatch_group_wait(downloadGroup, DISPATCH_TIME_FOREVER)
                 }
+                else if keyValue[0] == "display-name" && !keyValue[1].isEmpty  {
+                    //TODO: Sanitize IRC value
+                    message.sender = keyValue[1]
+                }
             }
             
             message.completeMessage = self.getAttributedStringForMessage(message)
@@ -145,7 +149,7 @@ class TwitchChatMessageQueue {
     
     private func getAttributedStringForMessage(message : TwitchChatMessage) -> NSAttributedString {
         
-        let attrMsg = NSMutableAttributedString(string: message.rawMessage)
+        let attrMsg = NSMutableAttributedString(string: message.sender! + ": " + message.rawMessage)
         
         if(message.emotes.count > 0) {
             for emote in message.emotes {
@@ -161,6 +165,12 @@ class TwitchChatMessageQueue {
         }
         
         return attrMsg
+    }
+    
+    private func sanitizedIRCString(string: String) -> String {
+        //https://github.com/ircv3/ircv3-specifications/blob/master/core/message-tags-3.2.md#escaping-values
+        
+        return ""
     }
     
 }
