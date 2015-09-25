@@ -121,11 +121,15 @@ class MenuItemView : UIView {
                 
                 self.title!.textColor = UIColor.blackColor()
                 self.backgroundColor = UIColor.whiteColor()
-                self.frame = CGRect(
-                    x: self.frame.origin.x - (self.bounds.width * 0.1)/2,
-                    y: self.frame.origin.y - (self.bounds.height * 0.1)/2,
+                
+                let newFrame = CGRect(
+                    x: self.bounds.origin.x - (self.bounds.width * 0.1)/2,
+                    y: self.bounds.origin.y - (self.bounds.height * 0.1)/2,
                     width: self.bounds.width * 1.1,
                     height: self.bounds.height * 1.1)
+                
+                self.bounds = newFrame
+                self.title!.frame = newFrame
                 
                 self.layoutIfNeeded()
                 },
@@ -138,11 +142,14 @@ class MenuItemView : UIView {
                 self.title!.textColor = UIColor.whiteColor()
                 self.backgroundColor = UIColor(white: 0.5, alpha: 0.9)
                 
-                self.frame = CGRect(
-                    x: self.frame.origin.x + ((self.bounds.width/1.1) * 0.1)/2,
-                    y: self.frame.origin.y + ((self.bounds.height/1.1) * 0.1)/2,
+                let newFrame = CGRect(
+                    x: self.bounds.origin.x + ((self.bounds.width/1.1) * 0.1)/2,
+                    y: self.bounds.origin.y + ((self.bounds.height/1.1) * 0.1)/2,
                     width: self.bounds.width / 1.1,
                     height: self.bounds.height / 1.1)
+                
+                self.bounds = newFrame
+                self.title!.frame = newFrame
                 
                 self.layoutIfNeeded()
                 },
