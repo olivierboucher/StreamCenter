@@ -10,6 +10,7 @@ import UIKit
 import Foundation
 
 class VideoViewController : UIViewController {
+    private var gestureRecognizer : UILongPressGestureRecognizer?
     private var videoView : VideoView?
     private var videoPlayer : AVPlayer?
     private var stream : TwitchStream?
@@ -18,6 +19,11 @@ class VideoViewController : UIViewController {
     convenience init(stream : TwitchStream){
         self.init(nibName: nil, bundle: nil)
         self.stream = stream;
+        
+        //Gestures configuration
+        self.gestureRecognizer = UILongPressGestureRecognizer(target: self, action: "handleLongPress")
+        //self.gestureRecognizer!.allowedPressTypes = [NSNumber(integer: UIPressType.Select.rawValue)];
+        self.view.addGestureRecognizer(self.gestureRecognizer!)
         
         TwitchApi.getStreamsForChannel(self.stream!.channel.name) {
             (streams, error) in
@@ -35,7 +41,7 @@ class VideoViewController : UIViewController {
                 
                 dispatch_async(dispatch_get_main_queue(),{
                     self.initializePlayerView()
-                    self.initializeChatView()
+                    //self.initializeChatView()
                 })
 
             }
@@ -67,5 +73,18 @@ class VideoViewController : UIViewController {
         self.chatView!.startDisplayingMessages()
         self.chatView?.backgroundColor = UIColor.whiteColor()
         self.view.addSubview(self.chatView!)
+    }
+    
+    func handleLongPress() {
+        if self.gestureRecognizer!.state == UIGestureRecognizerState.Began {
+            //Pop modal menu
+            //Live chat
+            //      Display/Hide
+            //Quality
+            //      Source
+            //      High
+            //      Medium
+            //      Low
+        }
     }
 }

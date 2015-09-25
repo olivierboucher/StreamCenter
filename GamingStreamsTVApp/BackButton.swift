@@ -5,17 +5,16 @@
 //  Created by Olivier Boucher on 2015-09-15.
 //  Copyright © 2015 Rivus Media Inc. All rights reserved.
 //
-import QuartzCore
 import UIKit
 import Foundation
 
 
 class BackButton : UIView {
     
-    private var _gestureRecognizer : UIGestureRecognizer?
-    private var _label : UILabel?
-    private var _imageView : UIImageView?
-    private var _callback : (() -> ())?
+    private var gestureRecognizer : UIGestureRecognizer?
+    private var label : UILabel?
+    private var imageView : UIImageView?
+    private var callback : (() -> ())?
     
     init(frame : CGRect, withTitle title : NSString, andCallback callback : (() -> ())) {
         super.init(frame: frame)
@@ -25,32 +24,32 @@ class BackButton : UIView {
         let maxLabelSize = CGSize(width: frame.width * 0.9, height: frame.height)
         let labelBounds = CGRect(origin: CGPoint(x: 0,y: 0), size: maxLabelSize)
         
-        _label = UILabel(frame: labelBounds)
-        _label!.font = font
-        _label!.text = title as String
-        _label!.textColor = UIColor.whiteColor()
-        _label!.textAlignment = NSTextAlignment.Left
+        self.label = UILabel(frame: labelBounds)
+        self.label!.font = font
+        self.label!.text = title as String
+        self.label!.textColor = UIColor.whiteColor()
+        self.label!.textAlignment = NSTextAlignment.Left
         //label.layer.borderColor = UIColor.redColor().CGColor;
         //label.layer.borderWidth = 1;
         
-        _imageView = UIImageView(frame: CGRect(x: 0,y: 0, width: frame.width * 0.1, height: frame.height))
-        _imageView!.contentMode = UIViewContentMode.ScaleAspectFit
-        _imageView!.image = self.getBackImageOfColor(UIColor.whiteColor())
+        self.imageView = UIImageView(frame: CGRect(x: 0,y: 0, width: frame.width * 0.1, height: frame.height))
+        self.imageView!.contentMode = UIViewContentMode.ScaleAspectFit
+        self.imageView!.image = self.getBackImageOfColor(UIColor.whiteColor())
         //imageView.layer.borderColor = UIColor.greenColor().CGColor;
         //imageView.layer.borderWidth = 1;
         
-        _imageView!.center = CGPoint(x: _imageView!.bounds.width/2, y: frame.origin.y)
-        _label!.center = CGPoint(x: _imageView!.bounds.width + _label!.bounds.width/2, y: frame.origin.y)
+        self.imageView!.center = CGPoint(x: self.imageView!.bounds.width/2, y: frame.origin.y)
+        self.label!.center = CGPoint(x: self.imageView!.bounds.width + self.label!.bounds.width/2, y: frame.origin.y)
         
         //Gestures configuration
-        self._gestureRecognizer = UIGestureRecognizer(target: self, action: "tapped:")
-        self._gestureRecognizer!.allowedPressTypes = [NSNumber(integer: UIPressType.Select.rawValue)];
-        self.addGestureRecognizer(self._gestureRecognizer!)
+        self.gestureRecognizer = UIGestureRecognizer(target: self, action: "tapped:")
+        self.gestureRecognizer!.allowedPressTypes = [NSNumber(integer: UIPressType.Select.rawValue)];
+        self.addGestureRecognizer(self.gestureRecognizer!)
         //Callback attribution
-        self._callback = callback
+        self.callback = callback
         
-        self.addSubview(_imageView!)
-        self.addSubview(_label!)
+        self.addSubview(self.imageView!)
+        self.addSubview(self.label!)
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -93,13 +92,13 @@ class BackButton : UIView {
         super.didUpdateFocusInContext(context, withAnimationCoordinator: coordinator)
         if(context.nextFocusedView == self){
             coordinator.addCoordinatedAnimations({
-                self._label!.textColor = UIColor.blackColor()
-                self._imageView!.image = self.getBackImageOfColor(UIColor.blackColor())
+                self.label!.textColor = UIColor.blackColor()
+                self.imageView!.image = self.getBackImageOfColor(UIColor.blackColor())
                 
-                self._label!.font = self._label!.font.fontWithSize(40)
-                self._imageView!.frame = CGRect(x: 0, y: 0, width: self._imageView!.bounds.width * 1.25, height: self._imageView!.bounds.height * 1.25)
-                self._imageView!.center = CGPoint(x: self._imageView!.bounds.width/2, y: self.frame.origin.y)
-                self._label!.center = CGPoint(x: self._imageView!.bounds.width + self._label!.bounds.width/2, y: self.frame.origin.y)
+                self.label!.font = self.label!.font.fontWithSize(40)
+                self.imageView!.frame = CGRect(x: 0, y: 0, width: self.imageView!.bounds.width * 1.25, height: self.imageView!.bounds.height * 1.25)
+                self.imageView!.center = CGPoint(x: self.imageView!.bounds.width/2, y: self.frame.origin.y)
+                self.label!.center = CGPoint(x: self.imageView!.bounds.width + self.label!.bounds.width/2, y: self.frame.origin.y)
                 
                 self.layoutIfNeeded()
                 
@@ -109,13 +108,13 @@ class BackButton : UIView {
         }
         else if(context.previouslyFocusedView == self) {
             coordinator.addCoordinatedAnimations({
-                self._label!.textColor = UIColor.whiteColor()
-                self._imageView!.image = self.getBackImageOfColor(UIColor.whiteColor())
+                self.label!.textColor = UIColor.whiteColor()
+                self.imageView!.image = self.getBackImageOfColor(UIColor.whiteColor())
                 
-                self._label!.font = self._label!.font.fontWithSize(30)
-                self._imageView!.frame = CGRect(x: 0, y: 0, width: self._imageView!.bounds.width / 1.25, height: self._imageView!.bounds.height / 1.25)
-                self._imageView!.center = CGPoint(x: self._imageView!.bounds.width/2, y: self.frame.origin.y)
-                self._label!.center = CGPoint(x: self._imageView!.bounds.width + self._label!.bounds.width/2, y: self.frame.origin.y)
+                self.label!.font = self.label!.font.fontWithSize(30)
+                self.imageView!.frame = CGRect(x: 0, y: 0, width: self.imageView!.bounds.width / 1.25, height: self.imageView!.bounds.height / 1.25)
+                self.imageView!.center = CGPoint(x: self.imageView!.bounds.width/2, y: self.frame.origin.y)
+                self.label!.center = CGPoint(x: self.imageView!.bounds.width + self.label!.bounds.width/2, y: self.frame.origin.y)
                 
                 self.layoutIfNeeded()
                 },
@@ -130,7 +129,7 @@ class BackButton : UIView {
         {
             if item.type == UIPressType.Select
             {
-                self._callback!()
+                self.callback!()
                 break;
             }
         }

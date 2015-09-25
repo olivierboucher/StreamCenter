@@ -37,15 +37,6 @@ class GamesViewController : UIViewController {
             self._loadingView?.center = CGPoint(x: self.view.bounds.width/2, y: self.view.bounds.height/2)
             self.view.addSubview(_loadingView!)
         }
-//        //TESTS
-//
-//        self._testChat = TwitchChatHandler()
-//        
-//        self._testChat?.anonymousConnect()
-//        self._testChat?.startLoop()
-//        self._testChat?.send("JOIN", destination: "#lirik", message: nil)
-//
-//        // TESTS END
         
         TwitchApi.getTopGamesWithOffset(0, limit: 17) {
             (games, error) in
@@ -114,7 +105,6 @@ class GamesViewController : UIViewController {
             self._collectionView!.registerClass(GameCellView.classForCoder(), forCellWithReuseIdentifier: GameCellView.cellIdentifier);
             self._collectionView!.dataSource = self;
             self._collectionView!.delegate = self;
-            //self._collectionView?.backgroundColor = UIColor.blueColor();
             self._collectionView!.contentInset = UIEdgeInsets(top: ITEMS_INSETS_Y + 10, left: ITEMS_INSETS_X, bottom: ITEMS_INSETS_Y, right: ITEMS_INSETS_X)
             
             self.view.addSubview(self._collectionView!)
@@ -124,21 +114,6 @@ class GamesViewController : UIViewController {
             _collectionView?.reloadData()
         }
     }
-    
-    //    override func didUpdateFocusInContext(context: UIFocusUpdateContext, withAnimationCoordinator coordinator: UIFocusAnimationCoordinator) {
-    //        super.didUpdateFocusInContext(context, withAnimationCoordinator: coordinator)
-    //
-    //        let view1 = context.previouslyFocusedView as? GameCellView
-    //        let view2 = context.nextFocusedView as? GameCellView
-    //
-    //        if(view1 != nil) {
-    //            NSLog("Prev : %@", (view1!.getGame()?.getName())!)
-    //        }
-    //        if(view2 != nil) {
-    //            NSLog("Next : %@", (view2!.getGame()?.getName())!)
-    //        }
-    //    }
-    
 }
 
 extension GamesViewController : UICollectionViewDelegate {
