@@ -88,10 +88,14 @@ class ModalMenuView : UIView {
 class MenuItemView : UIView {
     let option : MenuOption
     var title : UILabel? = nil
+    var gestureRecognizer : UITapGestureRecognizer?
     
     init(frame: CGRect, option: MenuOption) {
         self.option = option
         super.init(frame: frame)
+        
+        self.gestureRecognizer = UITapGestureRecognizer(target: self, action: "handleSelect")
+        self.gestureRecognizer!.allowedPressTypes = [UIPressType.Select.rawValue]
         
         self.title = UILabel(frame: self.bounds)
         
@@ -106,8 +110,12 @@ class MenuItemView : UIView {
     }
     
     required init?(coder aDecoder: NSCoder) {
-        self.option = MenuOption(title: "", enabled: false)
+        self.option = MenuOption(title: "", enabled: false, onClick: {_ in })
         super.init(coder: aDecoder)
+    }
+    
+    func handleSelect() {
+        self.option.clickCallback(sender: self)
     }
     
     override func canBecomeFocused() -> Bool {
@@ -164,17 +172,20 @@ struct MenuOption {
     let enabledTitle : String
     let disabledTitle : String
     var isEnabled : Bool
+    var clickCallback : (sender: MenuItemView?)->()
     
-    init(enabledTitle : String, disabledTitle : String, enabled : Bool) {
+    init(enabledTitle : String, disabledTitle : String, enabled : Bool, onClick : (sender :MenuItemView?)->()) {
         self.enabledTitle = enabledTitle
         self.disabledTitle = disabledTitle
         self.isEnabled = enabled
+        self.clickCallback = onClick
     }
     
-    init(title : String, enabled : Bool) {
+    init(title : String, enabled : Bool, onClick : (sender : MenuItemView?)->()) {
         self.enabledTitle = title
         self.disabledTitle = title
         self.isEnabled = enabled
+        self.clickCallback = onClick
     }
     
 }

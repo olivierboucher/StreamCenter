@@ -29,13 +29,13 @@ class VideoViewController : UIViewController {
         //Modal menu options
         self.modalMenuOptions = [
             "Live Chat" : [
-                MenuOption(enabledTitle: "Turn off", disabledTitle: "Turn on", enabled: false)
+                MenuOption(enabledTitle: "Turn off", disabledTitle: "Turn on", enabled: false, onClick:self.handleChatOnOff)
             ],
             "Stream Quality" : [
-                MenuOption(title: "Source", enabled: false),
-                MenuOption(title: "High", enabled: false),
-                MenuOption(title: "Medium", enabled: false),
-                MenuOption(title: "Low", enabled: false)
+                MenuOption(title: "Source", enabled: false, onClick: self.handleQualityChange),
+                MenuOption(title: "High", enabled: false, onClick: self.handleQualityChange),
+                MenuOption(title: "Medium", enabled: false, onClick: self.handleQualityChange),
+                MenuOption(title: "Low", enabled: false, onClick: self.handleQualityChange)
             ]
         ]
         
@@ -114,5 +114,13 @@ class VideoViewController : UIViewController {
             }
         }
         self.dismissViewControllerAnimated(true, completion: nil)
+    }
+    
+    func handleChatOnOff(sender : MenuItemView?) {
+        
+    }
+    
+    func handleQualityChange(sender : MenuItemView?) {
+        
     }
 }
