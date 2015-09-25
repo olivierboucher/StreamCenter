@@ -114,8 +114,7 @@ class TwitchChatMessageQueue {
                     dispatch_group_wait(downloadGroup, DISPATCH_TIME_FOREVER)
                 }
                 else if keyValue[0] == "display-name" && !keyValue[1].isEmpty  {
-                    //TODO: Sanitize IRC value
-                    message.sender = keyValue[1]
+                    message.sender = self.sanitizedIRCString(keyValue[1])
                 }
                 else if keyValue[0] == "@color" && !keyValue[1].isEmpty  {
                     message.senderDisplayColor = keyValue[1]
@@ -197,7 +196,12 @@ class TwitchChatMessageQueue {
     private func sanitizedIRCString(string: String) -> String {
         //https://github.com/ircv3/ircv3-specifications/blob/master/core/message-tags-3.2.md#escaping-values
         
-        return ""
+        return string.stringByReplacingOccurrencesOfString("\\:", withString: ";")
+                .stringByReplacingOccurrencesOfString("\\s", withString: "")
+                .stringByReplacingOccurrencesOfString("\\\\", withString: "\\")
+                .stringByReplacingOccurrencesOfString("\\r", withString: "\r")
+                .stringByReplacingOccurrencesOfString("\\n", withString: "\n")
+        
     }
     
 }
