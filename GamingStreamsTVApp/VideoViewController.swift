@@ -85,6 +85,27 @@ class VideoViewController : UIViewController {
             //      High
             //      Medium
             //      Low
+            
+            let modalMenu = ModalMenuView(frame: self.view.bounds,
+                options: [
+                    "Title1" : [
+                        MenuOption(title: "test1-1", enabled: false),
+                        MenuOption(title: "test1-2", enabled: false)
+                    ],
+                    "Title2" : [
+                        MenuOption(title: "test2-1", enabled: false),
+                        MenuOption(title: "test2-2", enabled: false),
+                        MenuOption(title: "test2-3", enabled: false)
+                    ]
+                ],
+                size: CGSize(width: self.view.bounds.width/2, height: self.view.bounds.height/2))
+            
+            modalMenu.center = CGPoint(x: self.view.bounds.width/2, y: self.view.bounds.height/2)
+            
+            modalMenu.layer.borderColor = UIColor.blueColor().CGColor
+            modalMenu.layer.borderWidth = 1
+            
+            self.view.addSubview(modalMenu)
         }
     }
 }
