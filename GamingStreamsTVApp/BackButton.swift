@@ -42,7 +42,7 @@ class BackButton : UIView {
         self.label!.center = CGPoint(x: self.imageView!.bounds.width + self.label!.bounds.width/2, y: frame.origin.y)
         
         //Gestures configuration
-        self.gestureRecognizer = UIGestureRecognizer(target: self, action: "tapped:")
+        self.gestureRecognizer = UITapGestureRecognizer(target: self, action: "handlePress")
         self.gestureRecognizer!.allowedPressTypes = [NSNumber(integer: UIPressType.Select.rawValue)];
         self.addGestureRecognizer(self.gestureRecognizer!)
         //Callback attribution
@@ -124,14 +124,7 @@ class BackButton : UIView {
         
     }
     
-    override func pressesEnded(presses: Set<UIPress>, withEvent event: UIPressesEvent?) {
-        for item in presses
-        {
-            if item.type == UIPressType.Select
-            {
-                self.callback!()
-                break;
-            }
-        }
+    func handlePress() {
+        self.callback!()
     }
 }

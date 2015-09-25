@@ -10,20 +10,34 @@ import UIKit
 import Foundation
 
 class VideoViewController : UIViewController {
-    private var gestureRecognizer : UILongPressGestureRecognizer?
+    private var longPressRecognizer : UILongPressGestureRecognizer?
     private var videoView : VideoView?
     private var videoPlayer : AVPlayer?
     private var stream : TwitchStream?
     private var chatView : TwitchChatView?
+    private var modalMenu : ModalMenuView?
+    private var modalMenuOptions : Dictionary<String, Array<MenuOption>>?
     
     convenience init(stream : TwitchStream){
         self.init(nibName: nil, bundle: nil)
         self.stream = stream;
         
         //Gestures configuration
-        self.gestureRecognizer = UILongPressGestureRecognizer(target: self, action: "handleLongPress")
-        //self.gestureRecognizer!.allowedPressTypes = [NSNumber(integer: UIPressType.Select.rawValue)];
-        self.view.addGestureRecognizer(self.gestureRecognizer!)
+        self.longPressRecognizer = UILongPressGestureRecognizer(target: self, action: "handleLongPress")
+        self.view.addGestureRecognizer(self.longPressRecognizer!)
+        
+        //Modal menu options
+        self.modalMenuOptions = [
+            "Live Chat" : [
+                MenuOption(enabledTitle: "Turn off", disabledTitle: "Turn on", enabled: false)
+            ],
+            "Stream Quality" : [
+                MenuOption(title: "Source", enabled: false),
+                MenuOption(title: "High", enabled: false),
+                MenuOption(title: "Medium", enabled: false),
+                MenuOption(title: "Low", enabled: false)
+            ]
+        ]
         
         TwitchApi.getStreamsForChannel(self.stream!.channel.name) {
             (streams, error) in
@@ -76,36 +90,29 @@ class VideoViewController : UIViewController {
     }
     
     func handleLongPress() {
-        if self.gestureRecognizer!.state == UIGestureRecognizerState.Began {
-            //Pop modal menu
-            //Live chat
-            //      Display/Hide
-            //Quality
-            //      Source
-            //      High
-            //      Medium
-            //      Low
+        if self.longPressRecognizer!.state == UIGestureRecognizerState.Began {
+            modalMenu = ModalMenuView(frame: self.view.bounds,
+                options: self.modalMenuOptions!,
+                size: CGSize(width: self.view.bounds.width/3, height: self.view.bounds.height/1.5))
             
-            let modalMenu = ModalMenuView(frame: self.view.bounds,
-                options: [
-                    "Title1" : [
-                        MenuOption(title: "test1-1", enabled: false),
-                        MenuOption(title: "test1-2", enabled: false)
-                    ],
-                    "Title2" : [
-                        MenuOption(title: "test2-1", enabled: false),
-                        MenuOption(title: "test2-2", enabled: false),
-                        MenuOption(title: "test2-3", enabled: false)
-                    ]
-                ],
-                size: CGSize(width: self.view.bounds.width/2, height: self.view.bounds.height/2))
+            modalMenu!.center = self.view.center
             
-            modalMenu.center = CGPoint(x: self.view.bounds.width/2, y: self.view.bounds.height/2)
+            let gestureRecognizer = UITapGestureRecognizer(target: self, action: "handleMenuPress")
+            gestureRecognizer.allowedPressTypes = [UIPressType.Menu.rawValue]
             
-            modalMenu.layer.borderColor = UIColor.blueColor().CGColor
-            modalMenu.layer.borderWidth = 1
+            modalMenu?.addGestureRecognizer(gestureRecognizer)
             
-            self.view.addSubview(modalMenu)
+            self.view.addSubview(modalMenu!)
         }
+    }
+    
+    func handleMenuPress() {
+        if let modalMenu = modalMenu {
+            if self.view.subviews.contains(modalMenu) {
+                modalMenu.removeFromSuperview()
+                return
+            }
+        }
+        self.dismissViewControllerAnimated(true, completion: nil)
     }
 }

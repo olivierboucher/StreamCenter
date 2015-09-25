@@ -40,16 +40,6 @@ class ModalMenuView : UIView {
         super.init(coder: aDecoder)
     }
     
-//    func blurAndSetMenuFrame() {
-//        let layer = CALayer()
-//        layer.frame = CGRect(origin:
-//            CGPoint(x: self.bounds.width/2 - self.menuSize.width/2,
-//                    y: self.bounds.height/2 - self.menuSize.height/2),
-//            size: self.menuSize)
-//        
-//        
-//    }
-    
     static func requiredMenuItemHeightToFit(menuOptions : Dictionary<String, Array<MenuOption>>, menuSize : CGSize) -> CGSize {
         var count : CGFloat = 0
         for menuOptionsArray in menuOptions {
@@ -66,18 +56,14 @@ class ModalMenuView : UIView {
             
             menuTitle.text = self.menuOptions[i].key
             menuTitle.textAlignment = NSTextAlignment.Center
-            menuTitle.font = UIFont.systemFontOfSize(self.menuItemSize.height * 0.7, weight: 1)
+            menuTitle.font = UIFont.systemFontOfSize(self.menuItemSize.height * 0.8, weight: 0.5)
             menuTitle.textColor = UIColor.whiteColor()
-            menuTitle.layer.borderColor = UIColor.greenColor().CGColor
-            menuTitle.layer.borderWidth = 1
             
             self.addSubview(menuTitle)
             
             for var j = 0; j < self.menuOptions[i].value.count; j++  {
                 currentIndex++
                 let optionView = MenuItemView(frame: self.getFrameForItemAtIndex(currentIndex), option: self.menuOptions[i].value[j])
-                optionView.layer.borderColor = UIColor.redColor().CGColor
-                optionView.layer.borderWidth = 1
                 
                 self.addSubview(optionView)
             }
@@ -101,15 +87,69 @@ class ModalMenuView : UIView {
 
 class MenuItemView : UIView {
     let option : MenuOption
+    var title : UILabel? = nil
     
     init(frame: CGRect, option: MenuOption) {
         self.option = option
         super.init(frame: frame)
+        
+        self.title = UILabel(frame: self.bounds)
+        
+        self.title!.text = self.option.isEnabled ? self.option.enabledTitle : self.option.disabledTitle
+        self.title!.textAlignment = NSTextAlignment.Center
+        self.title!.font = UIFont.systemFontOfSize(self.bounds.height * 0.7, weight: 0)
+        self.title!.textColor = UIColor.whiteColor()
+        
+        self.backgroundColor = UIColor(white: 0.5, alpha: 0.9)
+        self.addSubview(self.title!)
+        self.layer.cornerRadius = self.bounds.height * 0.05
     }
     
     required init?(coder aDecoder: NSCoder) {
         self.option = MenuOption(title: "", enabled: false)
         super.init(coder: aDecoder)
+    }
+    
+    override func canBecomeFocused() -> Bool {
+        return !self.option.isEnabled
+    }
+    
+    override func didUpdateFocusInContext(context: UIFocusUpdateContext, withAnimationCoordinator coordinator: UIFocusAnimationCoordinator) {
+        super.didUpdateFocusInContext(context, withAnimationCoordinator: coordinator)
+        if(context.nextFocusedView == self){
+            coordinator.addCoordinatedAnimations({
+                
+                self.title!.textColor = UIColor.blackColor()
+                self.backgroundColor = UIColor.whiteColor()
+                self.frame = CGRect(
+                    x: self.frame.origin.x - (self.bounds.width * 0.1)/2,
+                    y: self.frame.origin.y - (self.bounds.height * 0.1)/2,
+                    width: self.bounds.width * 1.1,
+                    height: self.bounds.height * 1.1)
+                
+                self.layoutIfNeeded()
+                },
+                completion: nil
+            )
+        }
+        else if(context.previouslyFocusedView == self) {
+            coordinator.addCoordinatedAnimations({
+                
+                self.title!.textColor = UIColor.whiteColor()
+                self.backgroundColor = UIColor(white: 0.5, alpha: 0.9)
+                
+                self.frame = CGRect(
+                    x: self.frame.origin.x + ((self.bounds.width/1.1) * 0.1)/2,
+                    y: self.frame.origin.y + ((self.bounds.height/1.1) * 0.1)/2,
+                    width: self.bounds.width / 1.1,
+                    height: self.bounds.height / 1.1)
+                
+                self.layoutIfNeeded()
+                },
+                completion: nil
+            )
+        }
+        
     }
 }
 
