@@ -165,7 +165,7 @@ class TwitchChatMessageQueue {
         
         
         if(message.emotes.count > 0) {
-            var removedChars = -message.sender!.characters.count-2; //Because ranges are based on rawMessage
+            var removedChars = -(message.sender!.characters.count + 2); //Because ranges are based on rawMessage
             for emote in message.emotes {
                 let attachment = NSTextAttachment()
                 let emoteImage = UIImage(data: self.delegate.getEmoteDataFromCache(emote.0)!)
