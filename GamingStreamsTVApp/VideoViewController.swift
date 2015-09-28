@@ -22,6 +22,8 @@ class VideoViewController : UIViewController {
         self.init(nibName: nil, bundle: nil)
         self.stream = stream;
         
+        self.view.backgroundColor = UIColor.blackColor()
+        
         //Gestures configuration
         self.longPressRecognizer = UILongPressGestureRecognizer(target: self, action: "handleLongPress")
         self.longPressRecognizer?.cancelsTouchesInView = false

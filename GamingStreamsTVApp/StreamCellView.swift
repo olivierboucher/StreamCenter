@@ -59,6 +59,22 @@ class StreamCellView : UICollectionViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        
+        self._stream = nil
+        self._image = nil
+        self._imageView?.image = nil
+        self._streamStatusLabel?.text = ""
+        self._viewersInfoLabel?.text = ""
+        
+        self._activityIndicator = UIActivityIndicatorView(frame: self._imageView!.frame)
+        self._activityIndicator?.activityIndicatorViewStyle = UIActivityIndicatorViewStyle.WhiteLarge
+        self._activityIndicator?.startAnimating()
+        
+        self._imageView?.addSubview(self._activityIndicator!)
+    }
+    
     func setStream(stream : TwitchStream) {
         self._stream = stream
         self._streamStatusLabel?.text = stream.channel.status
@@ -97,7 +113,7 @@ class StreamCellView : UICollectionViewCell {
                     Alamofire.request(.GET, imgUrlString!).response() {
                         (_, _, data, error) in
                         if error != nil {
-                            //TODO: GET ERROR FROM ALAMOFIRE
+                            //TODO(Olivier): GET ERROR FROM ALAMOFIRE
                             completionHandler(image : nil, error : nil);
                             return
                         }

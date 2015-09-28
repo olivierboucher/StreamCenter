@@ -50,6 +50,22 @@ class GameCellView : UICollectionViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        
+        self._game = nil
+        self._image = nil
+        self._imageView?.image = nil
+        self._gameNameLabel?.text = ""
+        self._viewCountLabel?.text = ""
+        
+        self._activityIndicator = UIActivityIndicatorView(frame: self._imageView!.frame)
+        self._activityIndicator?.activityIndicatorViewStyle = UIActivityIndicatorViewStyle.WhiteLarge
+        self._activityIndicator?.startAnimating()
+        
+        self._imageView?.addSubview(self._activityIndicator!)
+    }
+    
     func setGame(game : TwitchGame) {
         _game = game;
         _gameNameLabel!.text = game.name
