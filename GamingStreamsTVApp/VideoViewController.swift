@@ -24,6 +24,7 @@ class VideoViewController : UIViewController {
         
         //Gestures configuration
         self.longPressRecognizer = UILongPressGestureRecognizer(target: self, action: "handleLongPress")
+        self.longPressRecognizer?.cancelsTouchesInView = false
         self.view.addGestureRecognizer(self.longPressRecognizer!)
         
         //Modal menu options
@@ -55,11 +56,26 @@ class VideoViewController : UIViewController {
                 
                 dispatch_async(dispatch_get_main_queue(),{
                     self.initializePlayerView()
-                    //self.initializeChatView()
                 })
                 
             }
         }
+    }
+    
+    override func viewWillDisappear(animated: Bool) {
+        
+        if self.chatView != nil && self.view.subviews.contains(self.chatView!) {
+            self.chatView!.stopDisplayingMessages()
+            self.chatView!.removeFromSuperview()
+            self.chatView = nil
+        }
+        
+        self.videoView!.removeFromSuperview()
+        self.videoView!.setPlayer(nil)
+        self.videoView = nil
+        self.videoPlayer = nil
+
+        super.viewWillDisappear(animated)
     }
     
     override func viewDidLoad() {
@@ -91,18 +107,21 @@ class VideoViewController : UIViewController {
     
     func handleLongPress() {
         if self.longPressRecognizer!.state == UIGestureRecognizerState.Began {
-            modalMenu = ModalMenuView(frame: self.view.bounds,
-                options: self.modalMenuOptions!,
-                size: CGSize(width: self.view.bounds.width/3, height: self.view.bounds.height/1.5))
+            if self.modalMenu == nil {
+                modalMenu = ModalMenuView(frame: self.view.bounds,
+                    options: self.modalMenuOptions!,
+                    size: CGSize(width: self.view.bounds.width/3, height: self.view.bounds.height/1.5))
+                
+                modalMenu!.center = self.view.center
+                
+                let gestureRecognizer = UITapGestureRecognizer(target: self, action: "handleMenuPress")
+                gestureRecognizer.allowedPressTypes = [UIPressType.Menu.rawValue]
+                gestureRecognizer.cancelsTouchesInView = false
+                
+                modalMenu?.addGestureRecognizer(gestureRecognizer)
+            }
             
-            modalMenu!.center = self.view.center
-            
-            let gestureRecognizer = UITapGestureRecognizer(target: self, action: "handleMenuPress")
-            gestureRecognizer.allowedPressTypes = [UIPressType.Menu.rawValue]
-            
-            modalMenu?.addGestureRecognizer(gestureRecognizer)
-            
-            self.view.addSubview(modalMenu!)
+            self.view.addSubview(self.modalMenu!)
         }
     }
     

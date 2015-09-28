@@ -36,10 +36,6 @@ class IRCHandlerBase: NSObject, NSStreamDelegate
         super.init()
     }
     
-    deinit {
-        send("QUIT", destination: nil, message: "Closing connection")
-        disconnect()
-    }
     
     func send(command: String , destination: String?, message: String?) {
         var fullCommand : String = command
@@ -167,6 +163,8 @@ class IRCHandlerBase: NSObject, NSStreamDelegate
     }
     
     func disconnect() {
+        send("QUIT", destination: nil, message: "Closing connection")
+        
         inputStream!.close()
         outputStream!.close()
         

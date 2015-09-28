@@ -21,7 +21,7 @@ class TwitchChatMessageView : UIView {
         
         super.init(frame: CGRect(origin: position, size: CGSize(width: width, height: size.height+10)))
         
-        self.backgroundColor = UIColor.whiteColor()
+        self.backgroundColor = UIColor.clearColor()
     }
 
     required init?(coder aDecoder: NSCoder) {

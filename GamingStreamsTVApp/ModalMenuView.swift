@@ -29,6 +29,8 @@ class ModalMenuView : UIView {
         self.menuItemSize = ModalMenuView.requiredMenuItemHeightToFit(menuOptions, menuSize: size)
         super.init(frame: frame)
         
+        self.userInteractionEnabled = true
+        
         self.backgroundColor = UIColor(white: 0.8, alpha: 0.8)
         self.buildMenuItemViews()
     }
@@ -96,6 +98,8 @@ class MenuItemView : UIView {
         
         self.gestureRecognizer = UITapGestureRecognizer(target: self, action: "handleSelect")
         self.gestureRecognizer!.allowedPressTypes = [UIPressType.Select.rawValue]
+        self.addGestureRecognizer(self.gestureRecognizer!)
+        
         
         self.title = UILabel(frame: self.bounds)
         
@@ -103,6 +107,8 @@ class MenuItemView : UIView {
         self.title!.textAlignment = NSTextAlignment.Center
         self.title!.font = UIFont.systemFontOfSize(self.bounds.height * 0.7, weight: 0)
         self.title!.textColor = UIColor.whiteColor()
+        
+        self.userInteractionEnabled = true
         
         self.backgroundColor = UIColor(white: 0.5, alpha: 0.9)
         self.addSubview(self.title!)
@@ -128,7 +134,7 @@ class MenuItemView : UIView {
     }
     
     override func canBecomeFocused() -> Bool {
-        return !self.option.isEnabled
+        return true
     }
     
     override func didUpdateFocusInContext(context: UIFocusUpdateContext, withAnimationCoordinator coordinator: UIFocusAnimationCoordinator) {
