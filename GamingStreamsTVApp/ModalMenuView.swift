@@ -134,7 +134,14 @@ class MenuItemView : UIView {
     }
     
     override func canBecomeFocused() -> Bool {
-        return true
+        
+        if self.option.disabledTitle != self.option.enabledTitle {
+            return true
+        }
+        else {
+            return !self.option.isEnabled
+        }
+        
     }
     
     override func didUpdateFocusInContext(context: UIFocusUpdateContext, withAnimationCoordinator coordinator: UIFocusAnimationCoordinator) {
