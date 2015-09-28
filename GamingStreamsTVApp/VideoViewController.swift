@@ -57,7 +57,7 @@ class VideoViewController : UIViewController {
                     self.initializePlayerView()
                     //self.initializeChatView()
                 })
-
+                
             }
         }
     }
@@ -117,7 +117,42 @@ class VideoViewController : UIViewController {
     }
     
     func handleChatOnOff(sender : MenuItemView?) {
-        
+        //NOTE(Olivier) : 400 width reduction at 16:9 is 225 height reduction
+        dispatch_async(dispatch_get_main_queue(), {
+            if let menuItem = sender {
+                if menuItem.isOptionEnabled() {     //                      Turn chat off
+                    
+                    //The chat view
+                    self.chatView!.stopDisplayingMessages()
+                    self.chatView!.removeFromSuperview()
+                    self.chatView = nil
+                    
+                    //Resize video view
+                    self.videoView!.frame = self.view.frame
+                    
+                    //Set the menu option accordingly
+                    menuItem.setOptionEnabled(false)
+                }
+                else {                              //                      Turn chat on
+                    
+                    //Resize video view
+                    var frame = self.videoView!.frame
+                    frame.size.width -= 400
+                    frame.size.height -= 225
+                    frame.origin.y += (225/2)
+                    
+                    self.videoView!.frame = frame
+                    
+                    //The chat view
+                    self.chatView = TwitchChatView(frame: CGRect(x: self.view.bounds.width - 400, y: 0, width: 400, height: self.view!.bounds.height), channel: self.stream!.channel)
+                    self.chatView!.startDisplayingMessages()
+                    self.view.insertSubview(self.chatView!, belowSubview: self.modalMenu!)
+                    
+                    //Set the menu option accordingly
+                    menuItem.setOptionEnabled(true)
+                }
+            }
+        })
     }
     
     func handleQualityChange(sender : MenuItemView?) {

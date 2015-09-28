@@ -28,7 +28,7 @@ class TwitchApi {
                                         "allow_audio_only"  : "true",
                                         "allow_source"      : "true",
                                         "type"              : "any",
-                                        "p"                 : 1234,
+                                        "p"                 : Int(arc4random_uniform(99999)),
                                         "token"             : token,
                                         "sig"               : sig])
                                     .responseString { _, _, result in

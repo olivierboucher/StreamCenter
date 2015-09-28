@@ -86,7 +86,7 @@ class ModalMenuView : UIView {
 }
 
 class MenuItemView : UIView {
-    let option : MenuOption
+    var option : MenuOption
     var title : UILabel? = nil
     var gestureRecognizer : UITapGestureRecognizer?
     
@@ -116,6 +116,15 @@ class MenuItemView : UIView {
     
     func handleSelect() {
         self.option.clickCallback(sender: self)
+    }
+    
+    func isOptionEnabled() -> Bool {
+        return self.option.isEnabled
+    }
+    
+    func setOptionEnabled(enabled : Bool) {
+        self.option.isEnabled = enabled
+        self.title!.text = self.option.isEnabled ? self.option.enabledTitle : self.option.disabledTitle
     }
     
     override func canBecomeFocused() -> Bool {
