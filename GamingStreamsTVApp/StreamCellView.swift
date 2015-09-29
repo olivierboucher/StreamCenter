@@ -107,7 +107,7 @@ class StreamCellView : UICollectionViewCell {
     
     private func downloadImageWithSize(size : CGSize, completionHandler : (image : UIImage?, error : NSError?) -> ()) {
         
-        if let imgUrlTemplate = _stream?.preview["template"] as? String {
+        if let imgUrlTemplate = _stream?.preview["template"] {
             if let imgUrlString : String? = imgUrlTemplate.stringByReplacingOccurrencesOfString("{width}", withString: "\(Int(size.width))")
                 .stringByReplacingOccurrencesOfString("{height}", withString: "\(Int(size.height))") {
                     Alamofire.request(.GET, imgUrlString!).response() {

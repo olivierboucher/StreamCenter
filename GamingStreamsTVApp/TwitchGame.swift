@@ -15,10 +15,10 @@ class TwitchGame {
     private(set) var viewers : Int;
     private(set) var channels : Int;
     private(set) var name : String;
-    private(set) var thumbnails : NSDictionary;
-    private(set) var logos : NSDictionary;
+    private(set) var thumbnails : Dictionary<String, String>;
+    private(set) var logos : Dictionary<String, String>;
     
-    init(id : Int, viewers : Int, channels : Int, name : String, thumbnails : NSDictionary, logos : NSDictionary) {
+    init(id : Int, viewers : Int, channels : Int, name : String, thumbnails : Dictionary<String, String>, logos : Dictionary<String, String>) {
         self.id = id;
         self.viewers = viewers;
         self.channels = channels;

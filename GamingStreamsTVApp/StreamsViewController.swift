@@ -16,24 +16,24 @@ class StreamsViewController : LoadingViewController {
     private let ITEMS_INSETS_Y : CGFloat = 30;
     private let TOP_BAR_HEIGHT : CGFloat = 100;
     
-    private var _game : TwitchGame?
-    private var _topBar : TopBarView?
-    private var _collectionView : UICollectionView?;
-    private var _streams : NSArray?;
+    private var game : TwitchGame?
+    private var topBar : TopBarView?
+    private var collectionView : UICollectionView?;
+    private var streams : Array<TwitchStream>?;
     
     convenience init(game : TwitchGame){
         self.init(nibName: nil, bundle: nil);
-        self._game = game;
+        self.game = game;
     }
     
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
         
-        if(self._collectionView == nil){
+        if(self.collectionView == nil){
            self.displayLoadingView()
         }
         
-        TwitchApi.getTopStreamsForGameWithOffset(self._game!.name, offset: 0, limit: 20) {
+        TwitchApi.getTopStreamsForGameWithOffset(self.game!.name, offset: 0, limit: 20) {
             (streams, error) in
             
             if(error != nil || streams == nil){
@@ -45,17 +45,17 @@ class StreamsViewController : LoadingViewController {
                 });
             }
             else {
-                self._streams = streams!
+                self.streams = streams!
                 dispatch_async(dispatch_get_main_queue(),{
-                    if((self._topBar == nil) || !(self._topBar!.isDescendantOfView(self.view))) {
+                    if((self.topBar == nil) || !(self.topBar!.isDescendantOfView(self.view))) {
                         let topBarBounds = CGRect(x: self.view.bounds.origin.x, y: self.view.bounds.origin.y, width: self.view.bounds.size.width, height: self.TOP_BAR_HEIGHT)
-                        self._topBar = TopBarView(frame: topBarBounds, withMainTitle: "Live Streams - \(self._game!.name)", backButtonTitle : "Games") {
+                        self.topBar = TopBarView(frame: topBarBounds, withMainTitle: "Live Streams - \(self.game!.name)", backButtonTitle : "Games") {
                             //This is the callback that gets called on back button exit
                             self.dismissViewControllerAnimated(true, completion: nil)
                         }
-                        self._topBar?.backgroundColor = UIColor.init(white: 0.5, alpha: 1)
+                        self.topBar?.backgroundColor = UIColor.init(white: 0.5, alpha: 1)
                         
-                        self.view.addSubview(self._topBar!)
+                        self.view.addSubview(self.topBar!)
                     }
                     self.removeLoadingView()
                     self.removeErrorView()
@@ -74,24 +74,24 @@ class StreamsViewController : LoadingViewController {
     }
     
     private func displayCollectionView() {
-        if((_collectionView == nil) || !(_collectionView!.isDescendantOfView(self.view))) {
+        if((collectionView == nil) || !(collectionView!.isDescendantOfView(self.view))) {
             let layout : UICollectionViewFlowLayout = UICollectionViewFlowLayout();
             layout.scrollDirection = UICollectionViewScrollDirection.Vertical;
             layout.minimumInteritemSpacing = 10;
             layout.minimumLineSpacing = 10;
             
-            self._collectionView = UICollectionView(frame: self.view.bounds, collectionViewLayout: layout);
+            self.collectionView = UICollectionView(frame: self.view.bounds, collectionViewLayout: layout);
             
-            self._collectionView!.registerClass(StreamCellView.classForCoder(), forCellWithReuseIdentifier: StreamCellView.cellIdentifier);
-            self._collectionView!.dataSource = self;
-            self._collectionView!.delegate = self;
-            self._collectionView!.contentInset = UIEdgeInsets(top: ITEMS_INSETS_Y + 10, left: ITEMS_INSETS_X, bottom: ITEMS_INSETS_Y, right: ITEMS_INSETS_X)
+            self.collectionView!.registerClass(StreamCellView.classForCoder(), forCellWithReuseIdentifier: StreamCellView.cellIdentifier);
+            self.collectionView!.dataSource = self;
+            self.collectionView!.delegate = self;
+            self.collectionView!.contentInset = UIEdgeInsets(top: ITEMS_INSETS_Y + 10, left: ITEMS_INSETS_X, bottom: ITEMS_INSETS_Y, right: ITEMS_INSETS_X)
             
-            self.view.addSubview(self._collectionView!);
-            self.view.bringSubviewToFront(self._topBar!)
+            self.view.addSubview(self.collectionView!);
+            self.view.bringSubviewToFront(self.topBar!)
         }
         else {
-            self._collectionView!.reloadData()
+            self.collectionView!.reloadData()
         }
     }
 }
@@ -100,7 +100,7 @@ extension StreamsViewController : UICollectionViewDelegate {
     
     func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
         //TODO: get stream info and launch it
-        let selectedStream = _streams!.objectAtIndex((indexPath.section * NUM_COLUMNS) +  indexPath.row) as! TwitchStream
+        let selectedStream = streams![(indexPath.section * NUM_COLUMNS) +  indexPath.row]
         let videoViewController = VideoViewController(stream: selectedStream)
         
         self.presentViewController(videoViewController, animated: true, completion: nil)
@@ -130,27 +130,27 @@ extension StreamsViewController : UICollectionViewDataSource {
     
     func numberOfSectionsInCollectionView(collectionView: UICollectionView) -> Int {
         
-        let test = Double(_streams!.count) / Double(NUM_COLUMNS);
+        let test = Double(streams!.count) / Double(NUM_COLUMNS);
         let test2 = ceil(test);
         
         return Int(test2);
     }
     
     func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        if((section+1) * NUM_COLUMNS <= _streams!.count){
+        if((section+1) * NUM_COLUMNS <= streams!.count){
             //NSLog("count for section #%d : %d", section, NUM_COLUMNS);
             return NUM_COLUMNS;
         }
         else {
-            //NSLog("count for section #%d : %d", section, _games!.count - ((section) * NUM_COLUMNS));
-            return _streams!.count - ((section) * NUM_COLUMNS)
+            //NSLog("count for section #%d : %d", section, games!.count - ((section) * NUM_COLUMNS));
+            return streams!.count - ((section) * NUM_COLUMNS)
         }
     }
     
     func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
         let cell : StreamCellView = collectionView.dequeueReusableCellWithReuseIdentifier(StreamCellView.cellIdentifier, forIndexPath: indexPath) as! StreamCellView;
         //NSLog("Indexpath => section:%d row:%d", indexPath.section, indexPath.row);
-        cell.setStream(_streams!.objectAtIndex((indexPath.section * NUM_COLUMNS) +  indexPath.row) as! TwitchStream);
+        cell.setStream(streams![((indexPath.section * NUM_COLUMNS) +  indexPath.row)]);
         return cell;
     }
 }

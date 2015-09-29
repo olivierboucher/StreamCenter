@@ -13,10 +13,10 @@ class TwitchStream {
     private(set) var gameName : String;
     private(set) var viewers : Int;
     private(set) var videoHeight : Int;
-    private(set) var preview : NSDictionary;
+    private(set) var preview : Dictionary<String, String>;
     private(set) var channel : TwitchChannel;
     
-    init(id : Int, gameName : String, viewers : Int, videoHeight : Int, preview : NSDictionary, channel : TwitchChannel) {
+    init(id : Int, gameName : String, viewers : Int, videoHeight : Int, preview : Dictionary<String, String>, channel : TwitchChannel) {
         self.id = id;
         self.gameName = gameName;
         self.viewers = viewers;

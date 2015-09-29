@@ -11,14 +11,14 @@ import Alamofire
 
 class TwitchApi {
     
-    static func getStreamsForChannel(channel : String, completionHandler: (streams: NSArray?, error: NSError?) -> ()){
+    static func getStreamsForChannel(channel : String, completionHandler: (streams: Array<TwitchStreamVideo>?, error: NSError?) -> ()){
         //First we build the url according to the channel we desire to get stream link
         let accessUrlString = String(format: "https://api.twitch.tv/api/channels/%@/access_token", channel);
         
         Alamofire.request(.GET, accessUrlString)
             .responseJSON { _, _, result in
                 if(result.isSuccess){
-                    if let accessInfoDict = result.value as? NSDictionary {
+                    if let accessInfoDict = result.value as? Dictionary<String, AnyObject> {
                         if let sig = accessInfoDict["sig"] as? String {
                             if let token = accessInfoDict["token"] as? String {
                                 let playlistUrlString  = String(format : "http://usher.twitch.tv/api/channel/hls/%@.m3u8", channel);
@@ -76,7 +76,7 @@ class TwitchApi {
         
     }
     
-    static func getTopGamesWithOffset(offset : Int, limit : Int, completionHandler: (games: NSArray?, error: NSError?) -> ()) {
+    static func getTopGamesWithOffset(offset : Int, limit : Int, completionHandler: (games: Array<TwitchGame>?, error: NSError?) -> ()) {
         //First we build the url according to the game we desire to get infos
         let gamesUrlString = "https://api.twitch.tv/kraken/games/top";
         
@@ -86,18 +86,18 @@ class TwitchApi {
             .responseJSON { _, _, result in
                 
                 if(result.isSuccess) {
-                    if let gamesInfoDict = result.value as? NSDictionary {
-                        let games = NSMutableArray();
-                        for gameRaw in gamesInfoDict["top"] as! NSArray {
-                            if let topItemDict = gameRaw as? NSDictionary {
+                    if let gamesInfoDict = result.value as? Dictionary<String, AnyObject> {
+                        var games = Array<TwitchGame>();
+                        for gameRaw in gamesInfoDict["top"] as! Array<AnyObject> {
+                            if let topItemDict = gameRaw as? Dictionary<String, AnyObject> {
                                 if let gameDict = topItemDict["game"] as? NSDictionary {
-                                    games.addObject(TwitchGame(
+                                    games.append(TwitchGame(
                                         id : gameDict["_id"] as! Int,
                                         viewers : topItemDict["viewers"] as! Int,
                                         channels : topItemDict["channels"] as! Int,
                                         name : gameDict["name"] as! String,
-                                        thumbnails : gameDict["box"] as! NSDictionary,
-                                        logos : gameDict["logo"] as! NSDictionary));
+                                        thumbnails : gameDict["box"] as! Dictionary<String, String>,
+                                        logos : gameDict["logo"] as! Dictionary<String, String>));
                                 }
                             }
                         }
@@ -127,7 +127,7 @@ class TwitchApi {
         
     }
     
-    static func getTopStreamsForGameWithOffset(game : String, offset : Int, limit : Int, completionHandler: (streams: NSArray?, error: NSError?) -> ()) {
+    static func getTopStreamsForGameWithOffset(game : String, offset : Int, limit : Int, completionHandler: (streams: Array<TwitchStream>?, error: NSError?) -> ()) {
         //First we build the url according to the game we desire to get infos
         let streamsUrlString = "https://api.twitch.tv/kraken/streams";
         
@@ -138,22 +138,22 @@ class TwitchApi {
             .responseJSON { _, _, result in
                 
                 if(result.isSuccess) {
-                    if let streamsInfoDict = result.value as? NSDictionary {
+                    if let streamsInfoDict = result.value as? Dictionary<String, AnyObject> {
                         
-                        let streams = NSMutableArray();
+                        var streams = Array<TwitchStream>();
                         let dateFormatter = NSDateFormatter();
                         dateFormatter.dateFormat = "yyyy'-'MM'-'dd'T'HH':'mm':'ssXXX";
                         
-                        for streamRaw in streamsInfoDict["streams"] as! NSArray {
-                            if let streamDict = streamRaw as? NSDictionary {
+                        for streamRaw in streamsInfoDict["streams"] as! Array<AnyObject> {
+                            if let streamDict = streamRaw as? Dictionary<String, AnyObject> {
                                 //First extract the channel infos from the stream
                                 var channel : TwitchChannel?;
-                                if let channelDict = streamDict["channel"] as? NSDictionary {
+                                if let channelDict = streamDict["channel"] as? Dictionary<String, AnyObject> {
                                     channel = TwitchChannel(
                                         id: channelDict["_id"] as! Int,
                                         name : channelDict["name"] as! String,
                                         displayName : channelDict["display_name"] as! String,
-                                        links : channelDict["_links"] as! NSDictionary,
+                                        links : channelDict["_links"] as! Dictionary<String, String>,
                                         broadcasterLanguage : channelDict["broadcaster_language"] as? String!,
                                         language: channelDict["language"] as! String,
                                         gameName : channelDict["game"] as! String,
@@ -164,12 +164,12 @@ class TwitchApi {
                                         followers : channelDict["followers"] as! Int,
                                         views : channelDict["views"] as! Int
                                     );
-                                    streams.addObject(TwitchStream(
+                                    streams.append(TwitchStream(
                                         id : streamDict["_id"] as! Int,
                                         gameName : streamDict["game"] as! String,
                                         viewers : streamDict["viewers"] as! Int,
                                         videoHeight : streamDict["video_height"] as! Int,
-                                        preview : streamDict["preview"] as! NSDictionary,
+                                        preview : streamDict["preview"] as! Dictionary<String, String>,
                                         channel : channel!
                                         ));
                                 }

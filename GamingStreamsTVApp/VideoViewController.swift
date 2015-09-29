@@ -50,7 +50,7 @@ class VideoViewController : UIViewController {
             }
             
             if(streams != nil) {
-                let streamObject = streams?.objectAtIndex(0) as! TwitchStreamVideo
+                let streamObject = streams![0]
                 let streamAsset = AVURLAsset(URL: streamObject.url!)
                 let streamItem = AVPlayerItem(asset: streamAsset)
                 

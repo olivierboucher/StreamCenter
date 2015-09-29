@@ -10,10 +10,10 @@ import Foundation
 
 class M3UParser {
     
-    static func parseToDict(data : String) -> NSArray? {
+    static func parseToDict(data : String) -> Array<TwitchStreamVideo>? {
         let dataByLine = data.componentsSeparatedByString("\n");
         
-        let resultArray = NSMutableArray();
+        var resultArray = Array<TwitchStreamVideo>();
         
         if(dataByLine[0] == "#EXTM3U"){
             for(var i = 1; i < dataByLine.count ; i++) {
@@ -35,7 +35,7 @@ class M3UParser {
                     }
                     
                     if(codecs != nil && quality != nil && url != nil){
-                        resultArray.addObject(TwitchStreamVideo(quality: quality!, url: url!, codecs: codecs!));
+                        resultArray.append(TwitchStreamVideo(quality: quality!, url: url!, codecs: codecs!));
                     }
                     
                 }

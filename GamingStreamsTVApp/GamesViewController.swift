@@ -17,7 +17,7 @@ class GamesViewController : LoadingViewController {
     
     private var _topBar : TopBarView?
     private var _collectionView : UICollectionView?
-    private var _games : NSArray?
+    private var _games : Array<TwitchGame>?
     
     private var _testChat : TwitchChatHandler?
     
@@ -103,7 +103,7 @@ class GamesViewController : LoadingViewController {
 extension GamesViewController : UICollectionViewDelegate {
     
     func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
-        let selectedGame = _games!.objectAtIndex((indexPath.section * NUM_COLUMNS) +  indexPath.row) as! TwitchGame
+        let selectedGame = _games![(indexPath.section * NUM_COLUMNS) +  indexPath.row]
         let streamsViewController = StreamsViewController(game: selectedGame)
         
         self.presentViewController(streamsViewController, animated: true, completion: nil)
@@ -153,7 +153,7 @@ extension GamesViewController : UICollectionViewDataSource {
     func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
         let cell : GameCellView = collectionView.dequeueReusableCellWithReuseIdentifier(GameCellView.cellIdentifier, forIndexPath: indexPath) as! GameCellView;
         //NSLog("Indexpath => section:%d row:%d", indexPath.section, indexPath.row);
-        cell.setGame(_games!.objectAtIndex((indexPath.section * NUM_COLUMNS) +  indexPath.row) as! TwitchGame);
+        cell.setGame(_games![(indexPath.section * NUM_COLUMNS) +  indexPath.row]);
         return cell;
     }
 }
