@@ -8,7 +8,7 @@
 
 import UIKit
 
-class GamesViewController : UIViewController {
+class GamesViewController : LoadingViewController {
     
     private let NUM_COLUMNS = 5;
     private let ITEMS_INSETS_X : CGFloat = 25;
@@ -17,8 +17,6 @@ class GamesViewController : UIViewController {
     
     private var _topBar : TopBarView?
     private var _collectionView : UICollectionView?
-    private var _loadingView : LoadingView?
-    private var _errorView : ErrorView?
     private var _games : NSArray?
     
     private var _testChat : TwitchChatHandler?
@@ -33,9 +31,7 @@ class GamesViewController : UIViewController {
         super.viewWillAppear(animated)
         
         if(self._collectionView == nil){
-            self._loadingView = LoadingView(frame: CGRect(x: 0, y: 0, width: self.view.bounds.width/5, height: self.view.bounds.height/5))
-            self._loadingView?.center = CGPoint(x: self.view.bounds.width/2, y: self.view.bounds.height/2)
-            self.view.addSubview(_loadingView!)
+            self.displayLoadingView()
         }
         
         TwitchApi.getTopGamesWithOffset(0, limit: 17) {
@@ -43,15 +39,9 @@ class GamesViewController : UIViewController {
             
             if(error != nil || games == nil){
                 dispatch_async(dispatch_get_main_queue(),{
-                    if(self._errorView == nil){
-                        if((self._loadingView != nil) && (self._loadingView!.isDescendantOfView(self.view))){
-                            self._loadingView?.removeFromSuperview()
-                            self._loadingView = nil
-                        }
-                        let errorViewFrame = CGRect(x: 0, y: 0, width: 400, height: 400)
-                        self._errorView = ErrorView(frame: errorViewFrame, andTitle: "Error loading game list.\nPlease check your internet connection.")
-                        self._errorView?.center = CGPoint(x: self.view.bounds.width/2, y: self.view.bounds.height/2)
-                        self.view.addSubview(self._errorView!)
+                    if(self.errorView == nil){
+                        self.removeLoadingView()
+                        self.displayErrorView("Error loading game list.\nPlease check your internet connection.")
                     }
                 });
             }
@@ -65,14 +55,8 @@ class GamesViewController : UIViewController {
                         
                         self.view.addSubview(self._topBar!)
                     }
-                    if((self._loadingView != nil) && (self._loadingView!.isDescendantOfView(self.view))){
-                        self._loadingView?.removeFromSuperview()
-                        self._loadingView = nil
-                    }
-                    if((self._errorView != nil) && (self._errorView!.isDescendantOfView(self.view))){
-                        self._errorView?.removeFromSuperview()
-                        self._errorView = nil
-                    }
+                    self.removeLoadingView()
+                    self.removeErrorView()
                     self.displayCollectionView();
                 })
             }
