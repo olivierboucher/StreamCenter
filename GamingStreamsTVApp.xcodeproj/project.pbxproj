@@ -242,6 +242,14 @@
 			name = Extensions;
 			sourceTree = "<group>";
 		};
+		09199A1E1BBAD0D000B10543 /* Abstract */ = {
+			isa = PBXGroup;
+			children = (
+				09199A1C1BBAC67F00B10543 /* LoadingViewController.swift */,
+			);
+			name = Abstract;
+			sourceTree = "<group>";
+		};
 		09CE595D1BADBAFA0054EB71 /* Products */ = {
 			isa = PBXGroup;
 			children = (
@@ -267,12 +275,12 @@
 		09CE59831BAE456D0054EB71 /* Helpers */ = {
 			isa = PBXGroup;
 			children = (
-				09199A1B1BBABC9100B10543 /* Extensions */,
 				09CE597E1BAE08B10054EB71 /* IRCHandler.swift */,
 				090AB8F31BA5DA1400CDB05D /* M3UParser.swift */,
 				09CE59891BAF5F870054EB71 /* NSQueue.swift */,
 				09CE598B1BAF963C0054EB71 /* ConcurrencyHelpers.swift */,
 				09EB6D451BB4A8BE003EB244 /* CATextLayerVC.swift */,
+				09199A1B1BBABC9100B10543 /* Extensions */,
 			);
 			name = Helpers;
 			sourceTree = "<group>";
@@ -280,10 +288,10 @@
 		09CE59841BAF559D0054EB71 /* Chat */ = {
 			isa = PBXGroup;
 			children = (
-				090AB91A1BB3698800CDB05D /* Views */,
 				09CE59811BAE15280054EB71 /* TwitchChatHandler.swift */,
 				09CE59851BAF55BD0054EB71 /* TwitchChatMessage.swift */,
 				09CE59871BAF55CE0054EB71 /* TwitchChatMessageQueue.swift */,
+				090AB91A1BB3698800CDB05D /* Views */,
 			);
 			name = Chat;
 			sourceTree = "<group>";
@@ -294,7 +302,7 @@
 				090AB8E31BA5BFDF00CDB05D /* GamesViewController.swift */,
 				09D098241BA7666200E7E6FC /* StreamsViewController.swift */,
 				09D098281BA77FAB00E7E6FC /* VideoViewController.swift */,
-				09199A1C1BBAC67F00B10543 /* LoadingViewController.swift */,
+				09199A1E1BBAD0D000B10543 /* Abstract */,
 			);
 			name = ViewControllers;
 			sourceTree = "<group>";
