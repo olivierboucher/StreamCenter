@@ -24,6 +24,7 @@
 		090AB9221BB3699700CDB05D /* TwitchChatView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 090AB9211BB3699700CDB05D /* TwitchChatView.swift */; };
 		090AB9241BB36BC100CDB05D /* TwitchChatMessageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 090AB9231BB36BC100CDB05D /* TwitchChatMessageView.swift */; };
 		090AB9271BB579A300CDB05D /* ModalMenuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 090AB9261BB579A300CDB05D /* ModalMenuView.swift */; };
+		09199A1D1BBAC67F00B10543 /* LoadingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09199A1C1BBAC67F00B10543 /* LoadingViewController.swift */; };
 		09CE59791BADBBC70054EB71 /* Alamofire.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 09CE59761BADBBB90054EB71 /* Alamofire.framework */; };
 		09CE597A1BADBBC70054EB71 /* Alamofire.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 09CE59761BADBBB90054EB71 /* Alamofire.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		09CE597F1BAE08B10054EB71 /* IRCHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09CE597E1BAE08B10054EB71 /* IRCHandler.swift */; };
@@ -134,6 +135,7 @@
 		090AB9211BB3699700CDB05D /* TwitchChatView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TwitchChatView.swift; sourceTree = "<group>"; };
 		090AB9231BB36BC100CDB05D /* TwitchChatMessageView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TwitchChatMessageView.swift; sourceTree = "<group>"; };
 		090AB9261BB579A300CDB05D /* ModalMenuView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ModalMenuView.swift; sourceTree = "<group>"; };
+		09199A1C1BBAC67F00B10543 /* LoadingViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoadingViewController.swift; sourceTree = "<group>"; };
 		09CE595C1BADBAFA0054EB71 /* Alamofire.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = Alamofire.xcodeproj; path = Thirdparty/Alamofire/Alamofire.xcodeproj; sourceTree = "<group>"; };
 		09CE597E1BAE08B10054EB71 /* IRCHandler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IRCHandler.swift; sourceTree = "<group>"; };
 		09CE59811BAE15280054EB71 /* TwitchChatHandler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TwitchChatHandler.swift; sourceTree = "<group>"; };
@@ -231,6 +233,15 @@
 			name = Views;
 			sourceTree = "<group>";
 		};
+		09199A1B1BBABC9100B10543 /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				09EB6D3D1BB484F7003EB244 /* String.swift */,
+				09E33CC81BB5B2DF000702E2 /* Dictionary.swift */,
+			);
+			name = Extensions;
+			sourceTree = "<group>";
+		};
 		09CE595D1BADBAFA0054EB71 /* Products */ = {
 			isa = PBXGroup;
 			children = (
@@ -256,13 +267,12 @@
 		09CE59831BAE456D0054EB71 /* Helpers */ = {
 			isa = PBXGroup;
 			children = (
+				09199A1B1BBABC9100B10543 /* Extensions */,
 				09CE597E1BAE08B10054EB71 /* IRCHandler.swift */,
 				090AB8F31BA5DA1400CDB05D /* M3UParser.swift */,
 				09CE59891BAF5F870054EB71 /* NSQueue.swift */,
 				09CE598B1BAF963C0054EB71 /* ConcurrencyHelpers.swift */,
-				09EB6D3D1BB484F7003EB244 /* String.swift */,
 				09EB6D451BB4A8BE003EB244 /* CATextLayerVC.swift */,
-				09E33CC81BB5B2DF000702E2 /* Dictionary.swift */,
 			);
 			name = Helpers;
 			sourceTree = "<group>";
@@ -284,6 +294,7 @@
 				090AB8E31BA5BFDF00CDB05D /* GamesViewController.swift */,
 				09D098241BA7666200E7E6FC /* StreamsViewController.swift */,
 				09D098281BA77FAB00E7E6FC /* VideoViewController.swift */,
+				09199A1C1BBAC67F00B10543 /* LoadingViewController.swift */,
 			);
 			name = ViewControllers;
 			sourceTree = "<group>";
@@ -433,6 +444,7 @@
 				09CE598A1BAF5F870054EB71 /* NSQueue.swift in Sources */,
 				09EB6D3E1BB484F7003EB244 /* String.swift in Sources */,
 				09EB6D461BB4A8BE003EB244 /* CATextLayerVC.swift in Sources */,
+				09199A1D1BBAC67F00B10543 /* LoadingViewController.swift in Sources */,
 				090AB9221BB3699700CDB05D /* TwitchChatView.swift in Sources */,
 				090AB9011BA616A900CDB05D /* TwitchStreamVideo.swift in Sources */,
 				090AB9021BA616A900CDB05D /* M3UParser.swift in Sources */,
