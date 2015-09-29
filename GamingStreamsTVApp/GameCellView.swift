@@ -12,38 +12,38 @@ import Foundation
 class GameCellView : UICollectionViewCell {
     static let cellIdentifier : String = "kGameCellView";
     
-    private var _game : TwitchGame?
-    private var _image : UIImage?
-    private var _imageView : UIImageView?
-    private var _activityIndicator : UIActivityIndicatorView?
-    private var _gameNameLabel : UILabel?
-    private var _viewCountLabel : UILabel?
+    private var game : TwitchGame?
+    private var image : UIImage?
+    private var imageView : UIImageView?
+    private var activityIndicator : UIActivityIndicatorView?
+    private var gameNameLabel : UILabel?
+    private var viewCountLabel : UILabel?
     
     override init(frame: CGRect) {
         super.init(frame: frame);
         let imageViewFrame = CGRect(x: 0, y: 0, width: self.bounds.width, height: self.bounds.height-80)
-        self._imageView = UIImageView(frame: imageViewFrame);
-        self._imageView!.adjustsImageWhenAncestorFocused = true;
-        self._imageView!.layer.cornerRadius = 10
-        self._imageView!.backgroundColor = UIColor(white: 0.25, alpha: 0.7)
+        self.imageView = UIImageView(frame: imageViewFrame);
+        self.imageView!.adjustsImageWhenAncestorFocused = true;
+        self.imageView!.layer.cornerRadius = 10
+        self.imageView!.backgroundColor = UIColor(white: 0.25, alpha: 0.7)
         
-        self._activityIndicator = UIActivityIndicatorView(frame: imageViewFrame)
-        self._activityIndicator?.activityIndicatorViewStyle = UIActivityIndicatorViewStyle.WhiteLarge
-        self._activityIndicator?.startAnimating()
+        self.activityIndicator = UIActivityIndicatorView(frame: imageViewFrame)
+        self.activityIndicator?.activityIndicatorViewStyle = UIActivityIndicatorViewStyle.WhiteLarge
+        self.activityIndicator?.startAnimating()
         
-        self._gameNameLabel = UILabel(frame: CGRect(x: 0,y: self.bounds.height-80, width: self.bounds.size.width, height: 40))
-        self._viewCountLabel = UILabel(frame: CGRect(x: 0,y: self.bounds.height-40, width: self.bounds.size.width, height: 40))
-        self._gameNameLabel?.alpha = 0;
-        self._viewCountLabel?.alpha = 0;
-        self._gameNameLabel?.font = UIFont.systemFontOfSize(30, weight: UIFontWeightSemibold)
-        self._viewCountLabel?.font = UIFont.systemFontOfSize(30, weight: UIFontWeightThin)
-        self._gameNameLabel?.textColor = UIColor.whiteColor()
-        self._viewCountLabel?.textColor = UIColor.whiteColor()
+        self.gameNameLabel = UILabel(frame: CGRect(x: 0,y: self.bounds.height-80, width: self.bounds.size.width, height: 40))
+        self.viewCountLabel = UILabel(frame: CGRect(x: 0,y: self.bounds.height-40, width: self.bounds.size.width, height: 40))
+        self.gameNameLabel?.alpha = 0;
+        self.viewCountLabel?.alpha = 0;
+        self.gameNameLabel?.font = UIFont.systemFontOfSize(30, weight: UIFontWeightSemibold)
+        self.viewCountLabel?.font = UIFont.systemFontOfSize(30, weight: UIFontWeightThin)
+        self.gameNameLabel?.textColor = UIColor.whiteColor()
+        self.viewCountLabel?.textColor = UIColor.whiteColor()
         
-        self._imageView?.addSubview(self._activityIndicator!)
-        self.contentView.addSubview(self._imageView!)
-        self.contentView.addSubview(_gameNameLabel!)
-        self.contentView.addSubview(_viewCountLabel!)
+        self.imageView?.addSubview(self.activityIndicator!)
+        self.contentView.addSubview(self.imageView!)
+        self.contentView.addSubview(gameNameLabel!)
+        self.contentView.addSubview(viewCountLabel!)
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -53,48 +53,48 @@ class GameCellView : UICollectionViewCell {
     override func prepareForReuse() {
         super.prepareForReuse()
         
-        self._game = nil
-        self._image = nil
-        self._imageView?.image = nil
-        self._gameNameLabel?.text = ""
-        self._viewCountLabel?.text = ""
+        self.game = nil
+        self.image = nil
+        self.imageView?.image = nil
+        self.gameNameLabel?.text = ""
+        self.viewCountLabel?.text = ""
         
-        self._activityIndicator = UIActivityIndicatorView(frame: self._imageView!.frame)
-        self._activityIndicator?.activityIndicatorViewStyle = UIActivityIndicatorViewStyle.WhiteLarge
-        self._activityIndicator?.startAnimating()
+        self.activityIndicator = UIActivityIndicatorView(frame: self.imageView!.frame)
+        self.activityIndicator?.activityIndicatorViewStyle = UIActivityIndicatorViewStyle.WhiteLarge
+        self.activityIndicator?.startAnimating()
         
-        self._imageView?.addSubview(self._activityIndicator!)
+        self.imageView?.addSubview(self.activityIndicator!)
     }
     
     func setGame(game : TwitchGame) {
-        _game = game;
-        _gameNameLabel!.text = game.name
-        _viewCountLabel?.text = "\(game.viewers) viewers"
+        self.game = game;
+        gameNameLabel!.text = game.name
+        viewCountLabel?.text = "\(game.viewers) viewers"
         self.assignImageAndDisplay();
     }
     func getGame() -> TwitchGame? {
-        return self._game;
+        return self.game;
     }
     
     private func assignImageAndDisplay() {
         
-        self.downloadImageWithSize(self._imageView!.bounds.size) {
+        self.downloadImageWithSize(self.imageView!.bounds.size) {
             (image, error) in
             
             if(error != nil || image == nil) {
                 //TODO : Set error image, not available
-                self._image = nil;
+                self.image = nil;
             }
             else {
-                self._image = image!;
+                self.image = image!;
             }
             
             dispatch_async(dispatch_get_main_queue(),{
-                if((self._activityIndicator != nil) && (self._activityIndicator!.isDescendantOfView(self._imageView!))) {
-                    self._activityIndicator?.removeFromSuperview()
-                    self._activityIndicator = nil
+                if((self.activityIndicator != nil) && (self.activityIndicator!.isDescendantOfView(self.imageView!))) {
+                    self.activityIndicator?.removeFromSuperview()
+                    self.activityIndicator = nil
                 }
-                self._imageView!.image = self._image;
+                self.imageView!.image = self.image;
             })
             
         }
@@ -102,7 +102,7 @@ class GameCellView : UICollectionViewCell {
     
     private func downloadImageWithSize(size : CGSize, completionHandler : (image : UIImage?, error : NSError?) -> ()) {
         
-        if let imgUrlTemplate = _game?.thumbnails["template"] {
+        if let imgUrlTemplate = game?.thumbnails["template"] {
             if let imgUrlString : String? = imgUrlTemplate.stringByReplacingOccurrencesOfString("{width}", withString: "\(Int(size.width))")
                 .stringByReplacingOccurrencesOfString("{height}", withString: "\(Int(size.height))") {
                     Alamofire.request(.GET, imgUrlString!).response() {
@@ -125,10 +125,10 @@ class GameCellView : UICollectionViewCell {
         super.didUpdateFocusInContext(context, withAnimationCoordinator: coordinator)
         if(context.nextFocusedView == self){
             coordinator.addCoordinatedAnimations({
-                self._gameNameLabel?.center.y += 40
-                self._viewCountLabel?.center.y += 40
-                self._gameNameLabel?.alpha = 1;
-                self._viewCountLabel?.alpha = 1;
+                self.gameNameLabel?.center.y += 40
+                self.viewCountLabel?.center.y += 40
+                self.gameNameLabel?.alpha = 1;
+                self.viewCountLabel?.alpha = 1;
                 self.layoutIfNeeded()
                 
                 },
@@ -137,10 +137,10 @@ class GameCellView : UICollectionViewCell {
         }
         else if(context.previouslyFocusedView == self) {
             coordinator.addCoordinatedAnimations({
-                self._gameNameLabel?.center.y -= 40
-                self._viewCountLabel?.center.y -= 40
-                self._gameNameLabel?.alpha = 0;
-                self._viewCountLabel?.alpha = 0;
+                self.gameNameLabel?.center.y -= 40
+                self.viewCountLabel?.center.y -= 40
+                self.gameNameLabel?.alpha = 0;
+                self.viewCountLabel?.alpha = 0;
                 self.layoutIfNeeded()
                 },
                 completion: nil

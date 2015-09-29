@@ -10,8 +10,8 @@ import Foundation
 
 class LoadingView : UIView {
     
-    private var _label : UILabel?
-    private var _activityIndicator : UIActivityIndicatorView?
+    private var label : UILabel?
+    private var activityIndicator : UIActivityIndicatorView?
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -23,24 +23,24 @@ class LoadingView : UIView {
 //        self.layer.borderWidth = 1
         
         let labelBounds = CGRect(origin: CGPoint(x: 0, y: 0), size: CGSize(width: self.bounds.width, height: self.bounds.height * 0.3))
-        self._label = UILabel(frame: labelBounds)
-        self._label!.font = UIFont.systemFontOfSize(45)
-        self._label!.text = "Loading..."
-        self._label!.textColor = UIColor.whiteColor()
-        self._label!.textAlignment = NSTextAlignment.Center
+        self.label = UILabel(frame: labelBounds)
+        self.label!.font = UIFont.systemFontOfSize(45)
+        self.label!.text = "Loading..."
+        self.label!.textColor = UIColor.whiteColor()
+        self.label!.textAlignment = NSTextAlignment.Center
         
         let indicatorBounds = CGRect(origin: CGPoint(x: 0, y: 0), size: CGSize(width: self.bounds.width, height: self.bounds.height * 0.7))
-        self._activityIndicator = UIActivityIndicatorView(frame: indicatorBounds)
-        self._activityIndicator?.activityIndicatorViewStyle = UIActivityIndicatorViewStyle.WhiteLarge
-        self._activityIndicator?.sizeToFit()
-        self._activityIndicator?.startAnimating()
+        self.activityIndicator = UIActivityIndicatorView(frame: indicatorBounds)
+        self.activityIndicator?.activityIndicatorViewStyle = UIActivityIndicatorViewStyle.WhiteLarge
+        self.activityIndicator?.sizeToFit()
+        self.activityIndicator?.startAnimating()
         
         //Center the views correctly
-        self._activityIndicator?.center = CGPoint(x: self.bounds.width/2, y: self._activityIndicator!.bounds.height/2)
-        self._label?.center = CGPoint(x: self.bounds.width/2 + 10, y: self._activityIndicator!.bounds.height + self._label!.bounds.height/2)
+        self.activityIndicator?.center = CGPoint(x: self.bounds.width/2, y: self.activityIndicator!.bounds.height/2)
+        self.label?.center = CGPoint(x: self.bounds.width/2 + 10, y: self.activityIndicator!.bounds.height + self.label!.bounds.height/2)
         
-        self.addSubview(self._activityIndicator!)
-        self.addSubview(self._label!)
+        self.addSubview(self.activityIndicator!)
+        self.addSubview(self.label!)
         
     }
 

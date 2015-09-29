@@ -15,12 +15,9 @@ class GamesViewController : LoadingViewController {
     private let ITEMS_INSETS_Y : CGFloat = 40;
     private let TOP_BAR_HEIGHT : CGFloat = 100;
     
-    private var _topBar : TopBarView?
-    private var _collectionView : UICollectionView?
-    private var _games : Array<TwitchGame>?
-    
-    private var _testChat : TwitchChatHandler?
-    
+    private var topBar : TopBarView?
+    private var collectionView : UICollectionView?
+    private var games : Array<TwitchGame>?
     
     convenience init(){
         self.init(nibName: nil, bundle: nil);
@@ -30,7 +27,7 @@ class GamesViewController : LoadingViewController {
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
         
-        if(self._collectionView == nil){
+        if(self.collectionView == nil){
             self.displayLoadingView()
         }
         
@@ -46,14 +43,14 @@ class GamesViewController : LoadingViewController {
                 });
             }
             else {
-                self._games = games!;
+                self.games = games!;
                 dispatch_async(dispatch_get_main_queue(),{
-                    if((self._topBar == nil) || !(self._topBar!.isDescendantOfView(self.view))) {
+                    if((self.topBar == nil) || !(self.topBar!.isDescendantOfView(self.view))) {
                         let topBarBounds = CGRect(x: self.view.bounds.origin.x, y: self.view.bounds.origin.y, width: self.view.bounds.size.width, height: self.TOP_BAR_HEIGHT)
-                        self._topBar = TopBarView(frame: topBarBounds, withMainTitle: "Top Games")
-                        self._topBar?.backgroundColor = UIColor.init(white: 0.5, alpha: 1)
+                        self.topBar = TopBarView(frame: topBarBounds, withMainTitle: "Top Games")
+                        self.topBar?.backgroundColor = UIColor.init(white: 0.5, alpha: 1)
                         
-                        self.view.addSubview(self._topBar!)
+                        self.view.addSubview(self.topBar!)
                     }
                     self.removeLoadingView()
                     self.removeErrorView()
@@ -76,7 +73,7 @@ class GamesViewController : LoadingViewController {
     
     private func displayCollectionView() {
         
-        if((_collectionView == nil) || !(_collectionView!.isDescendantOfView(self.view))) {
+        if((collectionView == nil) || !(collectionView!.isDescendantOfView(self.view))) {
             let layout : UICollectionViewFlowLayout = UICollectionViewFlowLayout();
             layout.scrollDirection = UICollectionViewScrollDirection.Vertical;
             layout.minimumInteritemSpacing = 10;
@@ -84,18 +81,18 @@ class GamesViewController : LoadingViewController {
             
             let collectionViewBounds = CGRect(x: self.view.bounds.origin.x, y: self.view.bounds.origin.y, width: self.view.bounds.size.width, height: self.view.bounds.size.height)
             
-            self._collectionView = UICollectionView(frame: collectionViewBounds, collectionViewLayout: layout);
+            self.collectionView = UICollectionView(frame: collectionViewBounds, collectionViewLayout: layout);
             
-            self._collectionView!.registerClass(GameCellView.classForCoder(), forCellWithReuseIdentifier: GameCellView.cellIdentifier);
-            self._collectionView!.dataSource = self;
-            self._collectionView!.delegate = self;
-            self._collectionView!.contentInset = UIEdgeInsets(top: ITEMS_INSETS_Y + 10, left: ITEMS_INSETS_X, bottom: ITEMS_INSETS_Y, right: ITEMS_INSETS_X)
+            self.collectionView!.registerClass(GameCellView.classForCoder(), forCellWithReuseIdentifier: GameCellView.cellIdentifier);
+            self.collectionView!.dataSource = self;
+            self.collectionView!.delegate = self;
+            self.collectionView!.contentInset = UIEdgeInsets(top: ITEMS_INSETS_Y + 10, left: ITEMS_INSETS_X, bottom: ITEMS_INSETS_Y, right: ITEMS_INSETS_X)
             
-            self.view.addSubview(self._collectionView!)
-            self.view.bringSubviewToFront(self._topBar!)
+            self.view.addSubview(self.collectionView!)
+            self.view.bringSubviewToFront(self.topBar!)
         }
         else {
-            _collectionView?.reloadData()
+            collectionView?.reloadData()
         }
     }
 }
@@ -103,7 +100,7 @@ class GamesViewController : LoadingViewController {
 extension GamesViewController : UICollectionViewDelegate {
     
     func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
-        let selectedGame = _games![(indexPath.section * NUM_COLUMNS) +  indexPath.row]
+        let selectedGame = games![(indexPath.section * NUM_COLUMNS) +  indexPath.row]
         let streamsViewController = StreamsViewController(game: selectedGame)
         
         self.presentViewController(streamsViewController, animated: true, completion: nil)
@@ -133,27 +130,27 @@ extension GamesViewController : UICollectionViewDataSource {
     
     func numberOfSectionsInCollectionView(collectionView: UICollectionView) -> Int {
         
-        let test = Double(_games!.count) / Double(NUM_COLUMNS);
+        let test = Double(games!.count) / Double(NUM_COLUMNS);
         let test2 = ceil(test);
         
         return Int(test2);
     }
     
     func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        if((section+1) * NUM_COLUMNS <= _games!.count){
+        if((section+1) * NUM_COLUMNS <= games!.count){
             //NSLog("count for section #%d : %d", section, NUM_COLUMNS);
             return NUM_COLUMNS;
         }
         else {
-            //NSLog("count for section #%d : %d", section, _games!.count - ((section) * NUM_COLUMNS));
-            return _games!.count - ((section) * NUM_COLUMNS)
+            //NSLog("count for section #%d : %d", section, games!.count - ((section) * NUM_COLUMNS));
+            return games!.count - ((section) * NUM_COLUMNS)
         }
     }
     
     func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
         let cell : GameCellView = collectionView.dequeueReusableCellWithReuseIdentifier(GameCellView.cellIdentifier, forIndexPath: indexPath) as! GameCellView;
         //NSLog("Indexpath => section:%d row:%d", indexPath.section, indexPath.row);
-        cell.setGame(_games![(indexPath.section * NUM_COLUMNS) +  indexPath.row]);
+        cell.setGame(games![(indexPath.section * NUM_COLUMNS) +  indexPath.row]);
         return cell;
     }
 }

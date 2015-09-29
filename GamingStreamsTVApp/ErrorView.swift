@@ -10,27 +10,27 @@ import Foundation
 
 class ErrorView : UIView {
     
-    private var _imageView : UIImageView?
-    private var _label : UILabel?
+    private var imageView : UIImageView?
+    private var label : UILabel?
     
     init(frame: CGRect, andTitle title : String) {
         super.init(frame: frame)
         
         let imageViewBounds = CGRect(x: 0, y: 0, width: self.bounds.width, height: self.bounds.width/1.333333333)
-        _imageView = UIImageView(frame: imageViewBounds)
-        _imageView?.image = getErrorImageOfColor(UIColor.whiteColor())
+        imageView = UIImageView(frame: imageViewBounds)
+        imageView?.image = getErrorImageOfColor(UIColor.whiteColor())
         
         let labelBounds = CGRect(x: 0, y: imageViewBounds.height, width: imageViewBounds.width, height: self.bounds.height - imageViewBounds.height)
-        _label = UILabel(frame: labelBounds)
-        _label?.text = title
-        _label?.textColor = UIColor.whiteColor()
-        _label?.textAlignment = NSTextAlignment.Center
-        _label?.lineBreakMode = NSLineBreakMode.ByWordWrapping
-        _label?.numberOfLines = 0
-        _label?.font = _label?.font.fontWithSize(25)
+        label = UILabel(frame: labelBounds)
+        label?.text = title
+        label?.textColor = UIColor.whiteColor()
+        label?.textAlignment = NSTextAlignment.Center
+        label?.lineBreakMode = NSLineBreakMode.ByWordWrapping
+        label?.numberOfLines = 0
+        label?.font = label?.font.fontWithSize(25)
         
-        self.addSubview(_imageView!)
-        self.addSubview(_label!)
+        self.addSubview(imageView!)
+        self.addSubview(label!)
     }
 
     required init?(coder aDecoder: NSCoder) {
