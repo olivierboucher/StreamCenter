@@ -73,7 +73,10 @@ class IRCHandlerBase: NSObject, NSStreamDelegate
                 IRCBuffer = [UInt8](count: IRCBuffer.count, repeatedValue: 0)
             }
             //Remove that fucking crap
-            inputStringLines.removeAtIndex(inputStringLines.count-1)
+            if(inputStringLines.count > 0){
+                inputStringLines.removeAtIndex(inputStringLines.count-1)
+            }
+            
             
             for string in inputStringLines
             {
