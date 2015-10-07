@@ -40,6 +40,7 @@
 		09E33CC91BB5B2DF000702E2 /* Dictionary.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09E33CC81BB5B2DF000702E2 /* Dictionary.swift */; };
 		09EB6D3E1BB484F7003EB244 /* String.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09EB6D3D1BB484F7003EB244 /* String.swift */; };
 		09EB6D461BB4A8BE003EB244 /* CATextLayerVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09EB6D451BB4A8BE003EB244 /* CATextLayerVC.swift */; };
+		A5E7DC008D2754CA1EC6CFC5 /* Pods_GamingStreamsTVApp.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 73B61525F92468AED0A0EE8C /* Pods_GamingStreamsTVApp.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -150,6 +151,9 @@
 		09E33CC81BB5B2DF000702E2 /* Dictionary.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Dictionary.swift; sourceTree = "<group>"; };
 		09EB6D3D1BB484F7003EB244 /* String.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = String.swift; sourceTree = "<group>"; };
 		09EB6D451BB4A8BE003EB244 /* CATextLayerVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CATextLayerVC.swift; sourceTree = "<group>"; };
+		73B61525F92468AED0A0EE8C /* Pods_GamingStreamsTVApp.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_GamingStreamsTVApp.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		90FBC40A14CD24160B58953A /* Pods-GamingStreamsTVApp.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-GamingStreamsTVApp.release.xcconfig"; path = "Pods/Target Support Files/Pods-GamingStreamsTVApp/Pods-GamingStreamsTVApp.release.xcconfig"; sourceTree = "<group>"; };
+		DC2A8ED48462858490AD4901 /* Pods-GamingStreamsTVApp.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-GamingStreamsTVApp.debug.xcconfig"; path = "Pods/Target Support Files/Pods-GamingStreamsTVApp/Pods-GamingStreamsTVApp.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -158,6 +162,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				09CE59791BADBBC70054EB71 /* Alamofire.framework in Frameworks */,
+				A5E7DC008D2754CA1EC6CFC5 /* Pods_GamingStreamsTVApp.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -170,6 +175,8 @@
 				090AB8E01BA5BFDF00CDB05D /* GamingStreamsTVApp */,
 				090AB8DF1BA5BFDF00CDB05D /* Products */,
 				09CE596E1BADBB030054EB71 /* Thirdparty */,
+				F869E16742CCA364171847D9 /* Pods */,
+				334A70E19B5807FD4AAD28B4 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -307,6 +314,23 @@
 			name = ViewControllers;
 			sourceTree = "<group>";
 		};
+		334A70E19B5807FD4AAD28B4 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				73B61525F92468AED0A0EE8C /* Pods_GamingStreamsTVApp.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		F869E16742CCA364171847D9 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				DC2A8ED48462858490AD4901 /* Pods-GamingStreamsTVApp.debug.xcconfig */,
+				90FBC40A14CD24160B58953A /* Pods-GamingStreamsTVApp.release.xcconfig */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -314,10 +338,13 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 090AB8ED1BA5BFDF00CDB05D /* Build configuration list for PBXNativeTarget "GamingStreamsTVApp" */;
 			buildPhases = (
+				39804CB7D1311A3FA2A181BA /* Check Pods Manifest.lock */,
 				090AB8DA1BA5BFDF00CDB05D /* Sources */,
 				090AB8DB1BA5BFDF00CDB05D /* Frameworks */,
 				090AB8DC1BA5BFDF00CDB05D /* Resources */,
 				09CE597D1BADBBC70054EB71 /* Embed Frameworks */,
+				131F8F609B16A3B14577C607 /* Embed Pods Frameworks */,
+				009BD9E886A883AA569B636A /* Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -429,6 +456,54 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		009BD9E886A883AA569B636A /* Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-GamingStreamsTVApp/Pods-GamingStreamsTVApp-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		131F8F609B16A3B14577C607 /* Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Embed Pods Frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-GamingStreamsTVApp/Pods-GamingStreamsTVApp-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		39804CB7D1311A3FA2A181BA /* Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Check Pods Manifest.lock";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		090AB8DA1BA5BFDF00CDB05D /* Sources */ = {
@@ -562,6 +637,7 @@
 		};
 		090AB8EE1BA5BFDF00CDB05D /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = DC2A8ED48462858490AD4901 /* Pods-GamingStreamsTVApp.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = "App Icon & Top Shelf Image";
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
@@ -575,6 +651,7 @@
 		};
 		090AB8EF1BA5BFDF00CDB05D /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 90FBC40A14CD24160B58953A /* Pods-GamingStreamsTVApp.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = "App Icon & Top Shelf Image";
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
