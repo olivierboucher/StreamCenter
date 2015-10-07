@@ -12,6 +12,11 @@ I only support **Twitch** at the moment, features are :
 - Live chat with emoticons
 - Change video quality
 
+# Screenshots
+![Imgur](http://i.imgur.com/1Dipzvs.jpg)
+![Imgur](http://i.imgur.com/DMmZw4M.jpg)
+![Imgur](http://i.imgur.com/PhUoqOB.jpg)
+
 This is more of a MVP. I am looking for contributors to achieve various tasks:
 
 - some of the code was written before I knew about Swift standards.
