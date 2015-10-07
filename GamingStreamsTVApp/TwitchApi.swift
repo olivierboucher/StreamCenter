@@ -16,9 +16,9 @@ class TwitchApi {
         let accessUrlString = String(format: "https://api.twitch.tv/api/channels/%@/access_token", channel);
         
         Alamofire.request(.GET, accessUrlString)
-            .responseJSON { _, _, result in
-                if(result.isSuccess){
-                    if let accessInfoDict = result.value as? Dictionary<String, AnyObject> {
+            .responseJSON { response in
+                if(response.result.isSuccess){
+                    if let accessInfoDict = response.result.value as? Dictionary<String, AnyObject> {
                         if let sig = accessInfoDict["sig"] as? String {
                             if let token = accessInfoDict["token"] as? String {
                                 let playlistUrlString  = String(format : "http://usher.twitch.tv/api/channel/hls/%@.m3u8", channel);
@@ -31,9 +31,9 @@ class TwitchApi {
                                         "p"                 : Int(arc4random_uniform(99999)),
                                         "token"             : token,
                                         "sig"               : sig])
-                                    .responseString { _, _, result in
-                                        if(result.isSuccess){
-                                            let streams = M3UParser.parseToDict(result.value!);
+                                    .responseString {response in
+                                        if(response.result.isSuccess){
+                                            let streams = M3UParser.parseToDict(response.result.value!);
                                             completionHandler(streams: streams, error: nil);
                                             return
                                         }
@@ -41,7 +41,7 @@ class TwitchApi {
                                             //Error with the .m3u8
                                             let userInfo = [
                                                 NSLocalizedDescriptionKey : String("Operation was unsuccessful."),
-                                                NSLocalizedFailureReasonErrorKey: String("The operation returned an error : %@", result.error.debugDescription),
+                                                NSLocalizedFailureReasonErrorKey: String("The operation returned an error : %@", response.result.error.debugDescription),
                                                 NSLocalizedRecoverySuggestionErrorKey: String("Please ensure that the provided channel is valid")
                                             ];
                                             completionHandler(streams: nil, error: NSError(domain: "TwitchAPI", code: 1, userInfo: userInfo));
@@ -65,7 +65,7 @@ class TwitchApi {
                     //Error with access token request
                     let userInfo = [
                         NSLocalizedDescriptionKey : String("Operation was unsuccessful."),
-                        NSLocalizedFailureReasonErrorKey: String("The operation returned an error : %@", result.error.debugDescription),
+                        NSLocalizedFailureReasonErrorKey: String("The operation returned an error : %@", response.result.error.debugDescription),
                         NSLocalizedRecoverySuggestionErrorKey: String("Please ensure that the provided channel is valid")
                     ];
                     completionHandler(streams: nil, error: NSError(domain: "TwitchAPI", code: 1, userInfo: userInfo));
@@ -83,10 +83,10 @@ class TwitchApi {
         Alamofire.request(.GET, gamesUrlString, parameters :
             [   "limit"   : limit,
                 "offset"  : offset])
-            .responseJSON { _, _, result in
+            .responseJSON {response in
                 
-                if(result.isSuccess) {
-                    if let gamesInfoDict = result.value as? Dictionary<String, AnyObject> {
+                if(response.result.isSuccess) {
+                    if let gamesInfoDict = response.result.value as? Dictionary<String, AnyObject> {
                         var games = Array<TwitchGame>();
                         for gameRaw in gamesInfoDict["top"] as! Array<AnyObject> {
                             if let topItemDict = gameRaw as? Dictionary<String, AnyObject> {
@@ -117,7 +117,7 @@ class TwitchApi {
                 else {
                     let userInfo = [
                         NSLocalizedDescriptionKey : String("Operation was unsuccessful."),
-                        NSLocalizedFailureReasonErrorKey: String("The operation returned an error : %@", result.error.debugDescription),
+                        NSLocalizedFailureReasonErrorKey: String("The operation returned an error : %@", response.result.error.debugDescription),
                         NSLocalizedRecoverySuggestionErrorKey: String("Please ensure that the provided channel is valid")
                     ];
                     completionHandler(games: nil, error: NSError(domain: "TwitchAPI", code: 1, userInfo: userInfo));
@@ -135,10 +135,10 @@ class TwitchApi {
             [   "limit"   : limit,
                 "offset"  : offset,
                 "game"    : game])
-            .responseJSON { _, _, result in
+            .responseJSON { response in
                 
-                if(result.isSuccess) {
-                    if let streamsInfoDict = result.value as? Dictionary<String, AnyObject> {
+                if(response.result.isSuccess) {
+                    if let streamsInfoDict = response.result.value as? Dictionary<String, AnyObject> {
                         
                         var streams = Array<TwitchStream>();
                         let dateFormatter = NSDateFormatter();
@@ -201,7 +201,7 @@ class TwitchApi {
                 else {
                     let userInfo = [
                         NSLocalizedDescriptionKey : String("Operation was unsuccessful."),
-                        NSLocalizedFailureReasonErrorKey: String("The operation returned an error : %@", result.error.debugDescription),
+                        NSLocalizedFailureReasonErrorKey: String("The operation returned an error : %@", response.result.error.debugDescription),
                         NSLocalizedRecoverySuggestionErrorKey: String("Please ensure that the provided channel is valid")
                     ];
                     completionHandler(streams: nil, error: NSError(domain: "TwitchAPI", code: 1, userInfo: userInfo));

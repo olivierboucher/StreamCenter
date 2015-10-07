@@ -178,5 +178,8 @@ class VideoViewController : UIViewController {
     
     func handleQualityChange(sender : MenuItemView?) {
         
+        
+        
+        
     }
 }
