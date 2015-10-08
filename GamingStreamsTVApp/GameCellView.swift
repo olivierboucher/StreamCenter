@@ -11,6 +11,7 @@ import Foundation
 
 class GameCellView : UICollectionViewCell {
     static let cellIdentifier : String = "kGameCellView";
+    internal static let LABEL_HEIGHT : CGFloat = 40;
     
     private var game : TwitchGame?
     private var image : UIImage?
@@ -31,8 +32,8 @@ class GameCellView : UICollectionViewCell {
         self.activityIndicator?.activityIndicatorViewStyle = UIActivityIndicatorViewStyle.WhiteLarge
         self.activityIndicator?.startAnimating()
         
-        self.gameNameLabel = UILabel(frame: CGRect(x: 0,y: self.bounds.height-80, width: self.bounds.size.width, height: 40))
-        self.viewCountLabel = UILabel(frame: CGRect(x: 0,y: self.bounds.height-40, width: self.bounds.size.width, height: 40))
+        self.gameNameLabel = UILabel(frame: CGRect(x: 0,y: self.bounds.height - (GameCellView.LABEL_HEIGHT*2), width: self.bounds.size.width, height: GameCellView.LABEL_HEIGHT))
+        self.viewCountLabel = UILabel(frame: CGRect(x: 0,y: self.bounds.height - GameCellView.LABEL_HEIGHT, width: self.bounds.size.width, height: GameCellView.LABEL_HEIGHT))
         self.gameNameLabel?.alpha = 0;
         self.viewCountLabel?.alpha = 0;
         self.gameNameLabel?.font = UIFont.systemFontOfSize(30, weight: UIFontWeightSemibold)

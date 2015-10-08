@@ -3,8 +3,6 @@
 //  TestTVApp
 //
 //  Created by Olivier Boucher on 2015-09-13.
-//  Copyright © 2015 Rivus Media Inc. All rights reserved.
-//
 
 import UIKit
 
@@ -14,6 +12,7 @@ class GamesViewController : LoadingViewController {
     private let ITEMS_INSETS_X : CGFloat = 25;
     private let ITEMS_INSETS_Y : CGFloat = 40;
     private let TOP_BAR_HEIGHT : CGFloat = 100;
+    private let GAME_IMG_HEIGHT_RATIO : CGFloat = 1.39705882353; //Computed from sampled image from twitch api
     
     private var topBar : TopBarView?
     private var collectionView : UICollectionView?
@@ -23,7 +22,12 @@ class GamesViewController : LoadingViewController {
         self.init(nibName: nil, bundle: nil);
     }
     
-    //We want the latest data to be fetched each time
+    /*
+    * viewWillAppear(animated: Bool)
+    *
+    * Overrides the super function to reload the collection view with fresh data
+    *
+    */
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
         
@@ -71,6 +75,12 @@ class GamesViewController : LoadingViewController {
         // Dispose of any resources that can be recreated.
     }
     
+    /*
+     * displayCollectionView()
+     *
+     * Assigns a new collection view to the controller and displays it if
+     * it has not been initialized. Otherwise, it asks to reload data
+     */
     private func displayCollectionView() {
         
         if((collectionView == nil) || !(collectionView!.isDescendantOfView(self.view))) {
@@ -97,6 +107,11 @@ class GamesViewController : LoadingViewController {
     }
 }
 
+////////////////////////////////////////////
+// MARK - UICollectionViewDelegate interface
+////////////////////////////////////////////
+
+
 extension GamesViewController : UICollectionViewDelegate {
     
     func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
@@ -107,13 +122,18 @@ extension GamesViewController : UICollectionViewDelegate {
     }
 }
 
+//////////////////////////////////////////////////////
+// MARK - UICollectionViewDelegateFlowLayout interface
+//////////////////////////////////////////////////////
+
 extension GamesViewController : UICollectionViewDelegateFlowLayout {
     
     func collectionView(collectionView: UICollectionView,
         layout collectionViewLayout: UICollectionViewLayout,
         sizeForItemAtIndexPath indexPath: NSIndexPath) -> CGSize {
             let width = self.view.bounds.width / CGFloat(NUM_COLUMNS) - CGFloat(ITEMS_INSETS_X * 2);
-            let height = (width * 1.39705882353) + 80;
+            //Computed using the ratio from sampled from
+            let height = (width * GAME_IMG_HEIGHT_RATIO) + GameCellView.LABEL_HEIGHT * 2; //There 2 labels, top & bottom
             
             return CGSize(width: width, height: height)
     }
@@ -126,30 +146,30 @@ extension GamesViewController : UICollectionViewDelegateFlowLayout {
     }
 }
 
+//////////////////////////////////////////////
+// MARK - UICollectionViewDataSource interface
+//////////////////////////////////////////////
+
 extension GamesViewController : UICollectionViewDataSource {
     
     func numberOfSectionsInCollectionView(collectionView: UICollectionView) -> Int {
-        
-        let test = Double(games!.count) / Double(NUM_COLUMNS);
-        let test2 = ceil(test);
-        
-        return Int(test2);
+        //The number of possible rows
+        return Int(ceil(Double(games!.count) / Double(NUM_COLUMNS)));
     }
     
     func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        if((section+1) * NUM_COLUMNS <= games!.count){
-            //NSLog("count for section #%d : %d", section, NUM_COLUMNS);
+        // If the count of games allows the current row to be full
+        if((section + 1) * NUM_COLUMNS <= games!.count){
             return NUM_COLUMNS;
         }
+        // the row cannot be full so we return the difference
         else {
-            //NSLog("count for section #%d : %d", section, games!.count - ((section) * NUM_COLUMNS));
             return games!.count - ((section) * NUM_COLUMNS)
         }
     }
     
     func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
         let cell : GameCellView = collectionView.dequeueReusableCellWithReuseIdentifier(GameCellView.cellIdentifier, forIndexPath: indexPath) as! GameCellView;
-        //NSLog("Indexpath => section:%d row:%d", indexPath.section, indexPath.row);
         cell.setGame(games![(indexPath.section * NUM_COLUMNS) +  indexPath.row]);
         return cell;
     }
