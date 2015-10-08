@@ -3,12 +3,10 @@
 //  TestTVApp
 //
 //  Created by Olivier Boucher on 2015-09-13.
-//  Copyright © 2015 Rivus Media Inc. All rights reserved.
-//
 
 import Foundation
 
-class TwitchStream {
+struct TwitchStream: CellItem {
     private(set) var id : Int;
     private(set) var gameName : String;
     private(set) var viewers : Int;
@@ -23,5 +21,23 @@ class TwitchStream {
         self.videoHeight = videoHeight;
         self.preview = preview;
         self.channel = channel;
+    }
+    
+    var urlTemplate: String? {
+        get {
+            return preview["template"]
+        }
+    }
+    
+    var title: String {
+        get {
+            return channel.status
+        }
+    }
+    
+    var subtitle: String {
+        get {
+            return "\(viewers) viewers on \(channel.name)"
+        }
     }
 }

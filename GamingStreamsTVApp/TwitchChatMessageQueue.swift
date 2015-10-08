@@ -3,8 +3,7 @@
 //  GamingStreamsTVApp
 //
 //  Created by Olivier Boucher on 2015-09-20.
-//  Copyright © 2015 Rivus Media Inc. All rights reserved.
-//
+
 import Alamofire
 import UIKit
 import Foundation
@@ -34,8 +33,8 @@ class TwitchChatMessageQueue {
     }
     
     func addNewMessage(message : TwitchChatMessage) {
+        // For the data integrity - multiple threads can be accessing at the same time
         dispatch_semaphore_wait(self.mqMutex, DISPATCH_TIME_FOREVER);
-        //NSLog("Message added")
         messageQueue.offer(message)
         dispatch_semaphore_signal(self.mqMutex)
         
@@ -45,8 +44,9 @@ class TwitchChatMessageQueue {
     }
     
     func processAvailableMessages() {
-        //NSLog("Process batch start")
         var messagesArray = Array<TwitchChatMessage>()
+        // For data integrity - We do not want any thread adding messages as
+        // we are polling from the queue
         dispatch_semaphore_wait(self.mqMutex, DISPATCH_TIME_FOREVER);
         while(true){
             if let message = self.messageQueue.poll() as! TwitchChatMessage? {
@@ -58,8 +58,9 @@ class TwitchChatMessageQueue {
         }
         dispatch_semaphore_signal(self.mqMutex)
         
+        // We stop if there's not message to process, it will be reactivated when
+        // we recieve a new message
         if messagesArray.count == 0 {
-            //NSLog("Process batch stop, nothing to poll from")
             self.stopProcessing()
             return
         }

@@ -3,8 +3,6 @@
 //  GamingStreamsTVApp
 //
 //  Created by Olivier Boucher on 2015-09-19.
-//  Copyright © 2015 Rivus Media Inc. All rights reserved.
-//
 
 import Foundation
 
@@ -73,7 +71,10 @@ class IRCHandlerBase: NSObject, NSStreamDelegate
                 IRCBuffer = [UInt8](count: IRCBuffer.count, repeatedValue: 0)
             }
             //Remove that fucking crap
-            inputStringLines.removeAtIndex(inputStringLines.count-1)
+            if(inputStringLines.count > 0){
+                inputStringLines.removeAtIndex(inputStringLines.count-1)
+            }
+            
             
             for string in inputStringLines
             {

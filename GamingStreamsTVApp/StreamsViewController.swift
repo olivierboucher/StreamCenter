@@ -3,8 +3,7 @@
 //  GamingStreamsTVApp
 //
 //  Created by Olivier Boucher on 2015-09-14.
-//  Copyright © 2015 Rivus Media Inc. All rights reserved.
-//
+
 import UIKit
 import Foundation
 
@@ -15,17 +14,24 @@ class StreamsViewController : LoadingViewController {
     private let ITEMS_INSETS_X : CGFloat = 45;
     private let ITEMS_INSETS_Y : CGFloat = 30;
     private let TOP_BAR_HEIGHT : CGFloat = 100;
+    private let PREVIEW_IMG_HEIGHT_RATIO : CGFloat = 1.777777777; //Computed from sampled image from twitch api
     
     private var game : TwitchGame?
     private var topBar : TopBarView?
-    private var collectionView : UICollectionView?;
-    private var streams : Array<TwitchStream>?;
+    private var collectionView : UICollectionView?
+    private var streams : Array<TwitchStream>?
     
     convenience init(game : TwitchGame){
-        self.init(nibName: nil, bundle: nil);
-        self.game = game;
+        self.init(nibName: nil, bundle: nil)
+        self.game = game
     }
     
+    /*
+    * viewWillAppear(animated: Bool)
+    *
+    * Overrides the super function to reload the collection view with fresh data
+    * 
+    */
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
         
@@ -49,10 +55,7 @@ class StreamsViewController : LoadingViewController {
                 dispatch_async(dispatch_get_main_queue(),{
                     if((self.topBar == nil) || !(self.topBar!.isDescendantOfView(self.view))) {
                         let topBarBounds = CGRect(x: self.view.bounds.origin.x, y: self.view.bounds.origin.y, width: self.view.bounds.size.width, height: self.TOP_BAR_HEIGHT)
-                        self.topBar = TopBarView(frame: topBarBounds, withMainTitle: "Live Streams - \(self.game!.name)", backButtonTitle : "Games") {
-                            //This is the callback that gets called on back button exit
-                            self.dismissViewControllerAnimated(true, completion: nil)
-                        }
+                        self.topBar = TopBarView(frame: topBarBounds, withMainTitle: "Live Streams - \(self.game!.name)")
                         self.topBar?.backgroundColor = UIColor.init(white: 0.5, alpha: 1)
                         
                         self.view.addSubview(self.topBar!)
@@ -73,6 +76,12 @@ class StreamsViewController : LoadingViewController {
         super.didReceiveMemoryWarning()
     }
     
+    /*
+    * displayCollectionView()
+    *
+    * Assigns a new collection view to the controller and displays it if
+    * it has not been initialized. Otherwise, it asks to reload data
+    */
     private func displayCollectionView() {
         if((collectionView == nil) || !(collectionView!.isDescendantOfView(self.view))) {
             let layout : UICollectionViewFlowLayout = UICollectionViewFlowLayout();
@@ -82,7 +91,7 @@ class StreamsViewController : LoadingViewController {
             
             self.collectionView = UICollectionView(frame: self.view.bounds, collectionViewLayout: layout);
             
-            self.collectionView!.registerClass(StreamCellView.classForCoder(), forCellWithReuseIdentifier: StreamCellView.cellIdentifier);
+            self.collectionView!.registerClass(ItemCellView.classForCoder(), forCellWithReuseIdentifier: ItemCellView.CELL_IDENTIFIER);
             self.collectionView!.dataSource = self;
             self.collectionView!.delegate = self;
             self.collectionView!.contentInset = UIEdgeInsets(top: ITEMS_INSETS_Y + 10, left: ITEMS_INSETS_X, bottom: ITEMS_INSETS_Y, right: ITEMS_INSETS_X)
@@ -96,10 +105,13 @@ class StreamsViewController : LoadingViewController {
     }
 }
 
+////////////////////////////////////////////
+// MARK - UICollectionViewDelegate interface
+////////////////////////////////////////////
+
 extension StreamsViewController : UICollectionViewDelegate {
     
     func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
-        //TODO: get stream info and launch it
         let selectedStream = streams![(indexPath.section * NUM_COLUMNS) +  indexPath.row]
         let videoViewController = VideoViewController(stream: selectedStream)
         
@@ -107,13 +119,17 @@ extension StreamsViewController : UICollectionViewDelegate {
     }
 }
 
+//////////////////////////////////////////////////////
+// MARK - UICollectionViewDelegateFlowLayout interface
+//////////////////////////////////////////////////////
+
 extension StreamsViewController : UICollectionViewDelegateFlowLayout {
     
     func collectionView(collectionView: UICollectionView,
         layout collectionViewLayout: UICollectionViewLayout,
         sizeForItemAtIndexPath indexPath: NSIndexPath) -> CGSize {
             let width = self.view.bounds.width / CGFloat(NUM_COLUMNS) - CGFloat(ITEMS_INSETS_X * 2);
-            let height = width / 1.777777777 + 80;
+            let height = width / PREVIEW_IMG_HEIGHT_RATIO + (ItemCellView.LABEL_HEIGHT * 2); //There 2 labels, top & bottom
             
             return CGSize(width: width, height: height)
     }
@@ -126,31 +142,31 @@ extension StreamsViewController : UICollectionViewDelegateFlowLayout {
     }
 }
 
+//////////////////////////////////////////////
+// MARK - UICollectionViewDataSource interface
+//////////////////////////////////////////////
+
 extension StreamsViewController : UICollectionViewDataSource {
     
     func numberOfSectionsInCollectionView(collectionView: UICollectionView) -> Int {
-        
-        let test = Double(streams!.count) / Double(NUM_COLUMNS);
-        let test2 = ceil(test);
-        
-        return Int(test2);
+        //The number of possible rows
+        return Int(ceil(Double(streams!.count) / Double(NUM_COLUMNS)));
     }
     
     func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        // If the count of streams allows the current row to be full
         if((section+1) * NUM_COLUMNS <= streams!.count){
-            //NSLog("count for section #%d : %d", section, NUM_COLUMNS);
             return NUM_COLUMNS;
         }
+        // the row cannot be full so we return the difference
         else {
-            //NSLog("count for section #%d : %d", section, games!.count - ((section) * NUM_COLUMNS));
             return streams!.count - ((section) * NUM_COLUMNS)
         }
     }
     
     func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
-        let cell : StreamCellView = collectionView.dequeueReusableCellWithReuseIdentifier(StreamCellView.cellIdentifier, forIndexPath: indexPath) as! StreamCellView;
-        //NSLog("Indexpath => section:%d row:%d", indexPath.section, indexPath.row);
-        cell.setStream(streams![((indexPath.section * NUM_COLUMNS) +  indexPath.row)]);
+        let cell : ItemCellView = collectionView.dequeueReusableCellWithReuseIdentifier(ItemCellView.CELL_IDENTIFIER, forIndexPath: indexPath) as! ItemCellView
+        cell.setRepresentedItem(streams![(indexPath.section * NUM_COLUMNS) +  indexPath.row])
         return cell;
     }
 }

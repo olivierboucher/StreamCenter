@@ -3,12 +3,10 @@
 //  TestTVApp
 //
 //  Created by Olivier Boucher on 2015-09-13.
-//  Copyright © 2015 Rivus Media Inc. All rights reserved.
-//
 
 import Foundation
 
-class TwitchStreamVideo {
+struct TwitchStreamVideo {
     
     private(set) var quality : String?;
     private(set) var url : NSURL?;

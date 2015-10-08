@@ -1,23 +1,30 @@
 //
-//  GameCellView.swift
+//  CellView.swift
 //  GamingStreamsTVApp
 //
-//  Created by Olivier Boucher on 2015-09-13.
+//  Created by Brendan Kirchner on 10/8/15.
 //  Copyright © 2015 Rivus Media Inc. All rights reserved.
 //
-import Alamofire
-import UIKit;
-import Foundation
 
-class GameCellView : UICollectionViewCell {
-    static let cellIdentifier : String = "kGameCellView";
+import UIKit
+import Alamofire
+
+protocol CellItem {
+    var urlTemplate: String? { get }
+    var title: String { get }
+    var subtitle: String { get }
+}
+
+class ItemCellView: UICollectionViewCell {
+    internal static let CELL_IDENTIFIER : String = "kItemCellView";
+    internal static let LABEL_HEIGHT : CGFloat = 40;
     
-    private var game : TwitchGame?
+    private var representedItem : CellItem?;
     private var image : UIImage?
     private var imageView : UIImageView?
     private var activityIndicator : UIActivityIndicatorView?
-    private var gameNameLabel : UILabel?
-    private var viewCountLabel : UILabel?
+    private var titleLabel : UILabel?
+    private var subtitleLabel : UILabel?
     
     override init(frame: CGRect) {
         super.init(frame: frame);
@@ -31,33 +38,39 @@ class GameCellView : UICollectionViewCell {
         self.activityIndicator?.activityIndicatorViewStyle = UIActivityIndicatorViewStyle.WhiteLarge
         self.activityIndicator?.startAnimating()
         
-        self.gameNameLabel = UILabel(frame: CGRect(x: 0,y: self.bounds.height-80, width: self.bounds.size.width, height: 40))
-        self.viewCountLabel = UILabel(frame: CGRect(x: 0,y: self.bounds.height-40, width: self.bounds.size.width, height: 40))
-        self.gameNameLabel?.alpha = 0;
-        self.viewCountLabel?.alpha = 0;
-        self.gameNameLabel?.font = UIFont.systemFontOfSize(30, weight: UIFontWeightSemibold)
-        self.viewCountLabel?.font = UIFont.systemFontOfSize(30, weight: UIFontWeightThin)
-        self.gameNameLabel?.textColor = UIColor.whiteColor()
-        self.viewCountLabel?.textColor = UIColor.whiteColor()
+        self.titleLabel = UILabel(frame: CGRect(x: 0,y: self.bounds.height - (ItemCellView.LABEL_HEIGHT*2), width: self.bounds.size.width, height: ItemCellView.LABEL_HEIGHT))
+        self.subtitleLabel = UILabel(frame: CGRect(x: 0,y: self.bounds.height - ItemCellView.LABEL_HEIGHT, width: self.bounds.size.width, height: ItemCellView.LABEL_HEIGHT))
+        self.titleLabel?.alpha = 0;
+        self.subtitleLabel?.alpha = 0;
+        self.titleLabel?.font = UIFont.systemFontOfSize(30, weight: UIFontWeightSemibold)
+        self.subtitleLabel?.font = UIFont.systemFontOfSize(30, weight: UIFontWeightThin)
+        self.titleLabel?.textColor = UIColor.whiteColor()
+        self.subtitleLabel?.textColor = UIColor.whiteColor()
         
         self.imageView?.addSubview(self.activityIndicator!)
         self.contentView.addSubview(self.imageView!)
-        self.contentView.addSubview(gameNameLabel!)
-        self.contentView.addSubview(viewCountLabel!)
+        self.contentView.addSubview(titleLabel!)
+        self.contentView.addSubview(subtitleLabel!)
     }
-
+    
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
+    /*
+    * prepareForReuse()
+    *
+    * Override the default method to free internal ressources and add
+    * a loading indicator
+    */
     override func prepareForReuse() {
         super.prepareForReuse()
         
-        self.game = nil
+        self.representedItem = nil
         self.image = nil
         self.imageView?.image = nil
-        self.gameNameLabel?.text = ""
-        self.viewCountLabel?.text = ""
+        self.titleLabel?.text = ""
+        self.subtitleLabel?.text = ""
         
         self.activityIndicator = UIActivityIndicatorView(frame: self.imageView!.frame)
         self.activityIndicator?.activityIndicatorViewStyle = UIActivityIndicatorViewStyle.WhiteLarge
@@ -66,16 +79,12 @@ class GameCellView : UICollectionViewCell {
         self.imageView?.addSubview(self.activityIndicator!)
     }
     
-    func setGame(game : TwitchGame) {
-        self.game = game;
-        gameNameLabel!.text = game.name
-        viewCountLabel?.text = "\(game.viewers) viewers"
-        self.assignImageAndDisplay();
-    }
-    func getGame() -> TwitchGame? {
-        return self.game;
-    }
-    
+    /*
+    * assignImageAndDisplay()
+    *
+    * Downloads the image from the actual game and assigns it to the image view
+    * Removes the loading indicator on download callback success
+    */
     private func assignImageAndDisplay() {
         
         self.downloadImageWithSize(self.imageView!.bounds.size) {
@@ -100,9 +109,15 @@ class GameCellView : UICollectionViewCell {
         }
     }
     
+    /*
+    * downloadImageWithSize(size : CGSize, completionHandler : (image : UIImage?, error : NSError?) -> ())
+    *
+    * Download an image from twitch server with the required size
+    * Passes the downloaded image to a defined completion handler
+    */
     private func downloadImageWithSize(size : CGSize, completionHandler : (image : UIImage?, error : NSError?) -> ()) {
         
-        if let imgUrlTemplate = game?.thumbnails["template"] {
+        if let imgUrlTemplate = representedItem?.urlTemplate {
             if let imgUrlString : String? = imgUrlTemplate.stringByReplacingOccurrencesOfString("{width}", withString: "\(Int(size.width))")
                 .stringByReplacingOccurrencesOfString("{height}", withString: "\(Int(size.height))") {
                     Alamofire.request(.GET, imgUrlString!).response() {
@@ -121,32 +136,65 @@ class GameCellView : UICollectionViewCell {
         }
     }
     
+    /*
+    * didUpdateFocusInContext(context: UIFocusUpdateContext, withAnimationCoordinator coordinator: UIFocusAnimationCoordinator)
+    *
+    * Responds to the focus update by either growing or shrinking
+    *
+    */
     override func didUpdateFocusInContext(context: UIFocusUpdateContext, withAnimationCoordinator coordinator: UIFocusAnimationCoordinator) {
         super.didUpdateFocusInContext(context, withAnimationCoordinator: coordinator)
         if(context.nextFocusedView == self){
             coordinator.addCoordinatedAnimations({
-                self.gameNameLabel?.center.y += 40
-                self.viewCountLabel?.center.y += 40
-                self.gameNameLabel?.alpha = 1;
-                self.viewCountLabel?.alpha = 1;
+                self.titleLabel?.center.y += self.centerVerticalCoordinate
+                self.subtitleLabel?.center.y += self.centerVerticalCoordinate
+                self.titleLabel?.alpha = 1;
+                self.subtitleLabel?.alpha = 1;
                 self.layoutIfNeeded()
-                
                 },
                 completion: nil
             )
         }
         else if(context.previouslyFocusedView == self) {
             coordinator.addCoordinatedAnimations({
-                self.gameNameLabel?.center.y -= 40
-                self.viewCountLabel?.center.y -= 40
-                self.gameNameLabel?.alpha = 0;
-                self.viewCountLabel?.alpha = 0;
+                self.titleLabel?.center.y -= self.centerVerticalCoordinate
+                self.subtitleLabel?.center.y -= self.centerVerticalCoordinate
+                self.titleLabel?.alpha = 0;
+                self.subtitleLabel?.alpha = 0;
                 self.layoutIfNeeded()
                 },
                 completion: nil
             )
         }
     }
+    
+    var centerVerticalCoordinate: CGFloat {
+        get {
+            switch representedItem {
+            case is TwitchGame:
+                return 40
+            case is TwitchStream:
+                return 22
+            default:
+                return 22
+            }
+        }
+    }
+    
+    /////////////////////////////
+    // MARK - Getter and setters
+    /////////////////////////////
+    
+    func getRepresentedItem() -> CellItem? {
+        return self.representedItem;
+    }
+    
+    func setRepresentedItem(item : CellItem) {
+        self.representedItem = item;
+        titleLabel!.text = item.title
+        subtitleLabel?.text = item.subtitle
+        self.assignImageAndDisplay();
+        
+    }
+    
 }
-
-

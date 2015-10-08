@@ -16,9 +16,7 @@
 		090AB9021BA616A900CDB05D /* M3UParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 090AB8F31BA5DA1400CDB05D /* M3UParser.swift */; };
 		090AB9031BA616A900CDB05D /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 090AB8E11BA5BFDF00CDB05D /* AppDelegate.swift */; };
 		090AB9041BA616A900CDB05D /* GamesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 090AB8E31BA5BFDF00CDB05D /* GamesViewController.swift */; };
-		090AB9071BA6369300CDB05D /* GameCellView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 090AB9061BA6369300CDB05D /* GameCellView.swift */; };
 		090AB9091BA8454500CDB05D /* TopBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 090AB9081BA8454500CDB05D /* TopBarView.swift */; };
-		090AB90B1BA85B2000CDB05D /* BackButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 090AB90A1BA85B2000CDB05D /* BackButton.swift */; };
 		090AB90D1BA9B0F100CDB05D /* LoadingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 090AB90C1BA9B0F100CDB05D /* LoadingView.swift */; };
 		090AB90F1BA9BBE300CDB05D /* ErrorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 090AB90E1BA9BBE300CDB05D /* ErrorView.swift */; };
 		090AB9221BB3699700CDB05D /* TwitchChatView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 090AB9211BB3699700CDB05D /* TwitchChatView.swift */; };
@@ -34,13 +32,13 @@
 		09CE598A1BAF5F870054EB71 /* NSQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09CE59891BAF5F870054EB71 /* NSQueue.swift */; };
 		09CE598C1BAF963C0054EB71 /* ConcurrencyHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09CE598B1BAF963C0054EB71 /* ConcurrencyHelpers.swift */; };
 		09D098251BA7666200E7E6FC /* StreamsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09D098241BA7666200E7E6FC /* StreamsViewController.swift */; };
-		09D098271BA76BFD00E7E6FC /* StreamCellView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09D098261BA76BFD00E7E6FC /* StreamCellView.swift */; };
 		09D098291BA77FAB00E7E6FC /* VideoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09D098281BA77FAB00E7E6FC /* VideoViewController.swift */; };
 		09D0982B1BA782C800E7E6FC /* VideoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09D0982A1BA782C800E7E6FC /* VideoView.swift */; };
 		09E33CC91BB5B2DF000702E2 /* Dictionary.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09E33CC81BB5B2DF000702E2 /* Dictionary.swift */; };
 		09EB6D3E1BB484F7003EB244 /* String.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09EB6D3D1BB484F7003EB244 /* String.swift */; };
 		09EB6D461BB4A8BE003EB244 /* CATextLayerVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09EB6D451BB4A8BE003EB244 /* CATextLayerVC.swift */; };
 		A5E7DC008D2754CA1EC6CFC5 /* Pods_GamingStreamsTVApp.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 73B61525F92468AED0A0EE8C /* Pods_GamingStreamsTVApp.framework */; };
+		B44A44671BC6CAB800F399EC /* ItemCellView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B44A44661BC6CAB800F399EC /* ItemCellView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -128,9 +126,7 @@
 		090AB8F71BA5F56900CDB05D /* TwitchGame.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TwitchGame.swift; sourceTree = "<group>"; };
 		090AB8F91BA5FEB800CDB05D /* TwitchStream.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TwitchStream.swift; sourceTree = "<group>"; };
 		090AB8FB1BA6049000CDB05D /* TwitchChannel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TwitchChannel.swift; sourceTree = "<group>"; };
-		090AB9061BA6369300CDB05D /* GameCellView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GameCellView.swift; sourceTree = "<group>"; };
 		090AB9081BA8454500CDB05D /* TopBarView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TopBarView.swift; sourceTree = "<group>"; };
-		090AB90A1BA85B2000CDB05D /* BackButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BackButton.swift; sourceTree = "<group>"; };
 		090AB90C1BA9B0F100CDB05D /* LoadingView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoadingView.swift; sourceTree = "<group>"; };
 		090AB90E1BA9BBE300CDB05D /* ErrorView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ErrorView.swift; sourceTree = "<group>"; };
 		090AB9211BB3699700CDB05D /* TwitchChatView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TwitchChatView.swift; sourceTree = "<group>"; };
@@ -145,7 +141,6 @@
 		09CE59891BAF5F870054EB71 /* NSQueue.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NSQueue.swift; sourceTree = "<group>"; };
 		09CE598B1BAF963C0054EB71 /* ConcurrencyHelpers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConcurrencyHelpers.swift; sourceTree = "<group>"; };
 		09D098241BA7666200E7E6FC /* StreamsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StreamsViewController.swift; sourceTree = "<group>"; };
-		09D098261BA76BFD00E7E6FC /* StreamCellView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StreamCellView.swift; sourceTree = "<group>"; };
 		09D098281BA77FAB00E7E6FC /* VideoViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VideoViewController.swift; sourceTree = "<group>"; };
 		09D0982A1BA782C800E7E6FC /* VideoView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VideoView.swift; sourceTree = "<group>"; };
 		09E33CC81BB5B2DF000702E2 /* Dictionary.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Dictionary.swift; sourceTree = "<group>"; };
@@ -153,6 +148,7 @@
 		09EB6D451BB4A8BE003EB244 /* CATextLayerVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CATextLayerVC.swift; sourceTree = "<group>"; };
 		73B61525F92468AED0A0EE8C /* Pods_GamingStreamsTVApp.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_GamingStreamsTVApp.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		90FBC40A14CD24160B58953A /* Pods-GamingStreamsTVApp.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-GamingStreamsTVApp.release.xcconfig"; path = "Pods/Target Support Files/Pods-GamingStreamsTVApp/Pods-GamingStreamsTVApp.release.xcconfig"; sourceTree = "<group>"; };
+		B44A44661BC6CAB800F399EC /* ItemCellView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ItemCellView.swift; sourceTree = "<group>"; };
 		DC2A8ED48462858490AD4901 /* Pods-GamingStreamsTVApp.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-GamingStreamsTVApp.debug.xcconfig"; path = "Pods/Target Support Files/Pods-GamingStreamsTVApp/Pods-GamingStreamsTVApp.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -219,11 +215,9 @@
 		090AB9051BA6366500CDB05D /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				090AB9061BA6369300CDB05D /* GameCellView.swift */,
-				09D098261BA76BFD00E7E6FC /* StreamCellView.swift */,
+				B44A44661BC6CAB800F399EC /* ItemCellView.swift */,
 				09D0982A1BA782C800E7E6FC /* VideoView.swift */,
 				090AB9081BA8454500CDB05D /* TopBarView.swift */,
-				090AB90A1BA85B2000CDB05D /* BackButton.swift */,
 				090AB90C1BA9B0F100CDB05D /* LoadingView.swift */,
 				090AB90E1BA9BBE300CDB05D /* ErrorView.swift */,
 				090AB9261BB579A300CDB05D /* ModalMenuView.swift */,
@@ -521,7 +515,6 @@
 				09CE59821BAE15280054EB71 /* TwitchChatHandler.swift in Sources */,
 				09CE597F1BAE08B10054EB71 /* IRCHandler.swift in Sources */,
 				09CE59881BAF55CE0054EB71 /* TwitchChatMessageQueue.swift in Sources */,
-				09D098271BA76BFD00E7E6FC /* StreamCellView.swift in Sources */,
 				090AB9241BB36BC100CDB05D /* TwitchChatMessageView.swift in Sources */,
 				090AB9001BA616A900CDB05D /* TwitchStream.swift in Sources */,
 				09CE598A1BAF5F870054EB71 /* NSQueue.swift in Sources */,
@@ -533,12 +526,11 @@
 				090AB9021BA616A900CDB05D /* M3UParser.swift in Sources */,
 				09E33CC91BB5B2DF000702E2 /* Dictionary.swift in Sources */,
 				090AB9031BA616A900CDB05D /* AppDelegate.swift in Sources */,
-				090AB9071BA6369300CDB05D /* GameCellView.swift in Sources */,
 				09D098251BA7666200E7E6FC /* StreamsViewController.swift in Sources */,
 				090AB9041BA616A900CDB05D /* GamesViewController.swift in Sources */,
+				B44A44671BC6CAB800F399EC /* ItemCellView.swift in Sources */,
 				09D0982B1BA782C800E7E6FC /* VideoView.swift in Sources */,
 				09CE59861BAF55BD0054EB71 /* TwitchChatMessage.swift in Sources */,
-				090AB90B1BA85B2000CDB05D /* BackButton.swift in Sources */,
 				09CE598C1BAF963C0054EB71 /* ConcurrencyHelpers.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -641,7 +633,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = "App Icon & Top Shelf Image";
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				EMBEDDED_CONTENT_CONTAINS_SWIFT = YES;
+				EMBEDDED_CONTENT_CONTAINS_SWIFT = "$(inherited)";
 				INFOPLIST_FILE = GamingStreamsTVApp/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.rivusmedia.GamingStreamsTVApp;
@@ -655,7 +647,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = "App Icon & Top Shelf Image";
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				EMBEDDED_CONTENT_CONTAINS_SWIFT = YES;
+				EMBEDDED_CONTENT_CONTAINS_SWIFT = "$(inherited)";
 				INFOPLIST_FILE = GamingStreamsTVApp/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.rivusmedia.GamingStreamsTVApp;
