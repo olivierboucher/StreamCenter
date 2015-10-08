@@ -10,16 +10,31 @@ import UIKit
 import Foundation
 
 class StreamCellView : UICollectionViewCell {
-    static let cellIdentifier : String = "kStreamCellView"
+    internal static let CELL_IDENTIFIER : String = "kStreamCellView"
     internal static let LABEL_HEIGHT : CGFloat = 40;
     
-    private var stream : TwitchStream?
+    var stream : TwitchStream? {
+        get { return self.stream }
+        set {
+            self.stream = newValue
+            self.streamStatusLabel?.text = stream?.channel.status
+            self.viewersInfoLabel?.text = "\(stream?.viewers) viewers on \(stream?.channel.name)"
+            self.assignImageAndDisplay()
+        }
+    }
+    
     private var image : UIImage?
     private var imageView : UIImageView?
     private var activityIndicator : UIActivityIndicatorView?
     private var streamStatusLabel : UILabel?
     private var viewersInfoLabel : UILabel?
     
+    /*
+    * init(frame: CGRect)
+    *
+    * Override the default constructor to add required subviews
+    * Adds a loading indicator while a stream gets set and its image displayed
+    */
     override init(frame: CGRect) {
         super.init(frame: frame)
 
@@ -60,6 +75,12 @@ class StreamCellView : UICollectionViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
+    /*
+    * prepareForReuse()
+    *
+    * Override the default method to free internal ressources and add
+    * a loading indicator
+    */
     override func prepareForReuse() {
         super.prepareForReuse()
         
@@ -76,13 +97,13 @@ class StreamCellView : UICollectionViewCell {
         self.imageView?.addSubview(self.activityIndicator!)
     }
     
-    func setStream(stream : TwitchStream) {
-        self.stream = stream
-        self.streamStatusLabel?.text = stream.channel.status
-        self.viewersInfoLabel?.text = "\(stream.viewers) viewers on \(stream.channel.name)"
-        self.assignImageAndDisplay()
-    }
     
+    /*
+    * assignImageAndDisplay()
+    *
+    * Downloads the image from the actual stream and assigns it to the image view
+    * Removes the loading indicator on download callback success
+    */
     private func assignImageAndDisplay() {
         
         self.downloadImageWithSize(self.imageView!.bounds.size) {
@@ -106,6 +127,12 @@ class StreamCellView : UICollectionViewCell {
         }
     }
     
+    /*
+    * downloadImageWithSize(size : CGSize, completionHandler : (image : UIImage?, error : NSError?) -> ())
+    *
+    * Download an image from twitch server with the required size
+    * Passes the downloaded image to a defined completion handler
+    */
     private func downloadImageWithSize(size : CGSize, completionHandler : (image : UIImage?, error : NSError?) -> ()) {
         
         if let imgUrlTemplate = stream?.preview["template"] {
@@ -127,6 +154,12 @@ class StreamCellView : UICollectionViewCell {
         }
     }
     
+    /*
+    * didUpdateFocusInContext(context: UIFocusUpdateContext, withAnimationCoordinator coordinator: UIFocusAnimationCoordinator)
+    *
+    * Responds to the focus update by either growing or shrinking
+    *
+    */
     override func didUpdateFocusInContext(context: UIFocusUpdateContext, withAnimationCoordinator coordinator: UIFocusAnimationCoordinator) {
         super.didUpdateFocusInContext(context, withAnimationCoordinator: coordinator)
         if(context.nextFocusedView == self){

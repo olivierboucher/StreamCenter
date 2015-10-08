@@ -68,10 +68,10 @@ class GameCellView : UICollectionViewCell {
     }
     
     /*
-    * assignImageAndDisplay()
+    * prepareForReuse()
     *
-    * Downloads the image from the actual game and assigns it to the image view
-    * Removes the loading indicator on download callback success
+    * Override the default method to free internal ressources and add
+    * a loading indicator
     */
     override func prepareForReuse() {
         super.prepareForReuse()
