@@ -137,13 +137,20 @@ class VideoViewController : UIViewController {
     }
     
     func handleMenuPress() {
+        if dismissMenu() {
+            return
+        }
+        self.dismissViewControllerAnimated(true, completion: nil)
+    }
+    
+    func dismissMenu() -> Bool {
         if let modalMenu = modalMenu {
             if self.view.subviews.contains(modalMenu) {
                 modalMenu.removeFromSuperview()
-                return
+                return true
             }
         }
-        self.dismissViewControllerAnimated(true, completion: nil)
+        return false
     }
     
     func handleChatOnOff(sender : MenuItemView?) {
@@ -204,6 +211,7 @@ class VideoViewController : UIViewController {
                         let streamAsset = AVURLAsset(URL: stream.url!)
                         let streamItem = AVPlayerItem(asset: streamAsset)
                         self.videoPlayer?.replaceCurrentItemWithPlayerItem(streamItem)
+                        dismissMenu()
                     }
                 }
             }
