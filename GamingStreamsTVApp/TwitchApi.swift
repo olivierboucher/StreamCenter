@@ -15,6 +15,7 @@ class TwitchApi {
         
         Alamofire.request(.GET, accessUrlString)
             .responseJSON { response in
+                
                 if(response.result.isSuccess){
                     if let accessInfoDict = response.result.value as? Dictionary<String, AnyObject> {
                         if let sig = accessInfoDict["sig"] as? String {
@@ -29,7 +30,7 @@ class TwitchApi {
                                         "p"                 : Int(arc4random_uniform(99999)),
                                         "token"             : token,
                                         "sig"               : sig])
-                                    .responseString {response in
+                                    .responseString { response in
                                         if(response.result.isSuccess){
                                             let streams = M3UParser.parseToDict(response.result.value!);
                                             completionHandler(streams: streams, error: nil);
@@ -81,7 +82,7 @@ class TwitchApi {
         Alamofire.request(.GET, gamesUrlString, parameters :
             [   "limit"   : limit,
                 "offset"  : offset])
-            .responseJSON {response in
+            .responseJSON { response in
                 
                 if(response.result.isSuccess) {
                     if let gamesInfoDict = response.result.value as? Dictionary<String, AnyObject> {

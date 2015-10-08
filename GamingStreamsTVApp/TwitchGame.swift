@@ -6,8 +6,7 @@
 
 import Foundation
 
-
-struct TwitchGame {
+struct TwitchGame: CellItem {
     
     private(set) var id : Int;
     private(set) var viewers : Int;
@@ -24,6 +23,22 @@ struct TwitchGame {
         self.thumbnails = thumbnails;
         self.logos = logos;
     }
-
     
+    var urlTemplate: String? {
+        get {
+            return thumbnails["template"]
+        }
+    }
+    
+    var title: String {
+        get {
+            return name
+        }
+    }
+    
+    var subtitle: String {
+        get {
+            return "\(viewers) viewers"
+        }
+    }
 }

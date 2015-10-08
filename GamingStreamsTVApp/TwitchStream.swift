@@ -6,7 +6,7 @@
 
 import Foundation
 
-struct TwitchStream {
+struct TwitchStream: CellItem {
     private(set) var id : Int;
     private(set) var gameName : String;
     private(set) var viewers : Int;
@@ -21,5 +21,23 @@ struct TwitchStream {
         self.videoHeight = videoHeight;
         self.preview = preview;
         self.channel = channel;
+    }
+    
+    var urlTemplate: String? {
+        get {
+            return preview["template"]
+        }
+    }
+    
+    var title: String {
+        get {
+            return channel.status
+        }
+    }
+    
+    var subtitle: String {
+        get {
+            return "\(viewers) viewers on \(channel.name)"
+        }
     }
 }
