@@ -181,7 +181,11 @@ class TwitchChatMessageQueue {
                     let rmCount = string.substringWithRange(string.rangeFromNSRange(range)!).characters.count - attachString.length
                     if fixedRange.location + fixedRange.length <= attrMsg.length {
                         removedChars += rmCount
-                        attrMsg.replaceCharactersInRange(fixedRange, withAttributedString: attachString)
+                        if attachString != "\\U0000fffc" {
+                            attrMsg.replaceCharactersInRange(fixedRange, withAttributedString: attachString)
+                        } else {
+                            print("didn't add")
+                        }
                     }
                 }
             }

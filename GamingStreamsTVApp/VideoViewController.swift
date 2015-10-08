@@ -10,7 +10,7 @@ import UIKit
 import Foundation
 
 enum StreamSourceQuality: String {
-    case Chunked = "Source"
+    case Source = "Source"
     case High
     case Medium
     case Low
@@ -43,16 +43,26 @@ class VideoViewController : UIViewController {
         self.longPressRecognizer?.cancelsTouchesInView = false
         self.view.addGestureRecognizer(self.longPressRecognizer!)
         
+        let tapRecognizer = UITapGestureRecognizer(target: self, action: "pause")
+        tapRecognizer.allowedPressTypes = [NSNumber(integer: UIPressType.PlayPause.rawValue)];
+        self.view.addGestureRecognizer(tapRecognizer)
+        
+        let gestureRecognizer = UITapGestureRecognizer(target: self, action: "handleMenuPress")
+        gestureRecognizer.allowedPressTypes = [UIPressType.Menu.rawValue]
+        gestureRecognizer.cancelsTouchesInView = false
+        
+        self.view.addGestureRecognizer(gestureRecognizer)
+        
         //Modal menu options
         self.modalMenuOptions = [
             "Live Chat" : [
                 MenuOption(enabledTitle: "Turn off", disabledTitle: "Turn on", enabled: false, onClick:self.handleChatOnOff)
             ],
             "Stream Quality" : [
-                MenuOption(title: "Source", enabled: false, onClick: self.handleQualityChange),
-                MenuOption(title: "High", enabled: false, onClick: self.handleQualityChange),
-                MenuOption(title: "Medium", enabled: false, onClick: self.handleQualityChange),
-                MenuOption(title: "Low", enabled: false, onClick: self.handleQualityChange)
+                MenuOption(title: StreamSourceQuality.Source.rawValue, enabled: false, onClick: self.handleQualityChange),
+                MenuOption(title: StreamSourceQuality.High.rawValue, enabled: false, onClick: self.handleQualityChange),
+                MenuOption(title: StreamSourceQuality.Medium.rawValue, enabled: false, onClick: self.handleQualityChange),
+                MenuOption(title: StreamSourceQuality.Low.rawValue, enabled: false, onClick: self.handleQualityChange)
             ]
         ]
         
@@ -60,7 +70,8 @@ class VideoViewController : UIViewController {
             (streams, error) in
             
             if(error != nil) {
-                NSLog("Error getting stream video data")
+                print("Error getting stream video data")
+                print(error)
             }
             
             if let streams = streams {
@@ -77,6 +88,12 @@ class VideoViewController : UIViewController {
                 
             }
         }
+    }
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        // Do any additional setup after loading the view, typically from a nib.
+        
     }
     
     /*
@@ -99,17 +116,6 @@ class VideoViewController : UIViewController {
         self.videoPlayer = nil
 
         super.viewWillDisappear(animated)
-    }
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        // Do any additional setup after loading the view, typically from a nib.
-        
-    }
-    
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
     }
     
     /*
@@ -155,13 +161,9 @@ class VideoViewController : UIViewController {
                 
                 modalMenu!.center = self.view.center
                 
-                let gestureRecognizer = UITapGestureRecognizer(target: self, action: "handleMenuPress")
-                gestureRecognizer.allowedPressTypes = [UIPressType.Menu.rawValue]
-                gestureRecognizer.cancelsTouchesInView = false
                 
-                modalMenu?.addGestureRecognizer(gestureRecognizer)
             }
-            
+            modalMenu?.alpha = 1
             self.view.addSubview(self.modalMenu!)
         }
     }
@@ -182,6 +184,15 @@ class VideoViewController : UIViewController {
     func dismissMenu() -> Bool {
         if let modalMenu = modalMenu {
             if self.view.subviews.contains(modalMenu) {
+                //bkirchner: for some reason when i try to animate the menu fading away, it just goes to the homescreen - really odd
+//                UIView.animateWithDuration(0.5, animations: { () -> Void in
+//                    modalMenu.alpha = 0
+//                }, completion: { (finished) -> Void in
+//                    print("finished: \(finished)")
+//                    if finished {
+//                        modalMenu.removeFromSuperview()
+//                    }
+//                })
                 modalMenu.removeFromSuperview()
                 return true
             }
@@ -238,7 +249,7 @@ class VideoViewController : UIViewController {
         if let text = sender?.title?.text, quality = StreamSourceQuality(rawValue: text) {
             var qualityIdentifier = "chunked"
             switch quality {
-            case .Chunked:
+            case .Source:
                 qualityIdentifier = "chunked"
             case .High:
                 qualityIdentifier = "high"
@@ -256,6 +267,18 @@ class VideoViewController : UIViewController {
                         dismissMenu()
                     }
                 }
+            }
+        }
+    }
+    
+    func pause() {
+        if let player = self.videoPlayer {
+            if player.rate == 1 {
+                player.pause()
+            } else {
+                player.play()
+                player.currentItem?.playbackLikelyToKeepUp
+                player.setRate(1.0, time: kCMTimeInvalid, atHostTime: kCMTimePositiveInfinity)
             }
         }
     }
