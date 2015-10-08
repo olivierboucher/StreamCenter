@@ -10,16 +10,32 @@ import UIKit;
 import Foundation
 
 class GameCellView : UICollectionViewCell {
-    static let cellIdentifier : String = "kGameCellView";
+    internal static let CELL_IDENTIFIER : String = "kGameCellView";
     internal static let LABEL_HEIGHT : CGFloat = 40;
     
-    private var game : TwitchGame?
+    var game : TwitchGame? {
+        get { return self.game }
+        set {
+            self.game = newValue;
+            gameNameLabel!.text = newValue?.name
+            viewCountLabel?.text = "\(newValue?.viewers) viewers"
+            self.assignImageAndDisplay();
+        }
+    }
+
     private var image : UIImage?
     private var imageView : UIImageView?
     private var activityIndicator : UIActivityIndicatorView?
     private var gameNameLabel : UILabel?
     private var viewCountLabel : UILabel?
     
+    
+    /*
+    * init(frame: CGRect)
+    *
+    * Override the default constructor to add required subviews
+    * Adds a loading indicator while a game gets set and its image displayed
+    */
     override init(frame: CGRect) {
         super.init(frame: frame);
         let imageViewFrame = CGRect(x: 0, y: 0, width: self.bounds.width, height: self.bounds.height-80)
@@ -51,6 +67,12 @@ class GameCellView : UICollectionViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
+    /*
+    * assignImageAndDisplay()
+    *
+    * Downloads the image from the actual game and assigns it to the image view
+    * Removes the loading indicator on download callback success
+    */
     override func prepareForReuse() {
         super.prepareForReuse()
         
@@ -67,16 +89,12 @@ class GameCellView : UICollectionViewCell {
         self.imageView?.addSubview(self.activityIndicator!)
     }
     
-    func setGame(game : TwitchGame) {
-        self.game = game;
-        gameNameLabel!.text = game.name
-        viewCountLabel?.text = "\(game.viewers) viewers"
-        self.assignImageAndDisplay();
-    }
-    func getGame() -> TwitchGame? {
-        return self.game;
-    }
-    
+    /*
+    * assignImageAndDisplay()
+    *
+    * Downloads the image from the actual game and assigns it to the image view
+    * Removes the loading indicator on download callback success
+    */
     private func assignImageAndDisplay() {
         
         self.downloadImageWithSize(self.imageView!.bounds.size) {
@@ -101,6 +119,12 @@ class GameCellView : UICollectionViewCell {
         }
     }
     
+    /*
+    * downloadImageWithSize(size : CGSize, completionHandler : (image : UIImage?, error : NSError?) -> ())
+    *
+    * Download an image from twitch server with the required size
+    * Passes the downloaded image to a defined completion handler
+    */
     private func downloadImageWithSize(size : CGSize, completionHandler : (image : UIImage?, error : NSError?) -> ()) {
         
         if let imgUrlTemplate = game?.thumbnails["template"] {
@@ -122,6 +146,12 @@ class GameCellView : UICollectionViewCell {
         }
     }
     
+    /*
+    * didUpdateFocusInContext(context: UIFocusUpdateContext, withAnimationCoordinator coordinator: UIFocusAnimationCoordinator)
+    *
+    * Responds to the focus update by either growing or shrinking
+    *
+    */
     override func didUpdateFocusInContext(context: UIFocusUpdateContext, withAnimationCoordinator coordinator: UIFocusAnimationCoordinator) {
         super.didUpdateFocusInContext(context, withAnimationCoordinator: coordinator)
         if(context.nextFocusedView == self){
@@ -131,7 +161,6 @@ class GameCellView : UICollectionViewCell {
                 self.gameNameLabel?.alpha = 1;
                 self.viewCountLabel?.alpha = 1;
                 self.layoutIfNeeded()
-                
                 },
                 completion: nil
             )

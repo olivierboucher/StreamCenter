@@ -93,7 +93,7 @@ class GamesViewController : LoadingViewController {
             
             self.collectionView = UICollectionView(frame: collectionViewBounds, collectionViewLayout: layout);
             
-            self.collectionView!.registerClass(GameCellView.classForCoder(), forCellWithReuseIdentifier: GameCellView.cellIdentifier);
+            self.collectionView!.registerClass(GameCellView.classForCoder(), forCellWithReuseIdentifier: GameCellView.CELL_IDENTIFIER);
             self.collectionView!.dataSource = self;
             self.collectionView!.delegate = self;
             self.collectionView!.contentInset = UIEdgeInsets(top: ITEMS_INSETS_Y + 10, left: ITEMS_INSETS_X, bottom: ITEMS_INSETS_Y, right: ITEMS_INSETS_X)
@@ -169,8 +169,9 @@ extension GamesViewController : UICollectionViewDataSource {
     }
     
     func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
-        let cell : GameCellView = collectionView.dequeueReusableCellWithReuseIdentifier(GameCellView.cellIdentifier, forIndexPath: indexPath) as! GameCellView;
-        cell.setGame(games![(indexPath.section * NUM_COLUMNS) +  indexPath.row]);
+        let cell : GameCellView = collectionView.dequeueReusableCellWithReuseIdentifier(GameCellView.CELL_IDENTIFIER, forIndexPath: indexPath) as! GameCellView;
+        cell.game = games![(indexPath.section * NUM_COLUMNS) +  indexPath.row];
+
         return cell;
     }
 }

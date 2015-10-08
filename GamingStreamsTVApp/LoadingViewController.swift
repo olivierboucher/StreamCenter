@@ -3,8 +3,6 @@
 //  GamingStreamsTVApp
 //
 //  Created by Olivier Boucher on 2015-09-29.
-//  Copyright © 2015 Rivus Media Inc. All rights reserved.
-//
 
 import UIKit
 import Foundation
@@ -17,13 +15,24 @@ class LoadingViewController : UIViewController {
     internal var loadingView : LoadingView?
     internal var errorView : ErrorView?
     
-    
+    /*
+    * displayLoadingView()
+    *
+    * Initializes a loading view in the center of the screen and displays it
+    *
+    */
     func displayLoadingView()  {
         self.loadingView = LoadingView(frame: CGRect(x: 0, y: 0, width: self.view.bounds.width/5, height: self.view.bounds.height/5))
         self.loadingView?.center = self.view.center
         self.view.addSubview(self.loadingView!)
     }
     
+    /*
+    * removeLoadingView()
+    *
+    * Removes the loading view if existant
+    *
+    */
     func removeLoadingView() {
         if((self.loadingView != nil) && (self.loadingView!.isDescendantOfView(self.view))){
             self.loadingView?.removeFromSuperview()
@@ -31,6 +40,12 @@ class LoadingViewController : UIViewController {
         }
     }
     
+    /*
+    * displayErrorView(title : String)
+    *
+    * Initializes an error view in the center of the screen and displays it
+    *
+    */
     func displayErrorView(title : String) {
         let errorViewFrame = CGRect(x: 0, y: 0, width: 300, height: 300)
         self.errorView = ErrorView(frame: errorViewFrame, andTitle: title)
@@ -38,6 +53,12 @@ class LoadingViewController : UIViewController {
         self.view.addSubview(self.errorView!)
     }
     
+    /*
+    * removeErrorView()
+    *
+    * Removes the error view if existant
+    *
+    */
     func removeErrorView() {
         if((self.errorView != nil) && (self.errorView!.isDescendantOfView(self.view))){
             self.errorView?.removeFromSuperview()
