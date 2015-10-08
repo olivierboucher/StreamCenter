@@ -56,6 +56,7 @@ class LoadingViewController : UIViewController {
         self.reloadButton = UIButton(frame: CGRectMake(0, 0, 300, 20))
         self.reloadButton?.center = self.view.center
         self.reloadButton?.center.y += 200
+        self.reloadButton?.setTitleColor(UIColor.whiteColor(), forState: .Normal)
         self.reloadButton?.setTitle("Reload", forState: .Normal)
         self.reloadButton?.addTarget(self, action: Selector("reloadContent"), forControlEvents: .PrimaryActionTriggered)
         self.view.addSubview(self.reloadButton!)
@@ -84,7 +85,6 @@ class LoadingViewController : UIViewController {
     *
     */
     func reloadContent() {
-        print("sup")
-        displayLoadingView()
+        print("we are reloading the content now: \(self)")
     }
 }

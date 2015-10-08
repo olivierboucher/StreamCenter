@@ -107,6 +107,7 @@ class GamesViewController : LoadingViewController {
     
     override func reloadContent() {
         loadContent()
+        super.reloadContent()
     }
 }
 

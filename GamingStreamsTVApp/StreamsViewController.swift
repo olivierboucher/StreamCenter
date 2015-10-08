@@ -105,6 +105,7 @@ class StreamsViewController : LoadingViewController {
     
     override func reloadContent() {
         loadContent()
+        super.reloadContent()
     }
 }
 
