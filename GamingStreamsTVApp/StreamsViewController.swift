@@ -49,10 +49,7 @@ class StreamsViewController : LoadingViewController {
                 dispatch_async(dispatch_get_main_queue(),{
                     if((self.topBar == nil) || !(self.topBar!.isDescendantOfView(self.view))) {
                         let topBarBounds = CGRect(x: self.view.bounds.origin.x, y: self.view.bounds.origin.y, width: self.view.bounds.size.width, height: self.TOP_BAR_HEIGHT)
-                        self.topBar = TopBarView(frame: topBarBounds, withMainTitle: "Live Streams - \(self.game!.name)", backButtonTitle : "Games") {
-                            //This is the callback that gets called on back button exit
-                            self.dismissViewControllerAnimated(true, completion: nil)
-                        }
+                        self.topBar = TopBarView(frame: topBarBounds, withMainTitle: "Live Streams - \(self.game!.name)")
                         self.topBar?.backgroundColor = UIColor.init(white: 0.5, alpha: 1)
                         
                         self.view.addSubview(self.topBar!)
