@@ -26,6 +26,4 @@ class TwitchGame {
         self.thumbnails = thumbnails;
         self.logos = logos;
     }
-
-    
 }
