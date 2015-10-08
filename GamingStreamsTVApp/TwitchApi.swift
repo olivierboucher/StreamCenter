@@ -15,10 +15,6 @@ class TwitchApi {
         //First we build the url according to the channel we desire to get stream link
         let accessUrlString = String(format: "https://api.twitch.tv/api/channels/%@/access_token", channel);
         
-        Alamofire.request(.GET, accessUrlString).responseJSON { (response) in
-            //do nothing
-        }
-        
         Alamofire.request(.GET, accessUrlString)
             .responseJSON { response in
                 
