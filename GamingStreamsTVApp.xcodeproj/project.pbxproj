@@ -18,7 +18,6 @@
 		090AB9041BA616A900CDB05D /* GamesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 090AB8E31BA5BFDF00CDB05D /* GamesViewController.swift */; };
 		090AB9071BA6369300CDB05D /* GameCellView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 090AB9061BA6369300CDB05D /* GameCellView.swift */; };
 		090AB9091BA8454500CDB05D /* TopBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 090AB9081BA8454500CDB05D /* TopBarView.swift */; };
-		090AB90B1BA85B2000CDB05D /* BackButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 090AB90A1BA85B2000CDB05D /* BackButton.swift */; };
 		090AB90D1BA9B0F100CDB05D /* LoadingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 090AB90C1BA9B0F100CDB05D /* LoadingView.swift */; };
 		090AB90F1BA9BBE300CDB05D /* ErrorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 090AB90E1BA9BBE300CDB05D /* ErrorView.swift */; };
 		090AB9221BB3699700CDB05D /* TwitchChatView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 090AB9211BB3699700CDB05D /* TwitchChatView.swift */; };
@@ -130,7 +129,6 @@
 		090AB8FB1BA6049000CDB05D /* TwitchChannel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TwitchChannel.swift; sourceTree = "<group>"; };
 		090AB9061BA6369300CDB05D /* GameCellView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GameCellView.swift; sourceTree = "<group>"; };
 		090AB9081BA8454500CDB05D /* TopBarView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TopBarView.swift; sourceTree = "<group>"; };
-		090AB90A1BA85B2000CDB05D /* BackButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BackButton.swift; sourceTree = "<group>"; };
 		090AB90C1BA9B0F100CDB05D /* LoadingView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoadingView.swift; sourceTree = "<group>"; };
 		090AB90E1BA9BBE300CDB05D /* ErrorView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ErrorView.swift; sourceTree = "<group>"; };
 		090AB9211BB3699700CDB05D /* TwitchChatView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TwitchChatView.swift; sourceTree = "<group>"; };
@@ -223,7 +221,6 @@
 				09D098261BA76BFD00E7E6FC /* StreamCellView.swift */,
 				09D0982A1BA782C800E7E6FC /* VideoView.swift */,
 				090AB9081BA8454500CDB05D /* TopBarView.swift */,
-				090AB90A1BA85B2000CDB05D /* BackButton.swift */,
 				090AB90C1BA9B0F100CDB05D /* LoadingView.swift */,
 				090AB90E1BA9BBE300CDB05D /* ErrorView.swift */,
 				090AB9261BB579A300CDB05D /* ModalMenuView.swift */,
@@ -538,7 +535,6 @@
 				090AB9041BA616A900CDB05D /* GamesViewController.swift in Sources */,
 				09D0982B1BA782C800E7E6FC /* VideoView.swift in Sources */,
 				09CE59861BAF55BD0054EB71 /* TwitchChatMessage.swift in Sources */,
-				090AB90B1BA85B2000CDB05D /* BackButton.swift in Sources */,
 				09CE598C1BAF963C0054EB71 /* ConcurrencyHelpers.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

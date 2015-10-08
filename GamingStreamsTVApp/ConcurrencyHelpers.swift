@@ -3,8 +3,6 @@
 //  GamingStreamsTVApp
 //
 //  Created by Olivier Boucher on 2015-09-20.
-//  Copyright © 2015 Rivus Media Inc. All rights reserved.
-//
 
 import Foundation
 
