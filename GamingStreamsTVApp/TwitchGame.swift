@@ -7,7 +7,7 @@
 import Foundation
 
 
-class TwitchGame {
+struct TwitchGame {
     
     private(set) var id : Int;
     private(set) var viewers : Int;

@@ -6,7 +6,7 @@
 
 import Foundation
 
-class TwitchStream {
+struct TwitchStream {
     private(set) var id : Int;
     private(set) var gameName : String;
     private(set) var viewers : Int;

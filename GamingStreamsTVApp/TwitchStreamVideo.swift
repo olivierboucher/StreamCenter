@@ -6,7 +6,7 @@
 
 import Foundation
 
-class TwitchStreamVideo {
+struct TwitchStreamVideo {
     
     private(set) var quality : String?;
     private(set) var url : NSURL?;
