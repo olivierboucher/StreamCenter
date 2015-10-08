@@ -47,6 +47,7 @@ class TwitchApi {
                                             return
                                         }
                                 }
+                                return
                             }
                         }
                     }
