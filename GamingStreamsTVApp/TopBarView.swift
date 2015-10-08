@@ -3,8 +3,7 @@
 //  GamingStreamsTVApp
 //
 //  Created by Olivier Boucher on 2015-09-15.
-//  Copyright © 2015 Rivus Media Inc. All rights reserved.
-//
+
 import UIKit
 import Foundation
 
@@ -26,10 +25,6 @@ class TopBarView : UIView {
         self.addSubview(self.titleLabel!)
     }
     
-    override init(frame: CGRect) {
-        super.init(frame: frame)
-    }
-
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
     }

@@ -91,7 +91,7 @@ class StreamsViewController : LoadingViewController {
             
             self.collectionView = UICollectionView(frame: self.view.bounds, collectionViewLayout: layout);
             
-            self.collectionView!.registerClass(StreamCellView.classForCoder(), forCellWithReuseIdentifier: StreamCellView.cellIdentifier);
+            self.collectionView!.registerClass(StreamCellView.classForCoder(), forCellWithReuseIdentifier: StreamCellView.CELL_IDENTIFIER);
             self.collectionView!.dataSource = self;
             self.collectionView!.delegate = self;
             self.collectionView!.contentInset = UIEdgeInsets(top: ITEMS_INSETS_Y + 10, left: ITEMS_INSETS_X, bottom: ITEMS_INSETS_Y, right: ITEMS_INSETS_X)
@@ -165,8 +165,8 @@ extension StreamsViewController : UICollectionViewDataSource {
     }
     
     func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
-        let cell : StreamCellView = collectionView.dequeueReusableCellWithReuseIdentifier(StreamCellView.cellIdentifier, forIndexPath: indexPath) as! StreamCellView;
-        cell.setStream(streams![((indexPath.section * NUM_COLUMNS) +  indexPath.row)]);
+        let cell : StreamCellView = collectionView.dequeueReusableCellWithReuseIdentifier(StreamCellView.CELL_IDENTIFIER, forIndexPath: indexPath) as! StreamCellView;
+        cell.stream = streams![((indexPath.section * NUM_COLUMNS) +  indexPath.row)];
         return cell;
     }
 }
