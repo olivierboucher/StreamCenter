@@ -8,10 +8,10 @@ import Foundation
 
 class M3UParser {
     
-    static func parseToDict(data : String) -> Array<TwitchStreamVideo>? {
+    static func parseToDict(data : String) -> [TwitchStreamVideo]? {
         let dataByLine = data.componentsSeparatedByString("\n");
         
-        var resultArray = Array<TwitchStreamVideo>();
+        var resultArray = [TwitchStreamVideo]();
         
         if(dataByLine[0] == "#EXTM3U"){
             for(var i = 1; i < dataByLine.count ; i++) {

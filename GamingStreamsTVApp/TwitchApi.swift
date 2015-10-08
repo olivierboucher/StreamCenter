@@ -9,7 +9,7 @@ import Alamofire
 
 class TwitchApi {
     
-    static func getStreamsForChannel(channel : String, completionHandler: (streams: Array<TwitchStreamVideo>?, error: NSError?) -> ()){
+    static func getStreamsForChannel(channel : String, completionHandler: (streams: [TwitchStreamVideo]?, error: NSError?) -> ()){
         //First we build the url according to the channel we desire to get stream link
         let accessUrlString = String(format: "https://api.twitch.tv/api/channels/%@/access_token", channel);
         
@@ -76,7 +76,7 @@ class TwitchApi {
         
     }
     
-    static func getTopGamesWithOffset(offset : Int, limit : Int, completionHandler: (games: Array<TwitchGame>?, error: NSError?) -> ()) {
+    static func getTopGamesWithOffset(offset : Int, limit : Int, completionHandler: (games: [TwitchGame]?, error: NSError?) -> ()) {
         //First we build the url according to the game we desire to get infos
         let gamesUrlString = "https://api.twitch.tv/kraken/games/top";
         
@@ -87,8 +87,8 @@ class TwitchApi {
                 
                 if(response.result.isSuccess) {
                     if let gamesInfoDict = response.result.value as? Dictionary<String, AnyObject> {
-                        var games = Array<TwitchGame>();
-                        for gameRaw in gamesInfoDict["top"] as! Array<AnyObject> {
+                        var games = [TwitchGame]();
+                        for gameRaw in gamesInfoDict["top"] as! [AnyObject] {
                             if let topItemDict = gameRaw as? Dictionary<String, AnyObject> {
                                 if let gameDict = topItemDict["game"] as? NSDictionary {
                                     games.append(TwitchGame(
@@ -127,7 +127,7 @@ class TwitchApi {
         
     }
     
-    static func getTopStreamsForGameWithOffset(game : String, offset : Int, limit : Int, completionHandler: (streams: Array<TwitchStream>?, error: NSError?) -> ()) {
+    static func getTopStreamsForGameWithOffset(game : String, offset : Int, limit : Int, completionHandler: (streams: [TwitchStream]?, error: NSError?) -> ()) {
         //First we build the url according to the game we desire to get infos
         let streamsUrlString = "https://api.twitch.tv/kraken/streams";
         
@@ -140,11 +140,11 @@ class TwitchApi {
                 if(response.result.isSuccess) {
                     if let streamsInfoDict = response.result.value as? Dictionary<String, AnyObject> {
                         
-                        var streams = Array<TwitchStream>();
+                        var streams = [TwitchStream]();
                         let dateFormatter = NSDateFormatter();
                         dateFormatter.dateFormat = "yyyy'-'MM'-'dd'T'HH':'mm':'ssXXX";
                         
-                        for streamRaw in streamsInfoDict["streams"] as! Array<AnyObject> {
+                        for streamRaw in streamsInfoDict["streams"] as! [AnyObject] {
                             if let streamDict = streamRaw as? Dictionary<String, AnyObject> {
                                 //First extract the channel infos from the stream
                                 var channel : TwitchChannel?;

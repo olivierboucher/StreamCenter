@@ -16,7 +16,7 @@ class GamesViewController : LoadingViewController {
     
     private var topBar : TopBarView?
     private var collectionView : UICollectionView?
-    private var games : Array<TwitchGame>?
+    private var games : [TwitchGame]?
     
     convenience init(){
         self.init(nibName: nil, bundle: nil);
@@ -30,38 +30,7 @@ class GamesViewController : LoadingViewController {
     */
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
-        
-        if(self.collectionView == nil){
-            self.displayLoadingView()
-        }
-        
-        TwitchApi.getTopGamesWithOffset(0, limit: 17) {
-            (games, error) in
-            
-            if(error != nil || games == nil){
-                dispatch_async(dispatch_get_main_queue(),{
-                    if(self.errorView == nil){
-                        self.removeLoadingView()
-                        self.displayErrorView("Error loading game list.\nPlease check your internet connection.")
-                    }
-                });
-            }
-            else {
-                self.games = games!;
-                dispatch_async(dispatch_get_main_queue(),{
-                    if((self.topBar == nil) || !(self.topBar!.isDescendantOfView(self.view))) {
-                        let topBarBounds = CGRect(x: self.view.bounds.origin.x, y: self.view.bounds.origin.y, width: self.view.bounds.size.width, height: self.TOP_BAR_HEIGHT)
-                        self.topBar = TopBarView(frame: topBarBounds, withMainTitle: "Top Games")
-                        self.topBar?.backgroundColor = UIColor.init(white: 0.5, alpha: 1)
-                        
-                        self.view.addSubview(self.topBar!)
-                    }
-                    self.removeLoadingView()
-                    self.removeErrorView()
-                    self.displayCollectionView();
-                })
-            }
-        }
+        loadContent()
     }
     
     override func viewDidLoad() {
@@ -73,6 +42,36 @@ class GamesViewController : LoadingViewController {
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
+    }
+    
+    func loadContent() {
+        self.displayLoadingView()
+        TwitchApi.getTopGamesWithOffset(0, limit: 17) {
+            (games, error) in
+            
+            guard let games = games else {
+                dispatch_async(dispatch_get_main_queue(), {
+                    self.removeLoadingView()
+                    self.removeErrorView()
+                    self.displayErrorView("Error loading game list.\nPlease check your internet connection.")
+                });
+                return
+            }
+            
+            self.games = games
+            dispatch_async(dispatch_get_main_queue(), {
+                if((self.topBar == nil) || !(self.topBar!.isDescendantOfView(self.view))) {
+                    let topBarBounds = CGRect(x: self.view.bounds.origin.x, y: self.view.bounds.origin.y, width: self.view.bounds.size.width, height: self.TOP_BAR_HEIGHT)
+                    self.topBar = TopBarView(frame: topBarBounds, withMainTitle: "Top Games")
+                    self.topBar?.backgroundColor = UIColor.init(white: 0.5, alpha: 1)
+                    
+                    self.view.addSubview(self.topBar!)
+                }
+                self.removeLoadingView()
+                self.removeErrorView()
+                self.displayCollectionView();
+            })
+        }
     }
     
     /*
@@ -104,6 +103,10 @@ class GamesViewController : LoadingViewController {
         else {
             collectionView?.reloadData()
         }
+    }
+    
+    override func reloadContent() {
+        loadContent()
     }
 }
 

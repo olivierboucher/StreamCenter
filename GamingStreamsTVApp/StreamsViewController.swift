@@ -19,7 +19,7 @@ class StreamsViewController : LoadingViewController {
     private var game : TwitchGame?
     private var topBar : TopBarView?
     private var collectionView : UICollectionView?
-    private var streams : Array<TwitchStream>?
+    private var streams : [TwitchStream]?
     
     convenience init(game : TwitchGame){
         self.init(nibName: nil, bundle: nil)
@@ -34,38 +34,7 @@ class StreamsViewController : LoadingViewController {
     */
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
-        
-        if(self.collectionView == nil){
-           self.displayLoadingView()
-        }
-        
-        TwitchApi.getTopStreamsForGameWithOffset(self.game!.name, offset: 0, limit: 20) {
-            (streams, error) in
-            
-            if(error != nil || streams == nil){
-                dispatch_async(dispatch_get_main_queue(),{
-                    if(self.errorView == nil){
-                        self.removeLoadingView()
-                        self.displayErrorView("Error loading streams list.\nPlease check your internet connection.")
-                    }
-                });
-            }
-            else {
-                self.streams = streams!
-                dispatch_async(dispatch_get_main_queue(),{
-                    if((self.topBar == nil) || !(self.topBar!.isDescendantOfView(self.view))) {
-                        let topBarBounds = CGRect(x: self.view.bounds.origin.x, y: self.view.bounds.origin.y, width: self.view.bounds.size.width, height: self.TOP_BAR_HEIGHT)
-                        self.topBar = TopBarView(frame: topBarBounds, withMainTitle: "Live Streams - \(self.game!.name)")
-                        self.topBar?.backgroundColor = UIColor.init(white: 0.5, alpha: 1)
-                        
-                        self.view.addSubview(self.topBar!)
-                    }
-                    self.removeLoadingView()
-                    self.removeErrorView()
-                    self.displayCollectionView();
-                })
-            }
-        }
+        loadContent()
     }
     
     override func viewDidLoad() {
@@ -74,6 +43,36 @@ class StreamsViewController : LoadingViewController {
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
+    }
+    
+    func loadContent() {
+        self.displayLoadingView()
+        TwitchApi.getTopStreamsForGameWithOffset(self.game!.name, offset: 0, limit: 20) {
+            (streams, error) in
+            
+            guard let streams = streams else {
+                dispatch_async(dispatch_get_main_queue(), {
+                    self.removeLoadingView()
+                    self.removeErrorView()
+                    self.displayErrorView("Error loading streams list.\nPlease check your internet connection.")
+                });
+                return
+            }
+            
+            self.streams = streams
+            dispatch_async(dispatch_get_main_queue(), {
+                if((self.topBar == nil) || !(self.topBar!.isDescendantOfView(self.view))) {
+                    let topBarBounds = CGRect(x: self.view.bounds.origin.x, y: self.view.bounds.origin.y, width: self.view.bounds.size.width, height: self.TOP_BAR_HEIGHT)
+                    self.topBar = TopBarView(frame: topBarBounds, withMainTitle: "Live Streams - \(self.game!.name)")
+                    self.topBar?.backgroundColor = UIColor.init(white: 0.5, alpha: 1)
+                    
+                    self.view.addSubview(self.topBar!)
+                }
+                self.removeLoadingView()
+                self.removeErrorView()
+                self.displayCollectionView();
+            })
+        }
     }
     
     /*
@@ -102,6 +101,10 @@ class StreamsViewController : LoadingViewController {
         else {
             self.collectionView!.reloadData()
         }
+    }
+    
+    override func reloadContent() {
+        loadContent()
     }
 }
 

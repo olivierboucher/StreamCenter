@@ -14,6 +14,7 @@ import Foundation
 class LoadingViewController : UIViewController {
     internal var loadingView : LoadingView?
     internal var errorView : ErrorView?
+    private var reloadButton : UIButton?
     
     /*
     * displayLoadingView()
@@ -51,6 +52,13 @@ class LoadingViewController : UIViewController {
         self.errorView = ErrorView(frame: errorViewFrame, andTitle: title)
         self.errorView?.center = self.view.center
         self.view.addSubview(self.errorView!)
+        
+        self.reloadButton = UIButton(frame: CGRectMake(0, 0, 300, 20))
+        self.reloadButton?.center = self.view.center
+        self.reloadButton?.center.y += 200
+        self.reloadButton?.setTitle("Reload", forState: .Normal)
+        self.reloadButton?.addTarget(self, action: Selector("reloadContent"), forControlEvents: .PrimaryActionTriggered)
+        self.view.addSubview(self.reloadButton!)
     }
     
     /*
@@ -64,5 +72,19 @@ class LoadingViewController : UIViewController {
             self.errorView?.removeFromSuperview()
             self.errorView = nil
         }
+        if((self.reloadButton != nil) && (self.reloadButton!.isDescendantOfView(self.view))){
+            self.reloadButton?.removeFromSuperview()
+            self.reloadButton = nil
+        }
+    }
+    
+    /*
+    *
+    * Implement this on the child view controller to reload content if there was an error
+    *
+    */
+    func reloadContent() {
+        print("sup")
+        displayLoadingView()
     }
 }

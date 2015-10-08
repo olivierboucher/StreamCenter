@@ -24,7 +24,7 @@ class VideoViewController : UIViewController {
     private var currentStream : TwitchStream?
     private var chatView : TwitchChatView?
     private var modalMenu : ModalMenuView?
-    private var modalMenuOptions : Dictionary<String, Array<MenuOption>>?
+    private var modalMenuOptions : Dictionary<String, [MenuOption]>?
     
     /*
     * init(stream : TwitchStream)

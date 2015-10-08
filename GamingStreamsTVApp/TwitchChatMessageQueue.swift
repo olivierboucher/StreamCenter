@@ -44,7 +44,7 @@ class TwitchChatMessageQueue {
     }
     
     func processAvailableMessages() {
-        var messagesArray = Array<TwitchChatMessage>()
+        var messagesArray = [TwitchChatMessage]()
         // For data integrity - We do not want any thread adding messages as
         // we are polling from the queue
         dispatch_semaphore_wait(self.mqMutex, DISPATCH_TIME_FOREVER);
