@@ -11,6 +11,7 @@ import Foundation
 
 class StreamCellView : UICollectionViewCell {
     static let cellIdentifier : String = "kStreamCellView"
+    internal static let LABEL_HEIGHT : CGFloat = 40;
     
     private var stream : TwitchStream?
     private var image : UIImage?
@@ -22,18 +23,18 @@ class StreamCellView : UICollectionViewCell {
     override init(frame: CGRect) {
         super.init(frame: frame)
 
-        let imageViewBounds = CGRect(x: 0, y: 40, width: self.bounds.width, height: self.bounds.height - 80)
+        let imageViewBounds = CGRect(x: 0, y: StreamCellView.LABEL_HEIGHT, width: self.bounds.width, height: self.bounds.height - 80)
         self.imageView = UIImageView(frame: imageViewBounds)
         self.imageView!.adjustsImageWhenAncestorFocused = true
         self.imageView!.layer.cornerRadius = 10
         self.imageView!.backgroundColor = UIColor(white: 0.25, alpha: 0.7)
         
-        self.activityIndicator = UIActivityIndicatorView(frame: CGRect(x: 0, y: 0, width: self.bounds.width, height: self.bounds.height-80))
+        self.activityIndicator = UIActivityIndicatorView(frame: CGRect(x: 0, y: 0, width: self.bounds.width, height: self.bounds.height - (StreamCellView.LABEL_HEIGHT*2)))
         self.activityIndicator?.activityIndicatorViewStyle = UIActivityIndicatorViewStyle.WhiteLarge
         self.activityIndicator?.startAnimating()
         
-        self.streamStatusLabel = UILabel(frame: CGRect(x: 0,y: 0, width: self.bounds.width, height: 40))
-        self.viewersInfoLabel = UILabel(frame: CGRect(x: 0,y: self.bounds.height-40, width: self.bounds.width, height: 40))
+        self.streamStatusLabel = UILabel(frame: CGRect(x: 0,y: 0, width: self.bounds.width, height: StreamCellView.LABEL_HEIGHT))
+        self.viewersInfoLabel = UILabel(frame: CGRect(x: 0,y: self.bounds.height - StreamCellView.LABEL_HEIGHT, width: self.bounds.width, height: StreamCellView.LABEL_HEIGHT))
         self.streamStatusLabel?.alpha = 0;
         self.viewersInfoLabel?.alpha = 0;
         self.streamStatusLabel?.font = UIFont.systemFontOfSize(30, weight: UIFontWeightSemibold)
