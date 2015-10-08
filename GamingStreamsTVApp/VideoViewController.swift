@@ -3,7 +3,8 @@
 //  GamingStreamsTVApp
 //
 //  Created by Olivier Boucher on 2015-09-14.
-
+//  Copyright © 2015 Rivus Media Inc. All rights reserved.
+//
 import AVKit
 import UIKit
 import Foundation
@@ -234,9 +235,28 @@ class VideoViewController : UIViewController {
     }
     
     func handleQualityChange(sender : MenuItemView?) {
-        
-        
-        
-        
+        if let text = sender?.title?.text, quality = StreamSourceQuality(rawValue: text) {
+            var qualityIdentifier = "chunked"
+            switch quality {
+            case .Chunked:
+                qualityIdentifier = "chunked"
+            case .High:
+                qualityIdentifier = "high"
+            case .Medium:
+                qualityIdentifier = "medium"
+            case .Low:
+                qualityIdentifier = "low"
+            }
+            if let streams = self.streams {
+                for stream in streams {
+                    if stream.quality == qualityIdentifier {
+                        let streamAsset = AVURLAsset(URL: stream.url!)
+                        let streamItem = AVPlayerItem(asset: streamAsset)
+                        self.videoPlayer?.replaceCurrentItemWithPlayerItem(streamItem)
+                        dismissMenu()
+                    }
+                }
+            }
+        }
     }
 }
