@@ -17,7 +17,7 @@ class TwitchApi {
             .responseJSON { response in
                 
                 if(response.result.isSuccess){
-                    if let accessInfoDict = response.result.value as? Dictionary<String, AnyObject> {
+                    if let accessInfoDict = response.result.value as? [String : AnyObject] {
                         if let sig = accessInfoDict["sig"] as? String {
                             if let token = accessInfoDict["token"] as? String {
                                 let playlistUrlString  = String(format : "http://usher.twitch.tv/api/channel/hls/%@.m3u8", channel);
@@ -86,18 +86,18 @@ class TwitchApi {
             .responseJSON { response in
                 
                 if(response.result.isSuccess) {
-                    if let gamesInfoDict = response.result.value as? Dictionary<String, AnyObject> {
+                    if let gamesInfoDict = response.result.value as? [String : AnyObject] {
                         var games = [TwitchGame]();
                         for gameRaw in gamesInfoDict["top"] as! [AnyObject] {
-                            if let topItemDict = gameRaw as? Dictionary<String, AnyObject> {
+                            if let topItemDict = gameRaw as? [String : AnyObject] {
                                 if let gameDict = topItemDict["game"] as? NSDictionary {
                                     games.append(TwitchGame(
                                         id : gameDict["_id"] as! Int,
                                         viewers : topItemDict["viewers"] as! Int,
                                         channels : topItemDict["channels"] as! Int,
                                         name : gameDict["name"] as! String,
-                                        thumbnails : gameDict["box"] as! Dictionary<String, String>,
-                                        logos : gameDict["logo"] as! Dictionary<String, String>));
+                                        thumbnails : gameDict["box"] as! [String : String],
+                                        logos : gameDict["logo"] as! [String : String]));
                                 }
                             }
                         }
@@ -138,22 +138,22 @@ class TwitchApi {
             .responseJSON { response in
                 
                 if(response.result.isSuccess) {
-                    if let streamsInfoDict = response.result.value as? Dictionary<String, AnyObject> {
+                    if let streamsInfoDict = response.result.value as? [String : AnyObject] {
                         
                         var streams = [TwitchStream]();
                         let dateFormatter = NSDateFormatter();
                         dateFormatter.dateFormat = "yyyy'-'MM'-'dd'T'HH':'mm':'ssXXX";
                         
                         for streamRaw in streamsInfoDict["streams"] as! [AnyObject] {
-                            if let streamDict = streamRaw as? Dictionary<String, AnyObject> {
+                            if let streamDict = streamRaw as? [String : AnyObject] {
                                 //First extract the channel infos from the stream
                                 var channel : TwitchChannel?;
-                                if let channelDict = streamDict["channel"] as? Dictionary<String, AnyObject> {
+                                if let channelDict = streamDict["channel"] as? [String : AnyObject] {
                                     channel = TwitchChannel(
                                         id: channelDict["_id"] as! Int,
                                         name : channelDict["name"] as! String,
                                         displayName : channelDict["display_name"] as! String,
-                                        links : channelDict["_links"] as! Dictionary<String, String>,
+                                        links : channelDict["_links"] as! [String : String],
                                         broadcasterLanguage : channelDict["broadcaster_language"] as? String!,
                                         language: channelDict["language"] as! String,
                                         gameName : channelDict["game"] as! String,
@@ -169,7 +169,7 @@ class TwitchApi {
                                         gameName : streamDict["game"] as! String,
                                         viewers : streamDict["viewers"] as! Int,
                                         videoHeight : streamDict["video_height"] as! Int,
-                                        preview : streamDict["preview"] as! Dictionary<String, String>,
+                                        preview : streamDict["preview"] as! [String : String],
                                         channel : channel!
                                         ));
                                 }

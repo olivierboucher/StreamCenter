@@ -8,7 +8,7 @@ import UIKit
 import Foundation
 
 class ModalMenuView : UIView {
-    let menuOptions : Dictionary<String, [MenuOption]>
+    let menuOptions : [String : [MenuOption]]
     let menuSize : CGSize
     let menuItemSize : CGSize
     var menuItemCount : Int {
@@ -21,7 +21,7 @@ class ModalMenuView : UIView {
         }
     }
     
-    init(frame: CGRect, options: Dictionary<String, [MenuOption]>, size : CGSize) {
+    init(frame: CGRect, options: [String : [MenuOption]], size : CGSize) {
         self.menuSize = size
         self.menuOptions = options
         self.menuItemSize = ModalMenuView.requiredMenuItemHeightToFit(menuOptions, menuSize: size)
@@ -36,11 +36,11 @@ class ModalMenuView : UIView {
     required init?(coder aDecoder: NSCoder) {
         self.menuSize = CGSize(width: 0, height: 0)
         self.menuItemSize = CGSize(width: 0, height: 0)
-        self.menuOptions = Dictionary<String, [MenuOption]>()
+        self.menuOptions = [String : [MenuOption]]()
         super.init(coder: aDecoder)
     }
     
-    static func requiredMenuItemHeightToFit(menuOptions : Dictionary<String, [MenuOption]>, menuSize : CGSize) -> CGSize {
+    static func requiredMenuItemHeightToFit(menuOptions : [String : [MenuOption]], menuSize : CGSize) -> CGSize {
         var count : CGFloat = 0
         for menuOptionsArray in menuOptions {
             count += CGFloat(1 + menuOptionsArray.1.count)

@@ -13,7 +13,7 @@ class TwitchChatMessage {
     let rawMetadata : String
     //Clean data
     var sender : String?
-    var emotes : Dictionary<String, [NSRange]> = Dictionary<String, [NSRange]>()
+    var emotes = [String : [NSRange]]()
     var senderDisplayColor : String?
     //Processed message
     var completeMessage : NSAttributedString?
