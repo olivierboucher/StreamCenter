@@ -10,7 +10,7 @@ protocol TwitchChatHandlerConsumer {
     func messageReadyForDisplay(message: TwitchChatMessage)
 }
 
-class TwitchChatHandler : IRCHandlerBase, TwitchChatMessageQueueDelegate {
+class TwitchChatHandler : IRCHandlerBase {
     var opQueue : dispatch_queue_t
     var loopTimer: dispatch_source_t?
     var isAnonymous : Bool = false
@@ -26,6 +26,7 @@ class TwitchChatHandler : IRCHandlerBase, TwitchChatMessageQueueDelegate {
         
         self.messageQueue = TwitchChatMessageQueue(delegate: self)
         
+        //Sets the command handlers for each command type
         commandHandlers["PRIVMSG"] = TwitchChatIRCDelegate_Message()
         commandHandlers["PING"] = TwitchChatIRCDelegate_PING()
         commandHandlers["433"] = TwitchChatIRCDelegate_433()
@@ -55,14 +56,20 @@ class TwitchChatHandler : IRCHandlerBase, TwitchChatMessageQueueDelegate {
             super.doLoop()
         })
     }
+    
     func stopLoop() {
         if(self.loopTimer != nil) {
             dispatch_suspend(self.loopTimer!)
         }
     }
-    /*
-        DELEGATE METHODS
-    */
+}
+
+/////////////////////////////////////////
+// MARK - TwitchChatMessageQueueDelegate
+/////////////////////////////////////////
+
+extension TwitchChatHandler : TwitchChatMessageQueueDelegate {
+    
     func handleProcessedTwitchMessage(message: TwitchChatMessage) {
         self.consumer!.messageReadyForDisplay(message)
     }
@@ -77,6 +84,9 @@ class TwitchChatHandler : IRCHandlerBase, TwitchChatMessageQueueDelegate {
     }
 }
 
+//////////////////////////////
+// MARK - IRCHandlerDelegates
+//////////////////////////////
 
 private class TwitchChatIRCDelegate_Message : IRCHandlerDelegate {
     func respond(target: IRCHandlerBase, prefix: String?, destination: String?, message: String?, metadata : String?) {
