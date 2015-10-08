@@ -166,7 +166,7 @@ extension StreamsViewController : UICollectionViewDataSource {
     
     func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
         let cell : StreamCellView = collectionView.dequeueReusableCellWithReuseIdentifier(StreamCellView.CELL_IDENTIFIER, forIndexPath: indexPath) as! StreamCellView;
-        cell.stream = streams![((indexPath.section * NUM_COLUMNS) +  indexPath.row)];
+        cell.setStream(streams![((indexPath.section * NUM_COLUMNS) +  indexPath.row)]);
         return cell;
     }
 }

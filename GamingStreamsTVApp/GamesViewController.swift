@@ -170,7 +170,7 @@ extension GamesViewController : UICollectionViewDataSource {
     
     func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
         let cell : GameCellView = collectionView.dequeueReusableCellWithReuseIdentifier(GameCellView.CELL_IDENTIFIER, forIndexPath: indexPath) as! GameCellView;
-        cell.game = games![(indexPath.section * NUM_COLUMNS) +  indexPath.row];
+        cell.setGame(games![(indexPath.section * NUM_COLUMNS) +  indexPath.row]);
 
         return cell;
     }

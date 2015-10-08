@@ -12,16 +12,7 @@ class StreamCellView : UICollectionViewCell {
     internal static let CELL_IDENTIFIER : String = "kStreamCellView"
     internal static let LABEL_HEIGHT : CGFloat = 40;
     
-    var stream : TwitchStream? {
-        get { return self.stream }
-        set {
-            self.stream = newValue
-            self.streamStatusLabel?.text = stream?.channel.status
-            self.viewersInfoLabel?.text = "\(stream?.viewers) viewers on \(stream?.channel.name)"
-            self.assignImageAndDisplay()
-        }
-    }
-    
+    private var stream : TwitchStream?;
     private var image : UIImage?
     private var imageView : UIImageView?
     private var activityIndicator : UIActivityIndicatorView?
@@ -184,6 +175,21 @@ class StreamCellView : UICollectionViewCell {
                 completion: nil
             )
         }
+    }
+    
+/////////////////////////////
+// MARK - Getter and setters
+/////////////////////////////
+    
+    func getStream() -> TwitchStream? {
+        return self.stream;
+    }
+    
+    func setStream(stream : TwitchStream!) {
+        self.stream = stream
+        self.streamStatusLabel?.text = stream.channel.status
+        self.viewersInfoLabel?.text = "\(stream.viewers) viewers on \(stream.channel.name)"
+        self.assignImageAndDisplay()
     }
 
 }

@@ -12,16 +12,7 @@ class GameCellView : UICollectionViewCell {
     internal static let CELL_IDENTIFIER : String = "kGameCellView";
     internal static let LABEL_HEIGHT : CGFloat = 40;
     
-    var game : TwitchGame? {
-        get { return self.game }
-        set {
-            self.game = newValue;
-            gameNameLabel!.text = newValue?.name
-            viewCountLabel?.text = "\(newValue?.viewers) viewers"
-            self.assignImageAndDisplay();
-        }
-    }
-
+    private var game : TwitchGame?;
     private var image : UIImage?
     private var imageView : UIImageView?
     private var activityIndicator : UIActivityIndicatorView?
@@ -175,6 +166,22 @@ class GameCellView : UICollectionViewCell {
                 completion: nil
             )
         }
+    }
+    
+/////////////////////////////
+// MARK - Getter and setters
+/////////////////////////////
+    
+    func getGame() -> TwitchGame? {
+        return self.game;
+    }
+    
+    func setGame(game : TwitchGame!) {
+        self.game = game;
+        gameNameLabel!.text = game.name
+        viewCountLabel?.text = "\(game.viewers) viewers"
+        self.assignImageAndDisplay();
+        
     }
 }
 
