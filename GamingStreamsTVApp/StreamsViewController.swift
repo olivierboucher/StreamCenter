@@ -18,12 +18,12 @@ class StreamsViewController : LoadingViewController {
     
     private var game : TwitchGame?
     private var topBar : TopBarView?
-    private var collectionView : UICollectionView?;
-    private var streams : Array<TwitchStream>?;
+    private var collectionView : UICollectionView?
+    private var streams : Array<TwitchStream>?
     
     convenience init(game : TwitchGame){
-        self.init(nibName: nil, bundle: nil);
-        self.game = game;
+        self.init(nibName: nil, bundle: nil)
+        self.game = game
     }
     
     /*
@@ -91,7 +91,7 @@ class StreamsViewController : LoadingViewController {
             
             self.collectionView = UICollectionView(frame: self.view.bounds, collectionViewLayout: layout);
             
-            self.collectionView!.registerClass(StreamCellView.classForCoder(), forCellWithReuseIdentifier: StreamCellView.CELL_IDENTIFIER);
+            self.collectionView!.registerClass(ItemCellView.classForCoder(), forCellWithReuseIdentifier: ItemCellView.CELL_IDENTIFIER);
             self.collectionView!.dataSource = self;
             self.collectionView!.delegate = self;
             self.collectionView!.contentInset = UIEdgeInsets(top: ITEMS_INSETS_Y + 10, left: ITEMS_INSETS_X, bottom: ITEMS_INSETS_Y, right: ITEMS_INSETS_X)
@@ -129,7 +129,7 @@ extension StreamsViewController : UICollectionViewDelegateFlowLayout {
         layout collectionViewLayout: UICollectionViewLayout,
         sizeForItemAtIndexPath indexPath: NSIndexPath) -> CGSize {
             let width = self.view.bounds.width / CGFloat(NUM_COLUMNS) - CGFloat(ITEMS_INSETS_X * 2);
-            let height = width / PREVIEW_IMG_HEIGHT_RATIO + (StreamCellView.LABEL_HEIGHT * 2); //There 2 labels, top & bottom
+            let height = width / PREVIEW_IMG_HEIGHT_RATIO + (ItemCellView.LABEL_HEIGHT * 2); //There 2 labels, top & bottom
             
             return CGSize(width: width, height: height)
     }
@@ -165,8 +165,8 @@ extension StreamsViewController : UICollectionViewDataSource {
     }
     
     func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
-        let cell : StreamCellView = collectionView.dequeueReusableCellWithReuseIdentifier(StreamCellView.CELL_IDENTIFIER, forIndexPath: indexPath) as! StreamCellView;
-        cell.setStream(streams![((indexPath.section * NUM_COLUMNS) +  indexPath.row)]);
+        let cell : ItemCellView = collectionView.dequeueReusableCellWithReuseIdentifier(ItemCellView.CELL_IDENTIFIER, forIndexPath: indexPath) as! ItemCellView
+        cell.setRepresentedItem(streams![(indexPath.section * NUM_COLUMNS) +  indexPath.row])
         return cell;
     }
 }

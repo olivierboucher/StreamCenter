@@ -93,7 +93,7 @@ class GamesViewController : LoadingViewController {
             
             self.collectionView = UICollectionView(frame: collectionViewBounds, collectionViewLayout: layout);
             
-            self.collectionView!.registerClass(GameCellView.classForCoder(), forCellWithReuseIdentifier: GameCellView.CELL_IDENTIFIER);
+            self.collectionView!.registerClass(ItemCellView.classForCoder(), forCellWithReuseIdentifier: ItemCellView.CELL_IDENTIFIER);
             self.collectionView!.dataSource = self;
             self.collectionView!.delegate = self;
             self.collectionView!.contentInset = UIEdgeInsets(top: ITEMS_INSETS_Y + 10, left: ITEMS_INSETS_X, bottom: ITEMS_INSETS_Y, right: ITEMS_INSETS_X)
@@ -133,7 +133,7 @@ extension GamesViewController : UICollectionViewDelegateFlowLayout {
         sizeForItemAtIndexPath indexPath: NSIndexPath) -> CGSize {
             let width = self.view.bounds.width / CGFloat(NUM_COLUMNS) - CGFloat(ITEMS_INSETS_X * 2);
             //Computed using the ratio from sampled from
-            let height = (width * GAME_IMG_HEIGHT_RATIO) + GameCellView.LABEL_HEIGHT * 2; //There 2 labels, top & bottom
+            let height = (width * GAME_IMG_HEIGHT_RATIO) + ItemCellView.LABEL_HEIGHT * 2; //There 2 labels, top & bottom
             
             return CGSize(width: width, height: height)
     }
@@ -169,8 +169,8 @@ extension GamesViewController : UICollectionViewDataSource {
     }
     
     func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
-        let cell : GameCellView = collectionView.dequeueReusableCellWithReuseIdentifier(GameCellView.CELL_IDENTIFIER, forIndexPath: indexPath) as! GameCellView;
-        cell.setGame(games![(indexPath.section * NUM_COLUMNS) +  indexPath.row]);
+        let cell : ItemCellView = collectionView.dequeueReusableCellWithReuseIdentifier(ItemCellView.CELL_IDENTIFIER, forIndexPath: indexPath) as! ItemCellView;
+        cell.setRepresentedItem(games![(indexPath.section * NUM_COLUMNS) +  indexPath.row]);
 
         return cell;
     }
