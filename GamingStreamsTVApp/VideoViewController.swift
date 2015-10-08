@@ -18,6 +18,12 @@ class VideoViewController : UIViewController {
     private var modalMenu : ModalMenuView?
     private var modalMenuOptions : Dictionary<String, Array<MenuOption>>?
     
+    /*
+    * init(stream : TwitchStream)
+    *
+    * Initializes the controller, it's gesture recognizer and modal menu.
+    * Loads and prepare the video asset from the stream for display
+    */
     convenience init(stream : TwitchStream){
         self.init(nibName: nil, bundle: nil)
         self.stream = stream;
@@ -64,6 +70,12 @@ class VideoViewController : UIViewController {
         }
     }
     
+    /*
+    * viewWillDisappear(animated: Bool)
+    *
+    * Overrides the default method to shut off the chat connection if present
+    * and the free video assets
+    */
     override func viewWillDisappear(animated: Bool) {
         
         if self.chatView != nil && self.view.subviews.contains(self.chatView!) {
@@ -91,6 +103,12 @@ class VideoViewController : UIViewController {
         // Dispose of any resources that can be recreated.
     }
     
+    /*
+    * initializePlayerView()
+    *
+    * Initializes a player view with the current video player
+    * and displays it
+    */
     func initializePlayerView() {
         self.videoView = VideoView(frame: self.view.bounds)
         self.videoView?.setPlayer(self.videoPlayer!)
@@ -100,6 +118,12 @@ class VideoViewController : UIViewController {
         self.videoPlayer?.play()
     }
     
+    /*
+    * initializeChatView()
+    *
+    * Initializes a chat view for the current channel
+    * and displays it
+    */
     func initializeChatView() {
         self.chatView = TwitchChatView(frame: CGRect(x: 0, y: 0, width: 400, height: self.view!.bounds.height), channel: self.stream!.channel)
         self.chatView!.startDisplayingMessages()
@@ -107,6 +131,12 @@ class VideoViewController : UIViewController {
         self.view.addSubview(self.chatView!)
     }
     
+    /*
+    * handleLongPress()
+    *
+    * Handler for the UILongPressGestureRecognizer of the controller
+    * Presents the modal menu if it is initialized
+    */
     func handleLongPress() {
         if self.longPressRecognizer!.state == UIGestureRecognizerState.Began {
             if self.modalMenu == nil {
@@ -127,6 +157,12 @@ class VideoViewController : UIViewController {
         }
     }
     
+    /*
+    * handleMenuPress()
+    *
+    * Handler for the UITapGestureRecognizer of the modal menu
+    * Dismisses the modal menu if it is present
+    */
     func handleMenuPress() {
         if let modalMenu = modalMenu {
             if self.view.subviews.contains(modalMenu) {
@@ -137,6 +173,12 @@ class VideoViewController : UIViewController {
         self.dismissViewControllerAnimated(true, completion: nil)
     }
     
+    /*
+    * handleChatOnOff(sender : MenuItemView?)
+    *
+    * Handler for the chat option from the modal menu
+    * Displays or remove the chat view
+    */
     func handleChatOnOff(sender : MenuItemView?) {
         //NOTE(Olivier) : 400 width reduction at 16:9 is 225 height reduction
         dispatch_async(dispatch_get_main_queue(), {
