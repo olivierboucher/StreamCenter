@@ -46,14 +46,14 @@ class StreamsViewController : LoadingViewController {
     }
     
     func loadContent() {
-        self.displayLoadingView()
+        self.removeErrorView()
+        self.displayLoadingView("Loading Streams...")
         TwitchApi.getTopStreamsForGameWithOffset(self.game!.name, offset: 0, limit: 20) {
             (streams, error) in
             
             guard let streams = streams else {
                 dispatch_async(dispatch_get_main_queue(), {
                     self.removeLoadingView()
-                    self.removeErrorView()
                     self.displayErrorView("Error loading streams list.\nPlease check your internet connection.")
                 });
                 return
@@ -69,7 +69,6 @@ class StreamsViewController : LoadingViewController {
                     self.view.addSubview(self.topBar!)
                 }
                 self.removeLoadingView()
-                self.removeErrorView()
                 self.displayCollectionView();
             })
         }

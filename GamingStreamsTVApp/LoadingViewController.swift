@@ -22,7 +22,7 @@ class LoadingViewController : UIViewController {
     * Initializes a loading view in the center of the screen and displays it
     *
     */
-    func displayLoadingView()  {
+    func displayLoadingView(loading: String = "Loading...")  {
         self.loadingView = LoadingView(frame: CGRect(x: 0, y: 0, width: self.view.bounds.width/5, height: self.view.bounds.height/5))
         self.loadingView?.center = self.view.center
         self.view.addSubview(self.loadingView!)

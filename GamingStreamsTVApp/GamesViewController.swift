@@ -49,14 +49,14 @@ class GamesViewController : LoadingViewController {
     }
     
     func loadContent() {
-        self.displayLoadingView()
+        self.removeErrorView()
+        self.displayLoadingView("Loading Games...")
         TwitchApi.getTopGamesWithOffset(0, limit: 17) {
             (games, error) in
             
             guard let games = games else {
                 dispatch_async(dispatch_get_main_queue(), {
                     self.removeLoadingView()
-                    self.removeErrorView()
                     self.displayErrorView("Error loading game list.\nPlease check your internet connection.")
                 });
                 return
@@ -66,7 +66,6 @@ class GamesViewController : LoadingViewController {
             dispatch_async(dispatch_get_main_queue(), {
                 
                 self.removeLoadingView()
-                self.removeErrorView()
                 self.layoutAndDisplayViews();
             })
         }
