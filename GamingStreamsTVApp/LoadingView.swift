@@ -34,7 +34,11 @@ class LoadingView : UIView {
         
         self.addSubview(self.activityIndicator!)
         self.addSubview(self.label!)
-        
+    }
+    
+    convenience init(frame: CGRect, text: String) {
+        self.init(frame: frame)
+        self.label?.text = text
     }
 
     required init?(coder aDecoder: NSCoder) {
