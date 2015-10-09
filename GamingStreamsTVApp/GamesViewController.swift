@@ -18,6 +18,8 @@ class GamesViewController : LoadingViewController {
     private var collectionView : UICollectionView?
     private var games : [TwitchGame]?
     
+    private var searchController : UISearchController!
+    
     convenience init(){
         self.init(nibName: nil, bundle: nil);
     }
@@ -36,7 +38,9 @@ class GamesViewController : LoadingViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
-        
+        searchController = UISearchController(searchResultsController: self)
+        searchController.searchResultsUpdater = self
+        self.definesPresentationContext = true
     }
     
     override func didReceiveMemoryWarning() {
@@ -60,16 +64,10 @@ class GamesViewController : LoadingViewController {
             
             self.games = games
             dispatch_async(dispatch_get_main_queue(), {
-                if((self.topBar == nil) || !(self.topBar!.isDescendantOfView(self.view))) {
-                    let topBarBounds = CGRect(x: self.view.bounds.origin.x, y: self.view.bounds.origin.y, width: self.view.bounds.size.width, height: self.TOP_BAR_HEIGHT)
-                    self.topBar = TopBarView(frame: topBarBounds, withMainTitle: "Top Games")
-                    self.topBar?.backgroundColor = UIColor.init(white: 0.5, alpha: 1)
-                    
-                    self.view.addSubview(self.topBar!)
-                }
+                
                 self.removeLoadingView()
                 self.removeErrorView()
-                self.displayCollectionView();
+                self.layoutAndDisplayViews();
             })
         }
     }
@@ -80,7 +78,15 @@ class GamesViewController : LoadingViewController {
      * Assigns a new collection view to the controller and displays it if
      * it has not been initialized. Otherwise, it asks to reload data
      */
-    private func displayCollectionView() {
+    private func layoutAndDisplayViews() {
+        
+        if((self.topBar == nil) || !(self.topBar!.isDescendantOfView(self.view))) {
+            let topBarBounds = CGRect(x: self.view.bounds.origin.x, y: self.view.bounds.origin.y, width: self.view.bounds.size.width, height: self.TOP_BAR_HEIGHT)
+            self.topBar = TopBarView(frame: topBarBounds, withMainTitle: "Top Games")
+            self.topBar?.backgroundColor = UIColor.init(white: 0.5, alpha: 1)
+            
+            self.view.addSubview(self.topBar!)
+        }
         
         if((collectionView == nil) || !(collectionView!.isDescendantOfView(self.view))) {
             let layout : UICollectionViewFlowLayout = UICollectionViewFlowLayout();
@@ -99,10 +105,17 @@ class GamesViewController : LoadingViewController {
             
             self.view.addSubview(self.collectionView!)
             self.view.bringSubviewToFront(self.topBar!)
+            
         }
         else {
             collectionView?.reloadData()
         }
+        
+        if !(searchController.searchBar.isDescendantOfView(self.view)) {
+            searchController.searchBar.frame = CGRect(x: self.view.bounds.origin.x, y: self.view.bounds.origin.y, width: self.view.bounds.width, height: self.TOP_BAR_HEIGHT)
+            self.view.addSubview(searchController.searchBar)
+        }
+        
     }
     
     override func reloadContent() {
@@ -178,5 +191,18 @@ extension GamesViewController : UICollectionViewDataSource {
 
         return cell;
     }
+}
+
+//////////////////////////////////////////////
+// MARK - UICollectionViewDataSource interface
+//////////////////////////////////////////////
+
+extension GamesViewController : UISearchResultsUpdating {
+    
+    func updateSearchResultsForSearchController(searchController: UISearchController) {
+        //do the search
+        print("searching")
+    }
+    
 }
 

@@ -57,9 +57,13 @@ class LoadingViewController : UIViewController {
         self.reloadButton?.center = self.view.center
         self.reloadButton?.center.y += 200
         self.reloadButton?.setTitleColor(UIColor.whiteColor(), forState: .Normal)
+        //just for debugging
+//        self.reloadButton?.setTitleColor(UIColor.redColor(), forState: .Focused)
         self.reloadButton?.setTitle("Reload", forState: .Normal)
         self.reloadButton?.addTarget(self, action: Selector("reloadContent"), forControlEvents: .PrimaryActionTriggered)
         self.view.addSubview(self.reloadButton!)
+        
+        self.view.setNeedsFocusUpdate()
     }
     
     /*
