@@ -9,7 +9,7 @@ import Foundation
 
 
 class StreamsViewController : LoadingViewController {
-    
+    private let LOADING_BUFFER = 12;
     private let NUM_COLUMNS = 3;
     private let ITEMS_INSETS_X : CGFloat = 45;
     private let ITEMS_INSETS_Y : CGFloat = 30;
@@ -39,7 +39,7 @@ class StreamsViewController : LoadingViewController {
            self.displayLoadingView()
         }
         
-        TwitchApi.getTopStreamsForGameWithOffset(self.game!.name, offset: 0, limit: 20) {
+        TwitchApi.getTopStreamsForGameWithOffset(self.game!.name, offset: 0, limit: LOADING_BUFFER) {
             (streams, error) in
             
             if(error != nil || streams == nil){
@@ -116,6 +116,36 @@ extension StreamsViewController : UICollectionViewDelegate {
         let videoViewController = VideoViewController(stream: selectedStream)
         
         self.presentViewController(videoViewController, animated: true, completion: nil)
+    }
+    
+    func collectionView(collectionView: UICollectionView, willDisplayCell cell: UICollectionViewCell, forItemAtIndexPath indexPath: NSIndexPath) {
+        if((indexPath.section * NUM_COLUMNS) + indexPath.row == streams!.count-1){
+            TwitchApi.getTopStreamsForGameWithOffset(self.game!.name, offset: self.streams!.count, limit: LOADING_BUFFER) {
+                (streams, error) in
+                
+                if(error != nil || streams == nil){
+                    NSLog("Error loading more games")
+                }
+                else if(streams!.count > 0) {
+                    
+                    var sections = Array<NSIndexSet>()
+                    
+                    for var i = 0; i < streams!.count / self.NUM_COLUMNS; i++ {
+                        let section = self.collectionView!.numberOfSections() + i
+                        sections.append(NSIndexSet(index: section))
+                    }
+                    
+                    self.collectionView!.performBatchUpdates({
+                        self.streams!.appendContentsOf(streams!)
+                        
+                        for section in sections {
+                            self.collectionView!.insertSections(section)
+                        }
+                        
+                    }, completion: nil)
+                }
+            }
+        }
     }
 }
 
