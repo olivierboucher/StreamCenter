@@ -139,7 +139,7 @@ extension GamesViewController : UICollectionViewDelegate {
                     }
                     
                     self.collectionView!.performBatchUpdates({
-                        self.games!.appendContentsOf(games!);
+                        self.games!.appendContentsOf(games!)
                         
                         for section in sections {
                             self.collectionView!.insertSections(section)

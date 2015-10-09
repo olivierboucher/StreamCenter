@@ -136,7 +136,7 @@ extension StreamsViewController : UICollectionViewDelegate {
                     }
                     
                     self.collectionView!.performBatchUpdates({
-                        self.streams!.appendContentsOf(streams!);
+                        self.streams!.appendContentsOf(streams!)
                         
                         for section in sections {
                             self.collectionView!.insertSections(section)
