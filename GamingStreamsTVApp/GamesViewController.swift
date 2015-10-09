@@ -7,7 +7,7 @@
 import UIKit
 
 class GamesViewController : LoadingViewController {
-    
+    private let LOADING_BUFFER = 20;
     private let NUM_COLUMNS = 5;
     private let ITEMS_INSETS_X : CGFloat = 25;
     private let ITEMS_INSETS_Y : CGFloat = 40;
@@ -35,7 +35,7 @@ class GamesViewController : LoadingViewController {
             self.displayLoadingView()
         }
         
-        TwitchApi.getTopGamesWithOffset(0, limit: 17) {
+        TwitchApi.getTopGamesWithOffset(0, limit: LOADING_BUFFER) {
             (games, error) in
             
             if(error != nil || games == nil){
@@ -76,11 +76,11 @@ class GamesViewController : LoadingViewController {
     }
     
     /*
-     * displayCollectionView()
-     *
-     * Assigns a new collection view to the controller and displays it if
-     * it has not been initialized. Otherwise, it asks to reload data
-     */
+    * displayCollectionView()
+    *
+    * Assigns a new collection view to the controller and displays it if
+    * it has not been initialized. Otherwise, it asks to reload data
+    */
     private func displayCollectionView() {
         
         if((collectionView == nil) || !(collectionView!.isDescendantOfView(self.view))) {
@@ -119,6 +119,36 @@ extension GamesViewController : UICollectionViewDelegate {
         let streamsViewController = StreamsViewController(game: selectedGame)
         
         self.presentViewController(streamsViewController, animated: true, completion: nil)
+    }
+    
+    func collectionView(collectionView: UICollectionView, willDisplayCell cell: UICollectionViewCell, forItemAtIndexPath indexPath: NSIndexPath) {
+        if((indexPath.section * NUM_COLUMNS) + indexPath.row == games!.count-1){
+            TwitchApi.getTopGamesWithOffset(games!.count, limit: LOADING_BUFFER) {
+                (games, error) in
+                
+                if(error != nil || games == nil){
+                    NSLog("Error loading more games")
+                }
+                else if(games!.count > 0) {
+                    
+                    var sections = Array<NSIndexSet>()
+                    
+                    for var i = 0; i < games!.count / self.NUM_COLUMNS; i++ {
+                        let section = self.collectionView!.numberOfSections() + i
+                        sections.append(NSIndexSet(index: section))
+                    }
+                    
+                    self.collectionView!.performBatchUpdates({
+                        self.games!.appendContentsOf(games!);
+                        
+                        for section in sections {
+                            self.collectionView!.insertSections(section)
+                        }
+                        
+                    }, completion: nil)
+                }
+            }
+        }
     }
 }
 
@@ -162,7 +192,7 @@ extension GamesViewController : UICollectionViewDataSource {
         if((section + 1) * NUM_COLUMNS <= games!.count){
             return NUM_COLUMNS;
         }
-        // the row cannot be full so we return the difference
+            // the row cannot be full so we return the difference
         else {
             return games!.count - ((section) * NUM_COLUMNS)
         }
@@ -171,7 +201,7 @@ extension GamesViewController : UICollectionViewDataSource {
     func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
         let cell : ItemCellView = collectionView.dequeueReusableCellWithReuseIdentifier(ItemCellView.CELL_IDENTIFIER, forIndexPath: indexPath) as! ItemCellView;
         cell.setRepresentedItem(games![(indexPath.section * NUM_COLUMNS) +  indexPath.row]);
-
+        
         return cell;
     }
 }
