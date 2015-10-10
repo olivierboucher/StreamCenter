@@ -43,7 +43,7 @@ class VideoViewController : UIViewController {
         
         //Gestures configuration
         self.longPressRecognizer = UILongPressGestureRecognizer(target: self, action: Selector("handleLongPress"))
-        self.longPressRecognizer?.cancelsTouchesInView = false
+        self.longPressRecognizer?.cancelsTouchesInView = true
         self.view.addGestureRecognizer(self.longPressRecognizer!)
         
         let tapRecognizer = UITapGestureRecognizer(target: self, action: "pause")
@@ -52,7 +52,7 @@ class VideoViewController : UIViewController {
         
         let gestureRecognizer = UITapGestureRecognizer(target: self, action: "handleMenuPress")
         gestureRecognizer.allowedPressTypes = [UIPressType.Menu.rawValue]
-        gestureRecognizer.cancelsTouchesInView = false
+        gestureRecognizer.cancelsTouchesInView = true
         self.view.addGestureRecognizer(gestureRecognizer)
         
         leftSwipe = UISwipeGestureRecognizer(target: self, action: Selector("swipe:"))
@@ -176,8 +176,12 @@ class VideoViewController : UIViewController {
                 
                 
             }
-            modalMenu?.alpha = 1
+            
+            modalMenu?.alpha = 0
             self.view.addSubview(self.modalMenu!)
+            UIView.animateWithDuration(0.5, animations: { () -> Void in
+                self.modalMenu?.alpha = 1
+            })
         }
     }
     
@@ -198,15 +202,15 @@ class VideoViewController : UIViewController {
         if let modalMenu = modalMenu {
             if self.view.subviews.contains(modalMenu) {
                 //bkirchner: for some reason when i try to animate the menu fading away, it just goes to the homescreen - really odd
-//                UIView.animateWithDuration(0.5, animations: { () -> Void in
-//                    modalMenu.alpha = 0
-//                }, completion: { (finished) -> Void in
-//                    print("finished: \(finished)")
-//                    if finished {
-//                        modalMenu.removeFromSuperview()
-//                    }
-//                })
-                modalMenu.removeFromSuperview()
+                UIView.animateWithDuration(0.5, animations: { () -> Void in
+                    modalMenu.alpha = 0
+                }, completion: { (finished) -> Void in
+                    print("finished: \(finished)")
+                    if finished {
+                        modalMenu.removeFromSuperview()
+                    }
+                })
+//                modalMenu.removeFromSuperview()
                 return true
             }
         }
