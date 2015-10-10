@@ -35,36 +35,41 @@ class StreamsViewController : LoadingViewController {
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
         
-        if(self.collectionView == nil){
+        if (self.collectionView == nil) {
            self.displayLoadingView()
         }
         
         TwitchApi.getTopStreamsForGameWithOffset(self.game!.name, offset: 0, limit: LOADING_BUFFER) {
             (streams, error) in
             
-            if(error != nil || streams == nil){
-                dispatch_async(dispatch_get_main_queue(),{
-                    if(self.errorView == nil){
+            guard let streams = streams where error == nil else {
+                dispatch_async(dispatch_get_main_queue(), {
+                    
+                    if (self.errorView == nil) {
                         self.removeLoadingView()
                         self.displayErrorView("Error loading streams list.\nPlease check your internet connection.")
                     }
                 });
+                
+                return
             }
-            else {
-                self.streams = streams!
-                dispatch_async(dispatch_get_main_queue(),{
-                    if((self.topBar == nil) || !(self.topBar!.isDescendantOfView(self.view))) {
-                        let topBarBounds = CGRect(x: self.view.bounds.origin.x, y: self.view.bounds.origin.y, width: self.view.bounds.size.width, height: self.TOP_BAR_HEIGHT)
-                        self.topBar = TopBarView(frame: topBarBounds, withMainTitle: "Live Streams - \(self.game!.name)")
-                        self.topBar?.backgroundColor = UIColor.init(white: 0.5, alpha: 1)
-                        
-                        self.view.addSubview(self.topBar!)
-                    }
-                    self.removeLoadingView()
-                    self.removeErrorView()
-                    self.displayCollectionView();
-                })
-            }
+            
+            self.streams = streams
+            
+            dispatch_async(dispatch_get_main_queue(), {
+                
+                if ((self.topBar == nil) || !(self.topBar!.isDescendantOfView(self.view))) {
+                    let topBarBounds = CGRect(x: self.view.bounds.origin.x, y: self.view.bounds.origin.y, width: self.view.bounds.size.width, height: self.TOP_BAR_HEIGHT)
+                    self.topBar = TopBarView(frame: topBarBounds, withMainTitle: "Live Streams - \(self.game!.name)")
+                    self.topBar?.backgroundColor = UIColor.init(white: 0.5, alpha: 1)
+                    
+                    self.view.addSubview(self.topBar!)
+                }
+                
+                self.removeLoadingView()
+                self.removeErrorView()
+                self.displayCollectionView();
+            })
         }
     }
     
@@ -123,27 +128,26 @@ extension StreamsViewController : UICollectionViewDelegate {
             TwitchApi.getTopStreamsForGameWithOffset(self.game!.name, offset: self.streams!.count, limit: LOADING_BUFFER) {
                 (streams, error) in
                 
-                if(error != nil || streams == nil){
-                    NSLog("Error loading more games")
+                guard let streams = streams where error == nil else {
+                    NSLog("Error loading more streams")
+                    return
                 }
-                else if(streams!.count > 0) {
+                
+                var sections = Array<NSIndexSet>()
+                
+                for var i = 0; i < streams.count / self.NUM_COLUMNS; i++ {
+                    let section = self.collectionView!.numberOfSections() + i
+                    sections.append(NSIndexSet(index: section))
+                }
+                
+                self.collectionView!.performBatchUpdates({
+                    self.streams!.appendContentsOf(streams)
                     
-                    var sections = Array<NSIndexSet>()
-                    
-                    for var i = 0; i < streams!.count / self.NUM_COLUMNS; i++ {
-                        let section = self.collectionView!.numberOfSections() + i
-                        sections.append(NSIndexSet(index: section))
+                    for section in sections {
+                        self.collectionView!.insertSections(section)
                     }
                     
-                    self.collectionView!.performBatchUpdates({
-                        self.streams!.appendContentsOf(streams!)
-                        
-                        for section in sections {
-                            self.collectionView!.insertSections(section)
-                        }
-                        
-                    }, completion: nil)
-                }
+                }, completion: nil)
             }
         }
     }

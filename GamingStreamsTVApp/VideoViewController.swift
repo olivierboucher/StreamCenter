@@ -59,23 +59,22 @@ class VideoViewController : UIViewController {
         TwitchApi.getStreamsForChannel(self.currentStream!.channel.name) {
             (streams, error) in
             
-            if(error != nil) {
+            guard let streams = streams where error == nil else {
                 NSLog("Error getting stream video data")
+                return
             }
             
-            if let streams = streams {
-                self.streams = streams
-                let streamObject = streams[0]
-                let streamAsset = AVURLAsset(URL: streamObject.url!)
-                let streamItem = AVPlayerItem(asset: streamAsset)
-                
-                self.videoPlayer = AVPlayer(playerItem: streamItem)
-                
-                dispatch_async(dispatch_get_main_queue(),{
-                    self.initializePlayerView()
-                })
-                
-            }
+            self.streams = streams
+            let streamObject = streams[0]
+            let streamAsset = AVURLAsset(URL: streamObject.url!)
+            let streamItem = AVPlayerItem(asset: streamAsset)
+            
+            self.videoPlayer = AVPlayer(playerItem: streamItem)
+            
+            dispatch_async(dispatch_get_main_queue(),{
+                self.initializePlayerView()
+            })
+            
         }
     }
     
@@ -173,9 +172,11 @@ class VideoViewController : UIViewController {
     * Dismisses the modal menu if it is present
     */
     func handleMenuPress() {
-        if dismissMenu() {
+        
+        guard !dismissMenu() else {
             return
         }
+        
         self.dismissViewControllerAnimated(true, completion: nil)
     }
     

@@ -31,36 +31,41 @@ class GamesViewController : LoadingViewController {
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
         
-        if(self.collectionView == nil){
+        if (self.collectionView == nil) {
             self.displayLoadingView()
         }
         
         TwitchApi.getTopGamesWithOffset(0, limit: LOADING_BUFFER) {
             (games, error) in
             
-            if(error != nil || games == nil){
-                dispatch_async(dispatch_get_main_queue(),{
-                    if(self.errorView == nil){
+            guard let games = games where error == nil else {
+                dispatch_async(dispatch_get_main_queue(), {
+                    
+                    if (self.errorView == nil) {
                         self.removeLoadingView()
                         self.displayErrorView("Error loading game list.\nPlease check your internet connection.")
                     }
                 });
+                
+                return
             }
-            else {
-                self.games = games!;
-                dispatch_async(dispatch_get_main_queue(),{
-                    if((self.topBar == nil) || !(self.topBar!.isDescendantOfView(self.view))) {
-                        let topBarBounds = CGRect(x: self.view.bounds.origin.x, y: self.view.bounds.origin.y, width: self.view.bounds.size.width, height: self.TOP_BAR_HEIGHT)
-                        self.topBar = TopBarView(frame: topBarBounds, withMainTitle: "Top Games")
-                        self.topBar?.backgroundColor = UIColor.init(white: 0.5, alpha: 1)
-                        
-                        self.view.addSubview(self.topBar!)
-                    }
-                    self.removeLoadingView()
-                    self.removeErrorView()
-                    self.displayCollectionView();
-                })
-            }
+            
+            self.games = games;
+            
+            dispatch_async(dispatch_get_main_queue(), {
+                
+                if ((self.topBar == nil) || !(self.topBar!.isDescendantOfView(self.view))) {
+                    let topBarBounds = CGRect(x: self.view.bounds.origin.x, y: self.view.bounds.origin.y, width: self.view.bounds.size.width, height: self.TOP_BAR_HEIGHT)
+                    self.topBar = TopBarView(frame: topBarBounds, withMainTitle: "Top Games")
+                    self.topBar?.backgroundColor = UIColor.init(white: 0.5, alpha: 1)
+                    
+                    self.view.addSubview(self.topBar!)
+                }
+                
+                self.removeLoadingView()
+                self.removeErrorView()
+                self.displayCollectionView();
+            })
         }
     }
     
@@ -126,27 +131,27 @@ extension GamesViewController : UICollectionViewDelegate {
             TwitchApi.getTopGamesWithOffset(games!.count, limit: LOADING_BUFFER) {
                 (games, error) in
                 
-                if(error != nil || games == nil){
+                guard let games = games where error == nil else {
                     NSLog("Error loading more games")
+                    return
                 }
-                else if(games!.count > 0) {
+                
+                var sections = Array<NSIndexSet>()
+                
+                for var i = 0; i < games.count / self.NUM_COLUMNS; i++ {
+                    let section = self.collectionView!.numberOfSections() + i
+                    sections.append(NSIndexSet(index: section))
+                
+                }
+                
+                self.collectionView!.performBatchUpdates({
+                    self.games!.appendContentsOf(games)
                     
-                    var sections = Array<NSIndexSet>()
-                    
-                    for var i = 0; i < games!.count / self.NUM_COLUMNS; i++ {
-                        let section = self.collectionView!.numberOfSections() + i
-                        sections.append(NSIndexSet(index: section))
+                    for section in sections {
+                        self.collectionView!.insertSections(section)
                     }
                     
-                    self.collectionView!.performBatchUpdates({
-                        self.games!.appendContentsOf(games!)
-                        
-                        for section in sections {
-                            self.collectionView!.insertSections(section)
-                        }
-                        
-                    }, completion: nil)
-                }
+                }, completion: nil)
             }
         }
     }
