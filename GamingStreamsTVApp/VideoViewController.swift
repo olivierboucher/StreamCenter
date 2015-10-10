@@ -17,7 +17,6 @@ enum StreamSourceQuality: String {
 }
 
 class VideoViewController : UIViewController {
-    private var longPressRecognizer : UILongPressGestureRecognizer?
     private var videoView : VideoView?
     private var videoPlayer : AVPlayer?
     private var streams : [TwitchStreamVideo]?
@@ -42,9 +41,9 @@ class VideoViewController : UIViewController {
         self.view.backgroundColor = UIColor.blackColor()
         
         //Gestures configuration
-        self.longPressRecognizer = UILongPressGestureRecognizer(target: self, action: Selector("handleLongPress"))
-        self.longPressRecognizer?.cancelsTouchesInView = true
-        self.view.addGestureRecognizer(self.longPressRecognizer!)
+        let longPressRecognizer = UILongPressGestureRecognizer(target: self, action: Selector("handleLongPress:"))
+        longPressRecognizer.cancelsTouchesInView = true
+        self.view.addGestureRecognizer(longPressRecognizer)
         
         let tapRecognizer = UITapGestureRecognizer(target: self, action: "pause")
         tapRecognizer.allowedPressTypes = [NSNumber(integer: UIPressType.PlayPause.rawValue)];
@@ -165,8 +164,8 @@ class VideoViewController : UIViewController {
     * Handler for the UILongPressGestureRecognizer of the controller
     * Presents the modal menu if it is initialized
     */
-    func handleLongPress() {
-        if self.longPressRecognizer!.state == UIGestureRecognizerState.Began {
+    func handleLongPress(longPressRecognizer: UILongPressGestureRecognizer) {
+        if longPressRecognizer.state == UIGestureRecognizerState.Began {
             if self.modalMenu == nil {
                 modalMenu = ModalMenuView(frame: self.view.bounds,
                     options: self.modalMenuOptions!,
@@ -174,14 +173,14 @@ class VideoViewController : UIViewController {
                 
                 modalMenu!.center = self.view.center
                 
-                
+                modalMenu?.alpha = 0
+                self.view.addSubview(self.modalMenu!)
+                UIView.animateWithDuration(0.5, animations: { () -> Void in
+                    self.modalMenu?.alpha = 1
+                })
+            } else {
+                dismissMenu()
             }
-            
-            modalMenu?.alpha = 0
-            self.view.addSubview(self.modalMenu!)
-            UIView.animateWithDuration(0.5, animations: { () -> Void in
-                self.modalMenu?.alpha = 1
-            })
         }
     }
     
@@ -209,6 +208,7 @@ class VideoViewController : UIViewController {
                     if finished {
                         modalMenu.removeFromSuperview()
                     }
+                    self.modalMenu = nil
                 })
 //                modalMenu.removeFromSuperview()
                 return true
