@@ -87,7 +87,20 @@ class TwitchApi {
             
             if(response.result.isSuccess) {
                 if let gamesInfoDict = response.result.value as? [String : AnyObject] {
-                    let games = TwitchApi.parseGamesFromResponse(gamesDictionary: gamesInfoDict, withFirstKey: "top")
+                    var games = [TwitchGame]()
+                    for gameRaw in gamesInfoDict["top"] as! [AnyObject] {
+                        if let topItemDict = gameRaw as? [String : AnyObject] {
+                            if let gameDict = topItemDict["game"] as? NSDictionary {
+                                games.append(TwitchGame(
+                                    id : gameDict["_id"] as! Int,
+                                    viewers : topItemDict["viewers"] as! Int,
+                                    channels : topItemDict["channels"] as! Int,
+                                    name : gameDict["name"] as! String,
+                                    thumbnails : gameDict["box"] as! [String : String],
+                                    logos : gameDict["logo"] as! [String : String]));
+                            }
+                        }
+                    }
                     completionHandler(games: games, error: nil);
                     return
                 }
@@ -211,8 +224,7 @@ class TwitchApi {
         }
         
         Alamofire.request(.GET, gamesUrlString, parameters :
-            [   "limit"     : limit,
-                "offset"    : offset,
+            [
                 "query"     : encodedTerm,
                 "type"      : "suggest",
                 "live"      : true          ])
@@ -220,7 +232,16 @@ class TwitchApi {
             
             if(response.result.isSuccess) {
                 if let gamesInfoDict = response.result.value as? [String : AnyObject] {
-                    let games = TwitchApi.parseGamesFromResponse(gamesDictionary: gamesInfoDict, withFirstKey: "games")
+                    var games = [TwitchGame]()
+                    for gameDict in gamesInfoDict["games"] as! [[String : AnyObject]] {
+                        games.append(TwitchGame(
+                            id : gameDict["_id"] as! Int,
+                            viewers : 0,
+                            channels : 0,
+                            name : gameDict["name"] as! String,
+                            thumbnails : gameDict["box"] as! [String : String],
+                            logos : gameDict["logo"] as! [String : String]));
+                    }
                     completionHandler(games: games, error: nil);
                     return
                 }

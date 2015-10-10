@@ -18,8 +18,6 @@ class GamesViewController : LoadingViewController {
     private var collectionView : UICollectionView?
     private var games : [TwitchGame]?
     
-    private var searchController : UISearchController!
-    
     convenience init(){
         self.init(nibName: nil, bundle: nil);
     }
@@ -32,15 +30,17 @@ class GamesViewController : LoadingViewController {
     */
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
-        loadContent()
+        if self.games == nil {
+            loadContent()
+        }
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
-        searchController = UISearchController(searchResultsController: self)
-        searchController.searchResultsUpdater = self
-        self.definesPresentationContext = true
+        let longPressRecognizer = UILongPressGestureRecognizer(target: self, action: "handleLongPress:")
+        longPressRecognizer.cancelsTouchesInView = false
+        self.view.addGestureRecognizer(longPressRecognizer)
     }
     
     override func didReceiveMemoryWarning() {
@@ -93,7 +93,7 @@ class GamesViewController : LoadingViewController {
             layout.minimumInteritemSpacing = 10;
             layout.minimumLineSpacing = 10;
             
-            let collectionViewBounds = CGRect(x: self.view.bounds.origin.x, y: self.view.bounds.origin.y, width: self.view.bounds.size.width, height: self.view.bounds.size.height)
+            let collectionViewBounds = CGRect(x: self.view.bounds.origin.x, y: CGRectGetMaxY(topBar!.bounds), width: self.view.bounds.size.width, height: self.view.bounds.size.height)
             
             self.collectionView = UICollectionView(frame: collectionViewBounds, collectionViewLayout: layout);
             
@@ -110,11 +110,27 @@ class GamesViewController : LoadingViewController {
             collectionView?.reloadData()
         }
         
-        if !(searchController.searchBar.isDescendantOfView(self.view)) {
-            searchController.searchBar.frame = CGRect(x: self.view.bounds.origin.x, y: self.view.bounds.origin.y, width: self.view.bounds.width, height: self.TOP_BAR_HEIGHT)
-            self.view.addSubview(searchController.searchBar)
+    }
+    
+    func handleLongPress(gestureRecognizer: UILongPressGestureRecognizer) {
+        if gestureRecognizer.state == .Began {
+            TwitchApi.getGamesWithSearchTerm("call", offset: 0, limit: 20) { (games, error) -> () in
+                guard let games = games else {
+                    dispatch_async(dispatch_get_main_queue(), {
+                        self.removeLoadingView()
+                        self.displayErrorView("Error loading game list.\nPlease check your internet connection.")
+                    });
+                    return
+                }
+                
+                self.games = games
+                dispatch_async(dispatch_get_main_queue(), {
+                    
+                    self.removeLoadingView()
+                    self.layoutAndDisplayViews();
+                })
+            }
         }
-        
     }
     
     override func reloadContent() {
@@ -190,18 +206,5 @@ extension GamesViewController : UICollectionViewDataSource {
 
         return cell;
     }
-}
-
-//////////////////////////////////////////////
-// MARK - UICollectionViewDataSource interface
-//////////////////////////////////////////////
-
-extension GamesViewController : UISearchResultsUpdating {
-    
-    func updateSearchResultsForSearchController(searchController: UISearchController) {
-        //do the search
-        print("searching")
-    }
-    
 }
 
