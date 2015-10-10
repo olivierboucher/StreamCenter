@@ -7,19 +7,19 @@
 import UIKit
 
 class GamesViewController : LoadingViewController {
-    
-    private let NUM_COLUMNS = 5;
-    private let ITEMS_INSETS_X : CGFloat = 25;
-    private let ITEMS_INSETS_Y : CGFloat = 40;
-    private let TOP_BAR_HEIGHT : CGFloat = 100;
-    private let GAME_IMG_HEIGHT_RATIO : CGFloat = 1.39705882353; //Computed from sampled image from twitch api
+    private let LOADING_BUFFER = 20
+    private let NUM_COLUMNS = 5
+    private let ITEMS_INSETS_X : CGFloat = 25
+    private let ITEMS_INSETS_Y : CGFloat = 40
+    private let TOP_BAR_HEIGHT : CGFloat = 100
+    private let GAME_IMG_HEIGHT_RATIO : CGFloat = 1.39705882353 //Computed from sampled image from twitch api
     
     private var topBar : TopBarView?
     private var collectionView : UICollectionView?
     private var games : [TwitchGame]?
     
     convenience init(){
-        self.init(nibName: nil, bundle: nil);
+        self.init(nibName: nil, bundle: nil)
     }
     
     /*
@@ -72,7 +72,7 @@ class GamesViewController : LoadingViewController {
     }
     
     /*
-     * displayCollectionView()
+     * layoutAndDisplayViews()
      *
      * Assigns a new collection view to the controller and displays it if
      * it has not been initialized. Otherwise, it asks to reload data
@@ -91,7 +91,7 @@ class GamesViewController : LoadingViewController {
             let layout : UICollectionViewFlowLayout = UICollectionViewFlowLayout();
             layout.scrollDirection = UICollectionViewScrollDirection.Vertical;
             layout.minimumInteritemSpacing = 10;
-            layout.minimumLineSpacing = 10;
+            layout.minimumLineSpacing = 50;
             
             let collectionViewBounds = CGRect(x: self.view.bounds.origin.x, y: CGRectGetMaxY(topBar!.bounds), width: self.view.bounds.size.width, height: self.view.bounds.size.height)
             
@@ -147,10 +147,38 @@ class GamesViewController : LoadingViewController {
 extension GamesViewController : UICollectionViewDelegate {
     
     func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
-        let selectedGame = games![(indexPath.section * NUM_COLUMNS) +  indexPath.row]
+        let selectedGame = games![indexPath.row]
         let streamsViewController = StreamsViewController(game: selectedGame)
         
         self.presentViewController(streamsViewController, animated: true, completion: nil)
+    }
+    
+    func collectionView(collectionView: UICollectionView, willDisplayCell cell: UICollectionViewCell, forItemAtIndexPath indexPath: NSIndexPath) {
+        if(indexPath.row == (self.games?.count)! - 1){
+            TwitchApi.getTopGamesWithOffset(games!.count, limit: LOADING_BUFFER) {
+                (games, error) in
+                
+                if(error != nil || games == nil){
+                    NSLog("Error loading more games")
+                }
+                guard let games = games where games.count > 0 else {
+                    return
+                }
+                
+                var paths = [NSIndexPath]()
+                
+                for i in 0..<games.count {
+                    paths.append(NSIndexPath(forItem: i + self.games!.count, inSection: 0))
+                }
+                
+                self.collectionView!.performBatchUpdates({
+                    self.games!.appendContentsOf(games)
+                    
+                    self.collectionView!.insertItemsAtIndexPaths(paths)
+                    
+                    }, completion: nil)
+            }
+        }
     }
 }
 
@@ -186,24 +214,25 @@ extension GamesViewController : UICollectionViewDataSource {
     
     func numberOfSectionsInCollectionView(collectionView: UICollectionView) -> Int {
         //The number of possible rows
-        return Int(ceil(Double(games!.count) / Double(NUM_COLUMNS)));
+        return 1;
     }
     
     func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         // If the count of games allows the current row to be full
-        if((section + 1) * NUM_COLUMNS <= games!.count){
-            return NUM_COLUMNS;
+        guard let games = games else {
+            return 0
         }
-        // the row cannot be full so we return the difference
-        else {
-            return games!.count - ((section) * NUM_COLUMNS)
-        }
+        return games.count
     }
     
     func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
         let cell : ItemCellView = collectionView.dequeueReusableCellWithReuseIdentifier(ItemCellView.CELL_IDENTIFIER, forIndexPath: indexPath) as! ItemCellView;
-        cell.setRepresentedItem(games![(indexPath.section * NUM_COLUMNS) +  indexPath.row]);
-
+        guard let games = games else {
+            return cell
+        }
+        
+        cell.setRepresentedItem(games[indexPath.row]);
+        
         return cell;
     }
 }
