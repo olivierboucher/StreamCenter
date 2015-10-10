@@ -17,7 +17,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         YoutubeGaming.setAPIKey("AIzaSyAFLrfWAIk9gdaBbC3h7ymNpAtp9gLiWkY")
         
         let window = UIWindow.init(frame: UIScreen.mainScreen().bounds);
-        window.rootViewController =  GamesViewController(); // Set to YoutubeStreamsViewController() if you want youtube.
+        window.rootViewController = GamesViewController(); // Set to YoutubeStreamsViewController() if you want youtube.
         window.makeKeyAndVisible();
         self.window = window;
         
