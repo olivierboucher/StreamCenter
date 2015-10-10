@@ -12,10 +12,10 @@ struct TwitchGame: CellItem {
     private(set) var viewers : Int;
     private(set) var channels : Int;
     private(set) var name : String;
-    private(set) var thumbnails : Dictionary<String, String>;
-    private(set) var logos : Dictionary<String, String>;
+    private(set) var thumbnails : [String : String];
+    private(set) var logos : [String : String];
     
-    init(id : Int, viewers : Int, channels : Int, name : String, thumbnails : Dictionary<String, String>, logos : Dictionary<String, String>) {
+    init(id : Int, viewers : Int, channels : Int, name : String, thumbnails : [String : String], logos : [String : String]) {
         self.id = id;
         self.viewers = viewers;
         self.channels = channels;

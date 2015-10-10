@@ -19,7 +19,7 @@ class StreamsViewController : LoadingViewController {
     private var game : TwitchGame?
     private var topBar : TopBarView?
     private var collectionView : UICollectionView?
-    private var streams : Array<TwitchStream>?
+    private var streams : [TwitchStream]?
     
     convenience init(game : TwitchGame){
         self.init(nibName: nil, bundle: nil)
@@ -34,37 +34,9 @@ class StreamsViewController : LoadingViewController {
     */
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
-        
-        if(self.collectionView == nil){
-           self.displayLoadingView()
-        }
-        
-        TwitchApi.getTopStreamsForGameWithOffset(self.game!.name, offset: 0, limit: LOADING_BUFFER) {
-            (streams, error) in
-            
-            if(error != nil || streams == nil){
-                dispatch_async(dispatch_get_main_queue(),{
-                    if(self.errorView == nil){
-                        self.removeLoadingView()
-                        self.displayErrorView("Error loading streams list.\nPlease check your internet connection.")
-                    }
-                });
-            }
-            else {
-                self.streams = streams!
-                dispatch_async(dispatch_get_main_queue(),{
-                    if((self.topBar == nil) || !(self.topBar!.isDescendantOfView(self.view))) {
-                        let topBarBounds = CGRect(x: self.view.bounds.origin.x, y: self.view.bounds.origin.y, width: self.view.bounds.size.width, height: self.TOP_BAR_HEIGHT)
-                        self.topBar = TopBarView(frame: topBarBounds, withMainTitle: "Live Streams - \(self.game!.name)")
-                        self.topBar?.backgroundColor = UIColor.init(white: 0.5, alpha: 1)
-                        
-                        self.view.addSubview(self.topBar!)
-                    }
-                    self.removeLoadingView()
-                    self.removeErrorView()
-                    self.displayCollectionView();
-                })
-            }
+
+        if self.streams == nil {
+            loadContent()
         }
     }
     
@@ -74,6 +46,35 @@ class StreamsViewController : LoadingViewController {
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
+    }
+    
+    func loadContent() {
+        self.removeErrorView()
+        self.displayLoadingView("Loading Streams...")
+        TwitchApi.getTopStreamsForGameWithOffset(self.game!.name, offset: 0, limit: 20) {
+            (streams, error) in
+            
+            guard let streams = streams else {
+                dispatch_async(dispatch_get_main_queue(), {
+                    self.removeLoadingView()
+                    self.displayErrorView("Error loading streams list.\nPlease check your internet connection.")
+                });
+                return
+            }
+            
+            self.streams = streams
+            dispatch_async(dispatch_get_main_queue(), {
+                if((self.topBar == nil) || !(self.topBar!.isDescendantOfView(self.view))) {
+                    let topBarBounds = CGRect(x: self.view.bounds.origin.x, y: self.view.bounds.origin.y, width: self.view.bounds.size.width, height: self.TOP_BAR_HEIGHT)
+                    self.topBar = TopBarView(frame: topBarBounds, withMainTitle: "Live Streams - \(self.game!.name)")
+                    self.topBar?.backgroundColor = UIColor.init(white: 0.5, alpha: 1)
+                    
+                    self.view.addSubview(self.topBar!)
+                }
+                self.removeLoadingView()
+                self.displayCollectionView();
+            })
+        }
     }
     
     /*
@@ -87,7 +88,7 @@ class StreamsViewController : LoadingViewController {
             let layout : UICollectionViewFlowLayout = UICollectionViewFlowLayout();
             layout.scrollDirection = UICollectionViewScrollDirection.Vertical;
             layout.minimumInteritemSpacing = 10;
-            layout.minimumLineSpacing = 10;
+            layout.minimumLineSpacing = 35;
             
             self.collectionView = UICollectionView(frame: self.view.bounds, collectionViewLayout: layout);
             
@@ -102,6 +103,11 @@ class StreamsViewController : LoadingViewController {
         else {
             self.collectionView!.reloadData()
         }
+    }
+    
+    override func reloadContent() {
+        loadContent()
+        super.reloadContent()
     }
 }
 
@@ -119,31 +125,25 @@ extension StreamsViewController : UICollectionViewDelegate {
     }
     
     func collectionView(collectionView: UICollectionView, willDisplayCell cell: UICollectionViewCell, forItemAtIndexPath indexPath: NSIndexPath) {
-        if((indexPath.section * NUM_COLUMNS) + indexPath.row == streams!.count-1){
+        if (indexPath.row == (self.streams?.count)! - 1){
             TwitchApi.getTopStreamsForGameWithOffset(self.game!.name, offset: self.streams!.count, limit: LOADING_BUFFER) {
                 (streams, error) in
                 
-                if(error != nil || streams == nil){
-                    NSLog("Error loading more games")
+                guard let streams = streams else {
+                    return
                 }
-                else if(streams!.count > 0) {
-                    
-                    var sections = Array<NSIndexSet>()
-                    
-                    for var i = 0; i < streams!.count / self.NUM_COLUMNS; i++ {
-                        let section = self.collectionView!.numberOfSections() + i
-                        sections.append(NSIndexSet(index: section))
-                    }
-                    
-                    self.collectionView!.performBatchUpdates({
-                        self.streams!.appendContentsOf(streams!)
-                        
-                        for section in sections {
-                            self.collectionView!.insertSections(section)
-                        }
-                        
-                    }, completion: nil)
+                var paths = [NSIndexPath]()
+                
+                for i in 0..<streams.count {
+                    paths.append(NSIndexPath(forItem: i + self.streams!.count, inSection: 0))
                 }
+                    
+                self.collectionView!.performBatchUpdates({
+                    self.streams!.appendContentsOf(streams)
+                
+                    self.collectionView!.insertItemsAtIndexPaths(paths)
+                
+                }, completion: nil)
             }
         }
     }
@@ -180,23 +180,23 @@ extension StreamsViewController : UICollectionViewDataSource {
     
     func numberOfSectionsInCollectionView(collectionView: UICollectionView) -> Int {
         //The number of possible rows
-        return Int(ceil(Double(streams!.count) / Double(NUM_COLUMNS)));
+        return 1
     }
     
     func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         // If the count of streams allows the current row to be full
-        if((section+1) * NUM_COLUMNS <= streams!.count){
-            return NUM_COLUMNS;
+        guard let streams = streams else {
+            return 0
         }
-        // the row cannot be full so we return the difference
-        else {
-            return streams!.count - ((section) * NUM_COLUMNS)
-        }
+        return streams.count
     }
     
     func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
         let cell : ItemCellView = collectionView.dequeueReusableCellWithReuseIdentifier(ItemCellView.CELL_IDENTIFIER, forIndexPath: indexPath) as! ItemCellView
-        cell.setRepresentedItem(streams![(indexPath.section * NUM_COLUMNS) +  indexPath.row])
+        guard let streams = streams else {
+            return cell
+        }
+        cell.setRepresentedItem(streams[indexPath.row])
         return cell;
     }
 }

@@ -11,7 +11,7 @@ struct TwitchChannel {
     private(set) var id : Int;
     private(set) var name : String;
     private(set) var displayName : String
-    private(set) var links : Dictionary<String, String>;
+    private(set) var links : [String : String];
     private(set) var broadcasterLanguage : String?;
     private(set) var language : String;
     private(set) var gameName : String;
@@ -22,7 +22,7 @@ struct TwitchChannel {
     private(set) var followers : Int;
     private(set) var views : Int;
     
-    init(id : Int, name : String, displayName : String, links : Dictionary<String, String>, broadcasterLanguage : String?,
+    init(id : Int, name : String, displayName : String, links : [String : String], broadcasterLanguage : String?,
         language : String, gameName : String, logo : String?, status : String, videoBanner : String?,
         lastUpdate : NSDate, followers : Int, views : Int) {
         self.id = id;

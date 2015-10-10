@@ -15,7 +15,7 @@ class TwitchChatHandler : IRCHandlerBase {
     var loopTimer: dispatch_source_t?
     var isAnonymous : Bool = false
     var messageQueue : TwitchChatMessageQueue?
-    var emotesDictionnary = Dictionary<String, NSData>() //Dictionnary that holds all the emotes (Acts as cache)
+    var emotesDictionnary = [String : NSData]() //Dictionnary that holds all the emotes (Acts as cache)
     var consumer : TwitchChatHandlerConsumer?
     
     init() {

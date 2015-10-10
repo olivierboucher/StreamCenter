@@ -7,10 +7,10 @@
 import Foundation
 
 class NSQueue<T : AnyObject> {
-    private var array : Array<T>
+    private var array : [T]
     
     init() {
-        array = Array<T>()
+        array = [T]()
     }
     
     func offer(element : T) {

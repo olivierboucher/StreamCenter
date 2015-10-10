@@ -14,6 +14,7 @@ import Foundation
 class LoadingViewController : UIViewController {
     internal var loadingView : LoadingView?
     internal var errorView : ErrorView?
+    private var reloadButton : UIButton?
     
     /*
     * displayLoadingView()
@@ -21,8 +22,8 @@ class LoadingViewController : UIViewController {
     * Initializes a loading view in the center of the screen and displays it
     *
     */
-    func displayLoadingView()  {
-        self.loadingView = LoadingView(frame: CGRect(x: 0, y: 0, width: self.view.bounds.width/5, height: self.view.bounds.height/5))
+    func displayLoadingView(loading: String = "Loading...")  {
+        self.loadingView = LoadingView(frame: CGRect(x: 0, y: 0, width: self.view.bounds.width/5, height: self.view.bounds.height/5), text: loading)
         self.loadingView?.center = self.view.center
         self.view.addSubview(self.loadingView!)
     }
@@ -51,6 +52,18 @@ class LoadingViewController : UIViewController {
         self.errorView = ErrorView(frame: errorViewFrame, andTitle: title)
         self.errorView?.center = self.view.center
         self.view.addSubview(self.errorView!)
+        
+        self.reloadButton = UIButton(frame: CGRectMake(0, 0, 300, 20))
+        self.reloadButton?.center = self.view.center
+        self.reloadButton?.center.y += 200
+        self.reloadButton?.setTitleColor(UIColor.whiteColor(), forState: .Normal)
+        //just for debugging
+//        self.reloadButton?.setTitleColor(UIColor.redColor(), forState: .Focused)
+        self.reloadButton?.setTitle("Reload", forState: .Normal)
+        self.reloadButton?.addTarget(self, action: Selector("reloadContent"), forControlEvents: .PrimaryActionTriggered)
+        self.view.addSubview(self.reloadButton!)
+        
+        self.view.setNeedsFocusUpdate()
     }
     
     /*
@@ -64,5 +77,18 @@ class LoadingViewController : UIViewController {
             self.errorView?.removeFromSuperview()
             self.errorView = nil
         }
+        if((self.reloadButton != nil) && (self.reloadButton!.isDescendantOfView(self.view))){
+            self.reloadButton?.removeFromSuperview()
+            self.reloadButton = nil
+        }
+    }
+    
+    /*
+    *
+    * Implement this on the child view controller to reload content if there was an error
+    *
+    */
+    func reloadContent() {
+        print("we are reloading the content now: \(self)")
     }
 }
