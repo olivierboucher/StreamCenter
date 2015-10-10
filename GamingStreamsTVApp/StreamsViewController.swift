@@ -17,13 +17,16 @@ class StreamsViewController : LoadingViewController {
     private let PREVIEW_IMG_HEIGHT_RATIO : CGFloat = 1.777777777; //Computed from sampled image from twitch api
     
     private var game : TwitchGame?
-    private var topBar : TopBarView?
-    private var collectionView : UICollectionView?
     private var streams : [TwitchStream]?
     
     convenience init(game : TwitchGame){
         self.init(nibName: nil, bundle: nil)
         self.game = game
+    }
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        self.configureViews()
     }
     
     /*
@@ -38,10 +41,6 @@ class StreamsViewController : LoadingViewController {
         if self.streams == nil {
             loadContent()
         }
-    }
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
     }
     
     override func didReceiveMemoryWarning() {
@@ -64,45 +63,34 @@ class StreamsViewController : LoadingViewController {
             
             self.streams = streams
             dispatch_async(dispatch_get_main_queue(), {
-                if((self.topBar == nil) || !(self.topBar!.isDescendantOfView(self.view))) {
-                    let topBarBounds = CGRect(x: self.view.bounds.origin.x, y: self.view.bounds.origin.y, width: self.view.bounds.size.width, height: self.TOP_BAR_HEIGHT)
-                    self.topBar = TopBarView(frame: topBarBounds, withMainTitle: "Live Streams - \(self.game!.name)")
-                    self.topBar?.backgroundColor = UIColor.init(white: 0.5, alpha: 1)
-                    
-                    self.view.addSubview(self.topBar!)
-                }
                 self.removeLoadingView()
-                self.displayCollectionView();
+                self.collectionView.reloadData()
             })
         }
     }
     
-    /*
-    * displayCollectionView()
-    *
-    * Assigns a new collection view to the controller and displays it if
-    * it has not been initialized. Otherwise, it asks to reload data
-    */
-    private func displayCollectionView() {
-        if((collectionView == nil) || !(collectionView!.isDescendantOfView(self.view))) {
-            let layout : UICollectionViewFlowLayout = UICollectionViewFlowLayout();
-            layout.scrollDirection = UICollectionViewScrollDirection.Vertical;
-            layout.minimumInteritemSpacing = 10;
-            layout.minimumLineSpacing = 35;
-            
-            self.collectionView = UICollectionView(frame: self.view.bounds, collectionViewLayout: layout);
-            
-            self.collectionView!.registerClass(ItemCellView.classForCoder(), forCellWithReuseIdentifier: ItemCellView.CELL_IDENTIFIER);
-            self.collectionView!.dataSource = self;
-            self.collectionView!.delegate = self;
-            self.collectionView!.contentInset = UIEdgeInsets(top: ITEMS_INSETS_Y + 10, left: ITEMS_INSETS_X, bottom: ITEMS_INSETS_Y, right: ITEMS_INSETS_X)
-            
-            self.view.addSubview(self.collectionView!);
-            self.view.bringSubviewToFront(self.topBar!)
-        }
-        else {
-            self.collectionView!.reloadData()
-        }
+    private func configureViews() {
+        let topBarBounds = CGRect(x: self.view.bounds.origin.x, y: self.view.bounds.origin.y, width: self.view.bounds.size.width, height: self.TOP_BAR_HEIGHT)
+        self.topBar = TopBarView(frame: topBarBounds, withMainTitle: "Live Streams - \(self.game!.name)")
+        self.topBar.backgroundColor = UIColor(white: 0.5, alpha: 1)
+        
+        self.view.addSubview(self.topBar)
+        
+        
+        let layout : UICollectionViewFlowLayout = UICollectionViewFlowLayout();
+        layout.scrollDirection = UICollectionViewScrollDirection.Vertical;
+        layout.minimumInteritemSpacing = 10;
+        layout.minimumLineSpacing = 35;
+        
+        self.collectionView = UICollectionView(frame: self.view.bounds, collectionViewLayout: layout);
+        
+        self.collectionView.registerClass(ItemCellView.classForCoder(), forCellWithReuseIdentifier: ItemCellView.CELL_IDENTIFIER);
+        self.collectionView.dataSource = self;
+        self.collectionView.delegate = self;
+        self.collectionView.contentInset = UIEdgeInsets(top: ITEMS_INSETS_Y + 10, left: ITEMS_INSETS_X, bottom: ITEMS_INSETS_Y, right: ITEMS_INSETS_X)
+        
+        self.view.addSubview(self.collectionView);
+        self.view.bringSubviewToFront(self.topBar)
     }
     
     override func reloadContent() {

@@ -15,12 +15,21 @@ class GamesViewController : LoadingViewController {
     private let TOP_BAR_HEIGHT : CGFloat = 100
     private let GAME_IMG_HEIGHT_RATIO : CGFloat = 1.39705882353 //Computed from sampled image from twitch api
     
-    private var topBar : TopBarView?
-    private var collectionView : UICollectionView?
+    private var searchController: UISearchController!
     private var games : [TwitchGame]?
     
     convenience init(){
         self.init(nibName: nil, bundle: nil)
+    }
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        // Do any additional setup after loading the view, typically from a nib.
+        let longPressRecognizer = UILongPressGestureRecognizer(target: self, action: "handleLongPress:")
+        longPressRecognizer.cancelsTouchesInView = true
+        self.view.addGestureRecognizer(longPressRecognizer)
+        
+        configureViews()
     }
     
     /*
@@ -35,14 +44,6 @@ class GamesViewController : LoadingViewController {
         if self.games == nil {
             loadContent()
         }
-    }
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        // Do any additional setup after loading the view, typically from a nib.
-        let longPressRecognizer = UILongPressGestureRecognizer(target: self, action: "handleLongPress:")
-        longPressRecognizer.cancelsTouchesInView = true
-        self.view.addGestureRecognizer(longPressRecognizer)
     }
     
     override func didReceiveMemoryWarning() {
@@ -68,54 +69,45 @@ class GamesViewController : LoadingViewController {
             dispatch_async(dispatch_get_main_queue(), {
                 
                 self.removeLoadingView()
-                self.layoutAndDisplayViews();
+                self.collectionView.reloadData()
             })
         }
     }
     
     func configureViews() {
+        //do the top bar first
+        let topBarBounds = CGRect(x: self.view.bounds.origin.x, y: self.view.bounds.origin.y, width: self.view.bounds.size.width, height: self.TOP_BAR_HEIGHT)
+        self.topBar = TopBarView(frame: topBarBounds, withMainTitle: "Top Games")
+        self.topBar.backgroundColor = UIColor(white: 0.5, alpha: 1)
+        self.view.addSubview(self.topBar)
         
-    }
-    
-    /*
-     * layoutAndDisplayViews()
-     *
-     * Assigns a new collection view to the controller and displays it if
-     * it has not been initialized. Otherwise, it asks to reload data
-     */
-    private func layoutAndDisplayViews() {
+        //then do the search bar
+        let searchBarFrame = CGRect(x: 0, y: CGRectGetMaxY(topBarBounds), width: 600, height: self.TOP_BAR_HEIGHT)
+        self.searchController = UISearchController(searchResultsController: nil)
+        self.searchController.searchResultsUpdater = self
+        self.searchController.searchBar.frame = searchBarFrame
+        self.searchController.searchBar.center.x = CGRectGetMidX(self.view.bounds)
+        self.definesPresentationContext = true
+        self.view.addSubview(self.searchController.searchBar)
         
-        if((self.topBar == nil) || !(self.topBar!.isDescendantOfView(self.view))) {
-            let topBarBounds = CGRect(x: self.view.bounds.origin.x, y: self.view.bounds.origin.y, width: self.view.bounds.size.width, height: self.TOP_BAR_HEIGHT)
-            self.topBar = TopBarView(frame: topBarBounds, withMainTitle: "Top Games")
-            self.topBar?.backgroundColor = UIColor.init(white: 0.5, alpha: 1)
-            
-            self.view.addSubview(self.topBar!)
-        }
+        //then do the collection view
+        let layout : UICollectionViewFlowLayout = UICollectionViewFlowLayout();
+        layout.scrollDirection = UICollectionViewScrollDirection.Vertical;
+        layout.minimumInteritemSpacing = 10
+        layout.minimumLineSpacing = 50
         
-        if((collectionView == nil) || !(collectionView!.isDescendantOfView(self.view))) {
-            let layout : UICollectionViewFlowLayout = UICollectionViewFlowLayout();
-            layout.scrollDirection = UICollectionViewScrollDirection.Vertical;
-            layout.minimumInteritemSpacing = 10;
-            layout.minimumLineSpacing = 50;
-            
-            let collectionViewBounds = CGRect(x: self.view.bounds.origin.x, y: CGRectGetMaxY(topBar!.bounds), width: self.view.bounds.size.width, height: self.view.bounds.size.height)
-            
-            self.collectionView = UICollectionView(frame: collectionViewBounds, collectionViewLayout: layout);
-            
-            self.collectionView!.registerClass(ItemCellView.classForCoder(), forCellWithReuseIdentifier: ItemCellView.CELL_IDENTIFIER);
-            self.collectionView!.dataSource = self;
-            self.collectionView!.delegate = self;
-            self.collectionView!.contentInset = UIEdgeInsets(top: ITEMS_INSETS_Y + 10, left: ITEMS_INSETS_X, bottom: ITEMS_INSETS_Y, right: ITEMS_INSETS_X)
-            
-            self.view.addSubview(self.collectionView!)
-            self.view.bringSubviewToFront(self.topBar!)
-            
-        }
-        else {
-            collectionView?.reloadData()
-        }
+        let collectionViewBounds = CGRect(x: self.view.bounds.origin.x, y: CGRectGetMaxY(searchBarFrame), width: self.view.bounds.size.width, height: self.view.bounds.size.height)
         
+        self.collectionView = UICollectionView(frame: collectionViewBounds, collectionViewLayout: layout);
+        
+        self.collectionView.registerClass(ItemCellView.classForCoder(), forCellWithReuseIdentifier: ItemCellView.CELL_IDENTIFIER);
+        self.collectionView.dataSource = self;
+        self.collectionView.delegate = self;
+        self.collectionView.contentInset = UIEdgeInsets(top: 0, left: ITEMS_INSETS_X, bottom: ITEMS_INSETS_Y, right: ITEMS_INSETS_X)
+        
+        self.view.addSubview(self.collectionView)
+        self.view.bringSubviewToFront(self.topBar)
+        self.view.bringSubviewToFront(self.searchController.searchBar)
     }
     
     func handleLongPress(gestureRecognizer: UILongPressGestureRecognizer) {
@@ -149,7 +141,7 @@ class GamesViewController : LoadingViewController {
                     dispatch_async(dispatch_get_main_queue(), {
                         
                         self.removeLoadingView()
-                        self.layoutAndDisplayViews();
+                        self.collectionView.reloadData()
                     })
                 }
             }))
@@ -263,3 +255,12 @@ extension GamesViewController : UICollectionViewDataSource {
     }
 }
 
+//////////////////////////////////////////////
+// MARK - UISearchResultsUpdating interface
+//////////////////////////////////////////////
+
+extension GamesViewController : UISearchResultsUpdating {
+    func updateSearchResultsForSearchController(searchController: UISearchController) {
+        print(searchController)
+    }
+}
