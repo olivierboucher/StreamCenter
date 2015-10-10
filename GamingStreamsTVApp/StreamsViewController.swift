@@ -34,6 +34,7 @@ class StreamsViewController : LoadingViewController {
     */
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
+
         if self.streams == nil {
             loadContent()
         }

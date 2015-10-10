@@ -7,6 +7,7 @@
 import UIKit
 
 class GamesViewController : LoadingViewController {
+
     private let LOADING_BUFFER = 20
     private let NUM_COLUMNS = 5
     private let ITEMS_INSETS_X : CGFloat = 25
@@ -30,6 +31,7 @@ class GamesViewController : LoadingViewController {
     */
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
+        
         if self.games == nil {
             loadContent()
         }
@@ -227,6 +229,7 @@ extension GamesViewController : UICollectionViewDataSource {
     
     func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
         let cell : ItemCellView = collectionView.dequeueReusableCellWithReuseIdentifier(ItemCellView.CELL_IDENTIFIER, forIndexPath: indexPath) as! ItemCellView;
+
         guard let games = games else {
             return cell
         }
