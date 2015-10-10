@@ -37,6 +37,10 @@
 		09E33CC91BB5B2DF000702E2 /* Dictionary.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09E33CC81BB5B2DF000702E2 /* Dictionary.swift */; };
 		09EB6D3E1BB484F7003EB244 /* String.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09EB6D3D1BB484F7003EB244 /* String.swift */; };
 		09EB6D461BB4A8BE003EB244 /* CATextLayerVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09EB6D451BB4A8BE003EB244 /* CATextLayerVC.swift */; };
+		6AC41F8E1BC93EF50007AE3A /* YoutubeGaming.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AC41F8D1BC93EF50007AE3A /* YoutubeGaming.swift */; };
+		6AC41F911BC94D9F0007AE3A /* YoutubeStream.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AC41F901BC94D9F0007AE3A /* YoutubeStream.swift */; };
+		6AC41F931BC9613D0007AE3A /* YoutubeStreamsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AC41F921BC9613D0007AE3A /* YoutubeStreamsViewController.swift */; };
+		6AC41F951BC965E00007AE3A /* YoutubeVideoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AC41F941BC965E00007AE3A /* YoutubeVideoViewController.swift */; };
 		A5E7DC008D2754CA1EC6CFC5 /* Pods_GamingStreamsTVApp.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 73B61525F92468AED0A0EE8C /* Pods_GamingStreamsTVApp.framework */; };
 		B44A44671BC6CAB800F399EC /* ItemCellView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B44A44661BC6CAB800F399EC /* ItemCellView.swift */; };
 /* End PBXBuildFile section */
@@ -146,6 +150,10 @@
 		09E33CC81BB5B2DF000702E2 /* Dictionary.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Dictionary.swift; sourceTree = "<group>"; };
 		09EB6D3D1BB484F7003EB244 /* String.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = String.swift; sourceTree = "<group>"; };
 		09EB6D451BB4A8BE003EB244 /* CATextLayerVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CATextLayerVC.swift; sourceTree = "<group>"; };
+		6AC41F8D1BC93EF50007AE3A /* YoutubeGaming.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YoutubeGaming.swift; sourceTree = "<group>"; };
+		6AC41F901BC94D9F0007AE3A /* YoutubeStream.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YoutubeStream.swift; sourceTree = "<group>"; };
+		6AC41F921BC9613D0007AE3A /* YoutubeStreamsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YoutubeStreamsViewController.swift; sourceTree = "<group>"; };
+		6AC41F941BC965E00007AE3A /* YoutubeVideoViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YoutubeVideoViewController.swift; sourceTree = "<group>"; };
 		73B61525F92468AED0A0EE8C /* Pods_GamingStreamsTVApp.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_GamingStreamsTVApp.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		90FBC40A14CD24160B58953A /* Pods-GamingStreamsTVApp.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-GamingStreamsTVApp.release.xcconfig"; path = "Pods/Target Support Files/Pods-GamingStreamsTVApp/Pods-GamingStreamsTVApp.release.xcconfig"; sourceTree = "<group>"; };
 		B44A44661BC6CAB800F399EC /* ItemCellView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ItemCellView.swift; sourceTree = "<group>"; };
@@ -190,6 +198,7 @@
 				09D098231BA7663A00E7E6FC /* ViewControllers */,
 				090AB9051BA6366500CDB05D /* Views */,
 				090AB8F01BA5C7EC00CDB05D /* TwitchAPI */,
+				6AC41F8F1BC93EFB0007AE3A /* YoutubeGaming */,
 				09CE59831BAE456D0054EB71 /* Helpers */,
 				090AB8E11BA5BFDF00CDB05D /* AppDelegate.swift */,
 				090AB8E81BA5BFDF00CDB05D /* Assets.xcassets */,
@@ -300,6 +309,8 @@
 		09D098231BA7663A00E7E6FC /* ViewControllers */ = {
 			isa = PBXGroup;
 			children = (
+				6AC41F921BC9613D0007AE3A /* YoutubeStreamsViewController.swift */,
+				6AC41F941BC965E00007AE3A /* YoutubeVideoViewController.swift */,
 				090AB8E31BA5BFDF00CDB05D /* GamesViewController.swift */,
 				09D098241BA7666200E7E6FC /* StreamsViewController.swift */,
 				09D098281BA77FAB00E7E6FC /* VideoViewController.swift */,
@@ -314,6 +325,15 @@
 				73B61525F92468AED0A0EE8C /* Pods_GamingStreamsTVApp.framework */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		6AC41F8F1BC93EFB0007AE3A /* YoutubeGaming */ = {
+			isa = PBXGroup;
+			children = (
+				6AC41F8D1BC93EF50007AE3A /* YoutubeGaming.swift */,
+				6AC41F901BC94D9F0007AE3A /* YoutubeStream.swift */,
+			);
+			name = YoutubeGaming;
 			sourceTree = "<group>";
 		};
 		F869E16742CCA364171847D9 /* Pods */ = {
@@ -509,10 +529,12 @@
 				09D098291BA77FAB00E7E6FC /* VideoViewController.swift in Sources */,
 				090AB9271BB579A300CDB05D /* ModalMenuView.swift in Sources */,
 				090AB8FF1BA616A900CDB05D /* TwitchChannel.swift in Sources */,
+				6AC41F931BC9613D0007AE3A /* YoutubeStreamsViewController.swift in Sources */,
 				090AB90F1BA9BBE300CDB05D /* ErrorView.swift in Sources */,
 				090AB9091BA8454500CDB05D /* TopBarView.swift in Sources */,
 				090AB90D1BA9B0F100CDB05D /* LoadingView.swift in Sources */,
 				09CE59821BAE15280054EB71 /* TwitchChatHandler.swift in Sources */,
+				6AC41F911BC94D9F0007AE3A /* YoutubeStream.swift in Sources */,
 				09CE597F1BAE08B10054EB71 /* IRCHandler.swift in Sources */,
 				09CE59881BAF55CE0054EB71 /* TwitchChatMessageQueue.swift in Sources */,
 				090AB9241BB36BC100CDB05D /* TwitchChatMessageView.swift in Sources */,
@@ -529,6 +551,8 @@
 				09D098251BA7666200E7E6FC /* StreamsViewController.swift in Sources */,
 				090AB9041BA616A900CDB05D /* GamesViewController.swift in Sources */,
 				B44A44671BC6CAB800F399EC /* ItemCellView.swift in Sources */,
+				6AC41F8E1BC93EF50007AE3A /* YoutubeGaming.swift in Sources */,
+				6AC41F951BC965E00007AE3A /* YoutubeVideoViewController.swift in Sources */,
 				09D0982B1BA782C800E7E6FC /* VideoView.swift in Sources */,
 				09CE59861BAF55BD0054EB71 /* TwitchChatMessage.swift in Sources */,
 				09CE598C1BAF963C0054EB71 /* ConcurrencyHelpers.swift in Sources */,

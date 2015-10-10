@@ -122,16 +122,16 @@ class ItemCellView: UICollectionViewCell {
                 .stringByReplacingOccurrencesOfString("{height}", withString: "\(Int(size.height))") {
                     Alamofire.request(.GET, imgUrlString!).response() {
                         (_, _, data, error) in
-                        if error != nil {
+                        
+                        guard let data = data where error == nil else {
                             //TODO: GET ERROR FROM ALAMOFIRE
                             completionHandler(image : nil, error : nil);
                             return
                         }
-                        else {
-                            let image = UIImage(data: data!);
-                            completionHandler(image: image, error: nil);
-                        }
-                    }
+                        
+                        let image = UIImage(data: data);
+                        completionHandler(image: image, error: nil);
+                }
             }
         }
     }

@@ -1,22 +1,23 @@
 //
-//  ViewController.swift
-//  TestTVApp
+//  YoutubeStreamsVIewController.swift
+//  GamingStreamsTVApp
 //
-//  Created by Olivier Boucher on 2015-09-13.
+//  Created by Chayel Heinsen on 10/10/15.
+//  Copyright © 2015 Rivus Media Inc. All rights reserved.
+//
 
 import UIKit
 
-class GamesViewController : LoadingViewController {
+class YoutubeStreamsViewController: LoadingViewController {
     private let LOADING_BUFFER = 20;
-    private let NUM_COLUMNS = 5;
-    private let ITEMS_INSETS_X : CGFloat = 25;
-    private let ITEMS_INSETS_Y : CGFloat = 40;
     private let TOP_BAR_HEIGHT : CGFloat = 100;
-    private let GAME_IMG_HEIGHT_RATIO : CGFloat = 1.39705882353; //Computed from sampled image from twitch api
+    private let NUM_COLUMNS = 3;
+    private let ITEMS_INSETS_X : CGFloat = 45;
+    private let ITEMS_INSETS_Y : CGFloat = 30;
+    private let PREVIEW_IMG_HEIGHT_RATIO : CGFloat = 1.777777777;
     
-    private var topBar : TopBarView?
     private var collectionView : UICollectionView?
-    private var games : Array<TwitchGame>?
+    private var streams : Array<YoutubeStream>?
     
     convenience init(){
         self.init(nibName: nil, bundle: nil);
@@ -35,10 +36,9 @@ class GamesViewController : LoadingViewController {
             self.displayLoadingView()
         }
         
-        TwitchApi.getTopGamesWithOffset(0, limit: LOADING_BUFFER) {
-            (games, error) in
+        YoutubeGaming.streamsWithPageToken(nil) { (streams, error) -> Void in
             
-            guard let games = games where error == nil else {
+            guard let streams = streams where error == nil else {
                 dispatch_async(dispatch_get_main_queue(), {
                     
                     if (self.errorView == nil) {
@@ -50,18 +50,9 @@ class GamesViewController : LoadingViewController {
                 return
             }
             
-            self.games = games;
+            self.streams = streams
             
             dispatch_async(dispatch_get_main_queue(), {
-                
-                if ((self.topBar == nil) || !(self.topBar!.isDescendantOfView(self.view))) {
-                    let topBarBounds = CGRect(x: self.view.bounds.origin.x, y: self.view.bounds.origin.y, width: self.view.bounds.size.width, height: self.TOP_BAR_HEIGHT)
-                    self.topBar = TopBarView(frame: topBarBounds, withMainTitle: "Top Games")
-                    self.topBar?.backgroundColor = UIColor.init(white: 0.5, alpha: 1)
-                    
-                    self.view.addSubview(self.topBar!)
-                }
-                
                 self.removeLoadingView()
                 self.removeErrorView()
                 self.displayCollectionView();
@@ -69,15 +60,7 @@ class GamesViewController : LoadingViewController {
         }
     }
     
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        // Do any additional setup after loading the view, typically from a nib.
-    }
-    
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    }
+    // MARK: - Private
     
     /*
     * displayCollectionView()
@@ -87,7 +70,7 @@ class GamesViewController : LoadingViewController {
     */
     private func displayCollectionView() {
         
-        if((collectionView == nil) || !(collectionView!.isDescendantOfView(self.view))) {
+        if ((collectionView == nil) || !(collectionView!.isDescendantOfView(self.view))) {
             let layout : UICollectionViewFlowLayout = UICollectionViewFlowLayout();
             layout.scrollDirection = UICollectionViewScrollDirection.Vertical;
             layout.minimumInteritemSpacing = 10;
@@ -103,71 +86,66 @@ class GamesViewController : LoadingViewController {
             self.collectionView!.contentInset = UIEdgeInsets(top: ITEMS_INSETS_Y + 10, left: ITEMS_INSETS_X, bottom: ITEMS_INSETS_Y, right: ITEMS_INSETS_X)
             
             self.view.addSubview(self.collectionView!)
-            self.view.bringSubviewToFront(self.topBar!)
-        }
-        else {
+        } else {
             collectionView?.reloadData()
         }
     }
 }
 
-////////////////////////////////////////////
 // MARK - UICollectionViewDelegate interface
-////////////////////////////////////////////
 
-
-extension GamesViewController : UICollectionViewDelegate {
+extension YoutubeStreamsViewController : UICollectionViewDelegate {
     
     func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
-        let selectedGame = games![(indexPath.section * NUM_COLUMNS) +  indexPath.row]
-        let streamsViewController = StreamsViewController(game: selectedGame)
+        let selectedStream = streams![(indexPath.section * NUM_COLUMNS) +  indexPath.row]
+        let videoViewController = YoutubeVideoViewController(stream: selectedStream)
         
-        self.presentViewController(streamsViewController, animated: true, completion: nil)
+        self.presentViewController(videoViewController, animated: true, completion: nil)
     }
-    
+    /*
     func collectionView(collectionView: UICollectionView, willDisplayCell cell: UICollectionViewCell, forItemAtIndexPath indexPath: NSIndexPath) {
-        if((indexPath.section * NUM_COLUMNS) + indexPath.row == games!.count-1){
-            TwitchApi.getTopGamesWithOffset(games!.count, limit: LOADING_BUFFER) {
-                (games, error) in
+        
+        if ((indexPath.section * NUM_COLUMNS) + indexPath.row == streams!.count - 1) {
+            
+            TwitchApi.getTopStreamsForGameWithOffset(self.game!.name, offset: self.streams!.count, limit: LOADING_BUFFER) {
+                (streams, error) in
                 
-                guard let games = games where error == nil else {
-                    NSLog("Error loading more games")
+                guard let streams = streams where error == nil else {
+                    NSLog("Error loading more streams")
                     return
                 }
                 
                 var sections = Array<NSIndexSet>()
                 
-                for var i = 0; i < games.count / self.NUM_COLUMNS; i++ {
+                for var i = 0; i < streams.count / self.NUM_COLUMNS; i++ {
                     let section = self.collectionView!.numberOfSections() + i
                     sections.append(NSIndexSet(index: section))
-                
                 }
                 
                 self.collectionView!.performBatchUpdates({
-                    self.games!.appendContentsOf(games)
+                    self.streams!.appendContentsOf(streams)
                     
                     for section in sections {
                         self.collectionView!.insertSections(section)
                     }
                     
-                }, completion: nil)
+                    }, completion: nil)
             }
+            
         }
     }
+    */
 }
 
-//////////////////////////////////////////////////////
-// MARK - UICollectionViewDelegateFlowLayout interface
-//////////////////////////////////////////////////////
+// MARK: - UICollectionViewDelegateFlowLayout interface
 
-extension GamesViewController : UICollectionViewDelegateFlowLayout {
+extension YoutubeStreamsViewController : UICollectionViewDelegateFlowLayout {
     
     func collectionView(collectionView: UICollectionView,
         layout collectionViewLayout: UICollectionViewLayout,
         sizeForItemAtIndexPath indexPath: NSIndexPath) -> CGSize {
             let width = self.view.bounds.width / CGFloat(NUM_COLUMNS) - CGFloat(ITEMS_INSETS_X * 2);
-            //Computed using the ratio from sampled from
-            let height = (width * GAME_IMG_HEIGHT_RATIO) + ItemCellView.LABEL_HEIGHT * 2; //There 2 labels, top & bottom
+            let height = width / PREVIEW_IMG_HEIGHT_RATIO + (ItemCellView.LABEL_HEIGHT * 2); //There 2 labels, top & bottom
             
             return CGSize(width: width, height: height)
     }
@@ -180,33 +158,29 @@ extension GamesViewController : UICollectionViewDelegateFlowLayout {
     }
 }
 
-//////////////////////////////////////////////
-// MARK - UICollectionViewDataSource interface
-//////////////////////////////////////////////
+// MARK: - UICollectionViewDataSource interface
 
-extension GamesViewController : UICollectionViewDataSource {
+extension YoutubeStreamsViewController : UICollectionViewDataSource {
     
     func numberOfSectionsInCollectionView(collectionView: UICollectionView) -> Int {
         //The number of possible rows
-        return Int(ceil(Double(games!.count) / Double(NUM_COLUMNS)));
+        return Int(ceil(Double(streams!.count) / Double(NUM_COLUMNS)));
     }
     
     func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        // If the count of games allows the current row to be full
-        if((section + 1) * NUM_COLUMNS <= games!.count){
+        // If the count of streams allows the current row to be full
+        if((section+1) * NUM_COLUMNS <= streams!.count){
             return NUM_COLUMNS;
         }
             // the row cannot be full so we return the difference
         else {
-            return games!.count - ((section) * NUM_COLUMNS)
+            return streams!.count - ((section) * NUM_COLUMNS)
         }
     }
     
     func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
-        let cell : ItemCellView = collectionView.dequeueReusableCellWithReuseIdentifier(ItemCellView.CELL_IDENTIFIER, forIndexPath: indexPath) as! ItemCellView;
-        cell.setRepresentedItem(games![(indexPath.section * NUM_COLUMNS) +  indexPath.row]);
-        
+        let cell : ItemCellView = collectionView.dequeueReusableCellWithReuseIdentifier(ItemCellView.CELL_IDENTIFIER, forIndexPath: indexPath) as! ItemCellView
+        cell.setRepresentedItem(streams![(indexPath.section * NUM_COLUMNS) +  indexPath.row])
         return cell;
     }
 }
-
