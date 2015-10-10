@@ -13,8 +13,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
+        
+        YoutubeGaming.setAPIKey("AIzaSyAFLrfWAIk9gdaBbC3h7ymNpAtp9gLiWkY")
+        
         let window = UIWindow.init(frame: UIScreen.mainScreen().bounds);
-        window.rootViewController = GamesViewController();
+        window.rootViewController = YoutubeStreamsViewController() // GamesViewController()
         window.makeKeyAndVisible();
         self.window = window;
         
