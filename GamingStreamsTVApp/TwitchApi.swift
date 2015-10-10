@@ -212,20 +212,11 @@ class TwitchApi {
     
     static func getGamesWithSearchTerm(term: String, offset : Int, limit : Int, completionHandler: (games: [TwitchGame]?, error: NSError?) -> ()) {
         //First we build the url according to the game we desire to get infos
-        let gamesUrlString = "https://api.twitch.tv/kraken/search/games";
-        guard let encodedTerm = term.stringByAddingPercentEncodingWithAllowedCharacters(NSCharacterSet.URLQueryAllowedCharacterSet()) else {
-            let userInfo = [
-                NSLocalizedDescriptionKey : String("Operation was unsuccessful."),
-                NSLocalizedFailureReasonErrorKey: String("Could not encode search term"),
-                NSLocalizedRecoverySuggestionErrorKey: String("Please ensure that the provided search term is valid")
-            ];
-            completionHandler(games: nil, error: NSError(domain: "TwitchAPI", code: 3, userInfo: userInfo));
-            return
-        }
+        let searchUrlString = "https://api.twitch.tv/kraken/search/games"
         
-        Alamofire.request(.GET, gamesUrlString, parameters :
+        Alamofire.request(.GET, searchUrlString, parameters :
             [
-                "query"     : encodedTerm,
+                "query"     : term,
                 "type"      : "suggest",
                 "live"      : true          ])
         .responseJSON { response in
@@ -266,24 +257,6 @@ class TwitchApi {
             }
         }
         
-    }
-    
-    static func parseGamesFromResponse(gamesDictionary gamesDict: [String : AnyObject], withFirstKey key: String) -> [TwitchGame] {
-        var games = [TwitchGame]()
-        for gameRaw in gamesDict[key] as! [AnyObject] {
-            if let topItemDict = gameRaw as? [String : AnyObject] {
-                if let gameDict = topItemDict["game"] as? NSDictionary {
-                    games.append(TwitchGame(
-                        id : gameDict["_id"] as! Int,
-                        viewers : topItemDict["viewers"] as! Int,
-                        channels : topItemDict["channels"] as! Int,
-                        name : gameDict["name"] as! String,
-                        thumbnails : gameDict["box"] as! [String : String],
-                        logos : gameDict["logo"] as! [String : String]));
-                }
-            }
-        }
-        return games
     }
     
     static func getEmoteUrlStringFromId(id : String) -> String {

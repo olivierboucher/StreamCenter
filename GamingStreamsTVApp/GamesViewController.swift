@@ -116,22 +116,41 @@ class GamesViewController : LoadingViewController {
     
     func handleLongPress(gestureRecognizer: UILongPressGestureRecognizer) {
         if gestureRecognizer.state == .Began {
-            TwitchApi.getGamesWithSearchTerm("call", offset: 0, limit: 20) { (games, error) -> () in
-                guard let games = games else {
-                    dispatch_async(dispatch_get_main_queue(), {
-                        self.removeLoadingView()
-                        self.displayErrorView("Error loading game list.\nPlease check your internet connection.")
-                    });
+            
+            let alert = UIAlertController(title: "Search", message: "Please enter a search term", preferredStyle: .Alert)
+            
+            alert.addTextFieldWithConfigurationHandler({ (textField) -> Void in
+                textField.placeholder = "Call of Duty"
+            })
+            
+            alert.addAction(UIAlertAction(title: "Cancel", style: .Cancel, handler: nil))
+            
+            alert.addAction(UIAlertAction(title: "Search", style: .Default, handler: { (action) -> Void in
+                //do the search
+                
+                guard let term = alert.textFields?.first?.text else {
                     return
                 }
                 
-                self.games = games
-                dispatch_async(dispatch_get_main_queue(), {
+                TwitchApi.getGamesWithSearchTerm(term, offset: 0, limit: 20) { (games, error) -> () in
+                    guard let games = games where games.count > 0 else {
+                        dispatch_async(dispatch_get_main_queue(), {
+                            self.removeLoadingView()
+                            self.displayErrorView("Error loading game list.\nPlease check your internet connection.")
+                        });
+                        return
+                    }
                     
-                    self.removeLoadingView()
-                    self.layoutAndDisplayViews();
-                })
-            }
+                    self.games = games
+                    dispatch_async(dispatch_get_main_queue(), {
+                        
+                        self.removeLoadingView()
+                        self.layoutAndDisplayViews();
+                    })
+                }
+            }))
+            
+            presentViewController(alert, animated: true, completion: nil)
         }
     }
     
