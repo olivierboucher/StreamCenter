@@ -277,8 +277,6 @@ class VideoViewController : UIViewController {
                 player.pause()
             } else {
                 player.play()
-                player.currentItem?.playbackLikelyToKeepUp
-                player.setRate(1.0, time: kCMTimeInvalid, atHostTime: kCMTimePositiveInfinity)
             }
         }
     }
