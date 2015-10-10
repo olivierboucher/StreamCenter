@@ -261,6 +261,6 @@ extension GamesViewController : UICollectionViewDataSource {
 
 extension GamesViewController : UISearchResultsUpdating {
     func updateSearchResultsForSearchController(searchController: UISearchController) {
-        print(searchController)
+        print("doesn't do anything yet")
     }
 }
