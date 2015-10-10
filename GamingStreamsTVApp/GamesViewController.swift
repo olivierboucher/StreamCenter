@@ -41,7 +41,7 @@ class GamesViewController : LoadingViewController {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
         let longPressRecognizer = UILongPressGestureRecognizer(target: self, action: "handleLongPress:")
-        longPressRecognizer.cancelsTouchesInView = false
+        longPressRecognizer.cancelsTouchesInView = true
         self.view.addGestureRecognizer(longPressRecognizer)
     }
     
@@ -71,6 +71,10 @@ class GamesViewController : LoadingViewController {
                 self.layoutAndDisplayViews();
             })
         }
+    }
+    
+    func configureViews() {
+        
     }
     
     /*
@@ -128,7 +132,7 @@ class GamesViewController : LoadingViewController {
             alert.addAction(UIAlertAction(title: "Search", style: .Default, handler: { (action) -> Void in
                 //do the search
                 
-                guard let term = alert.textFields?.first?.text else {
+                guard let term = alert.textFields?.first?.text where term.characters.count > 0 else {
                     return
                 }
                 

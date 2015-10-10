@@ -26,6 +26,9 @@ class VideoViewController : UIViewController {
     private var modalMenu : ModalMenuView?
     private var modalMenuOptions : [String : [MenuOption]]?
     
+    private var leftSwipe: UISwipeGestureRecognizer!
+    private var rightSwipe: UISwipeGestureRecognizer!
+    
     /*
     * init(stream : TwitchStream)
     *
@@ -39,7 +42,7 @@ class VideoViewController : UIViewController {
         self.view.backgroundColor = UIColor.blackColor()
         
         //Gestures configuration
-        self.longPressRecognizer = UILongPressGestureRecognizer(target: self, action: "handleLongPress")
+        self.longPressRecognizer = UILongPressGestureRecognizer(target: self, action: Selector("handleLongPress"))
         self.longPressRecognizer?.cancelsTouchesInView = false
         self.view.addGestureRecognizer(self.longPressRecognizer!)
         
@@ -50,8 +53,18 @@ class VideoViewController : UIViewController {
         let gestureRecognizer = UITapGestureRecognizer(target: self, action: "handleMenuPress")
         gestureRecognizer.allowedPressTypes = [UIPressType.Menu.rawValue]
         gestureRecognizer.cancelsTouchesInView = false
-        
         self.view.addGestureRecognizer(gestureRecognizer)
+        
+        leftSwipe = UISwipeGestureRecognizer(target: self, action: Selector("swipe:"))
+        leftSwipe.direction = UISwipeGestureRecognizerDirection.Left
+        self.view.addGestureRecognizer(leftSwipe)
+        
+        rightSwipe = UISwipeGestureRecognizer(target: self, action: Selector("swipe:"))
+        rightSwipe.direction = UISwipeGestureRecognizerDirection.Right
+        rightSwipe.enabled = false
+        self.view.addGestureRecognizer(rightSwipe)
+            
+        
         
         //Modal menu options
         self.modalMenuOptions = [
@@ -212,37 +225,66 @@ class VideoViewController : UIViewController {
             if let menuItem = sender {
                 if menuItem.isOptionEnabled() {     //                      Turn chat off
                     
-                    //The chat view
-                    self.chatView!.stopDisplayingMessages()
-                    self.chatView!.removeFromSuperview()
-                    self.chatView = nil
-                    
-                    //Resize video view
-                    self.videoView!.frame = self.view.frame
+                    self.hideChat()
                     
                     //Set the menu option accordingly
                     menuItem.setOptionEnabled(false)
                 }
                 else {                              //                      Turn chat on
                     
-                    //Resize video view
-                    var frame = self.videoView!.frame
-                    frame.size.width -= 400
-                    frame.size.height -= 225
-                    frame.origin.y += (225/2)
-                    
-                    self.videoView!.frame = frame
-                    
-                    //The chat view
-                    self.chatView = TwitchChatView(frame: CGRect(x: self.view.bounds.width - 400, y: 0, width: 400, height: self.view!.bounds.height), channel: self.currentStream!.channel)
-                    self.chatView!.startDisplayingMessages()
-                    self.view.insertSubview(self.chatView!, belowSubview: self.modalMenu!)
+                    self.showChat()
                     
                     //Set the menu option accordingly
                     menuItem.setOptionEnabled(true)
                 }
             }
         })
+    }
+    
+    func showChat() {
+        //Resize video view
+        var frame = self.videoView!.frame
+        frame.size.width -= 400
+        frame.size.height -= 225
+        frame.origin.y += (225/2)
+        
+        
+        
+        //The chat view
+        self.chatView = TwitchChatView(frame: CGRect(x: self.view.bounds.width, y: 0, width: 400, height: self.view!.bounds.height), channel: self.currentStream!.channel)
+        self.chatView!.startDisplayingMessages()
+        if let modalMenu = modalMenu {
+            
+            self.view.insertSubview(self.chatView!, belowSubview: modalMenu)
+        } else {
+            self.view.addSubview(self.chatView!)
+        }
+        
+        rightSwipe.enabled = true
+        leftSwipe.enabled = false
+        
+        //animate the showing of the chat view
+        UIView.animateWithDuration(0.5) { () -> Void in
+            self.chatView!.frame = CGRect(x: self.view.bounds.width - 400, y: 0, width: 400, height: self.view!.bounds.height)
+            self.videoView!.frame = frame
+        }
+    }
+    
+    func hideChat() {
+        
+        rightSwipe.enabled = false
+        leftSwipe.enabled = true
+        
+        //animate the hiding of the chat view
+        UIView.animateWithDuration(0.5, animations: { () -> Void in
+            self.videoView!.frame = self.view.frame
+            self.chatView!.frame.origin.x = CGRectGetMaxX(self.view.frame)
+        }) { (finished) -> Void in
+                //The chat view
+                self.chatView!.stopDisplayingMessages()
+                self.chatView!.removeFromSuperview()
+                self.chatView = nil
+        }
     }
     
     func handleQualityChange(sender : MenuItemView?) {
@@ -277,6 +319,16 @@ class VideoViewController : UIViewController {
                 player.pause()
             } else {
                 player.play()
+            }
+        }
+    }
+    
+    func swipe(recognizer: UISwipeGestureRecognizer) {
+        if recognizer.state == .Ended {
+            if recognizer.direction == .Left {
+                showChat()
+            } else {
+                hideChat()
             }
         }
     }
