@@ -215,8 +215,7 @@ class TwitchApi {
         let searchUrlString = "https://api.twitch.tv/kraken/search/games"
         
         Alamofire.request(.GET, searchUrlString, parameters :
-            [
-                "query"     : term,
+            [   "query"     : term,
                 "type"      : "suggest",
                 "live"      : true          ])
         .responseJSON { response in

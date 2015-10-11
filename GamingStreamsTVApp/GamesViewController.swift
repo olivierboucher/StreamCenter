@@ -18,6 +18,8 @@ class GamesViewController : LoadingViewController {
     private var searchController: UISearchController!
     private var games : [TwitchGame]?
     
+    var didSearch = false
+    
     convenience init(){
         self.init(nibName: nil, bundle: nil)
     }
@@ -85,8 +87,10 @@ class GamesViewController : LoadingViewController {
         let searchBarFrame = CGRect(x: 0, y: CGRectGetMaxY(topBarBounds), width: 600, height: self.TOP_BAR_HEIGHT)
         self.searchController = UISearchController(searchResultsController: nil)
         self.searchController.searchResultsUpdater = self
+        self.searchController.delegate = self
         self.searchController.searchBar.frame = searchBarFrame
         self.searchController.searchBar.center.x = CGRectGetMidX(self.view.bounds)
+        self.searchController.searchBar.center.y += 15;
         self.definesPresentationContext = true
         self.view.addSubview(self.searchController.searchBar)
         
@@ -171,7 +175,7 @@ extension GamesViewController : UICollectionViewDelegate {
     }
     
     func collectionView(collectionView: UICollectionView, willDisplayCell cell: UICollectionViewCell, forItemAtIndexPath indexPath: NSIndexPath) {
-        if(indexPath.row == (self.games?.count)! - 1){
+        if(indexPath.row == (self.games?.count)! - 1 && !didSearch){
             TwitchApi.getTopGamesWithOffset(games!.count, limit: LOADING_BUFFER) {
                 (games, error) in
                 
@@ -230,7 +234,7 @@ extension GamesViewController : UICollectionViewDelegateFlowLayout {
 extension GamesViewController : UICollectionViewDataSource {
     
     func numberOfSectionsInCollectionView(collectionView: UICollectionView) -> Int {
-        //The number of possible rows
+        //The number of sections
         return 1;
     }
     
@@ -252,6 +256,41 @@ extension GamesViewController : UICollectionViewDataSource {
         cell.setRepresentedItem(games[indexPath.row]);
         
         return cell;
+    }
+}
+
+//////////////////////////////////////////////
+// MARK - UISearchControllerDelegate interface
+//////////////////////////////////////////////
+
+extension GamesViewController : UISearchControllerDelegate {
+    func didDismissSearchController(searchController: UISearchController) {
+        
+    }
+    
+    func willDismissSearchController(searchController: UISearchController) {
+        print("dismiss")
+        guard let term = searchController.searchBar.text where !term.isEmpty else {
+            return
+        }
+        displayLoadingView("Searching for '\(term)'")
+        TwitchApi.getGamesWithSearchTerm(term, offset: 0, limit: 20) { (games, error) -> () in
+            guard let games = games where games.count > 0 else {
+                dispatch_async(dispatch_get_main_queue(), {
+                    self.removeLoadingView()
+                    self.displayErrorView("Error loading searching for games.\nPlease check your internet connection.")
+                });
+                return
+            }
+            self.didSearch = true
+            
+            self.games = games
+            dispatch_async(dispatch_get_main_queue(), {
+                
+                self.removeLoadingView()
+                self.collectionView.reloadData()
+            })
+        }
     }
 }
 
