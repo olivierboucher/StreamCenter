@@ -21,6 +21,7 @@ class VideoViewController : UIViewController {
     private var videoPlayer : AVPlayer?
     private var streams : [TwitchStreamVideo]?
     private var currentStream : TwitchStream?
+    private var currentStreamVideo: TwitchStreamVideo?
     private var chatView : TwitchChatView?
     private var modalMenu : ModalMenuView?
     private var modalMenuOptions : [String : [MenuOption]]?
@@ -88,8 +89,8 @@ class VideoViewController : UIViewController {
             
             if let streams = streams {
                 self.streams = streams
-                let streamObject = streams[0]
-                let streamAsset = AVURLAsset(URL: streamObject.url!)
+                self.currentStreamVideo = streams[0]
+                let streamAsset = AVURLAsset(URL: self.currentStreamVideo!.url!)
                 let streamItem = AVPlayerItem(asset: streamAsset)
                 
                 self.videoPlayer = AVPlayer(playerItem: streamItem)
@@ -307,6 +308,7 @@ class VideoViewController : UIViewController {
             if let streams = self.streams {
                 for stream in streams {
                     if stream.quality == qualityIdentifier {
+                        currentStreamVideo = stream
                         let streamAsset = AVURLAsset(URL: stream.url!)
                         let streamItem = AVPlayerItem(asset: streamAsset)
                         self.videoPlayer?.replaceCurrentItemWithPlayerItem(streamItem)
@@ -322,6 +324,12 @@ class VideoViewController : UIViewController {
             if player.rate == 1 {
                 player.pause()
             } else {
+                if let currentVideo = currentStreamVideo {
+                    //do this to bring it back in sync
+                    let streamAsset = AVURLAsset(URL: currentVideo.url!)
+                    let streamItem = AVPlayerItem(asset: streamAsset)
+                    player.replaceCurrentItemWithPlayerItem(streamItem)
+                }
                 player.play()
             }
         }
