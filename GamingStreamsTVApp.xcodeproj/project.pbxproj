@@ -37,6 +37,7 @@
 		09EB6D461BB4A8BE003EB244 /* CATextLayerVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09EB6D451BB4A8BE003EB244 /* CATextLayerVC.swift */; };
 		A5E7DC008D2754CA1EC6CFC5 /* Pods_GamingStreamsTVApp.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 73B61525F92468AED0A0EE8C /* Pods_GamingStreamsTVApp.framework */; };
 		B44A44671BC6CAB800F399EC /* ItemCellView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B44A44661BC6CAB800F399EC /* ItemCellView.swift */; };
+		B4A67BBC1BCBDF8B003E3B6F /* UIColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4A67BBB1BCBDF8B003E3B6F /* UIColor.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -86,6 +87,7 @@
 		73B61525F92468AED0A0EE8C /* Pods_GamingStreamsTVApp.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_GamingStreamsTVApp.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		90FBC40A14CD24160B58953A /* Pods-GamingStreamsTVApp.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-GamingStreamsTVApp.release.xcconfig"; path = "Pods/Target Support Files/Pods-GamingStreamsTVApp/Pods-GamingStreamsTVApp.release.xcconfig"; sourceTree = "<group>"; };
 		B44A44661BC6CAB800F399EC /* ItemCellView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ItemCellView.swift; sourceTree = "<group>"; };
+		B4A67BBB1BCBDF8B003E3B6F /* UIColor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIColor.swift; sourceTree = "<group>"; };
 		DC2A8ED48462858490AD4901 /* Pods-GamingStreamsTVApp.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-GamingStreamsTVApp.debug.xcconfig"; path = "Pods/Target Support Files/Pods-GamingStreamsTVApp/Pods-GamingStreamsTVApp.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -174,6 +176,7 @@
 			children = (
 				09EB6D3D1BB484F7003EB244 /* String.swift */,
 				09E33CC81BB5B2DF000702E2 /* Dictionary.swift */,
+				B4A67BBB1BCBDF8B003E3B6F /* UIColor.swift */,
 			);
 			name = Extensions;
 			sourceTree = "<group>";
@@ -362,6 +365,7 @@
 				090AB8FE1BA616A900CDB05D /* TwitchGame.swift in Sources */,
 				09D098291BA77FAB00E7E6FC /* VideoViewController.swift in Sources */,
 				090AB9271BB579A300CDB05D /* ModalMenuView.swift in Sources */,
+				B4A67BBC1BCBDF8B003E3B6F /* UIColor.swift in Sources */,
 				090AB8FF1BA616A900CDB05D /* TwitchChannel.swift in Sources */,
 				090AB90F1BA9BBE300CDB05D /* ErrorView.swift in Sources */,
 				090AB9091BA8454500CDB05D /* TopBarView.swift in Sources */,
