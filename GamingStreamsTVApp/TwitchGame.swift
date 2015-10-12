@@ -5,16 +5,18 @@
 //  Created by Olivier Boucher on 2015-09-13.
 
 import Foundation
+import UIKit
 
-struct TwitchGame: CellItem {
+class TwitchGame: CellItem {
     
-    private(set) var id : Int
+    private(set) var id : Int!
     private(set) var viewers = 0
     private(set) var popularity = 0
     private(set) var channels = 0
-    private(set) var name : String
-    private(set) var thumbnails : [String : String]
-    private(set) var logos : [String : String]
+    private(set) var name : String!
+    private(set) var thumbnails : [String : String]!
+    private(set) var logos : [String : String]!
+    private var mImage: UIImage?
     
     init(id : Int, viewers : Int, channels : Int, name : String, thumbnails : [String : String], logos : [String : String]) {
         self.id = id
@@ -75,7 +77,7 @@ struct TwitchGame: CellItem {
     
     var urlTemplate: String? {
         get {
-            return thumbnails["template"]
+            return thumbnails["large"]
         }
     }
     
@@ -102,5 +104,15 @@ struct TwitchGame: CellItem {
         get {
             return nil
         }
+    }
+    
+    var image: UIImage? {
+        get {
+            return mImage
+        }
+    }
+    
+    func setImage(image: UIImage) {
+        mImage = image
     }
 }

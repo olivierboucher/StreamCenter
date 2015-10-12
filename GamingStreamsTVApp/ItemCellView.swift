@@ -14,6 +14,8 @@ protocol CellItem {
     var title: String { get }
     var subtitle: String { get }
     var bannerString: String? { get }
+    var image: UIImage? { get }
+    func setImage(image: UIImage)
 }
 
 class ItemCellView: UICollectionViewCell {
@@ -35,6 +37,7 @@ class ItemCellView: UICollectionViewCell {
         self.imageView.adjustsImageWhenAncestorFocused = true
         self.imageView.layer.cornerRadius = 10
         self.imageView.backgroundColor = UIColor(white: 0.25, alpha: 0.7)
+        self.imageView.contentMode = UIViewContentMode.ScaleAspectFill
         
         self.activityIndicator = UIActivityIndicatorView(frame: imageViewFrame)
         self.activityIndicator.translatesAutoresizingMaskIntoConstraints = false
@@ -104,17 +107,16 @@ class ItemCellView: UICollectionViewCell {
     * Removes the loading indicator on download callback success
     */
     private func assignImageAndDisplay() {
-        
+        print(self.imageView!.bounds.size)
         self.downloadImageWithSize(self.imageView!.bounds.size) {
             (image, error) in
             
-            if(error != nil || image == nil) {
-                //TODO : Set error image, not available
+            if let image = image {
+                self.image = image
+            } else {
                 self.image = nil
             }
-            else {
-                self.image = image!
-            }
+            
             
             dispatch_async(dispatch_get_main_queue(),{
                 if((self.activityIndicator != nil) && (self.activityIndicator!.isDescendantOfView(self.imageView!))) {
@@ -134,21 +136,22 @@ class ItemCellView: UICollectionViewCell {
     * Passes the downloaded image to a defined completion handler
     */
     private func downloadImageWithSize(size : CGSize, completionHandler : (image : UIImage?, error : NSError?) -> ()) {
-        
+        if let image = representedItem?.image {
+            completionHandler(image: image, error: nil)
+            return
+        }
         if let imgUrlTemplate = representedItem?.urlTemplate {
             if let imgUrlString : String? = imgUrlTemplate.stringByReplacingOccurrencesOfString("{width}", withString: "\(Int(size.width))")
                 .stringByReplacingOccurrencesOfString("{height}", withString: "\(Int(size.height))") {
                     Alamofire.request(.GET, imgUrlString!).response() {
                         (_, _, data, error) in
-                        if error != nil {
-                            //TODO: GET ERROR FROM ALAMOFIRE
-                            completionHandler(image : nil, error : nil)
+                        
+                        guard let data = data, image = UIImage(data: data) else {
+                            completionHandler(image: nil, error: nil)
                             return
                         }
-                        else {
-                            let image = UIImage(data: data!)
-                            completionHandler(image: image, error: nil)
-                        }
+                        self.representedItem?.setImage(image)
+                        completionHandler(image: image, error: nil)
                     }
             }
         }
@@ -206,7 +209,6 @@ class ItemCellView: UICollectionViewCell {
         titleLabel.text = item.title
         subtitleLabel.text = item.subtitle
         self.assignImageAndDisplay()
-        
     }
     
 }

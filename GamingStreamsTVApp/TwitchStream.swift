@@ -5,14 +5,16 @@
 //  Created by Olivier Boucher on 2015-09-13.
 
 import Foundation
+import UIKit
 
-struct TwitchStream: CellItem {
-    private(set) var id : Int
-    private(set) var gameName : String
+class TwitchStream: CellItem {
+    private(set) var id : Int!
+    private(set) var gameName : String!
     private(set) var viewers = 0
     private(set) var videoHeight = 0
-    private(set) var preview : [String : String]
-    private(set) var channel : TwitchChannel
+    private(set) var preview : [String : String]!
+    private(set) var channel : TwitchChannel!
+    private(set) var mImage: UIImage?
     
     init(id : Int, gameName : String, viewers : Int, videoHeight : Int, preview : [String : String], channel : TwitchChannel) {
         self.id = id
@@ -50,7 +52,7 @@ struct TwitchStream: CellItem {
     
     var urlTemplate: String? {
         get {
-            return preview["template"]
+            return preview["large"]
         }
     }
     
@@ -70,5 +72,15 @@ struct TwitchStream: CellItem {
         get {
             return channel.displayLanguage
         }
+    }
+    
+    var image: UIImage? {
+        get {
+            return mImage
+        }
+    }
+    
+    func setImage(image: UIImage) {
+        mImage = image
     }
 }
