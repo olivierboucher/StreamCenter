@@ -13,11 +13,10 @@ class StreamsViewController : LoadingViewController {
     private let NUM_COLUMNS = 3
     private let ITEMS_INSETS_X : CGFloat = 45
     private let ITEMS_INSETS_Y : CGFloat = 30
-    private let TOP_BAR_HEIGHT : CGFloat = 100
     private let PREVIEW_IMG_HEIGHT_RATIO : CGFloat = 1.777777777 //Computed from sampled image from twitch api
     
-    private var game : TwitchGame?
-    private var streams : [TwitchStream]?
+    private var game : TwitchGame!
+    private var streams = [TwitchStream]()
     
     convenience init(game : TwitchGame){
         self.init(nibName: nil, bundle: nil)
@@ -38,7 +37,7 @@ class StreamsViewController : LoadingViewController {
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
 
-        if self.streams == nil {
+        if self.streams.count == 0 {
             loadContent()
         }
     }
@@ -70,8 +69,8 @@ class StreamsViewController : LoadingViewController {
     }
     
     private func configureViews() {
-        let topBarBounds = CGRect(x: self.view.bounds.origin.x, y: self.view.bounds.origin.y, width: self.view.bounds.size.width, height: self.TOP_BAR_HEIGHT)
-        self.topBar = TopBarView(frame: topBarBounds, withMainTitle: "Live Streams - \(self.game!.name)")
+        self.topBar = TopBarView(frame: CGRectZero, withMainTitle: "Live Streams - \(self.game!.name)")
+        self.topBar.translatesAutoresizingMaskIntoConstraints = false
         self.topBar.backgroundColor = UIColor(white: 0.5, alpha: 1)
         
         self.view.addSubview(self.topBar)
@@ -82,8 +81,8 @@ class StreamsViewController : LoadingViewController {
         layout.minimumInteritemSpacing = 10
         layout.minimumLineSpacing = 35
         
-        self.collectionView = UICollectionView(frame: self.view.bounds, collectionViewLayout: layout)
-        
+        self.collectionView = UICollectionView(frame: CGRectZero, collectionViewLayout: layout)
+        self.collectionView.translatesAutoresizingMaskIntoConstraints = false
         self.collectionView.registerClass(ItemCellView.classForCoder(), forCellWithReuseIdentifier: ItemCellView.CELL_IDENTIFIER)
         self.collectionView.dataSource = self
         self.collectionView.delegate = self
@@ -91,6 +90,16 @@ class StreamsViewController : LoadingViewController {
         
         self.view.addSubview(self.collectionView)
         self.view.bringSubviewToFront(self.topBar)
+        
+        let viewDict = ["topbar" : topBar, "collection" : collectionView]
+        
+        self.topBar.addConstraint(NSLayoutConstraint(item: topBar, attribute: .Height, relatedBy: .Equal, toItem: nil, attribute: .NotAnAttribute, multiplier: 1.0, constant: TOP_BAR_HEIGHT))
+
+        self.view.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|[topbar]-0-[collection]|", options: [], metrics: nil, views: viewDict))
+        
+        self.view.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|[topbar]|", options: [], metrics: nil, views: viewDict))
+        
+        self.view.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|[collection]|", options: [], metrics: nil, views: viewDict))
     }
     
     override func reloadContent() {
@@ -106,15 +115,15 @@ class StreamsViewController : LoadingViewController {
 extension StreamsViewController : UICollectionViewDelegate {
     
     func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
-        let selectedStream = streams![(indexPath.section * NUM_COLUMNS) +  indexPath.row]
+        let selectedStream = streams[indexPath.row]
         let videoViewController = VideoViewController(stream: selectedStream)
         
         self.presentViewController(videoViewController, animated: true, completion: nil)
     }
     
     func collectionView(collectionView: UICollectionView, willDisplayCell cell: UICollectionViewCell, forItemAtIndexPath indexPath: NSIndexPath) {
-        if (indexPath.row == (self.streams?.count)! - 1){
-            TwitchApi.getTopStreamsForGameWithOffset(self.game!.name, offset: self.streams!.count, limit: LOADING_BUFFER) {
+        if (indexPath.row == self.streams.count - 1){
+            TwitchApi.getTopStreamsForGameWithOffset(self.game!.name, offset: self.streams.count, limit: LOADING_BUFFER) {
                 (streams, error) in
                 
                 guard let streams = streams else {
@@ -124,18 +133,18 @@ extension StreamsViewController : UICollectionViewDelegate {
                 
                 let filteredStreams = streams.filter({
                     let streamId = $0.id
-                    if let _ = self.streams!.indexOf({$0.id == streamId}) {
+                    if let _ = self.streams.indexOf({$0.id == streamId}) {
                         return false
                     }
                     return true
                 })
                 
                 for i in 0..<filteredStreams.count {
-                    paths.append(NSIndexPath(forItem: i + self.streams!.count, inSection: 0))
+                    paths.append(NSIndexPath(forItem: i + self.streams.count, inSection: 0))
                 }
                     
                 self.collectionView!.performBatchUpdates({
-                    self.streams!.appendContentsOf(filteredStreams)
+                    self.streams.appendContentsOf(filteredStreams)
                 
                     self.collectionView!.insertItemsAtIndexPaths(paths)
                 
@@ -181,17 +190,11 @@ extension StreamsViewController : UICollectionViewDataSource {
     
     func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         // If the count of streams allows the current row to be full
-        guard let streams = streams else {
-            return 0
-        }
         return streams.count
     }
     
     func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
         let cell : ItemCellView = collectionView.dequeueReusableCellWithReuseIdentifier(ItemCellView.CELL_IDENTIFIER, forIndexPath: indexPath) as! ItemCellView
-        guard let streams = streams else {
-            return cell
-        }
         cell.setRepresentedItem(streams[indexPath.row])
         return cell
     }
