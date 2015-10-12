@@ -99,17 +99,17 @@ class SearchResultsViewController: LoadingViewController {
     }
     
     private func configureViews() {
-        //do the top bar first
-        self.topBar = TopBarView(frame: CGRectZero, withMainTitle: "Search Results - \(searchTerm)")
-        self.topBar.translatesAutoresizingMaskIntoConstraints = false
-        self.view.addSubview(self.topBar)
         
         //then do the search bar
         self.searchTypeControl = UISegmentedControl(items: ["Games", "Streams"])
         self.searchTypeControl.translatesAutoresizingMaskIntoConstraints = false
         self.searchTypeControl.selectedSegmentIndex = 0
         self.searchTypeControl.addTarget(self, action: Selector("changedSearchType:"), forControlEvents: .ValueChanged)
-        self.view.addSubview(self.searchTypeControl)
+        
+        //do the top bar first
+        self.topBar = TopBarView(frame: CGRectZero, withMainTitle: "Search Results - \(searchTerm)", supplementalView: self.searchTypeControl)
+        self.topBar.translatesAutoresizingMaskIntoConstraints = false
+        self.view.addSubview(self.topBar)
         
         //then do the collection view
         let layout : UICollectionViewFlowLayout = UICollectionViewFlowLayout()
@@ -123,21 +123,19 @@ class SearchResultsViewController: LoadingViewController {
         self.collectionView.registerClass(ItemCellView.classForCoder(), forCellWithReuseIdentifier: ItemCellView.CELL_IDENTIFIER)
         self.collectionView.dataSource = self
         self.collectionView.delegate = self
-        self.collectionView.contentInset = UIEdgeInsets(top: 0, left: ITEMS_INSETS_X, bottom: ITEMS_INSETS_Y, right: ITEMS_INSETS_X)
+        self.collectionView.contentInset = UIEdgeInsets(top: TOP_BAR_HEIGHT + 15 + (TOP_BAR_HEIGHT / 1.5), left: ITEMS_INSETS_X, bottom: ITEMS_INSETS_Y, right: ITEMS_INSETS_X)
         
         self.view.addSubview(self.collectionView)
         self.view.bringSubviewToFront(self.topBar)
         self.view.bringSubviewToFront(self.searchTypeControl)
         
-        let viewDict = ["topbar" : topBar, "searchtype" : searchTypeControl, "collection" : collectionView]
+        let viewDict = ["topbar" : topBar, "collection" : collectionView]
         
         self.topBar.addConstraint(NSLayoutConstraint(item: topBar, attribute: .Height, relatedBy: .Equal, toItem: nil, attribute: .NotAnAttribute, multiplier: 1.0, constant: TOP_BAR_HEIGHT))
-        self.searchTypeControl.addConstraint(NSLayoutConstraint(item: searchTypeControl, attribute: .Height, relatedBy: .Equal, toItem: nil, attribute: .NotAnAttribute, multiplier: 1.0, constant: TOP_BAR_HEIGHT / 1.5))
-        self.searchTypeControl.addConstraint(NSLayoutConstraint(item: searchTypeControl, attribute: .Width, relatedBy: .Equal, toItem: nil, attribute: .NotAnAttribute, multiplier: 1.0, constant: self.view.bounds.width / 4))
         
-        self.view.addConstraint(NSLayoutConstraint(item: searchTypeControl, attribute: .CenterX, relatedBy: .Equal, toItem: self.view, attribute: .CenterX, multiplier: 1.0, constant: 0.0))
+        self.view.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|[topbar]", options: [], metrics: nil, views: viewDict))
         
-        self.view.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|[topbar]-15-[searchtype]-15-[collection]|", options: [], metrics: nil, views: viewDict))
+        self.view.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|[collection]|", options: [], metrics: nil, views: viewDict))
         
         self.view.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|[topbar]|", options: [], metrics: nil, views: viewDict))
         
