@@ -10,7 +10,7 @@ import Foundation
 class TopBarView : UIVisualEffectView {
     private var titleLabel : UILabel!
     
-    init (frame : CGRect, withMainTitle title : String) {
+    init (frame : CGRect, withMainTitle title : String, supplementalView: UIView? = nil) {
         let effect = UIBlurEffect(style: .Dark)
         super.init(effect: effect)
     
@@ -24,9 +24,19 @@ class TopBarView : UIVisualEffectView {
         
         self.contentView.addSubview(self.titleLabel)
         
-        let viewDict = ["title" : titleLabel]
-        self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|[title]|", options: [], metrics: nil, views: viewDict))
-        self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|[title]|", options: [], metrics: nil, views: viewDict))
+        if let supplementalView = supplementalView {
+            let viewDict = ["title" : titleLabel, "supp" : supplementalView]
+            self.contentView.addSubview(supplementalView)
+            self.contentView.addConstraint(NSLayoutConstraint(item: supplementalView, attribute: .Width, relatedBy: .Equal, toItem: self.contentView, attribute: .Width, multiplier: 0.3, constant: 1.0))
+            self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|-20-[supp]", options: [], metrics: nil, views: viewDict))
+            self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|[title]|", options: [], metrics: nil, views: viewDict))
+            self.contentView.addConstraint(NSLayoutConstraint(item: titleLabel, attribute: .CenterX, relatedBy: .Equal, toItem: self.contentView, attribute: .CenterX, multiplier: 1.0, constant: 0.0))
+            self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|-5-[supp]-5-|", options: [], metrics: nil, views: viewDict))
+        } else {
+            let viewDict = ["title" : titleLabel]
+            self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|[title]|", options: [], metrics: nil, views: viewDict))
+            self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|[title]|", options: [], metrics: nil, views: viewDict))
+        }
     }
     
     required init?(coder aDecoder: NSCoder) {
