@@ -34,7 +34,7 @@ class TwitchChatMessageQueue {
     
     func addNewMessage(message : TwitchChatMessage) {
         // For the data integrity - multiple threads can be accessing at the same time
-        dispatch_semaphore_wait(self.mqMutex, DISPATCH_TIME_FOREVER);
+        dispatch_semaphore_wait(self.mqMutex, DISPATCH_TIME_FOREVER)
         messageQueue.offer(message)
         dispatch_semaphore_signal(self.mqMutex)
         
@@ -47,7 +47,7 @@ class TwitchChatMessageQueue {
         var messagesArray = [TwitchChatMessage]()
         // For data integrity - We do not want any thread adding messages as
         // we are polling from the queue
-        dispatch_semaphore_wait(self.mqMutex, DISPATCH_TIME_FOREVER);
+        dispatch_semaphore_wait(self.mqMutex, DISPATCH_TIME_FOREVER)
         while(true){
             if let message = self.messageQueue.poll() as! TwitchChatMessage? {
                 messagesArray.append(message)
@@ -66,7 +66,7 @@ class TwitchChatMessageQueue {
         }
         
         for message : TwitchChatMessage in messagesArray {
-            let metaByLine = message.rawMetadata.componentsSeparatedByString(";");
+            let metaByLine = message.rawMetadata.componentsSeparatedByString(";")
             
             for singleMeta in metaByLine {
                 // key = [0] and value = [1]
@@ -165,7 +165,7 @@ class TwitchChatMessageQueue {
         
         
         if(message.emotes.count > 0) {
-            var removedChars = -(message.sender!.characters.count + 2); //Because ranges are based on rawMessage
+            var removedChars = -(message.sender!.characters.count + 2) //Because ranges are based on rawMessage
             for emote in message.emotes {
                 let attachment = NSTextAttachment()
                 let emoteImage = UIImage(data: self.delegate.getEmoteDataFromCache(emote.0)!)

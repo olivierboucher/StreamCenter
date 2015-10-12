@@ -9,12 +9,12 @@ import Foundation
 
 
 class StreamsViewController : LoadingViewController {
-    private let LOADING_BUFFER = 12;
-    private let NUM_COLUMNS = 3;
-    private let ITEMS_INSETS_X : CGFloat = 45;
-    private let ITEMS_INSETS_Y : CGFloat = 30;
-    private let TOP_BAR_HEIGHT : CGFloat = 100;
-    private let PREVIEW_IMG_HEIGHT_RATIO : CGFloat = 1.777777777; //Computed from sampled image from twitch api
+    private let LOADING_BUFFER = 12
+    private let NUM_COLUMNS = 3
+    private let ITEMS_INSETS_X : CGFloat = 45
+    private let ITEMS_INSETS_Y : CGFloat = 30
+    private let TOP_BAR_HEIGHT : CGFloat = 100
+    private let PREVIEW_IMG_HEIGHT_RATIO : CGFloat = 1.777777777 //Computed from sampled image from twitch api
     
     private var game : TwitchGame?
     private var streams : [TwitchStream]?
@@ -57,7 +57,7 @@ class StreamsViewController : LoadingViewController {
                 dispatch_async(dispatch_get_main_queue(), {
                     self.removeLoadingView()
                     self.displayErrorView("Error loading streams list.\nPlease check your internet connection.")
-                });
+                })
                 return
             }
             
@@ -77,19 +77,19 @@ class StreamsViewController : LoadingViewController {
         self.view.addSubview(self.topBar)
         
         
-        let layout : UICollectionViewFlowLayout = UICollectionViewFlowLayout();
-        layout.scrollDirection = UICollectionViewScrollDirection.Vertical;
-        layout.minimumInteritemSpacing = 10;
-        layout.minimumLineSpacing = 35;
+        let layout : UICollectionViewFlowLayout = UICollectionViewFlowLayout()
+        layout.scrollDirection = UICollectionViewScrollDirection.Vertical
+        layout.minimumInteritemSpacing = 10
+        layout.minimumLineSpacing = 35
         
-        self.collectionView = UICollectionView(frame: self.view.bounds, collectionViewLayout: layout);
+        self.collectionView = UICollectionView(frame: self.view.bounds, collectionViewLayout: layout)
         
-        self.collectionView.registerClass(ItemCellView.classForCoder(), forCellWithReuseIdentifier: ItemCellView.CELL_IDENTIFIER);
-        self.collectionView.dataSource = self;
-        self.collectionView.delegate = self;
+        self.collectionView.registerClass(ItemCellView.classForCoder(), forCellWithReuseIdentifier: ItemCellView.CELL_IDENTIFIER)
+        self.collectionView.dataSource = self
+        self.collectionView.delegate = self
         self.collectionView.contentInset = UIEdgeInsets(top: ITEMS_INSETS_Y + 10, left: ITEMS_INSETS_X, bottom: ITEMS_INSETS_Y, right: ITEMS_INSETS_X)
         
-        self.view.addSubview(self.collectionView);
+        self.view.addSubview(self.collectionView)
         self.view.bringSubviewToFront(self.topBar)
     }
     
@@ -154,8 +154,8 @@ extension StreamsViewController : UICollectionViewDelegateFlowLayout {
     func collectionView(collectionView: UICollectionView,
         layout collectionViewLayout: UICollectionViewLayout,
         sizeForItemAtIndexPath indexPath: NSIndexPath) -> CGSize {
-            let width = self.view.bounds.width / CGFloat(NUM_COLUMNS) - CGFloat(ITEMS_INSETS_X * 2);
-            let height = width / PREVIEW_IMG_HEIGHT_RATIO + (ItemCellView.LABEL_HEIGHT * 2); //There 2 labels, top & bottom
+            let width = self.view.bounds.width / CGFloat(NUM_COLUMNS) - CGFloat(ITEMS_INSETS_X * 2)
+            let height = width / PREVIEW_IMG_HEIGHT_RATIO + (ItemCellView.LABEL_HEIGHT * 2) //There 2 labels, top & bottom
             
             return CGSize(width: width, height: height)
     }
@@ -164,7 +164,7 @@ extension StreamsViewController : UICollectionViewDelegateFlowLayout {
         layout collectionViewLayout: UICollectionViewLayout,
         insetForSectionAtIndex section: Int) -> UIEdgeInsets {
             let topInset = (section == 0) ? TOP_BAR_HEIGHT : ITEMS_INSETS_X
-            return UIEdgeInsets(top: topInset, left: ITEMS_INSETS_X, bottom: ITEMS_INSETS_Y, right: ITEMS_INSETS_X);
+            return UIEdgeInsets(top: topInset, left: ITEMS_INSETS_X, bottom: ITEMS_INSETS_Y, right: ITEMS_INSETS_X)
     }
 }
 
@@ -193,6 +193,6 @@ extension StreamsViewController : UICollectionViewDataSource {
             return cell
         }
         cell.setRepresentedItem(streams[indexPath.row])
-        return cell;
+        return cell
     }
 }

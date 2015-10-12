@@ -63,7 +63,7 @@ class GamesViewController : LoadingViewController {
                 dispatch_async(dispatch_get_main_queue(), {
                     self.removeLoadingView()
                     self.displayErrorView("Error loading game list.\nPlease check your internet connection.")
-                });
+                })
                 return
             }
             
@@ -89,23 +89,23 @@ class GamesViewController : LoadingViewController {
         self.searchField.placeholder = "Search"
         self.searchField.delegate = self
         self.searchField.center.x = CGRectGetMidX(self.view.bounds)
-        self.searchField.center.y += 15;
+        self.searchField.center.y += 15
         self.definesPresentationContext = true
         self.view.addSubview(self.searchField)
         
         //then do the collection view
-        let layout : UICollectionViewFlowLayout = UICollectionViewFlowLayout();
-        layout.scrollDirection = UICollectionViewScrollDirection.Vertical;
+        let layout : UICollectionViewFlowLayout = UICollectionViewFlowLayout()
+        layout.scrollDirection = UICollectionViewScrollDirection.Vertical
         layout.minimumInteritemSpacing = 10
         layout.minimumLineSpacing = 50
         
         let collectionViewBounds = CGRect(x: self.view.bounds.origin.x, y: CGRectGetMaxY(searchBarFrame), width: self.view.bounds.size.width, height: self.view.bounds.size.height)
         
-        self.collectionView = UICollectionView(frame: collectionViewBounds, collectionViewLayout: layout);
+        self.collectionView = UICollectionView(frame: collectionViewBounds, collectionViewLayout: layout)
         
-        self.collectionView.registerClass(ItemCellView.classForCoder(), forCellWithReuseIdentifier: ItemCellView.CELL_IDENTIFIER);
-        self.collectionView.dataSource = self;
-        self.collectionView.delegate = self;
+        self.collectionView.registerClass(ItemCellView.classForCoder(), forCellWithReuseIdentifier: ItemCellView.CELL_IDENTIFIER)
+        self.collectionView.dataSource = self
+        self.collectionView.delegate = self
         self.collectionView.contentInset = UIEdgeInsets(top: 0, left: ITEMS_INSETS_X, bottom: ITEMS_INSETS_Y, right: ITEMS_INSETS_X)
         
         self.view.addSubview(self.collectionView)
@@ -136,7 +136,7 @@ class GamesViewController : LoadingViewController {
                         dispatch_async(dispatch_get_main_queue(), {
                             self.removeLoadingView()
                             self.displayErrorView("Error loading game list.\nPlease check your internet connection.")
-                        });
+                        })
                         return
                     }
                     
@@ -219,9 +219,9 @@ extension GamesViewController : UICollectionViewDelegateFlowLayout {
     func collectionView(collectionView: UICollectionView,
         layout collectionViewLayout: UICollectionViewLayout,
         sizeForItemAtIndexPath indexPath: NSIndexPath) -> CGSize {
-            let width = self.view.bounds.width / CGFloat(NUM_COLUMNS) - CGFloat(ITEMS_INSETS_X * 2);
+            let width = self.view.bounds.width / CGFloat(NUM_COLUMNS) - CGFloat(ITEMS_INSETS_X * 2)
             //Computed using the ratio from sampled from
-            let height = (width * GAME_IMG_HEIGHT_RATIO) + ItemCellView.LABEL_HEIGHT * 2; //There 2 labels, top & bottom
+            let height = (width * GAME_IMG_HEIGHT_RATIO) + ItemCellView.LABEL_HEIGHT * 2 //There 2 labels, top & bottom
             
             return CGSize(width: width, height: height)
     }
@@ -230,7 +230,7 @@ extension GamesViewController : UICollectionViewDelegateFlowLayout {
         layout collectionViewLayout: UICollectionViewLayout,
         insetForSectionAtIndex section: Int) -> UIEdgeInsets {
             let topInset = (section == 0) ? TOP_BAR_HEIGHT : ITEMS_INSETS_X
-            return UIEdgeInsets(top: topInset, left: ITEMS_INSETS_X, bottom: ITEMS_INSETS_Y, right: ITEMS_INSETS_X);
+            return UIEdgeInsets(top: topInset, left: ITEMS_INSETS_X, bottom: ITEMS_INSETS_Y, right: ITEMS_INSETS_X)
     }
 }
 
@@ -242,7 +242,7 @@ extension GamesViewController : UICollectionViewDataSource {
     
     func numberOfSectionsInCollectionView(collectionView: UICollectionView) -> Int {
         //The number of sections
-        return 1;
+        return 1
     }
     
     func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
@@ -254,15 +254,15 @@ extension GamesViewController : UICollectionViewDataSource {
     }
     
     func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
-        let cell : ItemCellView = collectionView.dequeueReusableCellWithReuseIdentifier(ItemCellView.CELL_IDENTIFIER, forIndexPath: indexPath) as! ItemCellView;
+        let cell : ItemCellView = collectionView.dequeueReusableCellWithReuseIdentifier(ItemCellView.CELL_IDENTIFIER, forIndexPath: indexPath) as! ItemCellView
 
         guard let games = games else {
             return cell
         }
         
-        cell.setRepresentedItem(games[indexPath.row]);
+        cell.setRepresentedItem(games[indexPath.row])
         
-        return cell;
+        return cell
     }
 }
 
@@ -285,7 +285,7 @@ extension GamesViewController : UITextFieldDelegate {
                 dispatch_async(dispatch_get_main_queue(), {
                     self.removeLoadingView()
                     self.displayErrorView("Error loading searching for games.\nPlease check your internet connection.")
-                });
+                })
                 return
             }
             self.didSearch = true

@@ -37,7 +37,7 @@ class VideoViewController : UIViewController {
     */
     convenience init(stream : TwitchStream){
         self.init(nibName: nil, bundle: nil)
-        self.currentStream = stream;
+        self.currentStream = stream
         
         self.view.backgroundColor = UIColor.blackColor()
         
@@ -47,7 +47,7 @@ class VideoViewController : UIViewController {
         self.view.addGestureRecognizer(longPressRecognizer)
         
         let tapRecognizer = UITapGestureRecognizer(target: self, action: "pause")
-        tapRecognizer.allowedPressTypes = [NSNumber(integer: UIPressType.PlayPause.rawValue)];
+        tapRecognizer.allowedPressTypes = [NSNumber(integer: UIPressType.PlayPause.rawValue)]
         self.view.addGestureRecognizer(tapRecognizer)
         
         let gestureRecognizer = UITapGestureRecognizer(target: self, action: "handleMenuPress")
