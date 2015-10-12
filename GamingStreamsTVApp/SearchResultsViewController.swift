@@ -104,6 +104,7 @@ class SearchResultsViewController: LoadingViewController {
         self.searchTypeControl = UISegmentedControl(items: ["Games", "Streams"])
         self.searchTypeControl.translatesAutoresizingMaskIntoConstraints = false
         self.searchTypeControl.selectedSegmentIndex = 0
+        self.searchTypeControl.backgroundColor = UIColor(white: 0.7, alpha: 1.0)
         self.searchTypeControl.addTarget(self, action: Selector("changedSearchType:"), forControlEvents: .ValueChanged)
         
         //do the top bar first
@@ -115,7 +116,7 @@ class SearchResultsViewController: LoadingViewController {
         let layout : UICollectionViewFlowLayout = UICollectionViewFlowLayout()
         
         layout.scrollDirection = UICollectionViewScrollDirection.Vertical
-        layout.minimumInteritemSpacing = 10
+        layout.minimumInteritemSpacing = ITEMS_INSETS_X
         layout.minimumLineSpacing = 50
         
         self.collectionView = UICollectionView(frame: CGRectZero, collectionViewLayout: layout)
@@ -123,7 +124,7 @@ class SearchResultsViewController: LoadingViewController {
         self.collectionView.registerClass(ItemCellView.classForCoder(), forCellWithReuseIdentifier: ItemCellView.CELL_IDENTIFIER)
         self.collectionView.dataSource = self
         self.collectionView.delegate = self
-        self.collectionView.contentInset = UIEdgeInsets(top: TOP_BAR_HEIGHT + 15 + (TOP_BAR_HEIGHT / 1.5), left: ITEMS_INSETS_X, bottom: ITEMS_INSETS_Y, right: ITEMS_INSETS_X)
+        self.collectionView.contentInset = UIEdgeInsets(top: TOP_BAR_HEIGHT + ITEMS_INSETS_Y, left: ITEMS_INSETS_X, bottom: ITEMS_INSETS_Y, right: ITEMS_INSETS_X)
         
         self.view.addSubview(self.collectionView)
         self.view.bringSubviewToFront(self.topBar)
@@ -259,7 +260,7 @@ extension SearchResultsViewController : UICollectionViewDelegateFlowLayout {
     func collectionView(collectionView: UICollectionView,
         layout collectionViewLayout: UICollectionViewLayout,
         sizeForItemAtIndexPath indexPath: NSIndexPath) -> CGSize {
-            let width = self.view.bounds.width / CGFloat(NUM_COLUMNS) - CGFloat(ITEMS_INSETS_X * 2)
+            let width = self.collectionView.bounds.width / CGFloat(NUM_COLUMNS) - CGFloat(ITEMS_INSETS_X * 2)
             var height: CGFloat!
             
             switch searchType {

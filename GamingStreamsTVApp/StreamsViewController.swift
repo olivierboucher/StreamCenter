@@ -12,7 +12,7 @@ class StreamsViewController : LoadingViewController {
     private let LOADING_BUFFER = 12
     private let NUM_COLUMNS = 3
     private let ITEMS_INSETS_X : CGFloat = 45
-    private let ITEMS_INSETS_Y : CGFloat = 30
+    private let ITEMS_INSETS_Y : CGFloat = 0
     private let PREVIEW_IMG_HEIGHT_RATIO : CGFloat = 1.777777777 //Computed from sampled image from twitch api
     
     private var game : TwitchGame!
@@ -77,7 +77,7 @@ class StreamsViewController : LoadingViewController {
         
         let layout : UICollectionViewFlowLayout = UICollectionViewFlowLayout()
         layout.scrollDirection = UICollectionViewScrollDirection.Vertical
-        layout.minimumInteritemSpacing = 10
+        layout.minimumInteritemSpacing = ITEMS_INSETS_X
         layout.minimumLineSpacing = 35
         
         self.collectionView = UICollectionView(frame: CGRectZero, collectionViewLayout: layout)

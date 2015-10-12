@@ -11,7 +11,7 @@ class GamesViewController : LoadingViewController {
     private let LOADING_BUFFER = 20
     private let NUM_COLUMNS = 5
     private let ITEMS_INSETS_X : CGFloat = 25
-    private let ITEMS_INSETS_Y : CGFloat = 40
+    private let ITEMS_INSETS_Y : CGFloat = 0
     private let GAME_IMG_HEIGHT_RATIO : CGFloat = 1.39705882353 //Computed from sampled image from twitch api
     
     private var searchField: UITextField!
@@ -78,6 +78,7 @@ class GamesViewController : LoadingViewController {
         //then do the search bar
         self.searchField = UITextField(frame: CGRectZero)
         self.searchField.translatesAutoresizingMaskIntoConstraints = false
+        self.searchField.backgroundColor = UIColor(white: 0.7, alpha: 1.0)
         self.searchField.placeholder = "Search Games Or Streams"
         self.searchField.delegate = self
         self.searchField.textAlignment = .Center
@@ -92,7 +93,7 @@ class GamesViewController : LoadingViewController {
         let layout : UICollectionViewFlowLayout = UICollectionViewFlowLayout()
         
         layout.scrollDirection = UICollectionViewScrollDirection.Vertical
-        layout.minimumInteritemSpacing = 10
+        layout.minimumInteritemSpacing = ITEMS_INSETS_X
         layout.minimumLineSpacing = 50
         
         self.collectionView = UICollectionView(frame: CGRectZero, collectionViewLayout: layout)
@@ -100,7 +101,7 @@ class GamesViewController : LoadingViewController {
         self.collectionView.registerClass(ItemCellView.classForCoder(), forCellWithReuseIdentifier: ItemCellView.CELL_IDENTIFIER)
         self.collectionView.dataSource = self
         self.collectionView.delegate = self
-        self.collectionView.contentInset = UIEdgeInsets(top: TOP_BAR_HEIGHT + 15 + (TOP_BAR_HEIGHT / 1.5), left: ITEMS_INSETS_X, bottom: ITEMS_INSETS_Y, right: ITEMS_INSETS_X)
+        self.collectionView.contentInset = UIEdgeInsets(top: TOP_BAR_HEIGHT + ITEMS_INSETS_Y, left: ITEMS_INSETS_X, bottom: ITEMS_INSETS_Y, right: ITEMS_INSETS_X)
         
         self.view.addSubview(self.collectionView)
         self.view.bringSubviewToFront(self.topBar)
