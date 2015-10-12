@@ -291,6 +291,19 @@ class TwitchApi {
         }
     }
     
+    static func authenticate(completionHandler: (authorized: Bool) -> ()) {
+        let urlString = "https://api.twitch.tv/kraken/oauth2/authorize"
+        Alamofire.request(.GET, urlString, parameters:
+            [   "response_type"     :   "code",
+                "client_id"         :   "clientID",
+                "redirect_uri"      :   "https://com.rivusmedia.GamingStreamsTVApp.auth",
+                "scope"             :   "" ])
+            .responseJSON { response in
+            //sup
+                print(response)
+        }
+    }
+    
     static func getEmoteUrlStringFromId(id : String) -> String {
         return  "http://static-cdn.jtvnw.net/emoticons/v1/\(id)/1.0"
     }

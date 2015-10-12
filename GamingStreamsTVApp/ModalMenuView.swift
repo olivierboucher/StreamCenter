@@ -194,7 +194,7 @@ struct MenuOption {
     var isEnabled : Bool
     var clickCallback : (sender: MenuItemView?)->()
     
-    init(enabledTitle : String, disabledTitle : String, enabled : Bool, onClick : (sender :MenuItemView?)->()) {
+    init(enabledTitle : String, disabledTitle : String, enabled : Bool, onClick : (sender : MenuItemView?)->()) {
         self.enabledTitle = enabledTitle
         self.disabledTitle = disabledTitle
         self.isEnabled = enabled
