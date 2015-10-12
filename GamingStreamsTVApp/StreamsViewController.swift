@@ -122,12 +122,20 @@ extension StreamsViewController : UICollectionViewDelegate {
                 }
                 var paths = [NSIndexPath]()
                 
-                for i in 0..<streams.count {
+                let filteredStreams = streams.filter({
+                    let streamId = $0.id
+                    if let _ = self.streams!.indexOf({$0.id == streamId}) {
+                        return false
+                    }
+                    return true
+                })
+                
+                for i in 0..<filteredStreams.count {
                     paths.append(NSIndexPath(forItem: i + self.streams!.count, inSection: 0))
                 }
                     
                 self.collectionView!.performBatchUpdates({
-                    self.streams!.appendContentsOf(streams)
+                    self.streams!.appendContentsOf(filteredStreams)
                 
                     self.collectionView!.insertItemsAtIndexPaths(paths)
                 
