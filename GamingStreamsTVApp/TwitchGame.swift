@@ -97,4 +97,10 @@ struct TwitchGame: CellItem {
             }
         }
     }
+    
+    var bannerString: String? {
+        get {
+            return nil
+        }
+    }
 }

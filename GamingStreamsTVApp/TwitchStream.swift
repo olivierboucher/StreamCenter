@@ -65,4 +65,10 @@ struct TwitchStream: CellItem {
             return "\(viewers) viewers on \(channel.name)"
         }
     }
+    
+    var bannerString: String? {
+        get {
+            return channel.displayLanguage
+        }
+    }
 }

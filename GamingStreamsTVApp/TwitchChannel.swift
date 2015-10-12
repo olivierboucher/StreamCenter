@@ -53,34 +53,22 @@ struct TwitchChannel {
         guard let links = dict["_links"] as? [String : String] else {
             return nil
         }
-        guard let broadcasterLanguage = dict["broadcaster_language"] as? String else {
-            return nil
-        }
         guard let language = dict["language"] as? String else {
             return nil
         }
         guard let gameName = dict["game"] as? String else {
             return nil
         }
-        guard let logo = dict["logo"] as? String else {
-            return nil
-        }
         guard let status = dict["status"] as? String else {
-            return nil
-        }
-        guard let videoBanner = dict["video_banner"] as? String else {
             return nil
         }
         self.id = id
         self.name = name
         self.displayName = displayName
         self.links = links
-        self.broadcasterLanguage = broadcasterLanguage
         self.language = language
         self.gameName = gameName
-        self.logo = logo
         self.status = status
-        self.videoBanner = videoBanner
         
         let dateFormatter = NSDateFormatter()
         dateFormatter.dateFormat = "yyyy'-'MM'-'dd'T'HH':'mm':'ssXXX"
@@ -92,6 +80,24 @@ struct TwitchChannel {
         }
         if let views = dict["views"] as? Int {
             self.views = views
+        }
+        if let broadcasterLanguage = dict["broadcaster_language"] as? String {
+            self.broadcasterLanguage = broadcasterLanguage
+        }
+        if let videoBanner = dict["video_banner"] as? String  {
+            self.videoBanner = videoBanner
+        }
+        if let logo = dict["logo"] as? String {
+            self.logo = logo
+        }
+    }
+    
+    var displayLanguage: String? {
+        get {
+            if let display = NSLocale(localeIdentifier: language).displayNameForKey(NSLocaleLanguageCode, value: language) {
+                return display.lowercaseString
+            }
+            return nil
         }
     }
 }

@@ -273,6 +273,10 @@ extension GamesViewController : UICollectionViewDataSource {
 extension GamesViewController : UITextFieldDelegate {
     func textFieldShouldEndEditing(textField: UITextField) -> Bool {
         guard let term = textField.text where !term.isEmpty else {
+            if didSearch {
+                self.loadContent()
+                didSearch = false
+            }
             return true
         }
         displayLoadingView("Searching for '\(term)'")
