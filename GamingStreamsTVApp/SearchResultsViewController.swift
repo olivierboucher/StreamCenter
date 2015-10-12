@@ -188,37 +188,39 @@ extension SearchResultsViewController : UICollectionViewDelegate {
     func collectionView(collectionView: UICollectionView, willDisplayCell cell: UICollectionViewCell, forItemAtIndexPath indexPath: NSIndexPath) {
         switch searchType {
         case .Game:
-            if (indexPath.row == self.games.count - 1) {
-                TwitchApi.getGamesWithSearchTerm(self.searchTerm, offset: self.games.count, limit: LOADING_BUFFER, completionHandler: { (games, error) -> () in
-                    if(error != nil || games == nil){
-                        NSLog("Error loading more games")
-                    }
-                    guard let games = games where games.count > 0 else {
-                        return
-                    }
-                    
-                    var paths = [NSIndexPath]()
-                    
-                    let filteredGames = games.filter({
-                        let gameId = $0.id
-                        if let _ = self.games.indexOf({$0.id == gameId}) {
-                            return false
-                        }
-                        return true
-                    })
-                    
-                    for i in 0..<filteredGames.count {
-                        paths.append(NSIndexPath(forItem: i + self.games.count, inSection: 0))
-                    }
-                    
-                    self.collectionView!.performBatchUpdates({
-                        self.games.appendContentsOf(filteredGames)
-                        
-                        self.collectionView!.insertItemsAtIndexPaths(paths)
-                        
-                        }, completion: nil)
-                })
-            }
+            //games don't support an offset to load more items
+            return
+//            if (indexPath.row == self.games.count - 1) {
+//                TwitchApi.getGamesWithSearchTerm(self.searchTerm, offset: self.games.count, limit: LOADING_BUFFER, completionHandler: { (games, error) -> () in
+//                    if(error != nil || games == nil){
+//                        NSLog("Error loading more games")
+//                    }
+//                    guard let games = games where games.count > 0 else {
+//                        return
+//                    }
+//                    
+//                    var paths = [NSIndexPath]()
+//                    
+//                    let filteredGames = games.filter({
+//                        let gameId = $0.id
+//                        if let _ = self.games.indexOf({$0.id == gameId}) {
+//                            return false
+//                        }
+//                        return true
+//                    })
+//                    
+//                    for i in 0..<filteredGames.count {
+//                        paths.append(NSIndexPath(forItem: i + self.games.count, inSection: 0))
+//                    }
+//                    
+//                    self.collectionView!.performBatchUpdates({
+//                        self.games.appendContentsOf(filteredGames)
+//                        
+//                        self.collectionView!.insertItemsAtIndexPaths(paths)
+//                        
+//                        }, completion: nil)
+//                })
+//            }
         case .Stream:
             if (indexPath.row == self.streams.count - 1) {
                 TwitchApi.getStreamsWithSearchTerm(self.searchTerm, offset: self.streams.count, limit: LOADING_BUFFER, completionHandler: { (streams, error) -> () in

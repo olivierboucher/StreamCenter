@@ -107,7 +107,6 @@ class ItemCellView: UICollectionViewCell {
     * Removes the loading indicator on download callback success
     */
     private func assignImageAndDisplay() {
-        print(self.imageView!.bounds.size)
         self.downloadImageWithSize(self.imageView!.bounds.size) {
             (image, error) in
             
@@ -141,18 +140,17 @@ class ItemCellView: UICollectionViewCell {
             return
         }
         if let imgUrlTemplate = representedItem?.urlTemplate {
-            if let imgUrlString : String? = imgUrlTemplate.stringByReplacingOccurrencesOfString("{width}", withString: "\(Int(size.width))")
-                .stringByReplacingOccurrencesOfString("{height}", withString: "\(Int(size.height))") {
-                    Alamofire.request(.GET, imgUrlString!).response() {
-                        (_, _, data, error) in
-                        
-                        guard let data = data, image = UIImage(data: data) else {
-                            completionHandler(image: nil, error: nil)
-                            return
-                        }
-                        self.representedItem?.setImage(image)
-                        completionHandler(image: image, error: nil)
-                    }
+            let imgUrlString = imgUrlTemplate.stringByReplacingOccurrencesOfString("{width}", withString: "\(Int(size.width))")
+                .stringByReplacingOccurrencesOfString("{height}", withString: "\(Int(size.height))")
+            Alamofire.request(.GET, imgUrlString).response() {
+                (_, _, data, error) in
+                
+                guard let data = data, image = UIImage(data: data) else {
+                    completionHandler(image: nil, error: nil)
+                    return
+                }
+                self.representedItem?.setImage(image)
+                completionHandler(image: image, error: nil)
             }
         }
     }
