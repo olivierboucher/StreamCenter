@@ -138,7 +138,7 @@ class SearchResultsViewController: LoadingViewController {
         
         self.view.addConstraint(NSLayoutConstraint(item: searchTypeControl, attribute: .CenterX, relatedBy: .Equal, toItem: self.view, attribute: .CenterX, multiplier: 1.0, constant: 0.0))
         
-        self.view.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|[topbar]-15-[searchtype]-5-[collection]|", options: [], metrics: nil, views: viewDict))
+        self.view.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|[topbar]-15-[searchtype]-15-[collection]|", options: [], metrics: nil, views: viewDict))
         
         self.view.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|[topbar]|", options: [], metrics: nil, views: viewDict))
         

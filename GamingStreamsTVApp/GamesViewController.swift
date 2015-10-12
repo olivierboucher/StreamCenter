@@ -115,7 +115,7 @@ class GamesViewController : LoadingViewController {
         
         self.view.addConstraint(NSLayoutConstraint(item: searchField, attribute: .CenterX, relatedBy: .Equal, toItem: self.view, attribute: .CenterX, multiplier: 1.0, constant: 0.0))
         
-        self.view.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|[topbar]-15-[searchfield]-5-[collection]|", options: [], metrics: nil, views: viewDict))
+        self.view.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|[topbar]-15-[searchfield]-15-[collection]|", options: [], metrics: nil, views: viewDict))
         
         self.view.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|[topbar]|", options: [], metrics: nil, views: viewDict))
         
