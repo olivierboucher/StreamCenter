@@ -86,7 +86,7 @@ class GamesViewController : LoadingViewController {
         //then do the search bar
         let searchBarFrame = CGRect(x: 0, y: CGRectGetMaxY(topBarBounds), width: 600, height: self.TOP_BAR_HEIGHT / 1.5)
         self.searchField = UITextField(frame: searchBarFrame)
-        self.searchField.placeholder = "Search"
+        self.searchField.placeholder = "Search Games"
         self.searchField.delegate = self
         self.searchField.center.x = CGRectGetMidX(self.view.bounds)
         self.searchField.center.y += 15
@@ -99,7 +99,7 @@ class GamesViewController : LoadingViewController {
         layout.minimumInteritemSpacing = 10
         layout.minimumLineSpacing = 50
         
-        let collectionViewBounds = CGRect(x: self.view.bounds.origin.x, y: CGRectGetMaxY(searchBarFrame), width: self.view.bounds.size.width, height: self.view.bounds.size.height)
+        let collectionViewBounds = CGRect(x: self.view.bounds.origin.x, y: CGRectGetMaxY(searchBarFrame) + 30, width: self.view.bounds.size.width, height: CGRectGetMaxY(self.view.bounds) - CGRectGetMaxY(self.searchField.frame))
         
         self.collectionView = UICollectionView(frame: collectionViewBounds, collectionViewLayout: layout)
         
@@ -284,7 +284,6 @@ extension GamesViewController : UITextFieldDelegate {
             guard let games = games where games.count > 0 else {
                 dispatch_async(dispatch_get_main_queue(), {
                     self.removeLoadingView()
-                    self.displayErrorView("Error loading searching for games.\nPlease check your internet connection.")
                 })
                 return
             }

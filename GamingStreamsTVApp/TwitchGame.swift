@@ -10,6 +10,7 @@ struct TwitchGame: CellItem {
     
     private(set) var id : Int
     private(set) var viewers = 0
+    private(set) var popularity = 0
     private(set) var channels = 0
     private(set) var name : String
     private(set) var thumbnails : [String : String]
@@ -42,13 +43,6 @@ struct TwitchGame: CellItem {
             self.name = name
             self.thumbnails = thumbs
             self.logos = logos
-            
-            if let viewers = dict["viewers"] as? Int {
-                self.viewers = viewers
-            }
-            if let channels = dict["channels"] as? Int {
-                self.channels = channels
-            }
         } else {
             guard let id = dict["_id"] as? Int else {
                 return nil
@@ -66,13 +60,16 @@ struct TwitchGame: CellItem {
             self.name = name
             self.thumbnails = thumbs
             self.logos = logos
-            
-            if let viewers = dict["viewers"] as? Int {
-                self.viewers = viewers
-            }
-            if let channels = dict["channels"] as? Int {
-                self.channels = channels
-            }
+        }
+        
+        if let viewers = dict["viewers"] as? Int {
+            self.viewers = viewers
+        }
+        if let channels = dict["channels"] as? Int {
+            self.channels = channels
+        }
+        if let popularity = dict["popularity"] as? Int {
+            self.popularity = popularity
         }
     }
     
@@ -93,8 +90,11 @@ struct TwitchGame: CellItem {
             if viewers > 0 {
                 return "\(viewers) viewers"
             } else {
-                return ""
+                if popularity > 0 {
+                    return "popularity: \(popularity)"
+                }
             }
+            return ""
         }
     }
     

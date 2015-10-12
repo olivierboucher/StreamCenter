@@ -57,12 +57,14 @@ class ItemCellView: UICollectionViewCell {
         self.contentView.addSubview(titleLabel)
         self.contentView.addSubview(subtitleLabel)
         
-        let viewDict = ["image" : imageView, "title" : titleLabel, "subtitle" : subtitleLabel]
+        let viewDict = ["image" : imageView, "title" : titleLabel, "subtitle" : subtitleLabel, "imageGuide" : imageView.focusedFrameGuide]
         
         self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|[image]|", options: [], metrics: nil, views: viewDict))
         self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|[title]|", options: [], metrics: nil, views: viewDict))
         self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|[subtitle]|", options: [], metrics: nil, views: viewDict))
-        self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|[image]-30-[title]-5-[subtitle]|", options: [], metrics: nil, views: viewDict))
+        self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|[image]", options: [], metrics: nil, views: viewDict))
+        
+        self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:[imageGuide]-5-[title]-5-[subtitle]|", options: [], metrics: nil, views: viewDict))
         
         self.imageView.addConstraint(NSLayoutConstraint(item: activityIndicator, attribute: NSLayoutAttribute.CenterX, relatedBy: .Equal, toItem: imageView, attribute: .CenterX, multiplier: 1.0, constant: 0))
         self.imageView.addConstraint(NSLayoutConstraint(item: activityIndicator, attribute: NSLayoutAttribute.CenterY, relatedBy: .Equal, toItem: imageView, attribute: .CenterY, multiplier: 1.0, constant: 0))
