@@ -21,6 +21,7 @@ class TopBarView : UIVisualEffectView {
         self.titleLabel.font = UIFont(name: "Helvetica", size: 50)
         self.titleLabel.textAlignment = NSTextAlignment.Center
         self.titleLabel.textColor = UIColor.whiteColor()
+        self.titleLabel.adjustsFontSizeToFitWidth = true
         
         self.contentView.addSubview(self.titleLabel)
         
@@ -31,6 +32,7 @@ class TopBarView : UIVisualEffectView {
             self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|-20-[supp]", options: [], metrics: nil, views: viewDict))
             self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|[title]|", options: [], metrics: nil, views: viewDict))
             self.contentView.addConstraint(NSLayoutConstraint(item: titleLabel, attribute: .CenterX, relatedBy: .Equal, toItem: self.contentView, attribute: .CenterX, multiplier: 1.0, constant: 0.0))
+            self.contentView.addConstraint(NSLayoutConstraint(item: titleLabel, attribute: .Leading, relatedBy: NSLayoutRelation.GreaterThanOrEqual, toItem: supplementalView, attribute: .Trailing, multiplier: 1.0, constant: 15.0))
             self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|-5-[supp]-5-|", options: [], metrics: nil, views: viewDict))
         } else {
             let viewDict = ["title" : titleLabel]

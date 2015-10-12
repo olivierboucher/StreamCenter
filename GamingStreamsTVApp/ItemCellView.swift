@@ -35,6 +35,7 @@ class ItemCellView: UICollectionViewCell {
         self.imageView = UIImageView(frame: imageViewFrame)
         self.imageView.translatesAutoresizingMaskIntoConstraints = false
         self.imageView.adjustsImageWhenAncestorFocused = true
+        //we don't need to have this next line because we are turning on the 'adjustsImageWhenAncestorFocused' therefore we can't clip to bounds, and the corner radius has no effect if we aren't clipping
         self.imageView.layer.cornerRadius = 10
         self.imageView.backgroundColor = UIColor(white: 0.25, alpha: 0.7)
         self.imageView.contentMode = UIViewContentMode.ScaleAspectFill
