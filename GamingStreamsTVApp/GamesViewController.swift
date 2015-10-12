@@ -15,7 +15,7 @@ class GamesViewController : LoadingViewController {
     private let TOP_BAR_HEIGHT : CGFloat = 100
     private let GAME_IMG_HEIGHT_RATIO : CGFloat = 1.39705882353 //Computed from sampled image from twitch api
     
-    private var searchController: UISearchController!
+    private var searchField: UITextField!
     private var games : [TwitchGame]?
     
     var didSearch = false
@@ -84,15 +84,14 @@ class GamesViewController : LoadingViewController {
         self.view.addSubview(self.topBar)
         
         //then do the search bar
-        let searchBarFrame = CGRect(x: 0, y: CGRectGetMaxY(topBarBounds), width: 600, height: self.TOP_BAR_HEIGHT)
-        self.searchController = UISearchController(searchResultsController: nil)
-        self.searchController.searchResultsUpdater = self
-        self.searchController.delegate = self
-        self.searchController.searchBar.frame = searchBarFrame
-        self.searchController.searchBar.center.x = CGRectGetMidX(self.view.bounds)
-        self.searchController.searchBar.center.y += 15;
+        let searchBarFrame = CGRect(x: 0, y: CGRectGetMaxY(topBarBounds), width: 600, height: self.TOP_BAR_HEIGHT / 1.5)
+        self.searchField = UITextField(frame: searchBarFrame)
+        self.searchField.placeholder = "Search"
+        self.searchField.delegate = self
+        self.searchField.center.x = CGRectGetMidX(self.view.bounds)
+        self.searchField.center.y += 15;
         self.definesPresentationContext = true
-        self.view.addSubview(self.searchController.searchBar)
+        self.view.addSubview(self.searchField)
         
         //then do the collection view
         let layout : UICollectionViewFlowLayout = UICollectionViewFlowLayout();
@@ -111,7 +110,7 @@ class GamesViewController : LoadingViewController {
         
         self.view.addSubview(self.collectionView)
         self.view.bringSubviewToFront(self.topBar)
-        self.view.bringSubviewToFront(self.searchController.searchBar)
+        self.view.bringSubviewToFront(self.searchField)
     }
     
     func handleLongPress(gestureRecognizer: UILongPressGestureRecognizer) {
@@ -260,18 +259,13 @@ extension GamesViewController : UICollectionViewDataSource {
 }
 
 //////////////////////////////////////////////
-// MARK - UISearchControllerDelegate interface
+// MARK - UITextFieldDelegate interface
 //////////////////////////////////////////////
 
-extension GamesViewController : UISearchControllerDelegate {
-    func didDismissSearchController(searchController: UISearchController) {
-        
-    }
-    
-    func willDismissSearchController(searchController: UISearchController) {
-        print("dismiss")
-        guard let term = searchController.searchBar.text where !term.isEmpty else {
-            return
+extension GamesViewController : UITextFieldDelegate {
+    func textFieldShouldEndEditing(textField: UITextField) -> Bool {
+        guard let term = textField.text where !term.isEmpty else {
+            return true
         }
         displayLoadingView("Searching for '\(term)'")
         TwitchApi.getGamesWithSearchTerm(term, offset: 0, limit: 20) { (games, error) -> () in
@@ -291,15 +285,17 @@ extension GamesViewController : UISearchControllerDelegate {
                 self.collectionView.reloadData()
             })
         }
+        return true
     }
+    
 }
 
 //////////////////////////////////////////////
 // MARK - UISearchResultsUpdating interface
 //////////////////////////////////////////////
 
-extension GamesViewController : UISearchResultsUpdating {
-    func updateSearchResultsForSearchController(searchController: UISearchController) {
-        print("doesn't do anything yet")
-    }
-}
+//extension GamesViewController : UISearchResultsUpdating {
+//    func updateSearchResultsForSearchController(searchController: UISearchController) {
+//        print("doesn't do anything yet")
+//    }
+//}
