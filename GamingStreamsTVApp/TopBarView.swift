@@ -7,11 +7,12 @@
 import UIKit
 import Foundation
 
-class TopBarView : UIView {
+class TopBarView : UIVisualEffectView {
     private var titleLabel : UILabel!
     
     init (frame : CGRect, withMainTitle title : String) {
-        super.init(frame: frame)
+        let effect = UIBlurEffect(style: .Dark)
+        super.init(effect: effect)
     
         //Place title
         self.titleLabel = UILabel(frame: CGRectZero)
@@ -21,11 +22,11 @@ class TopBarView : UIView {
         self.titleLabel.textAlignment = NSTextAlignment.Center
         self.titleLabel.textColor = UIColor.whiteColor()
         
-        self.addSubview(self.titleLabel)
+        self.contentView.addSubview(self.titleLabel)
         
         let viewDict = ["title" : titleLabel]
-        self.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|[title]|", options: [], metrics: nil, views: viewDict))
-        self.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|[title]|", options: [], metrics: nil, views: viewDict))
+        self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|[title]|", options: [], metrics: nil, views: viewDict))
+        self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|[title]|", options: [], metrics: nil, views: viewDict))
     }
     
     required init?(coder aDecoder: NSCoder) {

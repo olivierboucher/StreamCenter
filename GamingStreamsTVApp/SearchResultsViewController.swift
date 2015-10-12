@@ -102,7 +102,6 @@ class SearchResultsViewController: LoadingViewController {
         //do the top bar first
         self.topBar = TopBarView(frame: CGRectZero, withMainTitle: "Search Results - \(searchTerm)")
         self.topBar.translatesAutoresizingMaskIntoConstraints = false
-        self.topBar.backgroundColor = UIColor(white: 0.5, alpha: 1)
         self.view.addSubview(self.topBar)
         
         //then do the search bar
