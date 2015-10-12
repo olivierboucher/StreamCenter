@@ -9,27 +9,27 @@ import Foundation
 
 class ErrorView : UIView {
     
-    private var imageView : UIImageView?
-    private var label : UILabel?
+    private var imageView : UIImageView!
+    private var label : UILabel!
     
     init(frame: CGRect, andTitle title : String) {
         super.init(frame: frame)
         
         let imageViewBounds = CGRect(x: 0, y: 0, width: self.bounds.width, height: self.bounds.width/1.333333333)
         imageView = UIImageView(frame: imageViewBounds)
-        imageView?.image = getErrorImageOfColor(UIColor.whiteColor())
+        imageView.image = getErrorImageOfColor(UIColor.whiteColor())
         
         let labelBounds = CGRect(x: 0, y: imageViewBounds.height, width: imageViewBounds.width, height: self.bounds.height - imageViewBounds.height)
         label = UILabel(frame: labelBounds)
-        label?.text = title
-        label?.textColor = UIColor.whiteColor()
-        label?.textAlignment = NSTextAlignment.Center
-        label?.lineBreakMode = NSLineBreakMode.ByWordWrapping
-        label?.numberOfLines = 0
-        label?.font = label?.font.fontWithSize(25)
+        label.text = title
+        label.textColor = UIColor.whiteColor()
+        label.textAlignment = NSTextAlignment.Center
+        label.lineBreakMode = NSLineBreakMode.ByWordWrapping
+        label.numberOfLines = 0
+        label.font = label?.font.fontWithSize(25)
         
-        self.addSubview(imageView!)
-        self.addSubview(label!)
+        self.addSubview(imageView)
+        self.addSubview(label)
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -83,7 +83,7 @@ class ErrorView : UIView {
         CGPathAddLineToPoint(pathRef, nil, 144.5, 189.5)
         CGPathCloseSubpath(pathRef)
         
-        CGContextSetFillColorWithColor(ctx, color.CGColor);
+        CGContextSetFillColorWithColor(ctx, color.CGColor)
         CGContextAddPath(ctx, pathRef)
         CGContextFillPath(ctx)
         

@@ -12,6 +12,9 @@ import Foundation
 //This is not a protocol because I don't want to copy this code in each controller
 
 class LoadingViewController : UIViewController {
+    
+    internal let TOP_BAR_HEIGHT : CGFloat = 100
+    
     internal var collectionView : UICollectionView!
     internal var topBar : TopBarView!
     

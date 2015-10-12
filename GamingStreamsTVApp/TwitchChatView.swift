@@ -9,7 +9,7 @@ import Foundation
 
 
 class TwitchChatView : UIView, TwitchChatHandlerConsumer {
-    let channel : TwitchChannel?
+    let channel : TwitchChannel!
     let chatHandler = TwitchChatHandler()
     var shouldConsume = false
     var messageViews = [TwitchChatMessageView]()
@@ -26,12 +26,12 @@ class TwitchChatView : UIView, TwitchChatHandlerConsumer {
         let topLayer = CATextLayerVC()
         topLayer.frame = CGRect(x: 0, y: 0, width: self.bounds.width, height: 75)
         topLayer.foregroundColor = UIColor.whiteColor().CGColor
-        topLayer.backgroundColor = "#555555".toUIColorFromHex()!.CGColor
+        topLayer.backgroundColor = "#555555".toUIColorFromHex()?.CGColor
         topLayer.alignmentMode = kCAAlignmentCenter
         topLayer.font = CGFontCreateWithFontName(UIFont.systemFontOfSize(30).fontName as NSString)
         topLayer.fontSize = 30
         topLayer.contentsScale = UIScreen.mainScreen().scale
-        topLayer.string = "#" + self.channel!.name
+        topLayer.string = "#" + self.channel.name
         topLayer.zPosition = 999999999
         
         let shadowPath = UIBezierPath.init(rect: CGRect(x: 0, y: topLayer.frame.height, width: self.bounds.width, height: 1))
@@ -55,7 +55,7 @@ class TwitchChatView : UIView, TwitchChatHandlerConsumer {
         self.shouldConsume = true
         self.chatHandler.anonymousConnect()
         self.chatHandler.startLoop()
-        self.chatHandler.joinTwitchChannel(self.channel!)
+        self.chatHandler.joinTwitchChannel(self.channel)
     }
     
     func stopDisplayingMessages() {
