@@ -11,8 +11,6 @@ class GamesViewController : LoadingViewController {
     private let LOADING_BUFFER = 20
     private let NUM_COLUMNS = 5
     private let ITEMS_INSETS_X : CGFloat = 25
-    private let ITEMS_INSETS_Y : CGFloat = 0
-    private let GAME_IMG_HEIGHT_RATIO : CGFloat = 1.39705882353 //Computed from sampled image from twitch api
     
     private var searchField: UITextField!
     private var games = [TwitchGame]()
@@ -24,9 +22,6 @@ class GamesViewController : LoadingViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
-        let longPressRecognizer = UILongPressGestureRecognizer(target: self, action: "handleLongPress:")
-        longPressRecognizer.cancelsTouchesInView = true
-        self.view.addGestureRecognizer(longPressRecognizer)
         
         configureViews()
     }
@@ -89,7 +84,6 @@ class GamesViewController : LoadingViewController {
         
         //then do the collection view
         let layout : UICollectionViewFlowLayout = UICollectionViewFlowLayout()
-        
         layout.scrollDirection = UICollectionViewScrollDirection.Vertical
         layout.minimumInteritemSpacing = ITEMS_INSETS_X
         layout.minimumLineSpacing = 50
@@ -116,12 +110,6 @@ class GamesViewController : LoadingViewController {
         
         self.view.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|[collection]|", options: [], metrics: nil, views: viewDict))
         
-    }
-    
-    func handleLongPress(gestureRecognizer: UILongPressGestureRecognizer) {
-        TwitchApi.authenticate { (authorized) -> () in
-            print(authorized)
-        }
     }
     
     override func reloadContent() {
@@ -200,8 +188,7 @@ extension GamesViewController : UICollectionViewDelegateFlowLayout {
     func collectionView(collectionView: UICollectionView,
         layout collectionViewLayout: UICollectionViewLayout,
         insetForSectionAtIndex section: Int) -> UIEdgeInsets {
-            let topInset = (section == 0) ? TOP_BAR_HEIGHT : ITEMS_INSETS_X
-            return UIEdgeInsets(top: topInset, left: ITEMS_INSETS_X, bottom: ITEMS_INSETS_Y, right: ITEMS_INSETS_X)
+            return UIEdgeInsets(top: TOP_BAR_HEIGHT + ITEMS_INSETS_Y, left: ITEMS_INSETS_X, bottom: ITEMS_INSETS_Y, right: ITEMS_INSETS_X)
     }
 }
 
