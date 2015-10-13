@@ -218,10 +218,10 @@ extension SearchResultsViewController : UICollectionViewDelegate {
                         paths.append(NSIndexPath(forItem: i + self.streams.count, inSection: 0))
                     }
                     
-                    self.collectionView!.performBatchUpdates({
+                    self.collectionView.performBatchUpdates({
                         self.streams.appendContentsOf(filteredStreams)
                         
-                        self.collectionView!.insertItemsAtIndexPaths(paths)
+                        self.collectionView.insertItemsAtIndexPaths(paths)
                         
                         }, completion: nil)
                 })

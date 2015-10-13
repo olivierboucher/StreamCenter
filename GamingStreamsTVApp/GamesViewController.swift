@@ -158,10 +158,10 @@ extension GamesViewController : UICollectionViewDelegate {
                     paths.append(NSIndexPath(forItem: i + self.games.count, inSection: 0))
                 }
                 
-                self.collectionView!.performBatchUpdates({
+                self.collectionView.performBatchUpdates({
                     self.games.appendContentsOf(filteredGames)
                     
-                    self.collectionView!.insertItemsAtIndexPaths(paths)
+                    self.collectionView.insertItemsAtIndexPaths(paths)
                     
                     }, completion: nil)
             }

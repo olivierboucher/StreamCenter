@@ -22,7 +22,8 @@ class ScrollingLabel: UIView {
         }
     }
     private var textLayer = CATextLayer()
-    private var isAnimating = false
+    private var gradientLayer = CAGradientLayer()
+    private var isScrolling = false
     
     private var offset = CGFloat(0) {
         didSet {
@@ -34,7 +35,7 @@ class ScrollingLabel: UIView {
         self.font = UIFont.systemFontOfSize(17)
         self.textColor = UIColor.blackColor()
         super.init(frame: frame)
-        self.setupTextLayer()
+        self.setupLayers()
     }
     
     convenience init(scrollSpeed speed: Double) {
@@ -46,11 +47,12 @@ class ScrollingLabel: UIView {
         self.font = UIFont.systemFontOfSize(17)
         self.textColor = UIColor.blackColor()
         super.init(coder: aDecoder)
-        self.setupTextLayer()
+        self.setupLayers()
     }
     
-    func setupTextLayer() {
+    func setupLayers() {
         self.clipsToBounds = true
+        
         self.textLayer.string = "Hello World"
         self.textLayer.fontSize = 30
         self.textLayer.foregroundColor = UIColor.whiteColor().CGColor
@@ -59,12 +61,29 @@ class ScrollingLabel: UIView {
         self.textLayer.wrapped = false
         self.textLayer.alignmentMode = kCAAlignmentLeft
         self.layer.addSublayer(self.textLayer)
+        
+        self.gradientLayer.colors = [
+            UIColor(white: 0.4, alpha: 0).CGColor,
+            UIColor(white: 0.4, alpha: 0.9).CGColor,
+            UIColor.whiteColor().CGColor,
+            UIColor(white: 0.4, alpha: 0.9).CGColor,
+            UIColor(white: 0.4, alpha: 0).CGColor
+        ]
+        self.gradientLayer.startPoint = CGPoint(x: 0, y: 0.5)
+        self.gradientLayer.endPoint = CGPoint(x: 1, y: 0.5)
+        self.gradientLayer.locations = [
+            NSNumber(double: 0.0),
+            NSNumber(double: 0.05),
+            NSNumber(double: 0.5),
+            NSNumber(double: 0.95),
+            NSNumber(double: 1.0),
+        ]
     }
     
     override func layoutSubviews() {
-        print(self.frame)
         self.textLayer.frame = self.bounds
         self.textLayer.frame.size.width = self.textLayer.preferredFrameSize().width
+        self.gradientLayer.frame = self.bounds
     }
     
     /*
@@ -89,7 +108,8 @@ class ScrollingLabel: UIView {
         animation.fromValue = NSValue(CGPoint: initialPoint)
         animation.toValue = NSValue(CGPoint: CGPoint(x: initialPoint.x - (moveAmount + 5), y: initialPoint.y))
         self.textLayer.addAnimation(animation, forKey: nil)
-        isAnimating = true
+        self.layer.mask = self.gradientLayer
+        isScrolling = true
     }
     
     /*
@@ -99,8 +119,12 @@ class ScrollingLabel: UIView {
     *
     */
     func endScrolling() {
+        if !isScrolling {
+            return
+        }
         self.textLayer.removeAllAnimations()
-        isAnimating = false
+        self.layer.mask = nil
+        isScrolling = false
     }
     
     var font: UIFont {

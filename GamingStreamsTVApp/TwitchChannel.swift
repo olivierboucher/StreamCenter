@@ -6,7 +6,6 @@
 
 import Foundation
 
-
 struct TwitchChannel {
     private(set) var id : Int
     private(set) var name : String
