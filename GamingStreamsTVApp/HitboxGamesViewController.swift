@@ -78,6 +78,10 @@ class HitboxGamesViewController : LoadingViewController {
         self.searchField.delegate = self
         self.searchField.textAlignment = .Center
         
+        //then the source switcher
+        let button = UIButton()
+        button.addTarget(self, action: Selector("switchSource"), forControlEvents: .TouchUpInside)
+        
         //do the top bar first
         self.topBar = TopBarView(frame: CGRectZero, withMainTitle: "Hitbox games", supplementalView: self.searchField)
         self.topBar.translatesAutoresizingMaskIntoConstraints = false
@@ -219,12 +223,12 @@ extension HitboxGamesViewController : UICollectionViewDataSource {
 extension HitboxGamesViewController : UITextFieldDelegate {
     
     func textFieldDidEndEditing(textField: UITextField) {
-        guard let term = textField.text where !term.isEmpty else {
-            return
-        }
-        
-        let searchViewController = SearchResultsViewController(seatchTerm: term)
-        presentViewController(searchViewController, animated: true, completion: nil)
+//        guard let term = textField.text where !term.isEmpty else {
+//            return
+//        }
+//        
+//        let searchViewController = TwitchSearchResultsViewController(seatchTerm: term)
+//        presentViewController(searchViewController, animated: true, completion: nil)
     }
 }
 

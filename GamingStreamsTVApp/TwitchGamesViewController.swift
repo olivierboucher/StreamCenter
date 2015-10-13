@@ -6,7 +6,7 @@
 
 import UIKit
 
-class GamesViewController : LoadingViewController {
+class TwitchGamesViewController : LoadingViewController {
 
     private let LOADING_BUFFER = 20
     private let NUM_COLUMNS = 5
@@ -136,11 +136,11 @@ class GamesViewController : LoadingViewController {
 ////////////////////////////////////////////
 
 
-extension GamesViewController : UICollectionViewDelegate {
+extension TwitchGamesViewController : UICollectionViewDelegate {
     
     func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
         let selectedGame = games[indexPath.row]
-        let streamsViewController = StreamsViewController(game: selectedGame)
+        let streamsViewController = TwitchStreamsViewController(game: selectedGame)
         
         self.presentViewController(streamsViewController, animated: true, completion: nil)
     }
@@ -183,7 +183,7 @@ extension GamesViewController : UICollectionViewDelegate {
 // MARK - UICollectionViewDelegateFlowLayout interface
 //////////////////////////////////////////////////////
 
-extension GamesViewController : UICollectionViewDelegateFlowLayout {
+extension TwitchGamesViewController : UICollectionViewDelegateFlowLayout {
     
     func collectionView(collectionView: UICollectionView,
         layout collectionViewLayout: UICollectionViewLayout,
@@ -206,7 +206,7 @@ extension GamesViewController : UICollectionViewDelegateFlowLayout {
 // MARK - UICollectionViewDataSource interface
 //////////////////////////////////////////////
 
-extension GamesViewController : UICollectionViewDataSource {
+extension TwitchGamesViewController : UICollectionViewDataSource {
     
     func numberOfSectionsInCollectionView(collectionView: UICollectionView) -> Int {
         //The number of sections
@@ -229,14 +229,14 @@ extension GamesViewController : UICollectionViewDataSource {
 // MARK - UITextFieldDelegate interface
 //////////////////////////////////////////////
 
-extension GamesViewController : UITextFieldDelegate {
+extension TwitchGamesViewController : UITextFieldDelegate {
     
     func textFieldDidEndEditing(textField: UITextField) {
         guard let term = textField.text where !term.isEmpty else {
             return
         }
         
-        let searchViewController = SearchResultsViewController(seatchTerm: term)
+        let searchViewController = TwitchSearchResultsViewController(seatchTerm: term)
         presentViewController(searchViewController, animated: true, completion: nil)
     }
 }
@@ -245,7 +245,7 @@ extension GamesViewController : UITextFieldDelegate {
 // MARK - UISearchResultsUpdating interface
 //////////////////////////////////////////////
 
-//extension GamesViewController : UISearchResultsUpdating {
+//extension TwitchGamesViewController : UISearchResultsUpdating {
 //    func updateSearchResultsForSearchController(searchController: UISearchController) {
 //        print("doesn't do anything yet")
 //    }
