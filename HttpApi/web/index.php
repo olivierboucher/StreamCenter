@@ -9,6 +9,7 @@
 require_once __DIR__.'/../vendor/autoload.php';
 
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 /*
  * FOR DEVELOPMENT PURPOSES
@@ -62,38 +63,38 @@ else{
  */
 
 $app->get('/oauth/twitch/{uuid}', function($uuid) use($app) {
-    //TODO: Redirect to the following URL
-    //    https://api.twitch.tv/kraken/oauth2/authorize
-    //    ?response_type=code
-    //    &client_id=[your client ID] //NOTE(Olivier): This is obtained by registering our app
-    //    &redirect_uri=[your registered redirect URI] NOTE(Olivier): This will be /redirect/twitch/{uuid}
-    //    &scope=[space separated list of scopes]
-    //    &state=[your provided unique token]
+
+    return $app->redirect('https://api.twitch.tv/kraken/oauth2/authorize?response_type=code&client_id='. getenv('TWITCH_CLIENT_ID') .'&redirect_uri=http://streamcenterapp.com/oauth/redirect/twitch&scope=user_read channel_subscriptions user_subscriptions chat_login&state='. $uuid);
 });
 
 $app->post('/oauth/twitch', function(Request $request) use($app) {
     //TODO: Get POST payload containing the code to validate and return the OAuth token
 });
 
-$app->get('/redirect/twitch/{uuid}', function(Request $request, $uuid) use($app) {
-    //TODO: Get the code from the url param ?code=
-    //TODO: Query the POST https://api.twitch.tv/kraken/oauth2/token endpoint
-    // This is the payload that we want to send
-    //    client_id=[your client ID]
-    //    &client_secret=[your client secret]
-    //    &grant_type=authorization_code
-    //    &redirect_uri=[your registered redirect URI]
-    //    &code=[code received from redirect URI]
-    //    &state=[your provided unique token]
+$app->get('/oauth/redirect/twitch', function(Request $request) use($app) {
 
-    //TODO: Handle the response
-    // Sample response
-    //    {
-    //        "access_token": "[user access token]",
-    //        "scope":[array of requested scopes]
-    //    }
+    $app['monolog']->addInfo(sprintf("REDIRECT RQST : %s", var_export($request, true)));
+
+    $subRequest = Request::create('https://api.twitch.tv/kraken/oauth2/token', 'POST', array(
+        'client_id' => getenv('TWITCH_CLIENT_ID'),
+        'client_secret' => getenv('TWITCH_CLIENT_SECRET'),
+        'grant_type' => 'authorization_code',
+        'redirect_uri' => 'http://streamcenterapp.com/oauth/redirect/twitch',
+        'code' => $request->get('code'),
+        'state' => '',
+    ));
+
+    $response = $app->handle($subRequest, \Symfony\Component\HttpKernel\HttpKernelInterface::SUB_REQUEST, false);
+
+    $app['monolog']->addInfo(sprintf("TOKEN RESPONSE : %s", var_export($request, true)));
+
+    $jsonBody = json_encode($response->getContent());
+
+    $token = $jsonBody['access_token'];
 
     //TODO: Store the token in our Database
+
+    return new Response('TOKEN: '. $token, 200);
 });
 
 
