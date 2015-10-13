@@ -29,6 +29,20 @@ if ($DEV) {
 }
 
 /*
+ * DATABASE SETUP
+ */
+
+$app->register(new Silex\Provider\DoctrineServiceProvider(), array(
+    'db.options' => array(
+        'driver' => 'pdo_mysql',
+        'dbhost' => 'localhost',
+        'dbname' => 'stream_center',
+        'user' => 'streamcenterapi',
+        'password' => getenv('STREAMCENTER_API_MYSQLPWD'),
+    ),
+));
+
+/*
  * ROUTES
  */
 
