@@ -42,3 +42,13 @@ extension String {
         return UIColor(hexString: self)
     }
 }
+
+extension String {
+    func widthWithConstrainedHeight(height: CGFloat, font: UIFont) -> CGFloat {
+        let constraintRect = CGSize(width: CGFloat.max, height: height)
+        
+        let boundingBox = self.boundingRectWithSize(constraintRect, options: [.UsesFontLeading, .UsesLineFragmentOrigin], attributes: [NSFontAttributeName: font], context: nil)
+        
+        return boundingBox.width
+    }
+}

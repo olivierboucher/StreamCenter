@@ -1,30 +1,42 @@
 //
-//  HitboxGamesViewController.swift
-//  GamingStreamsTVApp
+//  ViewController.swift
+//  TestTVApp
 //
-//  Created by Brendan Kirchner on 10/13/15.
-//  Copyright © 2015 Rivus Media Inc. All rights reserved.
-//
+//  Created by Olivier Boucher on 2015-09-13.
 
 import UIKit
 
-class HitboxGamesViewController : LoadingViewController {
-        
+class TwitchGamesViewController : LoadingViewController {
+
     private let LOADING_BUFFER = 20
     private let NUM_COLUMNS = 5
     private let ITEMS_INSETS_X : CGFloat = 25
     
     private var searchField: UITextField!
-    private var games = [HitboxGame]()
+    private var games = [TwitchGame]()
     
-    convenience init() {
+    convenience init(){
         self.init(nibName: nil, bundle: nil)
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
+        
+        let longPressRecognizer = UILongPressGestureRecognizer(target: self, action: "handleLongPress:")
+        longPressRecognizer.cancelsTouchesInView = true
+        self.view.addGestureRecognizer(longPressRecognizer)
+        
         configureViews()
+    }
+    
+    override func handleLongPress(recognizer: UILongPressGestureRecognizer) {
+        //sup
+        if recognizer.state == .Began {
+            HitboxAPI.getLiveStreams(0, limit: LOADING_BUFFER) { (streams, error) -> () in
+                print(streams)
+            }
+        }
     }
     
     /*
@@ -49,9 +61,9 @@ class HitboxGamesViewController : LoadingViewController {
     func loadContent() {
         self.removeErrorView()
         self.displayLoadingView("Loading Games...")
-        
-        //right now this is hardcoded to search for league of legends
-        HitboxAPI.getGames(0, limit: LOADING_BUFFER) { (games, error) -> () in
+        TwitchApi.getTopGamesWithOffset(0, limit: 17) {
+            (games, error) in
+            
             guard let games = games else {
                 dispatch_async(dispatch_get_main_queue(), {
                     self.removeLoadingView()
@@ -74,16 +86,12 @@ class HitboxGamesViewController : LoadingViewController {
         //then do the search bar
         self.searchField = UITextField(frame: CGRectZero)
         self.searchField.translatesAutoresizingMaskIntoConstraints = false
-        self.searchField.placeholder = "Search Games or games"
+        self.searchField.placeholder = "Search Games or Streams"
         self.searchField.delegate = self
         self.searchField.textAlignment = .Center
         
-        //then the source switcher
-        let button = UIButton()
-        button.addTarget(self, action: Selector("switchSource"), forControlEvents: .TouchUpInside)
-        
         //do the top bar first
-        self.topBar = TopBarView(frame: CGRectZero, withMainTitle: "Hitbox games", leftView: self.searchField, rightView: button)
+        self.topBar = TopBarView(frame: CGRectZero, withMainTitle: "Top Games", leftView: self.searchField)
         self.topBar.translatesAutoresizingMaskIntoConstraints = false
         self.view.addSubview(self.topBar)
         
@@ -117,12 +125,6 @@ class HitboxGamesViewController : LoadingViewController {
         
     }
     
-    func switchSource() {
-        if let delegate = UIApplication.sharedApplication().delegate as? AppDelegate {
-            delegate.switchSource(.Twitch)
-        }
-    }
-    
     override func reloadContent() {
         loadContent()
         super.reloadContent()
@@ -134,53 +136,54 @@ class HitboxGamesViewController : LoadingViewController {
 ////////////////////////////////////////////
 
 
-extension HitboxGamesViewController : UICollectionViewDelegate {
+extension TwitchGamesViewController : UICollectionViewDelegate {
     
     func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
         let selectedGame = games[indexPath.row]
-        let streamsViewController = HitboxStreamsViewController(game: selectedGame)
+        let streamsViewController = TwitchStreamsViewController(game: selectedGame)
         
         self.presentViewController(streamsViewController, animated: true, completion: nil)
     }
     
-//    func collectionView(collectionView: UICollectionView, willDisplayCell cell: UICollectionViewCell, forItemAtIndexPath indexPath: NSIndexPath) {
-//        if(indexPath.row == self.games.count - 1){
-//            HitboxAPI.getLivegames(games.count, limit: LOADING_BUFFER, completionHandler: { (games, error) -> () in
-//                
-//                guard let games = games where games.count > 0 else {
-//                    return
-//                }
-//                
-//                var paths = [NSIndexPath]()
-//                
-//                let filteredgames = games.filter({
-//                    let streamID = $0.id
-//                    if let _ = self.games.indexOf({$0.id == streamID}) {
-//                        return false
-//                    }
-//                    return true
-//                })
-//                
-//                for i in 0..<filteredgames.count {
-//                    paths.append(NSIndexPath(forItem: i + self.games.count, inSection: 0))
-//                }
-//                
-//                self.collectionView!.performBatchUpdates({
-//                    self.games.appendContentsOf(filteredgames)
-//                    
-//                    self.collectionView!.insertItemsAtIndexPaths(paths)
-//                    
-//                    }, completion: nil)
-//            })
-//        }
-//    }
+    func collectionView(collectionView: UICollectionView, willDisplayCell cell: UICollectionViewCell, forItemAtIndexPath indexPath: NSIndexPath) {
+        if(indexPath.row == self.games.count - 1){
+            TwitchApi.getTopGamesWithOffset(games.count, limit: LOADING_BUFFER) {
+                (games, error) in
+                
+                guard let games = games where games.count > 0 else {
+                    return
+                }
+                
+                var paths = [NSIndexPath]()
+                
+                let filteredGames = games.filter({
+                    let gameId = $0.id
+                    if let _ = self.games.indexOf({$0.id == gameId}) {
+                        return false
+                    }
+                    return true
+                })
+                
+                for i in 0..<filteredGames.count {
+                    paths.append(NSIndexPath(forItem: i + self.games.count, inSection: 0))
+                }
+                
+                self.collectionView.performBatchUpdates({
+                    self.games.appendContentsOf(filteredGames)
+                    
+                    self.collectionView.insertItemsAtIndexPaths(paths)
+                    
+                    }, completion: nil)
+            }
+        }
+    }
 }
 
 //////////////////////////////////////////////////////
 // MARK - UICollectionViewDelegateFlowLayout interface
 //////////////////////////////////////////////////////
 
-extension HitboxGamesViewController : UICollectionViewDelegateFlowLayout {
+extension TwitchGamesViewController : UICollectionViewDelegateFlowLayout {
     
     func collectionView(collectionView: UICollectionView,
         layout collectionViewLayout: UICollectionViewLayout,
@@ -203,7 +206,7 @@ extension HitboxGamesViewController : UICollectionViewDelegateFlowLayout {
 // MARK - UICollectionViewDataSource interface
 //////////////////////////////////////////////
 
-extension HitboxGamesViewController : UICollectionViewDataSource {
+extension TwitchGamesViewController : UICollectionViewDataSource {
     
     func numberOfSectionsInCollectionView(collectionView: UICollectionView) -> Int {
         //The number of sections
@@ -226,15 +229,15 @@ extension HitboxGamesViewController : UICollectionViewDataSource {
 // MARK - UITextFieldDelegate interface
 //////////////////////////////////////////////
 
-extension HitboxGamesViewController : UITextFieldDelegate {
+extension TwitchGamesViewController : UITextFieldDelegate {
     
     func textFieldDidEndEditing(textField: UITextField) {
-//        guard let term = textField.text where !term.isEmpty else {
-//            return
-//        }
-//        
-//        let searchViewController = TwitchSearchResultsViewController(seatchTerm: term)
-//        presentViewController(searchViewController, animated: true, completion: nil)
+        guard let term = textField.text where !term.isEmpty else {
+            return
+        }
+        
+        let searchViewController = TwitchSearchResultsViewController(seatchTerm: term)
+        presentViewController(searchViewController, animated: true, completion: nil)
     }
 }
 
@@ -242,7 +245,7 @@ extension HitboxGamesViewController : UITextFieldDelegate {
 // MARK - UISearchResultsUpdating interface
 //////////////////////////////////////////////
 
-//extension HitboxgamesViewController : UISearchResultsUpdating {
+//extension TwitchGamesViewController : UISearchResultsUpdating {
 //    func updateSearchResultsForSearchController(searchController: UISearchController) {
 //        print("doesn't do anything yet")
 //    }

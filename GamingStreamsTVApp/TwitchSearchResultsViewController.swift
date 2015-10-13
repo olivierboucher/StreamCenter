@@ -1,5 +1,5 @@
 //
-//  SearchResultsViewController.swift
+//  TwitchSearchResultsViewController.swift
 //  GamingStreamsTVApp
 //
 //  Created by Brendan Kirchner on 10/12/15.
@@ -13,7 +13,7 @@ private enum SearchType {
     case Stream
 }
 
-class SearchResultsViewController: LoadingViewController {
+class TwitchSearchResultsViewController: LoadingViewController {
     
     private let LOADING_BUFFER = 20
     
@@ -103,7 +103,7 @@ class SearchResultsViewController: LoadingViewController {
         self.searchTypeControl.addTarget(self, action: Selector("changedSearchType:"), forControlEvents: .ValueChanged)
         
         //do the top bar first
-        self.topBar = TopBarView(frame: CGRectZero, withMainTitle: "Search Results - \(searchTerm)", supplementalView: self.searchTypeControl)
+        self.topBar = TopBarView(frame: CGRectZero, withMainTitle: "Search Results - \(searchTerm)", leftView: self.searchTypeControl)
         self.topBar.translatesAutoresizingMaskIntoConstraints = false
         self.view.addSubview(self.topBar)
         
@@ -177,13 +177,13 @@ class SearchResultsViewController: LoadingViewController {
 // MARK - UICollectionViewDelegate interface
 ////////////////////////////////////////////
 
-extension SearchResultsViewController : UICollectionViewDelegate {
+extension TwitchSearchResultsViewController : UICollectionViewDelegate {
     
     func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
         switch searchType {
         case .Game:
             let selectedGame = games[indexPath.row]
-            let streamViewController = StreamsViewController(game: selectedGame)
+            let streamViewController = TwitchStreamsViewController(game: selectedGame)
             self.presentViewController(streamViewController, animated: true, completion: nil)
         case .Stream:
             let selectedStream = streams[indexPath.row]
@@ -218,10 +218,10 @@ extension SearchResultsViewController : UICollectionViewDelegate {
                         paths.append(NSIndexPath(forItem: i + self.streams.count, inSection: 0))
                     }
                     
-                    self.collectionView!.performBatchUpdates({
+                    self.collectionView.performBatchUpdates({
                         self.streams.appendContentsOf(filteredStreams)
                         
-                        self.collectionView!.insertItemsAtIndexPaths(paths)
+                        self.collectionView.insertItemsAtIndexPaths(paths)
                         
                         }, completion: nil)
                 })
@@ -234,7 +234,7 @@ extension SearchResultsViewController : UICollectionViewDelegate {
 // MARK - UICollectionViewDelegateFlowLayout interface
 //////////////////////////////////////////////////////
 
-extension SearchResultsViewController : UICollectionViewDelegateFlowLayout {
+extension TwitchSearchResultsViewController : UICollectionViewDelegateFlowLayout {
     
     func collectionView(collectionView: UICollectionView,
         layout collectionViewLayout: UICollectionViewLayout,
@@ -267,7 +267,7 @@ extension SearchResultsViewController : UICollectionViewDelegateFlowLayout {
 // MARK - UICollectionViewDataSource interface
 //////////////////////////////////////////////
 
-extension SearchResultsViewController : UICollectionViewDataSource {
+extension TwitchSearchResultsViewController : UICollectionViewDataSource {
     
     func numberOfSectionsInCollectionView(collectionView: UICollectionView) -> Int {
         return 1
