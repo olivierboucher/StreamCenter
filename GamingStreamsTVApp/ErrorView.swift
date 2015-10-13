@@ -12,8 +12,8 @@ class ErrorView : UIView {
     private var imageView : UIImageView!
     private var label : UILabel!
     
-    init(frame: CGRect, andTitle title : String) {
-        super.init(frame: frame)
+    init(dimension: CGFloat, andTitle title : String) {
+        super.init(frame: CGRectMake(0, 0, dimension, dimension))
         
         let imageViewBounds = CGRect(x: 0, y: 0, width: self.bounds.width, height: self.bounds.width/1.333333333)
         imageView = UIImageView(frame: imageViewBounds)

@@ -87,26 +87,24 @@ class TwitchApi {
             
             if(response.result.isSuccess) {
                 if let gamesInfoDict = response.result.value as? [String : AnyObject] {
-                    var games = [TwitchGame]()
-                    for gameRaw in gamesInfoDict["top"] as! [AnyObject] {
-                        if let topItemDict = gameRaw as? [String : AnyObject] {
-                            if let game = TwitchGame(dict: topItemDict) {
+                    if let gamesDicts = gamesInfoDict["top"] as? [[String : AnyObject]] {
+                        var games = [TwitchGame]()
+                        for gameRaw in gamesDicts {
+                            if let game = TwitchGame(dict: gameRaw) {
                                 games.append(game)
                             }
                         }
+                        completionHandler(games: games, error: nil)
+                        return
                     }
-                    completionHandler(games: games, error: nil)
-                    return
                 }
-                else {
-                    let userInfo = [
-                        NSLocalizedDescriptionKey : String("Operation was unsuccessful."),
-                        NSLocalizedFailureReasonErrorKey: String("Could not parse data to a valid NSDictionnary object"),
-                        NSLocalizedRecoverySuggestionErrorKey: String("Please ensure that the provided url is valid")
-                    ]
-                    completionHandler(games: nil, error: NSError(domain: "TwitchAPI", code: 3, userInfo: userInfo))
-                    return
-                }
+                let userInfo = [
+                    NSLocalizedDescriptionKey : String("Operation was unsuccessful."),
+                    NSLocalizedFailureReasonErrorKey: String("Could not parse data to a valid NSDictionnary object"),
+                    NSLocalizedRecoverySuggestionErrorKey: String("Please ensure that the provided url is valid")
+                ]
+                completionHandler(games: nil, error: NSError(domain: "TwitchAPI", code: 3, userInfo: userInfo))
+                return
             }
             else {
                 let userInfo = [
@@ -118,7 +116,6 @@ class TwitchApi {
                 return
             }
         }
-        
     }
     
     static func getTopStreamsForGameWithOffset(game : String, offset : Int, limit : Int, completionHandler: (streams: [TwitchStream]?, error: NSError?) -> ()) {
@@ -135,31 +132,24 @@ class TwitchApi {
             if(response.result.isSuccess) {
                 if let streamsInfoDict = response.result.value as? [String : AnyObject] {
                     
-                    var streams = [TwitchStream]()
-                    let dateFormatter = NSDateFormatter()
-                    dateFormatter.dateFormat = "yyyy'-'MM'-'dd'T'HH':'mm':'ssXXX"
-                    
-                    for streamRaw in streamsInfoDict["streams"] as! [AnyObject] {
-                        if let streamDict = streamRaw as? [String : AnyObject] {
-                            //First extract the channel infos from the stream
-                            if let channelDict = streamDict["channel"] as? [String : AnyObject] {
-                                if let channel = TwitchChannel(dict: channelDict), stream = TwitchStream(dict: streamDict, channel: channel) {
+                    if let streamsDicts = streamsInfoDict["streams"] as? [[String : AnyObject]] {
+                        var streams = [TwitchStream]()
+                        for streamRaw in streamsDicts {
+                            if let channelDict = streamRaw["channel"] as? [String : AnyObject] {
+                                if let channel = TwitchChannel(dict: channelDict), stream = TwitchStream(dict: streamRaw, channel: channel) {
                                     streams.append(stream)
                                 }
-                                
-                            }
-                            else {
-                                let userInfo = [
-                                    NSLocalizedDescriptionKey : String("Operation was unsuccessful."),
-                                    NSLocalizedFailureReasonErrorKey: String("Could not parse channel data to NSDictionnary"),
-                                    NSLocalizedRecoverySuggestionErrorKey: String("Please ensure that the provided game is valid")
-                                ]
-                                completionHandler(streams: nil, error: NSError(domain: "TwitchAPI", code: 3, userInfo: userInfo))
-                                return
                             }
                         }
+                        completionHandler(streams: streams, error: nil)
+                        return
                     }
-                    completionHandler(streams: streams, error: nil)
+                    let userInfo = [
+                        NSLocalizedDescriptionKey : String("Operation was unsuccessful."),
+                        NSLocalizedFailureReasonErrorKey: String("Could not parse channel data to NSDictionnary"),
+                        NSLocalizedRecoverySuggestionErrorKey: String("Please ensure that the provided game is valid")
+                    ]
+                    completionHandler(streams: nil, error: NSError(domain: "TwitchAPI", code: 3, userInfo: userInfo))
                     return
                 }
                 else {
@@ -197,24 +187,24 @@ class TwitchApi {
             
             if(response.result.isSuccess) {
                 if let gamesInfoDict = response.result.value as? [String : AnyObject] {
-                    var games = [TwitchGame]()
-                    for gameDict in gamesInfoDict["games"] as! [[String : AnyObject]] {
-                        if let game = TwitchGame(dict: gameDict) {
-                            games.append(game)
+                    if let gamesDicts = gamesInfoDict["games"] as? [[String : AnyObject]] {
+                        var games = [TwitchGame]()
+                        for gameDict in gamesDicts {
+                            if let game = TwitchGame(dict: gameDict) {
+                                games.append(game)
+                            }
                         }
+                        completionHandler(games: games, error: nil)
+                        return
                     }
-                    completionHandler(games: games, error: nil)
-                    return
                 }
-                else {
-                    let userInfo = [
-                        NSLocalizedDescriptionKey : String("Operation was unsuccessful."),
-                        NSLocalizedFailureReasonErrorKey: String("Could not parse data to a valid NSDictionnary object"),
-                        NSLocalizedRecoverySuggestionErrorKey: String("Please ensure that the provided url is valid")
-                    ]
-                    completionHandler(games: nil, error: NSError(domain: "TwitchAPI", code: 3, userInfo: userInfo))
-                    return
-                }
+                let userInfo = [
+                    NSLocalizedDescriptionKey : String("Operation was unsuccessful."),
+                    NSLocalizedFailureReasonErrorKey: String("Could not parse data to a valid NSDictionnary object"),
+                    NSLocalizedRecoverySuggestionErrorKey: String("Please ensure that the provided url is valid")
+                ]
+                completionHandler(games: nil, error: NSError(domain: "TwitchAPI", code: 3, userInfo: userInfo))
+                return
             }
             else {
                 let userInfo = [
@@ -236,58 +226,40 @@ class TwitchApi {
             [   "limit"     : limit,
                 "offset"    : offset,
                 "query"     : term    ])
-            .responseJSON { response in
-                
-                if(response.result.isSuccess) {
-                    if let streamsInfoDict = response.result.value as? [String : AnyObject] {
-                        
+        .responseJSON { response in
+            
+            if(response.result.isSuccess) {
+                if let streamsInfoDict = response.result.value as? [String : AnyObject] {
+                    if let streamsDicts = streamsInfoDict["streams"] as? [[String : AnyObject]] {
                         var streams = [TwitchStream]()
-                        let dateFormatter = NSDateFormatter()
-                        dateFormatter.dateFormat = "yyyy'-'MM'-'dd'T'HH':'mm':'ssXXX"
-                        
-                        for streamRaw in streamsInfoDict["streams"] as! [AnyObject] {
-                            if let streamDict = streamRaw as? [String : AnyObject] {
-                                //First extract the channel infos from the stream
-                                if let channelDict = streamDict["channel"] as? [String : AnyObject] {
-                                    if let channel = TwitchChannel(dict: channelDict), stream = TwitchStream(dict: streamDict, channel: channel) {
-                                        streams.append(stream)
-                                    }
-                                    
-                                }
-                                else {
-                                    let userInfo = [
-                                        NSLocalizedDescriptionKey : String("Operation was unsuccessful."),
-                                        NSLocalizedFailureReasonErrorKey: String("Could not parse channel data to NSDictionnary"),
-                                        NSLocalizedRecoverySuggestionErrorKey: String("Please ensure that the provided game is valid")
-                                    ]
-                                    completionHandler(streams: nil, error: NSError(domain: "TwitchAPI", code: 3, userInfo: userInfo))
-                                    return
+                        for streamDict in streamsDicts {
+                            if let channelDict = streamDict["channel"] as? [String : AnyObject] {
+                                if let channel = TwitchChannel(dict: channelDict), stream = TwitchStream(dict: streamDict, channel: channel) {
+                                    streams.append(stream)
                                 }
                             }
                         }
                         completionHandler(streams: streams, error: nil)
                         return
                     }
-                    else {
-                        let userInfo = [
-                            NSLocalizedDescriptionKey : String("Operation was unsuccessful."),
-                            NSLocalizedFailureReasonErrorKey: String("Could not parse data to a valid NSDictionnary object"),
-                            NSLocalizedRecoverySuggestionErrorKey: String("Please ensure that the provided game is valid")
-                        ]
-                        completionHandler(streams: nil, error: NSError(domain: "TwitchAPI", code: 3, userInfo: userInfo))
-                        return
-                    }
-                    
                 }
-                else {
-                    let userInfo = [
-                        NSLocalizedDescriptionKey : String("Operation was unsuccessful."),
-                        NSLocalizedFailureReasonErrorKey: String("The operation returned an error : %@", response.result.error.debugDescription),
-                        NSLocalizedRecoverySuggestionErrorKey: String("Please ensure that the provided channel is valid")
-                    ]
-                    completionHandler(streams: nil, error: NSError(domain: "TwitchAPI", code: 1, userInfo: userInfo))
-                    return
-                }
+                let userInfo = [
+                    NSLocalizedDescriptionKey : String("Operation was unsuccessful."),
+                    NSLocalizedFailureReasonErrorKey: String("Could not parse data to a valid NSDictionnary object"),
+                    NSLocalizedRecoverySuggestionErrorKey: String("Please ensure that the provided game is valid")
+                ]
+                completionHandler(streams: nil, error: NSError(domain: "TwitchAPI", code: 3, userInfo: userInfo))
+                return
+            }
+            else {
+                let userInfo = [
+                    NSLocalizedDescriptionKey : String("Operation was unsuccessful."),
+                    NSLocalizedFailureReasonErrorKey: String("The operation returned an error : %@", response.result.error.debugDescription),
+                    NSLocalizedRecoverySuggestionErrorKey: String("Please ensure that the provided channel is valid")
+                ]
+                completionHandler(streams: nil, error: NSError(domain: "TwitchAPI", code: 1, userInfo: userInfo))
+                return
+            }
         }
     }
     
@@ -299,7 +271,7 @@ class TwitchApi {
                 "redirect_uri"      :   "https://com.rivusmedia.GamingStreamsTVApp.auth",
                 "scope"             :   "" ])
             .responseJSON { response in
-            //sup
+                //sup
                 print(response)
         }
     }
