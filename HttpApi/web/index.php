@@ -67,12 +67,35 @@ $app->get('/oauth/twitch/{uuid}', function($uuid) use($app) {
     return $app->redirect('https://api.twitch.tv/kraken/oauth2/authorize?response_type=code&client_id='. getenv('TWITCH_CLIENT_ID') .'&redirect_uri=http://streamcenterapp.com/oauth/redirect/twitch&scope=user_read channel_subscriptions user_subscriptions chat_login&state='. $uuid);
 });
 
-$app->post('/oauth/twitch', function(Request $request) use($app) {
-    //TODO: Get POST payload containing the code to validate and return the OAuth token
+$app->get('/oauth/twitch/{uuid}/{access_code}', function(Request $request, $uuid, $access_code) use($app) {
+
+    $stmt = $app['db']->prepare('SELECT access_token, refreshed_date FROM oauth_requests WHERE uuid=:uuid AND platform=:platform AND access_code=:access_code');
+    $stmt->bindValue("uuid", $uuid);
+    $stmt->bindValue("platform", 'TWITCH');
+    $stmt->bindValue("access_code", $access_code);
+    $stmt->execute();
+
+    $row = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    $app['monolog']->addInfo(sprintf("ACCESS TOKEN REQUEST RESULT : %s", var_export($row, true)));
+
+    if ($row != false) {
+        return $app->json(array(
+            'access_token' => $row['access_token'],
+            'generated_date' => $row['refreshed_date'],
+        ), 200);
+    }
+    else {
+        return $app->json(array(
+            "Error" => "Unauthorized",
+            "Message" => "Please authenticate at http://streamcenterapp.com/oauth/twitch/{device_uuid} or provide a valid access_code"
+        ), 401);
+    }
 });
 
 $app->post('/oauth/twitch/refresh', function(Request $request) use($app) {
     //TODO: Use the refresh token to generate a new token
+    //NOTE(Olivier): Twitch does not expire tokens yet so do not bother implementing this
 });
 
 $app->get('/oauth/redirect/twitch', function(Request $request) use($app) {
