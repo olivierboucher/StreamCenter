@@ -59,6 +59,14 @@ else{
 }
 
 /*
+ * VIEW RENDERING
+ */
+
+$app->register(new Silex\Provider\TwigServiceProvider(), array(
+    'twig.path' => __DIR__.'/views',
+));
+
+/*
  * ROUTES
  */
 
@@ -162,7 +170,9 @@ $app->get('/oauth/redirect/twitch', function(Request $request) use($app) {
         $app['monolog']->addInfo("UPDATED NEW TOKEN: $accessToken for UUID: $uuid");
     }
 
-    return new Response('TV ACCESS CODE: '. $accessCode, 200);
+    return $app['twig']->render('displayCode.twig', array(
+        'accessCode' => $accessCode,
+    ));
 });
 
 
