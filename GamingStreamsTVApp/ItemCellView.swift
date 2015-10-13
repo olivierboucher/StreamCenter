@@ -26,7 +26,7 @@ class ItemCellView: UICollectionViewCell {
     private var image : UIImage?
     private var imageView : UIImageView!
     private var activityIndicator : UIActivityIndicatorView!
-    private var titleLabel : ScrollingLabel!
+    private var titleLabel : UILabel!
     private var subtitleLabel : UILabel!
     
     override init(frame: CGRect) {
@@ -45,7 +45,7 @@ class ItemCellView: UICollectionViewCell {
         self.activityIndicator.activityIndicatorViewStyle = UIActivityIndicatorViewStyle.WhiteLarge
         self.activityIndicator.startAnimating()
         
-        self.titleLabel = ScrollingLabel(scrollSpeed: 0.5)
+        self.titleLabel = UILabel()
         self.subtitleLabel = UILabel()
         self.titleLabel.translatesAutoresizingMaskIntoConstraints = false
         self.subtitleLabel.translatesAutoresizingMaskIntoConstraints = false
@@ -168,7 +168,6 @@ class ItemCellView: UICollectionViewCell {
             coordinator.addCoordinatedAnimations({
                 self.titleLabel.alpha = 1
                 self.subtitleLabel.alpha = 1
-                self.titleLabel.beginScrolling()
                 },
                 completion: nil
             )
@@ -177,7 +176,6 @@ class ItemCellView: UICollectionViewCell {
             coordinator.addCoordinatedAnimations({
                 self.titleLabel.alpha = 0
                 self.subtitleLabel.alpha = 0
-                self.titleLabel.endScrolling()
                 },
                 completion: nil
             )
