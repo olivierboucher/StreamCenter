@@ -78,11 +78,9 @@ class GamesViewController : LoadingViewController {
         //then do the search bar
         self.searchField = UITextField(frame: CGRectZero)
         self.searchField.translatesAutoresizingMaskIntoConstraints = false
-//        self.searchField.backgroundColor = UIColor(white: 0.7, alpha: 1.0)
-        self.searchField.placeholder = "Search Games Or Streams"
+        self.searchField.placeholder = "Search Games or Streams"
         self.searchField.delegate = self
         self.searchField.textAlignment = .Center
-        self.definesPresentationContext = true
         
         //do the top bar first
         self.topBar = TopBarView(frame: CGRectZero, withMainTitle: "Top Games", supplementalView: self.searchField)
@@ -192,7 +190,7 @@ extension GamesViewController : UICollectionViewDelegateFlowLayout {
     func collectionView(collectionView: UICollectionView,
         layout collectionViewLayout: UICollectionViewLayout,
         sizeForItemAtIndexPath indexPath: NSIndexPath) -> CGSize {
-            let width = self.view.bounds.width / CGFloat(NUM_COLUMNS) - CGFloat(ITEMS_INSETS_X * 2)
+            let width = collectionView.bounds.width / CGFloat(NUM_COLUMNS) - CGFloat(ITEMS_INSETS_X * 2)
             //Computed using the ratio from sampled from
             let height = (width * GAME_IMG_HEIGHT_RATIO) + ItemCellView.LABEL_HEIGHT * 2 //There 2 labels, top & bottom
             

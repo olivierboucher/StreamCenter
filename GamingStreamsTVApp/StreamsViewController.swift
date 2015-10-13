@@ -164,7 +164,7 @@ extension StreamsViewController : UICollectionViewDelegateFlowLayout {
     func collectionView(collectionView: UICollectionView,
         layout collectionViewLayout: UICollectionViewLayout,
         sizeForItemAtIndexPath indexPath: NSIndexPath) -> CGSize {
-            let width = self.view.bounds.width / CGFloat(NUM_COLUMNS) - CGFloat(ITEMS_INSETS_X * 2)
+            let width = collectionView.bounds.width / CGFloat(NUM_COLUMNS) - CGFloat(ITEMS_INSETS_X * 2)
             let height = width / PREVIEW_IMG_HEIGHT_RATIO + (ItemCellView.LABEL_HEIGHT * 2) //There 2 labels, top & bottom
             
             return CGSize(width: width, height: height)
@@ -176,6 +176,7 @@ extension StreamsViewController : UICollectionViewDelegateFlowLayout {
             let topInset = (section == 0) ? TOP_BAR_HEIGHT : ITEMS_INSETS_X
             return UIEdgeInsets(top: topInset, left: ITEMS_INSETS_X, bottom: ITEMS_INSETS_Y, right: ITEMS_INSETS_X)
     }
+    
 }
 
 //////////////////////////////////////////////
