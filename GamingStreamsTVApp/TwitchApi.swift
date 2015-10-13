@@ -116,7 +116,6 @@ class TwitchApi {
                 return
             }
         }
-        
     }
     
     static func getTopStreamsForGameWithOffset(game : String, offset : Int, limit : Int, completionHandler: (streams: [TwitchStream]?, error: NSError?) -> ()) {
@@ -272,7 +271,7 @@ class TwitchApi {
                 "redirect_uri"      :   "https://com.rivusmedia.GamingStreamsTVApp.auth",
                 "scope"             :   "" ])
             .responseJSON { response in
-            //sup
+                //sup
                 print(response)
         }
     }

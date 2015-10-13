@@ -21,7 +21,7 @@ class TwitchChatView : UIView, TwitchChatHandlerConsumer {
         
         self.chatHandler.consumer = self
         
-        self.backgroundColor = "#DCDCDC".toUIColorFromHex()
+        self.backgroundColor = "#2E2E2E".toUIColorFromHex()
         
         let topLayer = CATextLayerVC()
         topLayer.frame = CGRect(x: 0, y: 0, width: self.bounds.width, height: 75)

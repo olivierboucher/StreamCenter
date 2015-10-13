@@ -10,7 +10,7 @@ import UIKit
 import Foundation
 
 enum StreamSourceQuality: String {
-    case Source = "Source"
+    case Source
     case High
     case Medium
     case Low

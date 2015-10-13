@@ -6,7 +6,7 @@
 
 import UIKit
 
-class GamesViewController : LoadingViewController {
+class TwitchGamesViewController : LoadingViewController {
 
     private let LOADING_BUFFER = 20
     private let NUM_COLUMNS = 5
@@ -90,8 +90,17 @@ class GamesViewController : LoadingViewController {
         self.searchField.delegate = self
         self.searchField.textAlignment = .Center
         
+        //then the source switcher
+        let button = UIButton(type: UIButtonType.System)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.setTitle("Switch Source", forState: .Normal)
+        button.setTitleColor(UIColor.darkGrayColor(), forState: .Normal)
+        button.setTitleColor(UIColor.blackColor(), forState: .Focused)
+        button.titleLabel?.textAlignment = NSTextAlignment.Right
+        button.addTarget(self, action: Selector("switchSource"), forControlEvents: .PrimaryActionTriggered)
+        
         //do the top bar first
-        self.topBar = TopBarView(frame: CGRectZero, withMainTitle: "Top Games", supplementalView: self.searchField)
+        self.topBar = TopBarView(frame: CGRectZero, withMainTitle: "Top Games", leftView: self.searchField, rightView: button)
         self.topBar.translatesAutoresizingMaskIntoConstraints = false
         self.view.addSubview(self.topBar)
         
@@ -125,6 +134,16 @@ class GamesViewController : LoadingViewController {
         
     }
     
+    /*
+    * switchSource()
+    *
+    * we add a button to the top bar and within this method you should call switchAPISource (a superclass method) to switch to a different source
+    *
+    */
+    func switchSource() {
+        switchAPISource(toThesePossibleSources: [.Hitbox, .Youtube])
+    }
+    
     override func reloadContent() {
         loadContent()
         super.reloadContent()
@@ -136,11 +155,11 @@ class GamesViewController : LoadingViewController {
 ////////////////////////////////////////////
 
 
-extension GamesViewController : UICollectionViewDelegate {
+extension TwitchGamesViewController : UICollectionViewDelegate {
     
     func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
         let selectedGame = games[indexPath.row]
-        let streamsViewController = StreamsViewController(game: selectedGame)
+        let streamsViewController = TwitchStreamsViewController(game: selectedGame)
         
         self.presentViewController(streamsViewController, animated: true, completion: nil)
     }
@@ -168,10 +187,10 @@ extension GamesViewController : UICollectionViewDelegate {
                     paths.append(NSIndexPath(forItem: i + self.games.count, inSection: 0))
                 }
                 
-                self.collectionView!.performBatchUpdates({
+                self.collectionView.performBatchUpdates({
                     self.games.appendContentsOf(filteredGames)
                     
-                    self.collectionView!.insertItemsAtIndexPaths(paths)
+                    self.collectionView.insertItemsAtIndexPaths(paths)
                     
                     }, completion: nil)
             }
@@ -183,7 +202,7 @@ extension GamesViewController : UICollectionViewDelegate {
 // MARK - UICollectionViewDelegateFlowLayout interface
 //////////////////////////////////////////////////////
 
-extension GamesViewController : UICollectionViewDelegateFlowLayout {
+extension TwitchGamesViewController : UICollectionViewDelegateFlowLayout {
     
     func collectionView(collectionView: UICollectionView,
         layout collectionViewLayout: UICollectionViewLayout,
@@ -206,7 +225,7 @@ extension GamesViewController : UICollectionViewDelegateFlowLayout {
 // MARK - UICollectionViewDataSource interface
 //////////////////////////////////////////////
 
-extension GamesViewController : UICollectionViewDataSource {
+extension TwitchGamesViewController : UICollectionViewDataSource {
     
     func numberOfSectionsInCollectionView(collectionView: UICollectionView) -> Int {
         //The number of sections
@@ -229,14 +248,14 @@ extension GamesViewController : UICollectionViewDataSource {
 // MARK - UITextFieldDelegate interface
 //////////////////////////////////////////////
 
-extension GamesViewController : UITextFieldDelegate {
+extension TwitchGamesViewController : UITextFieldDelegate {
     
     func textFieldDidEndEditing(textField: UITextField) {
         guard let term = textField.text where !term.isEmpty else {
             return
         }
         
-        let searchViewController = SearchResultsViewController(seatchTerm: term)
+        let searchViewController = TwitchSearchResultsViewController(seatchTerm: term)
         presentViewController(searchViewController, animated: true, completion: nil)
     }
 }
@@ -245,7 +264,7 @@ extension GamesViewController : UITextFieldDelegate {
 // MARK - UISearchResultsUpdating interface
 //////////////////////////////////////////////
 
-//extension GamesViewController : UISearchResultsUpdating {
+//extension TwitchGamesViewController : UISearchResultsUpdating {
 //    func updateSearchResultsForSearchController(searchController: UISearchController) {
 //        print("doesn't do anything yet")
 //    }

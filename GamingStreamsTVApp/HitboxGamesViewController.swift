@@ -78,8 +78,17 @@ class HitboxGamesViewController : LoadingViewController {
         self.searchField.delegate = self
         self.searchField.textAlignment = .Center
         
+        //then the source switcher
+        let button = UIButton(type: UIButtonType.System)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.setTitle("Switch Source", forState: .Normal)
+        button.setTitleColor(UIColor.darkGrayColor(), forState: .Normal)
+        button.setTitleColor(UIColor.blackColor(), forState: .Focused)
+        button.titleLabel?.textAlignment = NSTextAlignment.Right
+        button.addTarget(self, action: Selector("switchSource"), forControlEvents: .PrimaryActionTriggered)
+        
         //do the top bar first
-        self.topBar = TopBarView(frame: CGRectZero, withMainTitle: "Hitbox games", supplementalView: self.searchField)
+        self.topBar = TopBarView(frame: CGRectZero, withMainTitle: "Hitbox Games", leftView: self.searchField, rightView: button)
         self.topBar.translatesAutoresizingMaskIntoConstraints = false
         self.view.addSubview(self.topBar)
         
@@ -111,6 +120,16 @@ class HitboxGamesViewController : LoadingViewController {
         
         self.view.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|[collection]|", options: [], metrics: nil, views: viewDict))
         
+    }
+    
+    /*
+    * switchSource()
+    *
+    * we add a button to the top bar and within this method you should call switchAPISource (a superclass method) to switch to a different source
+    *
+    */
+    func switchSource() {
+        switchAPISource(toThesePossibleSources: [.Twitch, .Youtube])
     }
     
     override func reloadContent() {
@@ -219,12 +238,12 @@ extension HitboxGamesViewController : UICollectionViewDataSource {
 extension HitboxGamesViewController : UITextFieldDelegate {
     
     func textFieldDidEndEditing(textField: UITextField) {
-        guard let term = textField.text where !term.isEmpty else {
-            return
-        }
-        
-        let searchViewController = SearchResultsViewController(seatchTerm: term)
-        presentViewController(searchViewController, animated: true, completion: nil)
+//        guard let term = textField.text where !term.isEmpty else {
+//            return
+//        }
+//        
+//        let searchViewController = TwitchSearchResultsViewController(seatchTerm: term)
+//        presentViewController(searchViewController, animated: true, completion: nil)
     }
 }
 

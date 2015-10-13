@@ -118,6 +118,25 @@ class LoadingViewController : UIViewController {
             self.view.removeGestureRecognizer(recognizer)
             reloadContent()
         }
+    }
+    
+    func switchAPISource(toThesePossibleSources sources: [SourceAPI]) {
+        let alert = UIAlertController(title: "Switch Source", message: "Which source would you like to view?", preferredStyle: .Alert)
         
+        alert.addAction(UIAlertAction(title: "Cancel", style: .Cancel, handler: nil))
+        
+        for source in sources {
+            alert.addAction(UIAlertAction(title: source.rawValue, style: .Default, handler: { (action) -> Void in
+                self.performSwitch(source)
+            }))
+        }
+        
+        presentViewController(alert, animated: true, completion: nil)
+    }
+    
+    func performSwitch(source: SourceAPI) {
+        if let delegate = UIApplication.sharedApplication().delegate as? AppDelegate {
+            delegate.switchSource(source)
+        }
     }
 }
