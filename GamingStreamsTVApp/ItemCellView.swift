@@ -26,7 +26,7 @@ class ItemCellView: UICollectionViewCell {
     private var image : UIImage?
     private var imageView : UIImageView!
     private var activityIndicator : UIActivityIndicatorView!
-    private var titleLabel : UILabel!
+    private var titleLabel : ScrollingLabel!
     private var subtitleLabel : UILabel!
     
     override init(frame: CGRect) {
@@ -45,7 +45,7 @@ class ItemCellView: UICollectionViewCell {
         self.activityIndicator.activityIndicatorViewStyle = UIActivityIndicatorViewStyle.WhiteLarge
         self.activityIndicator.startAnimating()
         
-        self.titleLabel = UILabel()
+        self.titleLabel = ScrollingLabel(scrollSpeed: 0.5)
         self.subtitleLabel = UILabel()
         self.titleLabel.translatesAutoresizingMaskIntoConstraints = false
         self.subtitleLabel.translatesAutoresizingMaskIntoConstraints = false
@@ -68,7 +68,7 @@ class ItemCellView: UICollectionViewCell {
         self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|[subtitle]|", options: [], metrics: nil, views: viewDict))
         self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|[image]", options: [], metrics: nil, views: viewDict))
         
-        self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:[imageGuide]-5-[title]-5-[subtitle]|", options: [], metrics: nil, views: viewDict))
+        self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:[imageGuide]-5-[title(\(ItemCellView.LABEL_HEIGHT))]-5-[subtitle(\(ItemCellView.LABEL_HEIGHT))]|", options: [], metrics: nil, views: viewDict))
         
         self.imageView.addConstraint(NSLayoutConstraint(item: activityIndicator, attribute: NSLayoutAttribute.CenterX, relatedBy: .Equal, toItem: imageView, attribute: .CenterX, multiplier: 1.0, constant: 0))
         self.imageView.addConstraint(NSLayoutConstraint(item: activityIndicator, attribute: NSLayoutAttribute.CenterY, relatedBy: .Equal, toItem: imageView, attribute: .CenterY, multiplier: 1.0, constant: 0))
@@ -119,7 +119,7 @@ class ItemCellView: UICollectionViewCell {
             
             
             dispatch_async(dispatch_get_main_queue(),{
-                if((self.activityIndicator != nil) && (self.activityIndicator!.isDescendantOfView(self.imageView!))) {
+                if self.activityIndicator != nil  {
                     self.activityIndicator?.removeFromSuperview()
                     self.activityIndicator = nil
                 }
@@ -168,6 +168,7 @@ class ItemCellView: UICollectionViewCell {
             coordinator.addCoordinatedAnimations({
                 self.titleLabel.alpha = 1
                 self.subtitleLabel.alpha = 1
+                self.titleLabel.beginScrolling()
                 },
                 completion: nil
             )
@@ -176,6 +177,7 @@ class ItemCellView: UICollectionViewCell {
             coordinator.addCoordinatedAnimations({
                 self.titleLabel.alpha = 0
                 self.subtitleLabel.alpha = 0
+                self.titleLabel.endScrolling()
                 },
                 completion: nil
             )
