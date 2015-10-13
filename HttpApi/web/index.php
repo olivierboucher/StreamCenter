@@ -43,6 +43,21 @@ $app->register(new Silex\Provider\DoctrineServiceProvider(), array(
 ));
 
 /*
+ * LOGGING
+ */
+
+if($DEV){
+    $app->register(new Silex\Provider\MonologServiceProvider(), array(
+        'monolog.logfile' => '/home/olivier/stream_center_dev.log',
+    ));
+}
+else{
+    $app->register(new Silex\Provider\MonologServiceProvider(), array(
+        'monolog.logfile' => '/home/olivier/stream_center_prod.log',
+    ));
+}
+
+/*
  * ROUTES
  */
 
