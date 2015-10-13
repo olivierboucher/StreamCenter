@@ -29,10 +29,7 @@ class TopBarView : UIVisualEffectView {
             let viewDict = ["title" : titleLabel, "left" : leftView]
             self.contentView.addSubview(leftView)
             self.contentView.addConstraint(NSLayoutConstraint(item: leftView, attribute: .Width, relatedBy: .Equal, toItem: self.contentView, attribute: .Width, multiplier: 0.275, constant: 1.0))
-            self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|-30-[left]", options: [], metrics: nil, views: viewDict))
-            self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|[title]|", options: [], metrics: nil, views: viewDict))
-            self.contentView.addConstraint(NSLayoutConstraint(item: titleLabel, attribute: .CenterX, relatedBy: .Equal, toItem: self.contentView, attribute: .CenterX, multiplier: 1.0, constant: 0.0))
-            self.contentView.addConstraint(NSLayoutConstraint(item: titleLabel, attribute: .Leading, relatedBy: NSLayoutRelation.GreaterThanOrEqual, toItem: leftView, attribute: .Trailing, multiplier: 1.0, constant: 15.0))
+            self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|-30-[left]->=15-[title]", options: [], metrics: nil, views: viewDict))
             self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|->=10-[left]->=10-|", options: [], metrics: nil, views: viewDict))
             self.contentView.addConstraint(NSLayoutConstraint(item: leftView, attribute: .CenterY, relatedBy: .Equal, toItem: self.contentView, attribute: .CenterY, multiplier: 1.0, constant: 0.0))
         }
@@ -41,18 +38,17 @@ class TopBarView : UIVisualEffectView {
             let viewDict = ["title" : titleLabel, "right" : rightView]
             self.contentView.addSubview(rightView)
             self.contentView.addConstraint(NSLayoutConstraint(item: rightView, attribute: .Width, relatedBy: .Equal, toItem: self.contentView, attribute: .Width, multiplier: 0.275, constant: 1.0))
-            self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:[right]-30-|", options: [], metrics: nil, views: viewDict))
-            self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|[title]|", options: [], metrics: nil, views: viewDict))
-            self.contentView.addConstraint(NSLayoutConstraint(item: titleLabel, attribute: .CenterX, relatedBy: .Equal, toItem: self.contentView, attribute: .CenterX, multiplier: 1.0, constant: 0.0))
-            self.contentView.addConstraint(NSLayoutConstraint(item: titleLabel, attribute: .Trailing, relatedBy: NSLayoutRelation.GreaterThanOrEqual, toItem: rightView, attribute: .Leading, multiplier: 1.0, constant: 0.45))
+            self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:[title]->=15-[right]-30-|", options: [], metrics: nil, views: viewDict))
             self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|->=10-[right]->=10-|", options: [], metrics: nil, views: viewDict))
             self.contentView.addConstraint(NSLayoutConstraint(item: rightView, attribute: .CenterY, relatedBy: .Equal, toItem: self.contentView, attribute: .CenterY, multiplier: 1.0, constant: 0.0))
         }
-        
+        let viewDict = ["title" : titleLabel]
         if leftView == nil && rightView == nil {
-            let viewDict = ["title" : titleLabel]
             self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|[title]|", options: [], metrics: nil, views: viewDict))
             self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|[title]|", options: [], metrics: nil, views: viewDict))
+        } else {
+            self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|[title]|", options: [], metrics: nil, views: viewDict))
+            self.contentView.addConstraint(NSLayoutConstraint(item: titleLabel, attribute: .CenterX, relatedBy: .Equal, toItem: self.contentView, attribute: .CenterX, multiplier: 1.0, constant: 0.0))
         }
     }
     

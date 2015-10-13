@@ -90,8 +90,17 @@ class TwitchGamesViewController : LoadingViewController {
         self.searchField.delegate = self
         self.searchField.textAlignment = .Center
         
+        //then the source switcher
+        let button = UIButton()
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.setTitle("Switch Source", forState: .Normal)
+        button.setTitleColor(UIColor.darkGrayColor(), forState: .Normal)
+        button.setTitleColor(UIColor.whiteColor(), forState: .Focused)
+        button.titleLabel?.textAlignment = NSTextAlignment.Right
+        button.addTarget(self, action: Selector("switchSource"), forControlEvents: .PrimaryActionTriggered)
+        
         //do the top bar first
-        self.topBar = TopBarView(frame: CGRectZero, withMainTitle: "Top Games", leftView: self.searchField)
+        self.topBar = TopBarView(frame: CGRectZero, withMainTitle: "Top Games", leftView: self.searchField, rightView: button)
         self.topBar.translatesAutoresizingMaskIntoConstraints = false
         self.view.addSubview(self.topBar)
         
@@ -123,6 +132,10 @@ class TwitchGamesViewController : LoadingViewController {
         
         self.view.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|[collection]|", options: [], metrics: nil, views: viewDict))
         
+    }
+    
+    func switchSource() {
+        super.switchSource(toThesePossibleSources: [.Hitbox, .Youtube])
     }
     
     override func reloadContent() {

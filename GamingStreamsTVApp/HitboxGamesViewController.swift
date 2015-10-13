@@ -80,10 +80,15 @@ class HitboxGamesViewController : LoadingViewController {
         
         //then the source switcher
         let button = UIButton()
-        button.addTarget(self, action: Selector("switchSource"), forControlEvents: .TouchUpInside)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.setTitle("Switch Source", forState: .Normal)
+        button.setTitleColor(UIColor.darkGrayColor(), forState: .Normal)
+        button.setTitleColor(UIColor.whiteColor(), forState: .Focused)
+        button.titleLabel?.textAlignment = NSTextAlignment.Right
+        button.addTarget(self, action: Selector("switchSource"), forControlEvents: .PrimaryActionTriggered)
         
         //do the top bar first
-        self.topBar = TopBarView(frame: CGRectZero, withMainTitle: "Hitbox games", leftView: self.searchField, rightView: button)
+        self.topBar = TopBarView(frame: CGRectZero, withMainTitle: "Hitbox Games", leftView: self.searchField, rightView: button)
         self.topBar.translatesAutoresizingMaskIntoConstraints = false
         self.view.addSubview(self.topBar)
         
@@ -118,9 +123,7 @@ class HitboxGamesViewController : LoadingViewController {
     }
     
     func switchSource() {
-        if let delegate = UIApplication.sharedApplication().delegate as? AppDelegate {
-            delegate.switchSource(.Twitch)
-        }
+        super.switchSource(toThesePossibleSources: [.Twitch, .Youtube])
     }
     
     override func reloadContent() {

@@ -6,7 +6,7 @@
 
 import UIKit
 
-enum SourceAPI {
+enum SourceAPI: String {
     case Twitch
     case Hitbox
     case Youtube
