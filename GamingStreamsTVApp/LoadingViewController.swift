@@ -48,7 +48,7 @@ class LoadingViewController : UIViewController {
     *
     */
     func removeLoadingView() {
-        if((self.loadingView != nil) && (self.loadingView!.isDescendantOfView(self.view))){
+        if self.loadingView != nil {
             self.loadingView?.removeFromSuperview()
             self.loadingView = nil
         }
@@ -88,11 +88,11 @@ class LoadingViewController : UIViewController {
     *
     */
     func removeErrorView() {
-        if((self.errorView != nil) && (self.errorView!.isDescendantOfView(self.view))){
+        if self.errorView != nil {
             self.errorView?.removeFromSuperview()
             self.errorView = nil
         }
-        if((self.reloadLabel != nil) && (self.reloadLabel!.isDescendantOfView(self.view))){
+        if self.reloadLabel != nil {
             self.reloadLabel?.removeFromSuperview()
             self.reloadLabel = nil
         }
@@ -108,6 +108,7 @@ class LoadingViewController : UIViewController {
     }
     
     /*
+    * handleLongPress(recognizer: UILongPressGestureRecognizer)
     *
     * This is so that if the content doesn't load the first time around, we can load it again
     *
