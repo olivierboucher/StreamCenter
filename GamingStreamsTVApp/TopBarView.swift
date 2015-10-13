@@ -10,7 +10,7 @@ import Foundation
 class TopBarView : UIVisualEffectView {
     private var titleLabel : UILabel!
     
-    init (frame : CGRect, withMainTitle title : String, supplementalView: UIView? = nil) {
+    init (frame : CGRect, withMainTitle title : String, leftView: UIView? = nil, rightView: UIView? = nil) {
         let effect = UIBlurEffect(style: .Dark)
         super.init(effect: effect)
     
@@ -25,17 +25,31 @@ class TopBarView : UIVisualEffectView {
         
         self.contentView.addSubview(self.titleLabel)
         
-        if let supplementalView = supplementalView {
-            let viewDict = ["title" : titleLabel, "supp" : supplementalView]
-            self.contentView.addSubview(supplementalView)
-            self.contentView.addConstraint(NSLayoutConstraint(item: supplementalView, attribute: .Width, relatedBy: .Equal, toItem: self.contentView, attribute: .Width, multiplier: 0.275, constant: 1.0))
-            self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|-30-[supp]", options: [], metrics: nil, views: viewDict))
+        if let leftView = leftView {
+            let viewDict = ["title" : titleLabel, "left" : leftView]
+            self.contentView.addSubview(leftView)
+            self.contentView.addConstraint(NSLayoutConstraint(item: leftView, attribute: .Width, relatedBy: .Equal, toItem: self.contentView, attribute: .Width, multiplier: 0.275, constant: 1.0))
+            self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|-30-[left]", options: [], metrics: nil, views: viewDict))
             self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|[title]|", options: [], metrics: nil, views: viewDict))
             self.contentView.addConstraint(NSLayoutConstraint(item: titleLabel, attribute: .CenterX, relatedBy: .Equal, toItem: self.contentView, attribute: .CenterX, multiplier: 1.0, constant: 0.0))
-            self.contentView.addConstraint(NSLayoutConstraint(item: titleLabel, attribute: .Leading, relatedBy: NSLayoutRelation.GreaterThanOrEqual, toItem: supplementalView, attribute: .Trailing, multiplier: 1.0, constant: 15.0))
-            self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|->=10-[supp]->=10-|", options: [], metrics: nil, views: viewDict))
-            self.contentView.addConstraint(NSLayoutConstraint(item: supplementalView, attribute: .CenterY, relatedBy: .Equal, toItem: self.contentView, attribute: .CenterY, multiplier: 1.0, constant: 0.0))
-        } else {
+            self.contentView.addConstraint(NSLayoutConstraint(item: titleLabel, attribute: .Leading, relatedBy: NSLayoutRelation.GreaterThanOrEqual, toItem: leftView, attribute: .Trailing, multiplier: 1.0, constant: 15.0))
+            self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|->=10-[left]->=10-|", options: [], metrics: nil, views: viewDict))
+            self.contentView.addConstraint(NSLayoutConstraint(item: leftView, attribute: .CenterY, relatedBy: .Equal, toItem: self.contentView, attribute: .CenterY, multiplier: 1.0, constant: 0.0))
+        }
+        
+        if let rightView = rightView {
+            let viewDict = ["title" : titleLabel, "right" : rightView]
+            self.contentView.addSubview(rightView)
+            self.contentView.addConstraint(NSLayoutConstraint(item: rightView, attribute: .Width, relatedBy: .Equal, toItem: self.contentView, attribute: .Width, multiplier: 0.275, constant: 1.0))
+            self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:[right]-30-|", options: [], metrics: nil, views: viewDict))
+            self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|[title]|", options: [], metrics: nil, views: viewDict))
+            self.contentView.addConstraint(NSLayoutConstraint(item: titleLabel, attribute: .CenterX, relatedBy: .Equal, toItem: self.contentView, attribute: .CenterX, multiplier: 1.0, constant: 0.0))
+            self.contentView.addConstraint(NSLayoutConstraint(item: titleLabel, attribute: .Trailing, relatedBy: NSLayoutRelation.GreaterThanOrEqual, toItem: rightView, attribute: .Leading, multiplier: 1.0, constant: 0.45))
+            self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|->=10-[right]->=10-|", options: [], metrics: nil, views: viewDict))
+            self.contentView.addConstraint(NSLayoutConstraint(item: rightView, attribute: .CenterY, relatedBy: .Equal, toItem: self.contentView, attribute: .CenterY, multiplier: 1.0, constant: 0.0))
+        }
+        
+        if leftView == nil && rightView == nil {
             let viewDict = ["title" : titleLabel]
             self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|[title]|", options: [], metrics: nil, views: viewDict))
             self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|[title]|", options: [], metrics: nil, views: viewDict))

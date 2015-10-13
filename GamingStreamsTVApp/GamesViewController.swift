@@ -78,7 +78,7 @@ class GamesViewController : LoadingViewController {
         self.searchField.textAlignment = .Center
         
         //do the top bar first
-        self.topBar = TopBarView(frame: CGRectZero, withMainTitle: "Top Games", supplementalView: self.searchField)
+        self.topBar = TopBarView(frame: CGRectZero, withMainTitle: "Top Games", leftView: self.searchField)
         self.topBar.translatesAutoresizingMaskIntoConstraints = false
         self.view.addSubview(self.topBar)
         
