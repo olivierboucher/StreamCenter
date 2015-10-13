@@ -12,7 +12,15 @@ import QuartzCore
 
 class ScrollingLabel: UIView {
     
-    private var scrollSpeed = CGFloat(0.5)
+    private var scrollSpeed = 0.5 {
+        didSet {
+            if scrollSpeed > 1 {
+                scrollSpeed = 1
+            } else if scrollSpeed < 0 {
+                scrollSpeed = 0
+            }
+        }
+    }
     private var textLayer = CATextLayer()
     private var isAnimating = false
     
@@ -29,7 +37,7 @@ class ScrollingLabel: UIView {
         self.setupTextLayer()
     }
     
-    convenience init(scrollSpeed speed: CGFloat) {
+    convenience init(scrollSpeed speed: Double) {
         self.init(frame: CGRectZero)
         scrollSpeed = speed
     }
@@ -74,7 +82,7 @@ class ScrollingLabel: UIView {
         let initialPoint = self.textLayer.position
         let animation = CABasicAnimation(keyPath: "position")
         animation.timingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseInEaseOut)
-        animation.duration = max(2.5, (2.5 / 150) * Double(moveAmount) / 0.5)
+        animation.duration = 10 * (1.1 - scrollSpeed)
         animation.repeatCount = Float.infinity
         animation.autoreverses = true
         animation.fromValue = NSValue(CGPoint: initialPoint)
