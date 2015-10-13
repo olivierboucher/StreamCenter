@@ -43,6 +43,7 @@
 		B4DFFA351BCCB29000D177AE /* HitboxMedia.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4DFFA341BCCB29000D177AE /* HitboxMedia.swift */; };
 		B4DFFA371BCCBA6100D177AE /* HitboxGamesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4DFFA361BCCBA6100D177AE /* HitboxGamesViewController.swift */; };
 		B4DFFA391BCCBFBA00D177AE /* HitboxGame.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4DFFA381BCCBFBA00D177AE /* HitboxGame.swift */; };
+		B4DFFA3B1BCCC88E00D177AE /* HitboxStreamsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4DFFA3A1BCCC88E00D177AE /* HitboxStreamsViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -98,6 +99,7 @@
 		B4DFFA341BCCB29000D177AE /* HitboxMedia.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HitboxMedia.swift; sourceTree = "<group>"; };
 		B4DFFA361BCCBA6100D177AE /* HitboxGamesViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HitboxGamesViewController.swift; sourceTree = "<group>"; };
 		B4DFFA381BCCBFBA00D177AE /* HitboxGame.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HitboxGame.swift; sourceTree = "<group>"; };
+		B4DFFA3A1BCCC88E00D177AE /* HitboxStreamsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HitboxStreamsViewController.swift; sourceTree = "<group>"; };
 		DC2A8ED48462858490AD4901 /* Pods-GamingStreamsTVApp.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-GamingStreamsTVApp.debug.xcconfig"; path = "Pods/Target Support Files/Pods-GamingStreamsTVApp/Pods-GamingStreamsTVApp.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -231,8 +233,9 @@
 				09D098241BA7666200E7E6FC /* StreamsViewController.swift */,
 				B4A67BBD1BCBE4CB003E3B6F /* SearchResultsViewController.swift */,
 				09D098281BA77FAB00E7E6FC /* VideoViewController.swift */,
-				09199A1E1BBAD0D000B10543 /* Abstract */,
 				B4DFFA361BCCBA6100D177AE /* HitboxGamesViewController.swift */,
+				B4DFFA3A1BCCC88E00D177AE /* HitboxStreamsViewController.swift */,
+				09199A1E1BBAD0D000B10543 /* Abstract */,
 			);
 			name = ViewControllers;
 			sourceTree = "<group>";
@@ -415,6 +418,7 @@
 				B4DFFA351BCCB29000D177AE /* HitboxMedia.swift in Sources */,
 				090AB9041BA616A900CDB05D /* GamesViewController.swift in Sources */,
 				B44A44671BC6CAB800F399EC /* ItemCellView.swift in Sources */,
+				B4DFFA3B1BCCC88E00D177AE /* HitboxStreamsViewController.swift in Sources */,
 				09D0982B1BA782C800E7E6FC /* VideoView.swift in Sources */,
 				09CE59861BAF55BD0054EB71 /* TwitchChatMessage.swift in Sources */,
 				09CE598C1BAF963C0054EB71 /* ConcurrencyHelpers.swift in Sources */,
