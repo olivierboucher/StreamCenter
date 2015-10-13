@@ -40,6 +40,7 @@
 		B443D65A1BCD916700CAC88B /* (null) in Sources */ = {isa = PBXBuildFile; };
 		B44A44671BC6CAB800F399EC /* ItemCellView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B44A44661BC6CAB800F399EC /* ItemCellView.swift */; };
 		B4542FDE1BCD987F0099D14B /* ScrollingLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4542FDD1BCD987F0099D14B /* ScrollingLabel.swift */; };
+		B4542FE21BCD9BEA0099D14B /* SourceSelectorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4542FE11BCD9BEA0099D14B /* SourceSelectorViewController.swift */; };
 		B4A67BBC1BCBDF8B003E3B6F /* UIColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4A67BBB1BCBDF8B003E3B6F /* UIColor.swift */; };
 		B4DFFA331BCCB22900D177AE /* HitboxAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4DFFA321BCCB22900D177AE /* HitboxAPI.swift */; };
 		B4DFFA351BCCB29000D177AE /* HitboxMedia.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4DFFA341BCCB29000D177AE /* HitboxMedia.swift */; };
@@ -97,6 +98,7 @@
 		B443D6581BCD915700CAC88B /* TwitchSearchResultsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TwitchSearchResultsViewController.swift; sourceTree = "<group>"; };
 		B44A44661BC6CAB800F399EC /* ItemCellView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ItemCellView.swift; sourceTree = "<group>"; };
 		B4542FDD1BCD987F0099D14B /* ScrollingLabel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ScrollingLabel.swift; sourceTree = "<group>"; };
+		B4542FE11BCD9BEA0099D14B /* SourceSelectorViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SourceSelectorViewController.swift; sourceTree = "<group>"; };
 		B4A67BBB1BCBDF8B003E3B6F /* UIColor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIColor.swift; sourceTree = "<group>"; };
 		B4DFFA321BCCB22900D177AE /* HitboxAPI.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HitboxAPI.swift; sourceTree = "<group>"; };
 		B4DFFA341BCCB29000D177AE /* HitboxMedia.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HitboxMedia.swift; sourceTree = "<group>"; };
@@ -233,12 +235,9 @@
 		09D098231BA7663A00E7E6FC /* ViewControllers */ = {
 			isa = PBXGroup;
 			children = (
-				090AB8E31BA5BFDF00CDB05D /* TwitchGamesViewController.swift */,
-				09D098241BA7666200E7E6FC /* TwitchStreamsViewController.swift */,
-				B443D6581BCD915700CAC88B /* TwitchSearchResultsViewController.swift */,
-				09D098281BA77FAB00E7E6FC /* VideoViewController.swift */,
-				B4DFFA361BCCBA6100D177AE /* HitboxGamesViewController.swift */,
-				B4DFFA3A1BCCC88E00D177AE /* HitboxStreamsViewController.swift */,
+				B4542FE11BCD9BEA0099D14B /* SourceSelectorViewController.swift */,
+				B4542FDF1BCD9BC30099D14B /* Twitch */,
+				B4542FE01BCD9BCE0099D14B /* Hitbox */,
 				09199A1E1BBAD0D000B10543 /* Abstract */,
 			);
 			name = ViewControllers;
@@ -250,6 +249,26 @@
 				73B61525F92468AED0A0EE8C /* Pods_GamingStreamsTVApp.framework */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		B4542FDF1BCD9BC30099D14B /* Twitch */ = {
+			isa = PBXGroup;
+			children = (
+				090AB8E31BA5BFDF00CDB05D /* TwitchGamesViewController.swift */,
+				09D098241BA7666200E7E6FC /* TwitchStreamsViewController.swift */,
+				B443D6581BCD915700CAC88B /* TwitchSearchResultsViewController.swift */,
+				09D098281BA77FAB00E7E6FC /* VideoViewController.swift */,
+			);
+			name = Twitch;
+			sourceTree = "<group>";
+		};
+		B4542FE01BCD9BCE0099D14B /* Hitbox */ = {
+			isa = PBXGroup;
+			children = (
+				B4DFFA361BCCBA6100D177AE /* HitboxGamesViewController.swift */,
+				B4DFFA3A1BCCC88E00D177AE /* HitboxStreamsViewController.swift */,
+			);
+			name = Hitbox;
 			sourceTree = "<group>";
 		};
 		B4DFFA311BCCB21100D177AE /* HitboxAPI */ = {
@@ -421,6 +440,7 @@
 				090AB9031BA616A900CDB05D /* AppDelegate.swift in Sources */,
 				B4DFFA331BCCB22900D177AE /* HitboxAPI.swift in Sources */,
 				09D098251BA7666200E7E6FC /* TwitchStreamsViewController.swift in Sources */,
+				B4542FE21BCD9BEA0099D14B /* SourceSelectorViewController.swift in Sources */,
 				B4DFFA351BCCB29000D177AE /* HitboxMedia.swift in Sources */,
 				090AB9041BA616A900CDB05D /* TwitchGamesViewController.swift in Sources */,
 				B44A44671BC6CAB800F399EC /* ItemCellView.swift in Sources */,
