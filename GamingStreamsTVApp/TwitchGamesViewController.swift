@@ -91,11 +91,11 @@ class TwitchGamesViewController : LoadingViewController {
         self.searchField.textAlignment = .Center
         
         //then the source switcher
-        let button = UIButton()
+        let button = UIButton(type: UIButtonType.RoundedRect)
         button.translatesAutoresizingMaskIntoConstraints = false
         button.setTitle("Switch Source", forState: .Normal)
         button.setTitleColor(UIColor.darkGrayColor(), forState: .Normal)
-        button.setTitleColor(UIColor.whiteColor(), forState: .Focused)
+        button.setTitleColor(UIColor.blackColor(), forState: .Focused)
         button.titleLabel?.textAlignment = NSTextAlignment.Right
         button.addTarget(self, action: Selector("switchSource"), forControlEvents: .PrimaryActionTriggered)
         
