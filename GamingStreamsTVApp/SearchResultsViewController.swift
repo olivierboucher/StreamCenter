@@ -105,6 +105,7 @@ class SearchResultsViewController: LoadingViewController {
         self.searchTypeControl.translatesAutoresizingMaskIntoConstraints = false
         self.searchTypeControl.selectedSegmentIndex = 0
 //        self.searchTypeControl.backgroundColor = UIColor(white: 0.7, alpha: 1.0)
+        self.searchTypeControl.setTitleTextAttributes([NSForegroundColorAttributeName : UIColor(white: 0.45, alpha: 1)], forState: .Normal)
         self.searchTypeControl.addTarget(self, action: Selector("changedSearchType:"), forControlEvents: .ValueChanged)
         
         //do the top bar first
