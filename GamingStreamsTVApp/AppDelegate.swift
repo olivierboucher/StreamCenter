@@ -14,7 +14,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         let window = UIWindow.init(frame: UIScreen.mainScreen().bounds)
-        window.rootViewController = GamesViewController()
+        window.rootViewController = HitboxGamesViewController()
         window.makeKeyAndVisible()
         self.window = window
         

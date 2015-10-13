@@ -49,6 +49,8 @@ class HitboxGamesViewController : LoadingViewController {
     func loadContent() {
         self.removeErrorView()
         self.displayLoadingView("Loading Games...")
+        
+        //right now this is hardcoded to search for league of legends
         HitboxAPI.getGames(0, limit: LOADING_BUFFER) { (games, error) -> () in
             guard let games = games else {
                 dispatch_async(dispatch_get_main_queue(), {
@@ -126,9 +128,9 @@ extension HitboxGamesViewController : UICollectionViewDelegate {
     
     func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
         let selectedGame = games[indexPath.row]
-//        let gamesViewController = gamesViewController(game: selectedGame)
+        let streamsViewController = HitboxStreamsViewController(game: selectedGame)
         
-//        self.presentViewController(gamesViewController, animated: true, completion: nil)
+        self.presentViewController(streamsViewController, animated: true, completion: nil)
     }
     
 //    func collectionView(collectionView: UICollectionView, willDisplayCell cell: UICollectionViewCell, forItemAtIndexPath indexPath: NSIndexPath) {
