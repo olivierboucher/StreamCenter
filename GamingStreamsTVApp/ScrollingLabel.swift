@@ -64,7 +64,7 @@ class ScrollingLabel: UIView {
     override func layoutSubviews() {
         print(self.frame)
         self.textLayer.frame = self.bounds
-        self.textLayer.frame.size.width = 500
+        self.textLayer.frame.size.width = self.textLayer.preferredFrameSize().width
     }
     
     /*
@@ -75,7 +75,8 @@ class ScrollingLabel: UIView {
     */
     func beginScrolling() {
         let bounds = self.bounds
-        guard let size = textSize where size.width > bounds.width && self.scrollSpeed > 0 else {
+        let size = textSize
+        guard size.width > bounds.width && self.scrollSpeed > 0 else {
             return
         }
         let moveAmount = (size.width - bounds.width)
@@ -121,7 +122,7 @@ class ScrollingLabel: UIView {
         }
     }
     
-    var textSize: CGSize? {
+    var textSize: CGSize {
         get {
             return self.textLayer.preferredFrameSize()
         }
