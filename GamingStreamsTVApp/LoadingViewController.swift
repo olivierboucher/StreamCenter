@@ -120,7 +120,7 @@ class LoadingViewController : UIViewController {
         }
     }
     
-    func switchSource(toThesePossibleSources sources: [SourceAPI]) {
+    func switchAPISource(toThesePossibleSources sources: [SourceAPI]) {
         let alert = UIAlertController(title: "Switch Source", message: "Which source would you like to view?", preferredStyle: .Alert)
         
         alert.addAction(UIAlertAction(title: "Cancel", style: .Cancel, handler: nil))

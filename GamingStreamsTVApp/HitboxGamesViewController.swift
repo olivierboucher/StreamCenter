@@ -79,7 +79,7 @@ class HitboxGamesViewController : LoadingViewController {
         self.searchField.textAlignment = .Center
         
         //then the source switcher
-        let button = UIButton(type: UIButtonType.RoundedRect)
+        let button = UIButton(type: UIButtonType.System)
         button.translatesAutoresizingMaskIntoConstraints = false
         button.setTitle("Switch Source", forState: .Normal)
         button.setTitleColor(UIColor.darkGrayColor(), forState: .Normal)
@@ -122,8 +122,14 @@ class HitboxGamesViewController : LoadingViewController {
         
     }
     
+    /*
+    * switchSource()
+    *
+    * we add a button to the top bar and within this method you should call switchAPISource (a superclass method) to switch to a different source
+    *
+    */
     func switchSource() {
-        super.switchSource(toThesePossibleSources: [.Twitch, .Youtube])
+        switchAPISource(toThesePossibleSources: [.Twitch, .Youtube])
     }
     
     override func reloadContent() {
