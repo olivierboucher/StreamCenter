@@ -90,7 +90,7 @@ class VideoViewController : UIViewController {
             if let streams = streams {
                 self.streams = streams
                 self.currentStreamVideo = streams[0]
-                let streamAsset = AVURLAsset(URL: self.currentStreamVideo!.url!)
+                let streamAsset = AVURLAsset(URL: self.currentStreamVideo!.url)
                 let streamItem = AVPlayerItem(asset: streamAsset)
                 
                 self.videoPlayer = AVPlayer(playerItem: streamItem)
@@ -101,12 +101,6 @@ class VideoViewController : UIViewController {
                 
             }
         }
-    }
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        // Do any additional setup after loading the view, typically from a nib.
-        
     }
     
     /*
@@ -309,7 +303,7 @@ class VideoViewController : UIViewController {
                 for stream in streams {
                     if stream.quality == qualityIdentifier {
                         currentStreamVideo = stream
-                        let streamAsset = AVURLAsset(URL: stream.url!)
+                        let streamAsset = AVURLAsset(URL: stream.url)
                         let streamItem = AVPlayerItem(asset: streamAsset)
                         self.videoPlayer?.replaceCurrentItemWithPlayerItem(streamItem)
                         dismissMenu()
@@ -326,7 +320,7 @@ class VideoViewController : UIViewController {
             } else {
                 if let currentVideo = currentStreamVideo {
                     //do this to bring it back in sync
-                    let streamAsset = AVURLAsset(URL: currentVideo.url!)
+                    let streamAsset = AVURLAsset(URL: currentVideo.url)
                     let streamItem = AVPlayerItem(asset: streamAsset)
                     player.replaceCurrentItemWithPlayerItem(streamItem)
                 }

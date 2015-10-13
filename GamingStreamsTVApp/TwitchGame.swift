@@ -96,7 +96,8 @@ class TwitchGame: CellItem {
                     return "popularity: \(popularity)"
                 }
             }
-            return ""
+            //return blank so that the label is still rendered in the collection view (for spacing)
+            return " "
         }
     }
     

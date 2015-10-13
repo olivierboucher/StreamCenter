@@ -11,7 +11,7 @@ class GamesViewController : LoadingViewController {
     private let LOADING_BUFFER = 20
     private let NUM_COLUMNS = 5
     private let ITEMS_INSETS_X : CGFloat = 25
-    private let ITEMS_INSETS_Y : CGFloat = 40
+    private let ITEMS_INSETS_Y : CGFloat = 0
     private let GAME_IMG_HEIGHT_RATIO : CGFloat = 1.39705882353 //Computed from sampled image from twitch api
     
     private var searchField: UITextField!
@@ -78,10 +78,9 @@ class GamesViewController : LoadingViewController {
         //then do the search bar
         self.searchField = UITextField(frame: CGRectZero)
         self.searchField.translatesAutoresizingMaskIntoConstraints = false
-        self.searchField.placeholder = "Search Games Or Streams"
+        self.searchField.placeholder = "Search Games or Streams"
         self.searchField.delegate = self
         self.searchField.textAlignment = .Center
-        self.definesPresentationContext = true
         
         //do the top bar first
         self.topBar = TopBarView(frame: CGRectZero, withMainTitle: "Top Games", supplementalView: self.searchField)
@@ -92,7 +91,7 @@ class GamesViewController : LoadingViewController {
         let layout : UICollectionViewFlowLayout = UICollectionViewFlowLayout()
         
         layout.scrollDirection = UICollectionViewScrollDirection.Vertical
-        layout.minimumInteritemSpacing = 10
+        layout.minimumInteritemSpacing = ITEMS_INSETS_X
         layout.minimumLineSpacing = 50
         
         self.collectionView = UICollectionView(frame: CGRectZero, collectionViewLayout: layout)
@@ -100,7 +99,7 @@ class GamesViewController : LoadingViewController {
         self.collectionView.registerClass(ItemCellView.classForCoder(), forCellWithReuseIdentifier: ItemCellView.CELL_IDENTIFIER)
         self.collectionView.dataSource = self
         self.collectionView.delegate = self
-        self.collectionView.contentInset = UIEdgeInsets(top: TOP_BAR_HEIGHT + 15 + (TOP_BAR_HEIGHT / 1.5), left: ITEMS_INSETS_X, bottom: ITEMS_INSETS_Y, right: ITEMS_INSETS_X)
+        self.collectionView.contentInset = UIEdgeInsets(top: TOP_BAR_HEIGHT + ITEMS_INSETS_Y, left: ITEMS_INSETS_X, bottom: ITEMS_INSETS_Y, right: ITEMS_INSETS_X)
         
         self.view.addSubview(self.collectionView)
         self.view.bringSubviewToFront(self.topBar)
@@ -120,42 +119,8 @@ class GamesViewController : LoadingViewController {
     }
     
     func handleLongPress(gestureRecognizer: UILongPressGestureRecognizer) {
-        if gestureRecognizer.state == .Began {
-            
-            let alert = UIAlertController(title: "Search", message: "Please enter a search term", preferredStyle: .Alert)
-            
-            alert.addTextFieldWithConfigurationHandler({ (textField) -> Void in
-                textField.placeholder = "Call of Duty"
-            })
-            
-            alert.addAction(UIAlertAction(title: "Cancel", style: .Cancel, handler: nil))
-            
-            alert.addAction(UIAlertAction(title: "Search", style: .Default, handler: { (action) -> Void in
-                //do the search
-                
-                guard let term = alert.textFields?.first?.text where term.characters.count > 0 else {
-                    return
-                }
-                
-                TwitchApi.getGamesWithSearchTerm(term, offset: 0, limit: 20) { (games, error) -> () in
-                    guard let games = games where games.count > 0 else {
-                        dispatch_async(dispatch_get_main_queue(), {
-                            self.removeLoadingView()
-                            self.displayErrorView("Error loading game list.\nPlease check your internet connection.")
-                        })
-                        return
-                    }
-                    
-                    self.games = games
-                    dispatch_async(dispatch_get_main_queue(), {
-                        
-                        self.removeLoadingView()
-                        self.collectionView.reloadData()
-                    })
-                }
-            }))
-            
-            presentViewController(alert, animated: true, completion: nil)
+        TwitchApi.authenticate { (authorized) -> () in
+            print(authorized)
         }
     }
     
@@ -225,7 +190,7 @@ extension GamesViewController : UICollectionViewDelegateFlowLayout {
     func collectionView(collectionView: UICollectionView,
         layout collectionViewLayout: UICollectionViewLayout,
         sizeForItemAtIndexPath indexPath: NSIndexPath) -> CGSize {
-            let width = self.view.bounds.width / CGFloat(NUM_COLUMNS) - CGFloat(ITEMS_INSETS_X * 2)
+            let width = collectionView.bounds.width / CGFloat(NUM_COLUMNS) - CGFloat(ITEMS_INSETS_X * 2)
             //Computed using the ratio from sampled from
             let height = (width * GAME_IMG_HEIGHT_RATIO) + ItemCellView.LABEL_HEIGHT * 2 //There 2 labels, top & bottom
             

@@ -22,6 +22,10 @@ class LoadingViewController : UIViewController {
     internal var errorView : ErrorView?
     private var reloadButton : UIButton?
     
+    override func viewDidLoad() {
+        self.view.backgroundColor = UIColor(white: 0.4, alpha: 1)
+    }
+    
     /*
     * displayLoadingView()
     *
