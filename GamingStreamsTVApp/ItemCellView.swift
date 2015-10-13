@@ -119,7 +119,7 @@ class ItemCellView: UICollectionViewCell {
             
             
             dispatch_async(dispatch_get_main_queue(),{
-                if((self.activityIndicator != nil) && (self.activityIndicator!.isDescendantOfView(self.imageView!))) {
+                if self.activityIndicator != nil  {
                     self.activityIndicator?.removeFromSuperview()
                     self.activityIndicator = nil
                 }

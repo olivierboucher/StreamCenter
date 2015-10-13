@@ -39,6 +39,10 @@
 		B44A44671BC6CAB800F399EC /* ItemCellView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B44A44661BC6CAB800F399EC /* ItemCellView.swift */; };
 		B4A67BBC1BCBDF8B003E3B6F /* UIColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4A67BBB1BCBDF8B003E3B6F /* UIColor.swift */; };
 		B4A67BBE1BCBE4CB003E3B6F /* SearchResultsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4A67BBD1BCBE4CB003E3B6F /* SearchResultsViewController.swift */; };
+		B4DFFA331BCCB22900D177AE /* HitboxAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4DFFA321BCCB22900D177AE /* HitboxAPI.swift */; };
+		B4DFFA351BCCB29000D177AE /* HitboxMedia.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4DFFA341BCCB29000D177AE /* HitboxMedia.swift */; };
+		B4DFFA371BCCBA6100D177AE /* HitboxGamesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4DFFA361BCCBA6100D177AE /* HitboxGamesViewController.swift */; };
+		B4DFFA391BCCBFBA00D177AE /* HitboxGame.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4DFFA381BCCBFBA00D177AE /* HitboxGame.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -90,6 +94,10 @@
 		B44A44661BC6CAB800F399EC /* ItemCellView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ItemCellView.swift; sourceTree = "<group>"; };
 		B4A67BBB1BCBDF8B003E3B6F /* UIColor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIColor.swift; sourceTree = "<group>"; };
 		B4A67BBD1BCBE4CB003E3B6F /* SearchResultsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchResultsViewController.swift; sourceTree = "<group>"; };
+		B4DFFA321BCCB22900D177AE /* HitboxAPI.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HitboxAPI.swift; sourceTree = "<group>"; };
+		B4DFFA341BCCB29000D177AE /* HitboxMedia.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HitboxMedia.swift; sourceTree = "<group>"; };
+		B4DFFA361BCCBA6100D177AE /* HitboxGamesViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HitboxGamesViewController.swift; sourceTree = "<group>"; };
+		B4DFFA381BCCBFBA00D177AE /* HitboxGame.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HitboxGame.swift; sourceTree = "<group>"; };
 		DC2A8ED48462858490AD4901 /* Pods-GamingStreamsTVApp.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-GamingStreamsTVApp.debug.xcconfig"; path = "Pods/Target Support Files/Pods-GamingStreamsTVApp/Pods-GamingStreamsTVApp.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -128,6 +136,7 @@
 			children = (
 				09D098231BA7663A00E7E6FC /* ViewControllers */,
 				090AB9051BA6366500CDB05D /* Views */,
+				B4DFFA311BCCB21100D177AE /* HitboxAPI */,
 				090AB8F01BA5C7EC00CDB05D /* TwitchAPI */,
 				09CE59831BAE456D0054EB71 /* Helpers */,
 				090AB8E11BA5BFDF00CDB05D /* AppDelegate.swift */,
@@ -223,6 +232,7 @@
 				B4A67BBD1BCBE4CB003E3B6F /* SearchResultsViewController.swift */,
 				09D098281BA77FAB00E7E6FC /* VideoViewController.swift */,
 				09199A1E1BBAD0D000B10543 /* Abstract */,
+				B4DFFA361BCCBA6100D177AE /* HitboxGamesViewController.swift */,
 			);
 			name = ViewControllers;
 			sourceTree = "<group>";
@@ -233,6 +243,16 @@
 				73B61525F92468AED0A0EE8C /* Pods_GamingStreamsTVApp.framework */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		B4DFFA311BCCB21100D177AE /* HitboxAPI */ = {
+			isa = PBXGroup;
+			children = (
+				B4DFFA321BCCB22900D177AE /* HitboxAPI.swift */,
+				B4DFFA381BCCBFBA00D177AE /* HitboxGame.swift */,
+				B4DFFA341BCCB29000D177AE /* HitboxMedia.swift */,
+			);
+			name = HitboxAPI;
 			sourceTree = "<group>";
 		};
 		F869E16742CCA364171847D9 /* Pods */ = {
@@ -368,6 +388,7 @@
 				090AB8FE1BA616A900CDB05D /* TwitchGame.swift in Sources */,
 				09D098291BA77FAB00E7E6FC /* VideoViewController.swift in Sources */,
 				090AB9271BB579A300CDB05D /* ModalMenuView.swift in Sources */,
+				B4DFFA371BCCBA6100D177AE /* HitboxGamesViewController.swift in Sources */,
 				B4A67BBC1BCBDF8B003E3B6F /* UIColor.swift in Sources */,
 				090AB8FF1BA616A900CDB05D /* TwitchChannel.swift in Sources */,
 				090AB90F1BA9BBE300CDB05D /* ErrorView.swift in Sources */,
@@ -380,6 +401,7 @@
 				090AB9001BA616A900CDB05D /* TwitchStream.swift in Sources */,
 				09CE598A1BAF5F870054EB71 /* NSQueue.swift in Sources */,
 				09EB6D3E1BB484F7003EB244 /* String.swift in Sources */,
+				B4DFFA391BCCBFBA00D177AE /* HitboxGame.swift in Sources */,
 				09EB6D461BB4A8BE003EB244 /* CATextLayerVC.swift in Sources */,
 				09199A1D1BBAC67F00B10543 /* LoadingViewController.swift in Sources */,
 				090AB9221BB3699700CDB05D /* TwitchChatView.swift in Sources */,
@@ -388,7 +410,9 @@
 				090AB9021BA616A900CDB05D /* M3UParser.swift in Sources */,
 				09E33CC91BB5B2DF000702E2 /* Dictionary.swift in Sources */,
 				090AB9031BA616A900CDB05D /* AppDelegate.swift in Sources */,
+				B4DFFA331BCCB22900D177AE /* HitboxAPI.swift in Sources */,
 				09D098251BA7666200E7E6FC /* StreamsViewController.swift in Sources */,
+				B4DFFA351BCCB29000D177AE /* HitboxMedia.swift in Sources */,
 				090AB9041BA616A900CDB05D /* GamesViewController.swift in Sources */,
 				B44A44671BC6CAB800F399EC /* ItemCellView.swift in Sources */,
 				09D0982B1BA782C800E7E6FC /* VideoView.swift in Sources */,

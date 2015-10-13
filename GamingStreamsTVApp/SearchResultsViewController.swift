@@ -16,10 +16,6 @@ private enum SearchType {
 class SearchResultsViewController: LoadingViewController {
     
     private let LOADING_BUFFER = 20
-    private let ITEMS_INSETS_X : CGFloat = 25
-    private let ITEMS_INSETS_Y : CGFloat = 40
-    private let GAME_IMG_HEIGHT_RATIO : CGFloat = 1.39705882353 //Computed from sampled image from twitch api
-    private let STREAM_IMG_HEIGHT_RATIO : CGFloat = 1.777777777 //Computed from sampled image from twitch api
     
     private var searchType = SearchType.Game
     
@@ -113,9 +109,7 @@ class SearchResultsViewController: LoadingViewController {
         
         //then do the collection view
         let layout : UICollectionViewFlowLayout = UICollectionViewFlowLayout()
-        
         layout.scrollDirection = UICollectionViewScrollDirection.Vertical
-//        layout.minimumInteritemSpacing = ITEMS_INSETS_X
         layout.minimumLineSpacing = 50
         
         self.collectionView = UICollectionView(frame: CGRectZero, collectionViewLayout: layout)
@@ -123,7 +117,7 @@ class SearchResultsViewController: LoadingViewController {
         self.collectionView.registerClass(ItemCellView.classForCoder(), forCellWithReuseIdentifier: ItemCellView.CELL_IDENTIFIER)
         self.collectionView.dataSource = self
         self.collectionView.delegate = self
-        self.collectionView.contentInset = UIEdgeInsets(top: TOP_BAR_HEIGHT + ITEMS_INSETS_Y, left: ITEMS_INSETS_X, bottom: ITEMS_INSETS_Y, right: ITEMS_INSETS_X)
+        self.collectionView.contentInset = UIEdgeInsets(top: TOP_BAR_HEIGHT + ITEMS_INSETS_Y, left: itemInset, bottom: ITEMS_INSETS_Y, right: itemInset)
         
         self.view.addSubview(self.collectionView)
         self.view.bringSubviewToFront(self.topBar)
@@ -204,37 +198,6 @@ extension SearchResultsViewController : UICollectionViewDelegate {
         case .Game:
             //games don't support an offset to load more items
             return
-//            if (indexPath.row == self.games.count - 1) {
-//                TwitchApi.getGamesWithSearchTerm(self.searchTerm, offset: self.games.count, limit: LOADING_BUFFER, completionHandler: { (games, error) -> () in
-//                    if(error != nil || games == nil){
-//                        NSLog("Error loading more games")
-//                    }
-//                    guard let games = games where games.count > 0 else {
-//                        return
-//                    }
-//                    
-//                    var paths = [NSIndexPath]()
-//                    
-//                    let filteredGames = games.filter({
-//                        let gameId = $0.id
-//                        if let _ = self.games.indexOf({$0.id == gameId}) {
-//                            return false
-//                        }
-//                        return true
-//                    })
-//                    
-//                    for i in 0..<filteredGames.count {
-//                        paths.append(NSIndexPath(forItem: i + self.games.count, inSection: 0))
-//                    }
-//                    
-//                    self.collectionView!.performBatchUpdates({
-//                        self.games.appendContentsOf(filteredGames)
-//                        
-//                        self.collectionView!.insertItemsAtIndexPaths(paths)
-//                        
-//                        }, completion: nil)
-//                })
-//            }
         case .Stream:
             if (indexPath.row == self.streams.count - 1) {
                 TwitchApi.getStreamsWithSearchTerm(self.searchTerm, offset: self.streams.count, limit: LOADING_BUFFER, completionHandler: { (streams, error) -> () in
@@ -292,8 +255,7 @@ extension SearchResultsViewController : UICollectionViewDelegateFlowLayout {
     func collectionView(collectionView: UICollectionView,
         layout collectionViewLayout: UICollectionViewLayout,
         insetForSectionAtIndex section: Int) -> UIEdgeInsets {
-            let topInset = (section == 0) ? TOP_BAR_HEIGHT : ITEMS_INSETS_X
-            return UIEdgeInsets(top: topInset, left: ITEMS_INSETS_X, bottom: ITEMS_INSETS_Y, right: ITEMS_INSETS_X)
+            return UIEdgeInsets(top: TOP_BAR_HEIGHT + ITEMS_INSETS_Y, left: itemInset, bottom: ITEMS_INSETS_Y, right: itemInset)
     }
     
     func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAtIndex section: Int) -> CGFloat {

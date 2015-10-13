@@ -14,13 +14,16 @@ import Foundation
 class LoadingViewController : UIViewController {
     
     internal let TOP_BAR_HEIGHT : CGFloat = 100
+    internal let ITEMS_INSETS_Y : CGFloat = 0
+    internal let GAME_IMG_HEIGHT_RATIO : CGFloat = 1.39705882353 //Computed from sampled image from twitch api
+    internal let STREAM_IMG_HEIGHT_RATIO : CGFloat = 1.777777777 //Computed from sampled image from twitch api
     
     internal var collectionView : UICollectionView!
     internal var topBar : TopBarView!
     
     internal var loadingView : LoadingView?
     internal var errorView : ErrorView?
-    private var reloadButton : UIButton?
+    private var reloadLabel : UILabel?
     
     override func viewDidLoad() {
         self.view.backgroundColor = UIColor(white: 0.4, alpha: 1)
@@ -45,7 +48,7 @@ class LoadingViewController : UIViewController {
     *
     */
     func removeLoadingView() {
-        if((self.loadingView != nil) && (self.loadingView!.isDescendantOfView(self.view))){
+        if self.loadingView != nil {
             self.loadingView?.removeFromSuperview()
             self.loadingView = nil
         }
@@ -58,22 +61,24 @@ class LoadingViewController : UIViewController {
     *
     */
     func displayErrorView(title : String) {
-        let errorViewFrame = CGRect(x: 0, y: 0, width: 300, height: 300)
-        self.errorView = ErrorView(frame: errorViewFrame, andTitle: title)
+        self.errorView = ErrorView(dimension: 450, andTitle: title)
         self.errorView?.center = self.view.center
         self.view.addSubview(self.errorView!)
         
-        self.reloadButton = UIButton(frame: CGRectMake(0, 0, 300, 20))
-        self.reloadButton?.center = self.view.center
-        self.reloadButton?.center.y += 200
-        self.reloadButton?.setTitleColor(UIColor.whiteColor(), forState: .Normal)
-        //just for debugging
-//        self.reloadButton?.setTitleColor(UIColor.redColor(), forState: .Focused)
-        self.reloadButton?.setTitle("Reload", forState: .Normal)
-        self.reloadButton?.addTarget(self, action: Selector("reloadContent"), forControlEvents: .PrimaryActionTriggered)
-        self.view.addSubview(self.reloadButton!)
+        self.reloadLabel = UILabel()
+        self.reloadLabel?.text = "Press and hold to reload the content"
+        self.reloadLabel?.font = self.reloadLabel?.font.fontWithSize(25)
+        self.reloadLabel?.sizeToFit()
+        self.reloadLabel?.center = CGPoint(x: CGRectGetMidX(self.errorView!.frame), y: CGRectGetMaxY(self.errorView!.frame))
+        self.reloadLabel?.center.y += 10
+        self.reloadLabel?.textColor = UIColor.whiteColor()
+        self.view.addSubview(self.reloadLabel!)
+        self.view.bringSubviewToFront(self.reloadLabel!)
         
-        self.view.setNeedsFocusUpdate()
+        //Gestures configuration
+        let longPressRecognizer = UILongPressGestureRecognizer(target: self, action: Selector("handleLongPress:"))
+        longPressRecognizer.cancelsTouchesInView = true
+        self.view.addGestureRecognizer(longPressRecognizer)
     }
     
     /*
@@ -83,13 +88,13 @@ class LoadingViewController : UIViewController {
     *
     */
     func removeErrorView() {
-        if((self.errorView != nil) && (self.errorView!.isDescendantOfView(self.view))){
+        if self.errorView != nil {
             self.errorView?.removeFromSuperview()
             self.errorView = nil
         }
-        if((self.reloadButton != nil) && (self.reloadButton!.isDescendantOfView(self.view))){
-            self.reloadButton?.removeFromSuperview()
-            self.reloadButton = nil
+        if self.reloadLabel != nil {
+            self.reloadLabel?.removeFromSuperview()
+            self.reloadLabel = nil
         }
     }
     
@@ -100,5 +105,19 @@ class LoadingViewController : UIViewController {
     */
     func reloadContent() {
         print("we are reloading the content now: \(self)")
+    }
+    
+    /*
+    * handleLongPress(recognizer: UILongPressGestureRecognizer)
+    *
+    * This is so that if the content doesn't load the first time around, we can load it again
+    *
+    */
+    func handleLongPress(recognizer: UILongPressGestureRecognizer) {
+        if recognizer.state == .Began {
+            self.view.removeGestureRecognizer(recognizer)
+            reloadContent()
+        }
+        
     }
 }
