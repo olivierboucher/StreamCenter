@@ -28,7 +28,7 @@ class QRCodeViewController: UIViewController {
         self.titleLabel.textAlignment = NSTextAlignment.Center
         self.titleLabel.text = "Scan the QR code below or go to the link provided.\nOnce you have received your authentication code, enter it below."
         
-        let image = QRCodeGenerator.generateQRCode(withString: authenticationUrlString)
+        let image = QRCodeGenerator.generateQRCode(withString: authenticationUrlString, clearBackground: true)
         let imageView = UIImageView(image: image)
         imageView.translatesAutoresizingMaskIntoConstraints = false
         
@@ -99,7 +99,7 @@ class QRCodeViewController: UIViewController {
                 })
                 return
             }
-            TokenHelper.storeToken(token)
+            TokenHelper.storeTwitchToken(token)
             dispatch_async(dispatch_get_main_queue(), { () -> Void in
                 self.dismissViewControllerAnimated(true, completion: nil)
             })
