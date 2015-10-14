@@ -66,14 +66,13 @@ class LoadingViewController : UIViewController {
         self.view.addSubview(self.errorView!)
         
         self.reloadLabel = UILabel()
-        self.reloadLabel?.text = "Press and hold to reload the content"
+        self.reloadLabel?.text = "Press and hold on your remote to reload the content."
         self.reloadLabel?.font = self.reloadLabel?.font.fontWithSize(25)
         self.reloadLabel?.sizeToFit()
         self.reloadLabel?.center = CGPoint(x: CGRectGetMidX(self.errorView!.frame), y: CGRectGetMaxY(self.errorView!.frame))
         self.reloadLabel?.center.y += 10
         self.reloadLabel?.textColor = UIColor.whiteColor()
         self.view.addSubview(self.reloadLabel!)
-        self.view.bringSubviewToFront(self.reloadLabel!)
         
         //Gestures configuration
         let longPressRecognizer = UILongPressGestureRecognizer(target: self, action: Selector("handleLongPress:"))
