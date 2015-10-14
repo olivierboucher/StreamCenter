@@ -35,6 +35,16 @@ body {
 	border-bottom-left-radius: 5px;
 }
 
+.bar-start:after {
+	content: "";
+	background-color: black;
+	width: 1%;	
+	height: 20px;
+	float: right;
+	position: relative;
+	left: 1%;
+}
+
 .bar-end {
 	display: inline-block;
 	height: 20px;
