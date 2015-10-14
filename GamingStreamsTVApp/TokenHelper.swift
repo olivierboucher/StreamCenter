@@ -10,17 +10,28 @@ import UIKit
 
 class TokenHelper: NSObject {
     
-    static let TOKEN_KEY = "com.StreamCenter.TOKEN_KEY"
+    static let TWITCH_SERVICE = "com.StreamCenter.Twitch.SERVICE"
+    static let TWITCH_TOKEN_KEY = "com.StreamCenter.Twitch.TOKEN_KEY"
     
-    static func storeToken(token: String) {
-        let defaults = NSUserDefaults.standardUserDefaults()
-        defaults.setObject(token, forKey: TokenHelper.TOKEN_KEY)
-        defaults.synchronize()
+//    static func storeTwitchToken(token: String) {
+//        let defaults = NSUserDefaults.standardUserDefaults()
+//        defaults.setObject(token, forKey: TokenHelper.TWITCH_TOKEN_KEY)
+//        defaults.synchronize()
+//    }
+//    
+//    static func getTwitchToken() -> String? {
+//        let defaults = NSUserDefaults.standardUserDefaults()
+//        return defaults.stringForKey(TokenHelper.TWITCH_TOKEN_KEY)
+//    }
+    
+    static func storeTwitchToken(token: String) {
+        let keychain = Keychain(service: TokenHelper.TWITCH_SERVICE)
+        keychain[TokenHelper.TWITCH_TOKEN_KEY] = token
     }
     
-    static func getToken() -> String? {
-        let defaults = NSUserDefaults.standardUserDefaults()
-        return defaults.stringForKey(TokenHelper.TOKEN_KEY)
+    static func getTwitchToken() -> String? {
+        let keychain = Keychain(service: TokenHelper.TWITCH_SERVICE)
+        return keychain[TokenHelper.TWITCH_TOKEN_KEY]
     }
 
 }
