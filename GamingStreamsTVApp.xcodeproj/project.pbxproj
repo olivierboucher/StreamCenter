@@ -40,7 +40,7 @@
 		B443D65A1BCD916700CAC88B /* (null) in Sources */ = {isa = PBXBuildFile; };
 		B44A44671BC6CAB800F399EC /* ItemCellView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B44A44661BC6CAB800F399EC /* ItemCellView.swift */; };
 		B4542FDE1BCD987F0099D14B /* ScrollingLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4542FDD1BCD987F0099D14B /* ScrollingLabel.swift */; };
-		B4542FE21BCD9BEA0099D14B /* SourceSelectorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4542FE11BCD9BEA0099D14B /* SourceSelectorViewController.swift */; };
+		B46307981BCEE55B005F705E /* SourceTabController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B46307971BCEE55B005F705E /* SourceTabController.swift */; };
 		B4A67BBC1BCBDF8B003E3B6F /* UIColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4A67BBB1BCBDF8B003E3B6F /* UIColor.swift */; };
 		B4DFFA331BCCB22900D177AE /* HitboxAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4DFFA321BCCB22900D177AE /* HitboxAPI.swift */; };
 		B4DFFA351BCCB29000D177AE /* HitboxMedia.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4DFFA341BCCB29000D177AE /* HitboxMedia.swift */; };
@@ -98,7 +98,7 @@
 		B443D6581BCD915700CAC88B /* TwitchSearchResultsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TwitchSearchResultsViewController.swift; sourceTree = "<group>"; };
 		B44A44661BC6CAB800F399EC /* ItemCellView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ItemCellView.swift; sourceTree = "<group>"; };
 		B4542FDD1BCD987F0099D14B /* ScrollingLabel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ScrollingLabel.swift; sourceTree = "<group>"; };
-		B4542FE11BCD9BEA0099D14B /* SourceSelectorViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SourceSelectorViewController.swift; sourceTree = "<group>"; };
+		B46307971BCEE55B005F705E /* SourceTabController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SourceTabController.swift; sourceTree = "<group>"; };
 		B4A67BBB1BCBDF8B003E3B6F /* UIColor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIColor.swift; sourceTree = "<group>"; };
 		B4DFFA321BCCB22900D177AE /* HitboxAPI.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HitboxAPI.swift; sourceTree = "<group>"; };
 		B4DFFA341BCCB29000D177AE /* HitboxMedia.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HitboxMedia.swift; sourceTree = "<group>"; };
@@ -235,7 +235,7 @@
 		09D098231BA7663A00E7E6FC /* ViewControllers */ = {
 			isa = PBXGroup;
 			children = (
-				B4542FE11BCD9BEA0099D14B /* SourceSelectorViewController.swift */,
+				B46307971BCEE55B005F705E /* SourceTabController.swift */,
 				B4542FDF1BCD9BC30099D14B /* Twitch */,
 				B4542FE01BCD9BCE0099D14B /* Hitbox */,
 				09199A1E1BBAD0D000B10543 /* Abstract */,
@@ -424,6 +424,7 @@
 				09CE597F1BAE08B10054EB71 /* IRCHandler.swift in Sources */,
 				B443D65A1BCD916700CAC88B /* (null) in Sources */,
 				09CE59881BAF55CE0054EB71 /* TwitchChatMessageQueue.swift in Sources */,
+				B46307981BCEE55B005F705E /* SourceTabController.swift in Sources */,
 				090AB9241BB36BC100CDB05D /* TwitchChatMessageView.swift in Sources */,
 				090AB9001BA616A900CDB05D /* TwitchStream.swift in Sources */,
 				09CE598A1BAF5F870054EB71 /* NSQueue.swift in Sources */,
@@ -440,7 +441,6 @@
 				090AB9031BA616A900CDB05D /* AppDelegate.swift in Sources */,
 				B4DFFA331BCCB22900D177AE /* HitboxAPI.swift in Sources */,
 				09D098251BA7666200E7E6FC /* TwitchStreamsViewController.swift in Sources */,
-				B4542FE21BCD9BEA0099D14B /* SourceSelectorViewController.swift in Sources */,
 				B4DFFA351BCCB29000D177AE /* HitboxMedia.swift in Sources */,
 				090AB9041BA616A900CDB05D /* TwitchGamesViewController.swift in Sources */,
 				B44A44671BC6CAB800F399EC /* ItemCellView.swift in Sources */,
