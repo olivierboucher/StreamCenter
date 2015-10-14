@@ -85,8 +85,10 @@ class GamesViewController : LoadingViewController {
         self.searchField.delegate = self
         self.searchField.textAlignment = .Center
         
+        let imageView = UIImageView(image: UIImage(named: "twitch"))
+        
         //do the top bar first
-        self.topBar = TopBarView(frame: CGRectZero, withMainTitle: "Top Games", leftView: self.searchField)
+        self.topBar = TopBarView(frame: CGRectZero, withMainTitle: "Top Games", centerView: imageView, leftView: self.searchField)
         self.topBar.translatesAutoresizingMaskIntoConstraints = false
         self.view.addSubview(self.topBar)
         
