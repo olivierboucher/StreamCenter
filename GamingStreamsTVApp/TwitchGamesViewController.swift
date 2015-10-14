@@ -17,6 +17,7 @@ class TwitchGamesViewController : LoadingViewController {
     
     convenience init(){
         self.init(nibName: nil, bundle: nil)
+        title = "Twitch"
     }
     
     override func viewDidLoad() {
@@ -90,17 +91,8 @@ class TwitchGamesViewController : LoadingViewController {
         self.searchField.delegate = self
         self.searchField.textAlignment = .Center
         
-        //then the source switcher
-        let button = UIButton(type: UIButtonType.System)
-        button.translatesAutoresizingMaskIntoConstraints = false
-        button.setTitle("Switch Source", forState: .Normal)
-        button.setTitleColor(UIColor.darkGrayColor(), forState: .Normal)
-        button.setTitleColor(UIColor.blackColor(), forState: .Focused)
-        button.titleLabel?.textAlignment = NSTextAlignment.Right
-        button.addTarget(self, action: Selector("switchSource"), forControlEvents: .PrimaryActionTriggered)
-        
         //do the top bar first
-        self.topBar = TopBarView(frame: CGRectZero, withMainTitle: "Top Games", leftView: self.searchField, rightView: button)
+        self.topBar = TopBarView(frame: CGRectZero, withMainTitle: "Top Games", leftView: self.searchField)
         self.topBar.translatesAutoresizingMaskIntoConstraints = false
         self.view.addSubview(self.topBar)
         
@@ -132,16 +124,6 @@ class TwitchGamesViewController : LoadingViewController {
         
         self.view.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|[collection]|", options: [], metrics: nil, views: viewDict))
         
-    }
-    
-    /*
-    * switchSource()
-    *
-    * we add a button to the top bar and within this method you should call switchAPISource (a superclass method) to switch to a different source
-    *
-    */
-    func switchSource() {
-        switchAPISource(toThesePossibleSources: [.Hitbox, .Youtube])
     }
     
     override func reloadContent() {
