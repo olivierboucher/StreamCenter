@@ -10,7 +10,8 @@ import UIKit
 
 class QRCodeViewController: UIViewController {
     
-    let UUID = NSUUID().UUIDString
+    //    let UUID = NSUUID().UUIDString
+    let UUID = String.randomStringWithLength(12)
     
     let codeField = UITextField()
     let titleLabel = UILabel()
@@ -105,5 +106,4 @@ class QRCodeViewController: UIViewController {
         }
         
     }
-
 }
