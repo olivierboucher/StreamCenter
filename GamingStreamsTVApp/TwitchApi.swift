@@ -21,8 +21,14 @@ class TwitchApi {
                 switch self {
                 case .URLError:
                     return "There was an error with the request."
-                default:
-                    return "unimplemented: \(self)"
+                case .JSONError:
+                    return "There was an error parsing the JSON."
+                case .AuthError:
+                    return "The user is not authenticated."
+                case .NoAuthTokenError:
+                    return "There was no auth token provided in the response data."
+                case .OtherError:
+                    return "An unidentified error occured."
                 }
             }
         }
@@ -31,9 +37,15 @@ class TwitchApi {
             get {
                 switch self {
                 case .URLError:
-                    return "Please make sure that the url is formatted correctly"
-                default:
-                    return "unimplemented: \(self)"
+                    return "Please make sure that the url is formatted correctly."
+                case .JSONError:
+                    return "Please check the request information and response."
+                case .AuthError:
+                    return "Please make sure to authenticate with Twitch before attempting to load this data."
+                case .NoAuthTokenError:
+                    return "Please check the server logs and response."
+                case .OtherError:
+                    return "Sorry, there's no provided solution for this error."
                 }
             }
         }
@@ -68,7 +80,7 @@ class TwitchApi {
                                     }
                                     else {
                                         //Error with the .m3u8
-                                        completionHandler(streams: nil, error: .OtherError)
+                                        completionHandler(streams: nil, error: .URLError)
                                         return
                                     }
                             }
@@ -77,7 +89,7 @@ class TwitchApi {
                     }
                 }
                 //Error with the access token json response
-                completionHandler(streams: nil, error: .OtherError)
+                completionHandler(streams: nil, error: .JSONError)
                 return
                 
             }
