@@ -40,6 +40,15 @@ class GamesViewController : LoadingViewController {
         }
     }
     
+    override func viewDidAppear(animated: Bool) {
+        super.viewDidAppear(animated)
+        if let token = TokenHelper.getTwitchToken() {
+            print("token is: \(token)")
+            return
+        }
+        presentViewController(QRCodeViewController(), animated: true, completion: nil)
+    }
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.

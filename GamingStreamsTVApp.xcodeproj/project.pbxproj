@@ -43,6 +43,7 @@
 		B4D15C7C1BCDCBA2006FFB5D /* QRCodeGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4D15C7B1BCDCBA2006FFB5D /* QRCodeGenerator.swift */; };
 		B4D15C7E1BCDCCB3006FFB5D /* QRCodeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4D15C7D1BCDCCB3006FFB5D /* QRCodeViewController.swift */; };
 		B4D15C801BCDD3E3006FFB5D /* TokenHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4D15C7F1BCDD3E3006FFB5D /* TokenHelper.swift */; };
+		B4D15C821BCDFC6C006FFB5D /* Keychain.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4D15C811BCDFC6C006FFB5D /* Keychain.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -98,6 +99,7 @@
 		B4D15C7B1BCDCBA2006FFB5D /* QRCodeGenerator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QRCodeGenerator.swift; sourceTree = "<group>"; };
 		B4D15C7D1BCDCCB3006FFB5D /* QRCodeViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QRCodeViewController.swift; sourceTree = "<group>"; };
 		B4D15C7F1BCDD3E3006FFB5D /* TokenHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TokenHelper.swift; sourceTree = "<group>"; };
+		B4D15C811BCDFC6C006FFB5D /* Keychain.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Keychain.swift; sourceTree = "<group>"; };
 		DC2A8ED48462858490AD4901 /* Pods-GamingStreamsTVApp.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-GamingStreamsTVApp.debug.xcconfig"; path = "Pods/Target Support Files/Pods-GamingStreamsTVApp/Pods-GamingStreamsTVApp.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -209,8 +211,9 @@
 				09CE598B1BAF963C0054EB71 /* ConcurrencyHelpers.swift */,
 				09EB6D451BB4A8BE003EB244 /* CATextLayerVC.swift */,
 				B4D15C7B1BCDCBA2006FFB5D /* QRCodeGenerator.swift */,
-				09199A1B1BBABC9100B10543 /* Extensions */,
 				B4D15C7F1BCDD3E3006FFB5D /* TokenHelper.swift */,
+				B4D15C811BCDFC6C006FFB5D /* Keychain.swift */,
+				09199A1B1BBABC9100B10543 /* Extensions */,
 			);
 			name = Helpers;
 			sourceTree = "<group>";
@@ -233,8 +236,8 @@
 				09D098241BA7666200E7E6FC /* StreamsViewController.swift */,
 				B4A67BBD1BCBE4CB003E3B6F /* SearchResultsViewController.swift */,
 				09D098281BA77FAB00E7E6FC /* VideoViewController.swift */,
-				09199A1E1BBAD0D000B10543 /* Abstract */,
 				B4D15C7D1BCDCCB3006FFB5D /* QRCodeViewController.swift */,
+				09199A1E1BBAD0D000B10543 /* Abstract */,
 			);
 			name = ViewControllers;
 			sourceTree = "<group>";
@@ -410,6 +413,7 @@
 				09D0982B1BA782C800E7E6FC /* VideoView.swift in Sources */,
 				09CE59861BAF55BD0054EB71 /* TwitchChatMessage.swift in Sources */,
 				09CE598C1BAF963C0054EB71 /* ConcurrencyHelpers.swift in Sources */,
+				B4D15C821BCDFC6C006FFB5D /* Keychain.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
