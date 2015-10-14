@@ -9,7 +9,37 @@ import Alamofire
 
 class TwitchApi {
     
-    static func getStreamsForChannel(channel : String, completionHandler: (streams: [TwitchStreamVideo]?, error: NSError?) -> ()){
+    enum TwitchError: ErrorType {
+        case URLError
+        case JSONError
+        case AuthError
+        case NoAuthTokenError
+        case OtherError
+        
+        var errorDescription: String {
+            get {
+                switch self {
+                case .URLError:
+                    return "There was an error with the request."
+                default:
+                    return "unimplemented: \(self)"
+                }
+            }
+        }
+        
+        var recoverySuggestion: String {
+            get {
+                switch self {
+                case .URLError:
+                    return "Please make sure that the url is formatted correctly"
+                default:
+                    return "unimplemented: \(self)"
+                }
+            }
+        }
+    }
+    
+    static func getStreamsForChannel(channel : String, completionHandler: (streams: [TwitchStreamVideo]?, error: TwitchError?) -> ()){
         //First we build the url according to the channel we desire to get stream link
         let accessUrlString = String(format: "https://api.twitch.tv/api/channels/%@/access_token", channel)
         
@@ -38,12 +68,7 @@ class TwitchApi {
                                     }
                                     else {
                                         //Error with the .m3u8
-                                        let userInfo = [
-                                            NSLocalizedDescriptionKey : String("Operation was unsuccessful."),
-                                            NSLocalizedFailureReasonErrorKey: String("The operation returned an error : %@", response.result.error.debugDescription),
-                                            NSLocalizedRecoverySuggestionErrorKey: String("Please ensure that the provided channel is valid")
-                                        ]
-                                        completionHandler(streams: nil, error: NSError(domain: "TwitchAPI", code: 1, userInfo: userInfo))
+                                        completionHandler(streams: nil, error: .OtherError)
                                         return
                                     }
                             }
@@ -52,23 +77,13 @@ class TwitchApi {
                     }
                 }
                 //Error with the access token json response
-                let userInfo = [
-                    NSLocalizedDescriptionKey : String("Operation was unsuccessful."),
-                    NSLocalizedFailureReasonErrorKey: String("Could not parse data to a valid JSON object"),
-                    NSLocalizedRecoverySuggestionErrorKey: String("Please ensure that the provided channel is valid")
-                ]
-                completionHandler(streams: nil, error: NSError(domain: "TwitchAPI", code: 2, userInfo: userInfo))
+                completionHandler(streams: nil, error: .OtherError)
                 return
                 
             }
             else {
                 //Error with access token request
-                let userInfo = [
-                    NSLocalizedDescriptionKey : String("Operation was unsuccessful."),
-                    NSLocalizedFailureReasonErrorKey: String("The operation returned an error : %@", response.result.error.debugDescription),
-                    NSLocalizedRecoverySuggestionErrorKey: String("Please ensure that the provided channel is valid")
-                ]
-                completionHandler(streams: nil, error: NSError(domain: "TwitchAPI", code: 1, userInfo: userInfo))
+                completionHandler(streams: nil, error: .URLError)
                 return
                 
             }
@@ -76,7 +91,7 @@ class TwitchApi {
         
     }
     
-    static func getTopGamesWithOffset(offset : Int, limit : Int, completionHandler: (games: [TwitchGame]?, error: NSError?) -> ()) {
+    static func getTopGamesWithOffset(offset : Int, limit : Int, completionHandler: (games: [TwitchGame]?, error: TwitchError?) -> ()) {
         //First we build the url according to the game we desire to get infos
         let gamesUrlString = "https://api.twitch.tv/kraken/games/top"
         
@@ -98,27 +113,17 @@ class TwitchApi {
                         return
                     }
                 }
-                let userInfo = [
-                    NSLocalizedDescriptionKey : String("Operation was unsuccessful."),
-                    NSLocalizedFailureReasonErrorKey: String("Could not parse data to a valid NSDictionnary object"),
-                    NSLocalizedRecoverySuggestionErrorKey: String("Please ensure that the provided url is valid")
-                ]
-                completionHandler(games: nil, error: NSError(domain: "TwitchAPI", code: 3, userInfo: userInfo))
+                completionHandler(games: nil, error: .JSONError)
                 return
             }
             else {
-                let userInfo = [
-                    NSLocalizedDescriptionKey : String("Operation was unsuccessful."),
-                    NSLocalizedFailureReasonErrorKey: String("The operation returned an error : %@", response.result.error.debugDescription),
-                    NSLocalizedRecoverySuggestionErrorKey: String("Please ensure that the provided channel is valid")
-                ]
-                completionHandler(games: nil, error: NSError(domain: "TwitchAPI", code: 1, userInfo: userInfo))
+                completionHandler(games: nil, error: .URLError)
                 return
             }
         }
     }
     
-    static func getTopStreamsForGameWithOffset(game : String, offset : Int, limit : Int, completionHandler: (streams: [TwitchStream]?, error: NSError?) -> ()) {
+    static func getTopStreamsForGameWithOffset(game : String, offset : Int, limit : Int, completionHandler: (streams: [TwitchStream]?, error: TwitchError?) -> ()) {
         //First we build the url according to the game we desire to get infos
         let streamsUrlString = "https://api.twitch.tv/kraken/streams"
         
@@ -131,7 +136,6 @@ class TwitchApi {
             
             if response.result.isSuccess {
                 if let streamsInfoDict = response.result.value as? [String : AnyObject] {
-                    
                     if let streamsDicts = streamsInfoDict["streams"] as? [[String : AnyObject]] {
                         var streams = [TwitchStream]()
                         for streamRaw in streamsDicts {
@@ -144,38 +148,18 @@ class TwitchApi {
                         completionHandler(streams: streams, error: nil)
                         return
                     }
-                    let userInfo = [
-                        NSLocalizedDescriptionKey : String("Operation was unsuccessful."),
-                        NSLocalizedFailureReasonErrorKey: String("Could not parse channel data to NSDictionnary"),
-                        NSLocalizedRecoverySuggestionErrorKey: String("Please ensure that the provided game is valid")
-                    ]
-                    completionHandler(streams: nil, error: NSError(domain: "TwitchAPI", code: 3, userInfo: userInfo))
-                    return
                 }
-                else {
-                    let userInfo = [
-                        NSLocalizedDescriptionKey : String("Operation was unsuccessful."),
-                        NSLocalizedFailureReasonErrorKey: String("Could not parse data to a valid NSDictionnary object"),
-                        NSLocalizedRecoverySuggestionErrorKey: String("Please ensure that the provided game is valid")
-                    ]
-                    completionHandler(streams: nil, error: NSError(domain: "TwitchAPI", code: 3, userInfo: userInfo))
-                    return
-                }
-                
+                completionHandler(streams: nil, error: .JSONError)
+                return
             }
             else {
-                let userInfo = [
-                    NSLocalizedDescriptionKey : String("Operation was unsuccessful."),
-                    NSLocalizedFailureReasonErrorKey: String("The operation returned an error : %@", response.result.error.debugDescription),
-                    NSLocalizedRecoverySuggestionErrorKey: String("Please ensure that the provided channel is valid")
-                ]
-                completionHandler(streams: nil, error: NSError(domain: "TwitchAPI", code: 1, userInfo: userInfo))
+                completionHandler(streams: nil, error: .URLError)
                 return
             }
         }
     }
     
-    static func getGamesWithSearchTerm(term: String, offset : Int, limit : Int, completionHandler: (games: [TwitchGame]?, error: NSError?) -> ()) {
+    static func getGamesWithSearchTerm(term: String, offset : Int, limit : Int, completionHandler: (games: [TwitchGame]?, error: TwitchError?) -> ()) {
         //First we build the url according to the game we desire to get infos
         let searchUrlString = "https://api.twitch.tv/kraken/search/games"
         
@@ -198,27 +182,17 @@ class TwitchApi {
                         return
                     }
                 }
-                let userInfo = [
-                    NSLocalizedDescriptionKey : String("Operation was unsuccessful."),
-                    NSLocalizedFailureReasonErrorKey: String("Could not parse data to a valid NSDictionnary object"),
-                    NSLocalizedRecoverySuggestionErrorKey: String("Please ensure that the provided url is valid")
-                ]
-                completionHandler(games: nil, error: NSError(domain: "TwitchAPI", code: 3, userInfo: userInfo))
+                completionHandler(games: nil, error: .JSONError)
                 return
             }
             else {
-                let userInfo = [
-                    NSLocalizedDescriptionKey : String("Operation was unsuccessful."),
-                    NSLocalizedFailureReasonErrorKey: String("The operation returned an error : %@", response.result.error.debugDescription),
-                    NSLocalizedRecoverySuggestionErrorKey: String("Please ensure that the provided search term is valid")
-                ]
-                completionHandler(games: nil, error: NSError(domain: "TwitchAPI", code: 1, userInfo: userInfo))
+                completionHandler(games: nil, error: .URLError)
                 return
             }
         }
     }
     
-    static func getStreamsWithSearchTerm(term : String, offset : Int, limit : Int, completionHandler: (streams: [TwitchStream]?, error: NSError?) -> ()) {
+    static func getStreamsWithSearchTerm(term : String, offset : Int, limit : Int, completionHandler: (streams: [TwitchStream]?, error: TwitchError?) -> ()) {
         //First we build the url according to the game we desire to get infos
         let streamsUrlString = "https://api.twitch.tv/kraken/streams"
         
@@ -243,27 +217,57 @@ class TwitchApi {
                         return
                     }
                 }
-                let userInfo = [
-                    NSLocalizedDescriptionKey : String("Operation was unsuccessful."),
-                    NSLocalizedFailureReasonErrorKey: String("Could not parse data to a valid NSDictionnary object"),
-                    NSLocalizedRecoverySuggestionErrorKey: String("Please ensure that the provided game is valid")
-                ]
-                completionHandler(streams: nil, error: NSError(domain: "TwitchAPI", code: 3, userInfo: userInfo))
+                completionHandler(streams: nil, error: .JSONError)
                 return
             }
             else {
-                let userInfo = [
-                    NSLocalizedDescriptionKey : String("Operation was unsuccessful."),
-                    NSLocalizedFailureReasonErrorKey: String("The operation returned an error : %@", response.result.error.debugDescription),
-                    NSLocalizedRecoverySuggestionErrorKey: String("Please ensure that the provided channel is valid")
-                ]
-                completionHandler(streams: nil, error: NSError(domain: "TwitchAPI", code: 1, userInfo: userInfo))
+                completionHandler(streams: nil, error: .URLError)
                 return
             }
         }
     }
     
-    static func authenticate(withCode code: String, andUUID UUID: String, completionHandler: (token: String?, error: String?) -> ()) {
+    static func getStreamsThatUserIsFollowing(offset : Int, limit : Int, completionHandler: (streams: [TwitchStream]?, error: TwitchError?) -> ()) {
+        
+        guard let token = TokenHelper.getTwitchToken() else {
+            completionHandler(streams: nil, error: .AuthError)
+            return
+        }
+        //First we build the url according to the game we desire to get infos
+        let streamsUrlString = "https://api.twitch.tv/kraken/streams/followed"
+        
+        Alamofire.request(.GET, streamsUrlString, parameters :
+            [   "limit"         : limit,
+                "offset"        : offset,
+                "oauth_token"   : token     ])
+            .responseJSON { response in
+                
+                if response.result.isSuccess {
+                    if let streamsInfoDict = response.result.value as? [String : AnyObject] {
+                        if let streamsDicts = streamsInfoDict["streams"] as? [[String : AnyObject]] {
+                            var streams = [TwitchStream]()
+                            for streamDict in streamsDicts {
+                                if let channelDict = streamDict["channel"] as? [String : AnyObject] {
+                                    if let channel = TwitchChannel(dict: channelDict), stream = TwitchStream(dict: streamDict, channel: channel) {
+                                        streams.append(stream)
+                                    }
+                                }
+                            }
+                            completionHandler(streams: streams, error: nil)
+                            return
+                        }
+                    }
+                    completionHandler(streams: nil, error: .JSONError)
+                    return
+                }
+                else {
+                    completionHandler(streams: nil, error: .URLError)
+                    return
+                }
+        }
+    }
+    
+    static func authenticate(withCode code: String, andUUID UUID: String, completionHandler: (token: String?, error: TwitchError?) -> ()) {
         let urlString = "http://streamcenterapp.com/oauth/twitch/\(UUID)/\(code)"
         Alamofire.request(.GET, urlString)
             .responseJSON { response in
@@ -273,7 +277,7 @@ class TwitchApi {
                 if response.result.isSuccess {
                     if let dictionary = response.result.value as? [String : AnyObject] {
                         guard let token = dictionary["access_token"] as? String, date = dictionary["generated_date"] as? String else {
-                            completionHandler(token: nil, error: "The response did not contain an authentication token.")
+                            completionHandler(token: nil, error: .NoAuthTokenError)
                             return
                         }
                         print(date)
@@ -281,7 +285,7 @@ class TwitchApi {
                         completionHandler(token: token, error: nil)
                     }
                 } else {
-                    completionHandler(token: nil, error: "The request returned an error.")
+                    completionHandler(token: nil, error: .URLError)
                     return
                 }
                 
