@@ -54,9 +54,9 @@ class TopBarView : UIVisualEffectView {
         let viewDict = ["title" : titleView]
         if leftView == nil && rightView == nil {
             self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|[title]|", options: [], metrics: nil, views: viewDict))
-            self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|-5-[title]-5-|", options: [], metrics: nil, views: viewDict))
+            self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|-10-[title]-10-|", options: [], metrics: nil, views: viewDict))
         } else {
-            self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|-5-[title]-5-|", options: [], metrics: nil, views: viewDict))
+            self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|-10-[title]-10-|", options: [], metrics: nil, views: viewDict))
             self.contentView.addConstraint(NSLayoutConstraint(item: self.titleView, attribute: .CenterX, relatedBy: .Equal, toItem: self.contentView, attribute: .CenterX, multiplier: 1.0, constant: 0.0))
         }
     }

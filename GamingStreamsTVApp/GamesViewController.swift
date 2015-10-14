@@ -86,6 +86,7 @@ class GamesViewController : LoadingViewController {
         self.searchField.textAlignment = .Center
         
         let imageView = UIImageView(image: UIImage(named: "twitch"))
+        imageView.contentMode = .ScaleAspectFit
         
         //do the top bar first
         self.topBar = TopBarView(frame: CGRectZero, withMainTitle: "Top Games", centerView: imageView, leftView: self.searchField)
