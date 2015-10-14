@@ -16,7 +16,7 @@ class TwitchApi {
         Alamofire.request(.GET, accessUrlString)
         .responseJSON { response in
             
-            if(response.result.isSuccess){
+            if response.result.isSuccess {
                 if let accessInfoDict = response.result.value as? [String : AnyObject] {
                     if let sig = accessInfoDict["sig"] as? String {
                         if let token = accessInfoDict["token"] as? String {
@@ -31,7 +31,7 @@ class TwitchApi {
                                     "token"             : token,
                                     "sig"               : sig])
                                 .responseString { response in
-                                    if(response.result.isSuccess){
+                                    if response.result.isSuccess {
                                         let streams = M3UParser.parseToDict(response.result.value!)
                                         completionHandler(streams: streams, error: nil)
                                         return
@@ -85,7 +85,7 @@ class TwitchApi {
                 "offset"  : offset])
         .responseJSON { response in
             
-            if(response.result.isSuccess) {
+            if response.result.isSuccess {
                 if let gamesInfoDict = response.result.value as? [String : AnyObject] {
                     if let gamesDicts = gamesInfoDict["top"] as? [[String : AnyObject]] {
                         var games = [TwitchGame]()
@@ -129,7 +129,7 @@ class TwitchApi {
                 "stream_type"   : "live"  ])
         .responseJSON { response in
             
-            if(response.result.isSuccess) {
+            if response.result.isSuccess {
                 if let streamsInfoDict = response.result.value as? [String : AnyObject] {
                     
                     if let streamsDicts = streamsInfoDict["streams"] as? [[String : AnyObject]] {
@@ -185,7 +185,7 @@ class TwitchApi {
                 "live"      : true          ])
         .responseJSON { response in
             
-            if(response.result.isSuccess) {
+            if response.result.isSuccess {
                 if let gamesInfoDict = response.result.value as? [String : AnyObject] {
                     if let gamesDicts = gamesInfoDict["games"] as? [[String : AnyObject]] {
                         var games = [TwitchGame]()
@@ -228,7 +228,7 @@ class TwitchApi {
                 "query"     : term    ])
         .responseJSON { response in
             
-            if(response.result.isSuccess) {
+            if response.result.isSuccess {
                 if let streamsInfoDict = response.result.value as? [String : AnyObject] {
                     if let streamsDicts = streamsInfoDict["streams"] as? [[String : AnyObject]] {
                         var streams = [TwitchStream]()
@@ -263,16 +263,28 @@ class TwitchApi {
         }
     }
     
-    static func authenticate(completionHandler: (authorized: Bool) -> ()) {
-        let urlString = "https://api.twitch.tv/kraken/oauth2/authorize"
-        Alamofire.request(.GET, urlString, parameters:
-            [   "response_type"     :   "code",
-                "client_id"         :   "clientID",
-                "redirect_uri"      :   "https://com.rivusmedia.GamingStreamsTVApp.auth",
-                "scope"             :   "" ])
+    static func authenticate(withCode code: String, andUUID UUID: String, completionHandler: (token: String?, error: String?) -> ()) {
+        let urlString = "http://streamcenterapp.com/oauth/twitch/\(UUID)/\(code)"
+        Alamofire.request(.GET, urlString)
             .responseJSON { response in
                 //sup
                 print(response)
+                
+                if response.result.isSuccess {
+                    if let dictionary = response.result.value as? [String : AnyObject] {
+                        guard let token = dictionary["access_token"] as? String, date = dictionary["generated_date"] as? String else {
+                            completionHandler(token: nil, error: "The response did not contain an authentication token.")
+                            return
+                        }
+                        print(date)
+                        //date is formatted: '2015-10-13 20:35:12'
+                        completionHandler(token: token, error: nil)
+                    }
+                } else {
+                    completionHandler(token: nil, error: "The request returned an error.")
+                    return
+                }
+                
         }
     }
     

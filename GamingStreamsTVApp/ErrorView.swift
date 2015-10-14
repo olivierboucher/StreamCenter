@@ -26,7 +26,7 @@ class ErrorView : UIView {
         label.textAlignment = NSTextAlignment.Center
         label.lineBreakMode = NSLineBreakMode.ByWordWrapping
         label.numberOfLines = 0
-        label.font = label?.font.fontWithSize(25)
+        label.font = label.font.fontWithSize(25)
         
         self.addSubview(imageView)
         self.addSubview(label)

@@ -40,6 +40,9 @@
 		B4A67BBC1BCBDF8B003E3B6F /* UIColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4A67BBB1BCBDF8B003E3B6F /* UIColor.swift */; };
 		B4A67BBE1BCBE4CB003E3B6F /* SearchResultsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4A67BBD1BCBE4CB003E3B6F /* SearchResultsViewController.swift */; };
 		B4BDA2581BCD282C000DD1C8 /* ScrollingLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4BDA2571BCD282C000DD1C8 /* ScrollingLabel.swift */; };
+		B4D15C7C1BCDCBA2006FFB5D /* QRCodeGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4D15C7B1BCDCBA2006FFB5D /* QRCodeGenerator.swift */; };
+		B4D15C7E1BCDCCB3006FFB5D /* QRCodeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4D15C7D1BCDCCB3006FFB5D /* QRCodeViewController.swift */; };
+		B4D15C801BCDD3E3006FFB5D /* TokenHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4D15C7F1BCDD3E3006FFB5D /* TokenHelper.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -92,6 +95,9 @@
 		B4A67BBB1BCBDF8B003E3B6F /* UIColor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIColor.swift; sourceTree = "<group>"; };
 		B4A67BBD1BCBE4CB003E3B6F /* SearchResultsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchResultsViewController.swift; sourceTree = "<group>"; };
 		B4BDA2571BCD282C000DD1C8 /* ScrollingLabel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ScrollingLabel.swift; sourceTree = "<group>"; };
+		B4D15C7B1BCDCBA2006FFB5D /* QRCodeGenerator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QRCodeGenerator.swift; sourceTree = "<group>"; };
+		B4D15C7D1BCDCCB3006FFB5D /* QRCodeViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QRCodeViewController.swift; sourceTree = "<group>"; };
+		B4D15C7F1BCDD3E3006FFB5D /* TokenHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TokenHelper.swift; sourceTree = "<group>"; };
 		DC2A8ED48462858490AD4901 /* Pods-GamingStreamsTVApp.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-GamingStreamsTVApp.debug.xcconfig"; path = "Pods/Target Support Files/Pods-GamingStreamsTVApp/Pods-GamingStreamsTVApp.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -202,7 +208,9 @@
 				09CE59891BAF5F870054EB71 /* NSQueue.swift */,
 				09CE598B1BAF963C0054EB71 /* ConcurrencyHelpers.swift */,
 				09EB6D451BB4A8BE003EB244 /* CATextLayerVC.swift */,
+				B4D15C7B1BCDCBA2006FFB5D /* QRCodeGenerator.swift */,
 				09199A1B1BBABC9100B10543 /* Extensions */,
+				B4D15C7F1BCDD3E3006FFB5D /* TokenHelper.swift */,
 			);
 			name = Helpers;
 			sourceTree = "<group>";
@@ -226,6 +234,7 @@
 				B4A67BBD1BCBE4CB003E3B6F /* SearchResultsViewController.swift */,
 				09D098281BA77FAB00E7E6FC /* VideoViewController.swift */,
 				09199A1E1BBAD0D000B10543 /* Abstract */,
+				B4D15C7D1BCDCCB3006FFB5D /* QRCodeViewController.swift */,
 			);
 			name = ViewControllers;
 			sourceTree = "<group>";
@@ -388,10 +397,13 @@
 				09199A1D1BBAC67F00B10543 /* LoadingViewController.swift in Sources */,
 				090AB9221BB3699700CDB05D /* TwitchChatView.swift in Sources */,
 				B4A67BBE1BCBE4CB003E3B6F /* SearchResultsViewController.swift in Sources */,
+				B4D15C7C1BCDCBA2006FFB5D /* QRCodeGenerator.swift in Sources */,
 				090AB9011BA616A900CDB05D /* TwitchStreamVideo.swift in Sources */,
 				090AB9021BA616A900CDB05D /* M3UParser.swift in Sources */,
+				B4D15C7E1BCDCCB3006FFB5D /* QRCodeViewController.swift in Sources */,
 				09E33CC91BB5B2DF000702E2 /* Dictionary.swift in Sources */,
 				090AB9031BA616A900CDB05D /* AppDelegate.swift in Sources */,
+				B4D15C801BCDD3E3006FFB5D /* TokenHelper.swift in Sources */,
 				09D098251BA7666200E7E6FC /* StreamsViewController.swift in Sources */,
 				090AB9041BA616A900CDB05D /* GamesViewController.swift in Sources */,
 				B44A44671BC6CAB800F399EC /* ItemCellView.swift in Sources */,

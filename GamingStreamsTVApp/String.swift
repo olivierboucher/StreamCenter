@@ -52,3 +52,20 @@ extension String {
         return boundingBox.width
     }
 }
+
+extension String {
+    static func randomStringWithLength(len: Int) -> String {
+        
+        let letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
+        
+        var randomString = ""
+        
+        for (var i=0; i < len; i++){
+            let length = UInt32(letters.characters.count)
+            let rand = Int(arc4random_uniform(length))
+            randomString.append(letters[letters.startIndex.advancedBy(rand)])
+        }
+        
+        return randomString
+    }
+}
