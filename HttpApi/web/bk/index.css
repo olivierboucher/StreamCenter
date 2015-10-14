@@ -13,7 +13,7 @@ body {
 	border-top-right-radius: 45px;
 	color: white;
 	text-align: center;
-	padding-top: 80px;
+	padding: 80px 10px 0px 10px;
 }
 
 .tv-bottom {
@@ -22,6 +22,8 @@ body {
 	border-bottom-left-radius: 45px;
 	border-bottom-right-radius: 45px;
 	overflow: hidden;
+	position: relative;
+	z-index: 1;
 }
 
 .bar-start {
@@ -30,28 +32,19 @@ body {
 	background-color: rgb(26, 109, 222);
 	margin: 35px 0px 0px 5%;
 	padding: 0;
-	width: 29%;
+	width: 30%;
 	border-top-left-radius: 5px;
 	border-bottom-left-radius: 5px;
+	position: absolute;
 }
 
 .bar-start:after {
 	content: "";
-	background-color: black;
-	width: 1%;	
-	height: 20px;
-	float: right;
-	position: relative;
-	left: 1%;
-}
-
-.bar-end {
-	display: inline-block;
 	height: 20px;
 	background-color: rgb(142, 142, 142);
-	margin: 35px 5% 0px 0px;
 	padding: 0;
-	width: 60%;
-	border-top-right-radius: 5px;
-	border-bottom-right-radius: 5px;
+	width: 300%;
+	border-radius: 5px;
+	position: absolute;
+	z-index: -1;
 }
