@@ -16,16 +16,14 @@ class TokenHelper: NSObject {
     static let HITBOX_SERVICE = "com.StreamCenter.Hitbox.SERVICE"
     static let HITBOX_TOKEN_KEY = "com.StreamCenter.Hitbox.TOKEN_KEY"
     
-//    static func storeTwitchToken(token: String) {
-//        let defaults = NSUserDefaults.standardUserDefaults()
-//        defaults.setObject(token, forKey: TokenHelper.TWITCH_TOKEN_KEY)
-//        defaults.synchronize()
-//    }
-//    
-//    static func getTwitchToken() -> String? {
-//        let defaults = NSUserDefaults.standardUserDefaults()
-//        return defaults.stringForKey(TokenHelper.TWITCH_TOKEN_KEY)
-//    }
+    static func removeTwitchToken() {
+        let keychain = Keychain(service: TokenHelper.TWITCH_SERVICE)
+        do {
+            try keychain.remove(TokenHelper.TWITCH_TOKEN_KEY)
+        } catch {
+            print("error removing twitch token: \(error)")
+        }
+    }
     
     static func storeTwitchToken(token: String) {
         let keychain = Keychain(service: TokenHelper.TWITCH_SERVICE)
