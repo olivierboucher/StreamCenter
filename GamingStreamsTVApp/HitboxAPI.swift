@@ -119,30 +119,30 @@ class HitboxAPI {
     }
     
     //https://api.hitbox.tv/mediainfo/live/458643
-    static func getStreamInfo(forMediaId mediaId: Int, offset: Int, limit: Int, completionHandler: (streams: [HitboxMedia]?, error: HitboxError?) -> ()) {
-        let urlString = "https://api.hitbox.tv/mediainfo/live/\(mediaId)"
+    static func getStreamInfo(forMediaId mediaId: String, completionHandler: (streamVideos: [HitboxStreamVideo]?, error: HitboxError?) -> ()) {
+        let urlString = "http://www.hitbox.tv/api/player/config/live/\(mediaId)"
         
         Alamofire.request(.GET, urlString)
             .responseJSON { (response) -> Void in
                 //do the stuff
                 if(response.result.isSuccess) {
                     if let baseDict = response.result.value as? [String : AnyObject] {
-                        if let streamsDicts = baseDict["livestream"] as? [[String : AnyObject]] {
-                            var streams = [HitboxMedia]()
-                            for streamRaw in streamsDicts {
-                                if let stream = HitboxMedia(dict: streamRaw) {
-                                    streams.append(stream)
+                        if let playlist = baseDict["playlist"] as? [[String : AnyObject]], bitrates = playlist[0]["bitrates"] as? [[String : AnyObject]] {
+                            var streamVideos = [HitboxStreamVideo]()
+                            for bitrate in bitrates {
+                                if let video = HitboxStreamVideo(dict: bitrate) {
+                                    streamVideos.append(video)
                                 }
                             }
-                            completionHandler(streams: streams, error: nil)
+                            completionHandler(streamVideos: streamVideos, error: nil)
                             return
                         }
                     }
-                    completionHandler(streams: nil, error: .JSONError)
+                    completionHandler(streamVideos: nil, error: .JSONError)
                     return
                 }
                 else {
-                    completionHandler(streams: nil, error: .URLError)
+                    completionHandler(streamVideos: nil, error: .URLError)
                     return
                 }
         }
