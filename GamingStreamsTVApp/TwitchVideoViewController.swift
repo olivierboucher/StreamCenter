@@ -306,6 +306,7 @@ class TwitchVideoViewController : UIViewController {
                         let streamItem = AVPlayerItem(asset: streamAsset)
                         self.videoPlayer?.replaceCurrentItemWithPlayerItem(streamItem)
                         dismissMenu()
+                        return
                     }
                 }
             }
