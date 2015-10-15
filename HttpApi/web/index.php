@@ -67,6 +67,13 @@ $app->register(new Silex\Provider\TwigServiceProvider(), array(
 ));
 
 /*
+ * SESSION
+ */
+
+$app->register(new Silex\Provider\SessionServiceProvider());
+$app['session']->start();
+
+/*
  * ROUTES
  */
 
@@ -75,11 +82,47 @@ $app->get('/', function(Request $request) use($app) {
 });
 
 $app->get('/customurl', function(Request $request) use($app) {
-    return $app['twig']->render('acceptUrl.twig');
+    $csrfToken = md5(uniqid(rand(), true));
+    $app['session']->set('csrf_token', $csrfToken);
+    return $app['twig']->render('acceptUrl.twig', array(
+        'csrf_token' => $csrfToken,
+    ));
 });
 
 $app->post('/customurl', function(Request $request) use ($app) {
+    $csrfCheck = $request->get('csrfToken') === $app['session']->get('csrf_token');
 
+    if($csrfCheck){
+        $url = $request->get('urlInput');
+        if (!filter_var($url, FILTER_VALIDATE_URL) === false) {
+
+            $code = substr(md5(microtime()),rand(0,26),5);
+            $app['monolog']->addInfo("GENERATED NEW CODE: $code FOR URL: $url");
+
+            $stmt = $app['db']->prepare('INSERT INTO custom_urls(url, generated_date, code) VALUES(:url, :generated_date, :code)');
+            $stmt->bindValue("url", $url);
+            $stmt->bindValue("generated_date", new DateTime(), 'datetime');
+            $stmt->bindValue("code", $code);
+
+            $stmt->execute();
+
+            return $app['twig']->render('displayCode.twig', array(
+                'accessCode' => $code,
+            ));
+
+        } else {
+            return $app->json(array(
+                "error" => "Bad request",
+                "message" => "Provided data is invalid"
+            ), 400);
+        }
+    }
+    else {
+        return $app->json(array(
+            "error" => "Bad request",
+            "message" => "Invalid CSRF token"
+        ), 400);
+    }
 });
 
 $app->get('/customurl/{code}', function(Request $request, $code) use($app) {
