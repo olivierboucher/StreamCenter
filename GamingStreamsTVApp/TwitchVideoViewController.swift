@@ -64,8 +64,6 @@ class TwitchVideoViewController : UIViewController {
         rightSwipe.enabled = false
         self.view.addGestureRecognizer(rightSwipe)
             
-        
-        
         //Modal menu options
         self.modalMenuOptions = [
             "Live Chat" : [
@@ -306,6 +304,7 @@ class TwitchVideoViewController : UIViewController {
                         let streamItem = AVPlayerItem(asset: streamAsset)
                         self.videoPlayer?.replaceCurrentItemWithPlayerItem(streamItem)
                         dismissMenu()
+                        return
                     }
                 }
             }

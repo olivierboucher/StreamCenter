@@ -22,13 +22,15 @@ import AVKit
 class HitboxVideoViewController : UIViewController {
     private var videoView : VideoView?
     private var videoPlayer : AVPlayer?
+    private var modalMenu : ModalMenuView?
     
     private var media: HitboxMedia!
     private var streamVideos: [HitboxStreamVideo]?
     private var currentStreamVideo: HitboxStreamVideo?
+    private var modalMenuOptions : [String : [MenuOption]]?
     
-    private var leftSwipe: UISwipeGestureRecognizer!
-    private var rightSwipe: UISwipeGestureRecognizer!
+//    private var leftSwipe: UISwipeGestureRecognizer!
+//    private var rightSwipe: UISwipeGestureRecognizer!
     
     /*
     * init(stream : TwitchStream)
@@ -45,6 +47,11 @@ class HitboxVideoViewController : UIViewController {
         let tapRecognizer = UITapGestureRecognizer(target: self, action: "pause")
         tapRecognizer.allowedPressTypes = [NSNumber(integer: UIPressType.PlayPause.rawValue)]
         self.view.addGestureRecognizer(tapRecognizer)
+        
+        let gestureRecognizer = UITapGestureRecognizer(target: self, action: "handleMenuPress")
+        gestureRecognizer.allowedPressTypes = [UIPressType.Menu.rawValue]
+        gestureRecognizer.cancelsTouchesInView = true
+        self.view.addGestureRecognizer(gestureRecognizer)
         
         HitboxAPI.getStreamInfo(forMediaId: self.media.userMediaId) { (streamVideos, error) -> () in
             
@@ -86,6 +93,20 @@ class HitboxVideoViewController : UIViewController {
     * and displays it
     */
     func initializePlayerView() {
+        
+        if let streams = self.streamVideos {
+            var menuOptions = [MenuOption]()
+            for stream in streams {
+                menuOptions.append(MenuOption(title: stream.label, enabled: false, parameters: ["bitrate" : stream.bitrate], onClick: self.handleQualityChange))
+            }
+            self.modalMenuOptions = ["Quality" : menuOptions]
+            //Gestures configuration
+            let longPressRecognizer = UILongPressGestureRecognizer(target: self, action: Selector("handleLongPress:"))
+            longPressRecognizer.cancelsTouchesInView = true
+            self.view.addGestureRecognizer(longPressRecognizer)
+        }
+        
+        
         self.videoView = VideoView(frame: self.view.bounds)
         self.videoView?.setPlayer(self.videoPlayer!)
         self.videoView?.setVideoFillMode(AVLayerVideoGravityResizeAspect)
@@ -106,6 +127,82 @@ class HitboxVideoViewController : UIViewController {
                     player.replaceCurrentItemWithPlayerItem(streamItem)
                 }
                 player.play()
+            }
+        }
+    }
+    
+    /*
+    * handleLongPress()
+    *
+    * Handler for the UILongPressGestureRecognizer of the controller
+    * Presents the modal menu if it is initialized
+    */
+    func handleLongPress(longPressRecognizer: UILongPressGestureRecognizer) {
+        if longPressRecognizer.state == UIGestureRecognizerState.Began {
+            if self.modalMenu == nil {
+                modalMenu = ModalMenuView(frame: self.view.bounds,
+                    options: self.modalMenuOptions!,
+                    size: CGSize(width: self.view.bounds.width/3, height: self.view.bounds.height/1.5))
+                
+                modalMenu!.center = self.view.center
+                
+                modalMenu?.alpha = 0
+                self.view.addSubview(self.modalMenu!)
+                UIView.animateWithDuration(0.5, animations: { () -> Void in
+                    self.modalMenu?.alpha = 1
+                })
+            } else {
+                dismissMenu()
+            }
+        }
+    }
+    
+    /*
+    * handleMenuPress()
+    *
+    * Handler for the UITapGestureRecognizer of the modal menu
+    * Dismisses the modal menu if it is present
+    */
+    func handleMenuPress() {
+        if dismissMenu() {
+            return
+        }
+        self.dismissViewControllerAnimated(true, completion: nil)
+    }
+    
+    func dismissMenu() -> Bool {
+        if let modalMenu = modalMenu {
+            if self.view.subviews.contains(modalMenu) {
+                //bkirchner: for some reason when i try to animate the menu fading away, it just goes to the homescreen - really odd
+                UIView.animateWithDuration(0.5, animations: { () -> Void in
+                    modalMenu.alpha = 0
+                    }, completion: { (finished) -> Void in
+                        print("finished: \(finished)")
+                        if finished {
+                            modalMenu.removeFromSuperview()
+                        }
+                        self.modalMenu = nil
+                })
+                return true
+            }
+        }
+        return false
+    }
+    
+    func handleQualityChange(sender : MenuItemView?) {
+        
+        if let bitrate = sender?.option.parameters?["bitrate"] as? Int {
+            if let streamVideos = self.streamVideos {
+                for stream in streamVideos {
+                    if stream.bitrate == bitrate {
+                        currentStreamVideo = stream
+                        let streamAsset = AVURLAsset(URL: stream.url)
+                        let streamItem = AVPlayerItem(asset: streamAsset)
+                        self.videoPlayer?.replaceCurrentItemWithPlayerItem(streamItem)
+                        dismissMenu()
+                        return
+                    }
+                }
             }
         }
     }
