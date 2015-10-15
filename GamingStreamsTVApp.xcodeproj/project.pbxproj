@@ -37,6 +37,7 @@
 		09EB6D461BB4A8BE003EB244 /* CATextLayerVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09EB6D451BB4A8BE003EB244 /* CATextLayerVC.swift */; };
 		A5E7DC008D2754CA1EC6CFC5 /* Pods_GamingStreamsTVApp.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 73B61525F92468AED0A0EE8C /* Pods_GamingStreamsTVApp.framework */; };
 		B44A44671BC6CAB800F399EC /* ItemCellView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B44A44661BC6CAB800F399EC /* ItemCellView.swift */; };
+		B4A2E6CF1BD01AEF0094AECA /* StreamCenterService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4A2E6CE1BD01AEF0094AECA /* StreamCenterService.swift */; };
 		B4A67BBC1BCBDF8B003E3B6F /* UIColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4A67BBB1BCBDF8B003E3B6F /* UIColor.swift */; };
 		B4A67BBE1BCBE4CB003E3B6F /* TwitchSearchResultsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4A67BBD1BCBE4CB003E3B6F /* TwitchSearchResultsViewController.swift */; };
 		B4BDA2581BCD282C000DD1C8 /* ScrollingLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4BDA2571BCD282C000DD1C8 /* ScrollingLabel.swift */; };
@@ -96,6 +97,7 @@
 		73B61525F92468AED0A0EE8C /* Pods_GamingStreamsTVApp.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_GamingStreamsTVApp.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		90FBC40A14CD24160B58953A /* Pods-GamingStreamsTVApp.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-GamingStreamsTVApp.release.xcconfig"; path = "Pods/Target Support Files/Pods-GamingStreamsTVApp/Pods-GamingStreamsTVApp.release.xcconfig"; sourceTree = "<group>"; };
 		B44A44661BC6CAB800F399EC /* ItemCellView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ItemCellView.swift; sourceTree = "<group>"; };
+		B4A2E6CE1BD01AEF0094AECA /* StreamCenterService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StreamCenterService.swift; sourceTree = "<group>"; };
 		B4A67BBB1BCBDF8B003E3B6F /* UIColor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIColor.swift; sourceTree = "<group>"; };
 		B4A67BBD1BCBE4CB003E3B6F /* TwitchSearchResultsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TwitchSearchResultsViewController.swift; sourceTree = "<group>"; };
 		B4BDA2571BCD282C000DD1C8 /* ScrollingLabel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ScrollingLabel.swift; sourceTree = "<group>"; };
@@ -203,6 +205,7 @@
 		09199A1E1BBAD0D000B10543 /* Abstract */ = {
 			isa = PBXGroup;
 			children = (
+				B4D15C7D1BCDCCB3006FFB5D /* QRCodeViewController.swift */,
 				09199A1C1BBAC67F00B10543 /* LoadingViewController.swift */,
 			);
 			name = Abstract;
@@ -211,6 +214,7 @@
 		09CE59831BAE456D0054EB71 /* Helpers */ = {
 			isa = PBXGroup;
 			children = (
+				B4A2E6CE1BD01AEF0094AECA /* StreamCenterService.swift */,
 				09CE597E1BAE08B10054EB71 /* IRCHandler.swift */,
 				090AB8F31BA5DA1400CDB05D /* M3UParser.swift */,
 				09CE59891BAF5F870054EB71 /* NSQueue.swift */,
@@ -238,7 +242,6 @@
 		09D098231BA7663A00E7E6FC /* ViewControllers */ = {
 			isa = PBXGroup;
 			children = (
-				B4D15C7D1BCDCCB3006FFB5D /* QRCodeViewController.swift */,
 				B4FB52AF1BCF27E600C57B0B /* Twitch */,
 				B4FB52B01BCF280900C57B0B /* Custom */,
 				09199A1E1BBAD0D000B10543 /* Abstract */,
@@ -434,6 +437,7 @@
 				09E33CC91BB5B2DF000702E2 /* Dictionary.swift in Sources */,
 				090AB9031BA616A900CDB05D /* AppDelegate.swift in Sources */,
 				B4FB52B21BCF282000C57B0B /* CustomVideoViewController.swift in Sources */,
+				B4A2E6CF1BD01AEF0094AECA /* StreamCenterService.swift in Sources */,
 				B4D15C801BCDD3E3006FFB5D /* TokenHelper.swift in Sources */,
 				09D098251BA7666200E7E6FC /* TwitchStreamsViewController.swift in Sources */,
 				090AB9041BA616A900CDB05D /* TwitchGamesViewController.swift in Sources */,

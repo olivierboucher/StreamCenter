@@ -36,11 +36,11 @@ class TwitchAuthViewController: QRCodeViewController {
             return
         }
         
-        TwitchApi.authenticate(withCode: code, andUUID: UUID) { (token, error) -> () in
+        StreamCenterService.authenticateTwitch(withCode: code, andUUID: UUID) { (token, error) -> () in
             print(token)
             guard let token = token else {
                 dispatch_async(dispatch_get_main_queue(), { () -> Void in
-                    self.titleLabel.text = "\(error)\nPlease ensure that your code is correct and press Authenticate again."
+                    self.titleLabel.text = "\(error)\nPlease ensure that your code is correct and press Process again."
                 })
                 return
             }

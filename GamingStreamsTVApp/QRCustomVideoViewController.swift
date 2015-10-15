@@ -24,7 +24,6 @@ class QRCustomVideoViewController: QRCodeViewController {
     init() {
         let title = "Scan the QR code below to be taken to a web page where you can enter a custom url.\nOnce you have received a response code from the website, enter it below."
         super.init(title: title, url: "http://streamcenterapp.com/customurl/")
-        self.delegate = self
         self.title = "Custom Video"
     }
 
@@ -32,34 +31,23 @@ class QRCustomVideoViewController: QRCodeViewController {
         fatalError("init(coder:) has not been implemented")
     }
     
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
-    }
-    */
-    
     override func processCode() {
         //implement this
-    }
-
-}
-
-extension QRCustomVideoViewController: QRCodeDelegate {
-    
-    func qrCodeViewControllerFinished(success: Bool, data: [String : AnyObject]?) {
-        dispatch_async(dispatch_get_main_queue()) { () -> Void in
-            if let data = data where success == true {
-                if let urlString = data["stream_url"] as? String {
-                    self.presentViewController(CustomVideoViewController(url: urlString), animated: true, completion: nil)
-                    return
-                }
+        guard let code = codeField.text else {
+            print("no code")
+            return
+        }
+        StreamCenterService.getCustomURL(fromCode: code) { (url, error) -> () in
+            guard let url = url else {
+                dispatch_async(dispatch_get_main_queue(), { () -> Void in
+                    self.titleLabel.text = "\(error)\nPlease ensure that your code is correct and press Process again."
+                })
+                return
             }
-            self.titleLabel.text = "Error"
+            dispatch_async(dispatch_get_main_queue(), { () -> Void in
+                self.presentViewController(CustomVideoViewController(url: url), animated: true, completion: nil)
+            })
         }
     }
-    
+
 }
