@@ -12,7 +12,11 @@ class HitboxGamesViewController : LoadingViewController {
         
     private let LOADING_BUFFER = 20
     private let NUM_COLUMNS = 5
-    private let ITEMS_INSETS_X : CGFloat = 25
+    override var ITEMS_INSETS_X : CGFloat {
+        get {
+            return 25
+        }
+    }
     
     private var searchField: UITextField!
     private var games = [HitboxGame]()
@@ -125,7 +129,7 @@ class HitboxGamesViewController : LoadingViewController {
 ////////////////////////////////////////////
 
 
-extension HitboxGamesViewController : UICollectionViewDelegate {
+extension HitboxGamesViewController {
     
     func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
         let selectedGame = games[indexPath.row]
@@ -194,19 +198,19 @@ extension HitboxGamesViewController : UICollectionViewDelegateFlowLayout {
 // MARK - UICollectionViewDataSource interface
 //////////////////////////////////////////////
 
-extension HitboxGamesViewController : UICollectionViewDataSource {
+extension HitboxGamesViewController {
     
-    func numberOfSectionsInCollectionView(collectionView: UICollectionView) -> Int {
+    override func numberOfSectionsInCollectionView(collectionView: UICollectionView) -> Int {
         //The number of sections
         return 1
     }
     
-    func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+    override func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         // If the count of games allows the current row to be full
         return games.count
     }
     
-    func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
+    override func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
         let cell : ItemCellView = collectionView.dequeueReusableCellWithReuseIdentifier(ItemCellView.CELL_IDENTIFIER, forIndexPath: indexPath) as! ItemCellView
         cell.setRepresentedItem(games[indexPath.row])
         return cell
