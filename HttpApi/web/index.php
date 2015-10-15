@@ -70,6 +70,40 @@ $app->register(new Silex\Provider\TwigServiceProvider(), array(
  * ROUTES
  */
 
+$app->get('/', function(Request $request) use($app) {
+    return $app['twig']->render('index.twig');
+});
+
+$app->get('/customurl', function(Request $request) use($app) {
+    return $app['twig']->render('acceptUrl.twig');
+});
+
+$app->post('/customurl', function(Request $request) use ($app) {
+
+});
+
+$app->get('/customurl/{code}', function(Request $request, $code) use($app) {
+    $stmt = $app['db']->prepare('SELECT * FROM custom_urls WHERE code=:code');
+    $stmt->bindValue("code", $code);
+    $stmt->execute();
+
+    $row = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    if ($row != false) {
+        return $app->json(array(
+            'id' => $row['id'],
+            'url' => $row['url'],
+            'generated_date' => $row['generated_date'],
+        ), 200);
+    }
+    else {
+        return $app->json(array(
+            "error" => "Not found",
+            "message" => "The provided code did not match any stored url."
+        ), 404);
+    }
+});
+
 $app->get('/oauth/twitch/{uuid}', function($uuid) use($app) {
 
     return $app->redirect('https://api.twitch.tv/kraken/oauth2/authorize?response_type=code&client_id='. getenv('TWITCH_CLIENT_ID') .'&redirect_uri=http://streamcenterapp.com/oauth/redirect/twitch&scope=user_read channel_subscriptions user_subscriptions chat_login&state='. $uuid);
@@ -95,15 +129,12 @@ $app->get('/oauth/twitch/{uuid}/{access_code}', function(Request $request, $uuid
     }
     else {
         return $app->json(array(
-            "Error" => "Unauthorized",
-            "Message" => "Please authenticate at http://streamcenterapp.com/oauth/twitch/{device_uuid} or provide a valid access_code"
+            "error" => "Unauthorized",
+            "message" => "Please authenticate at http://streamcenterapp.com/oauth/twitch/{device_uuid} or provide a valid access_code."
         ), 401);
     }
 });
 
-$app->get('/customurl', function(Request $request) use($app) {
-	return $app['twig']->render('acceptUrl.twig');
-});
 
 $app->post('/oauth/twitch/refresh', function(Request $request) use($app) {
     //TODO: Use the refresh token to generate a new token
