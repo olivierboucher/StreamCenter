@@ -1,5 +1,5 @@
 //
-//  VideoViewController.swift
+//  TwitchVideoViewController.swift
 //  GamingStreamsTVApp
 //
 //  Created by Olivier Boucher on 2015-09-14.
@@ -16,7 +16,7 @@ enum StreamSourceQuality: String {
     case Low
 }
 
-class VideoViewController : UIViewController {
+class TwitchVideoViewController : UIViewController {
     private var videoView : VideoView?
     private var videoPlayer : AVPlayer?
     private var streams : [TwitchStreamVideo]?
@@ -98,7 +98,6 @@ class VideoViewController : UIViewController {
                 dispatch_async(dispatch_get_main_queue(),{
                     self.initializePlayerView()
                 })
-                
             }
         }
     }

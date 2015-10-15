@@ -8,6 +8,10 @@
 
 import UIKit
 
+protocol QRCodeDelegate {
+    func qrCodeViewControllerFinished(success: Bool, data: [String : AnyObject]?)
+}
+
 class QRCodeViewController: UIViewController {
     
     //    let UUID = NSUUID().UUIDString
@@ -16,17 +20,19 @@ class QRCodeViewController: UIViewController {
     let codeField = UITextField()
     let titleLabel = UILabel()
     
-    convenience init() {
-        self.init(nibName: nil, bundle: nil)
+    var delegate: QRCodeDelegate?
+    
+    init(title: String, baseURL: String) {
+        super.init(nibName: nil, bundle: nil)
         
-        let authenticationUrlString = "http://streamcenterapp.com/oauth/twitch/\(UUID)"
+        let authenticationUrlString = "\(baseURL)\(UUID)"
         
         
         self.titleLabel.translatesAutoresizingMaskIntoConstraints = false
         self.titleLabel.font = UIFont.systemFontOfSize(45, weight: UIFontWeightSemibold)
         self.titleLabel.numberOfLines = 0
         self.titleLabel.textAlignment = NSTextAlignment.Center
-        self.titleLabel.text = "Scan the QR code below or go to the link provided.\nOnce you have received your authentication code, enter it below."
+        self.titleLabel.text = title
         
         let image = QRCodeGenerator.generateQRCode(withString: authenticationUrlString, clearBackground: true)
         let imageView = UIImageView(image: image)
@@ -43,8 +49,8 @@ class QRCodeViewController: UIViewController {
         
         let authButton = UIButton(type: .System)
         authButton.translatesAutoresizingMaskIntoConstraints = false
-        authButton.addTarget(self, action: Selector("authenticate"), forControlEvents: .PrimaryActionTriggered)
-        authButton.setTitle("Authenticate", forState: .Normal)
+        authButton.addTarget(self, action: Selector("processCode"), forControlEvents: .PrimaryActionTriggered)
+        authButton.setTitle("Process", forState: .Normal)
         
         let dismissButton = UIButton(type: .System)
         dismissButton.translatesAutoresizingMaskIntoConstraints = false
@@ -80,12 +86,23 @@ class QRCodeViewController: UIViewController {
         self.view.addConstraint(NSLayoutConstraint(item: dismissButton, attribute: .CenterX, relatedBy: .Equal, toItem: self.view, attribute: .CenterX, multiplier: 1.0, constant: 0.0))
         
     }
+
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(animated)
+        if self.delegate == nil {
+            NSException(name: "Unimplemented Exception", reason: "You must set a delegate for QRCodeViewController instances", userInfo: nil).raise()
+        }
+    }
     
     func dismiss() {
         dismissViewControllerAnimated(true, completion: nil)
     }
     
-    func authenticate() {
+    func processCode() {
         guard let code = codeField.text else {
             print("no code")
             return
@@ -100,10 +117,7 @@ class QRCodeViewController: UIViewController {
                 return
             }
             TokenHelper.storeTwitchToken(token)
-            dispatch_async(dispatch_get_main_queue(), { () -> Void in
-                self.dismissViewControllerAnimated(true, completion: nil)
-            })
+            self.delegate?.qrCodeViewControllerFinished(true, data: nil)
         }
-        
     }
 }

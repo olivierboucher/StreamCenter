@@ -1,5 +1,5 @@
 //
-//  StreamsViewController.swift
+//  TwitchStreamsViewController.swift
 //  GamingStreamsTVApp
 //
 //  Created by Olivier Boucher on 2015-09-14.
@@ -8,7 +8,7 @@ import UIKit
 import Foundation
 
 
-class StreamsViewController : LoadingViewController {
+class TwitchStreamsViewController : LoadingViewController {
     private let LOADING_BUFFER = 12
     private let NUM_COLUMNS = 3
     private let ITEMS_INSETS_X : CGFloat = 45
@@ -111,11 +111,11 @@ class StreamsViewController : LoadingViewController {
 // MARK - UICollectionViewDelegate interface
 ////////////////////////////////////////////
 
-extension StreamsViewController : UICollectionViewDelegate {
+extension TwitchStreamsViewController : UICollectionViewDelegate {
     
     func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
         let selectedStream = streams[indexPath.row]
-        let videoViewController = VideoViewController(stream: selectedStream)
+        let videoViewController = TwitchVideoViewController(stream: selectedStream)
         
         self.presentViewController(videoViewController, animated: true, completion: nil)
     }
@@ -157,7 +157,7 @@ extension StreamsViewController : UICollectionViewDelegate {
 // MARK - UICollectionViewDelegateFlowLayout interface
 //////////////////////////////////////////////////////
 
-extension StreamsViewController : UICollectionViewDelegateFlowLayout {
+extension TwitchStreamsViewController : UICollectionViewDelegateFlowLayout {
     
     func collectionView(collectionView: UICollectionView,
         layout collectionViewLayout: UICollectionViewLayout,
@@ -180,7 +180,7 @@ extension StreamsViewController : UICollectionViewDelegateFlowLayout {
 // MARK - UICollectionViewDataSource interface
 //////////////////////////////////////////////
 
-extension StreamsViewController : UICollectionViewDataSource {
+extension TwitchStreamsViewController : UICollectionViewDataSource {
     
     func numberOfSectionsInCollectionView(collectionView: UICollectionView) -> Int {
         //The number of possible rows
