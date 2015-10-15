@@ -10,7 +10,11 @@ class TwitchGamesViewController : LoadingViewController {
 
     private let LOADING_BUFFER = 20
     private let NUM_COLUMNS = 5
-    private let ITEMS_INSETS_X : CGFloat = 25
+    override var ITEMS_INSETS_X : CGFloat {
+        get {
+            return 25
+        }
+    }
     
     private var searchField: UITextField!
     private var games = [TwitchGame]()
@@ -91,38 +95,7 @@ class TwitchGamesViewController : LoadingViewController {
         let imageView = UIImageView(image: UIImage(named: "twitch"))
         imageView.contentMode = .ScaleAspectFit
         
-        //do the top bar first
-        self.topBar = TopBarView(frame: CGRectZero, withMainTitle: "Top Games", centerView: imageView, leftView: self.searchField)
-        self.topBar.translatesAutoresizingMaskIntoConstraints = false
-        self.view.addSubview(self.topBar)
-        
-        //then do the collection view
-        let layout : UICollectionViewFlowLayout = UICollectionViewFlowLayout()
-        layout.scrollDirection = UICollectionViewScrollDirection.Vertical
-        layout.minimumInteritemSpacing = ITEMS_INSETS_X
-        layout.minimumLineSpacing = 50
-        
-        self.collectionView = UICollectionView(frame: CGRectZero, collectionViewLayout: layout)
-        self.collectionView.translatesAutoresizingMaskIntoConstraints = false
-        self.collectionView.registerClass(ItemCellView.classForCoder(), forCellWithReuseIdentifier: ItemCellView.CELL_IDENTIFIER)
-        self.collectionView.dataSource = self
-        self.collectionView.delegate = self
-        self.collectionView.contentInset = UIEdgeInsets(top: TOP_BAR_HEIGHT + ITEMS_INSETS_Y, left: ITEMS_INSETS_X, bottom: ITEMS_INSETS_Y, right: ITEMS_INSETS_X)
-        
-        self.view.addSubview(self.collectionView)
-        self.view.bringSubviewToFront(self.topBar)
-        
-        let viewDict = ["topbar" : topBar, "collection" : collectionView]
-        
-        self.view.addConstraint(NSLayoutConstraint(item: topBar, attribute: .Height, relatedBy: .Equal, toItem: nil, attribute: .NotAnAttribute, multiplier: 1.0, constant: TOP_BAR_HEIGHT))
-        
-        self.view.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|[topbar]", options: [], metrics: nil, views: viewDict))
-        
-        self.view.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|[collection]|", options: [], metrics: nil, views: viewDict))
-        
-        self.view.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|[topbar]|", options: [], metrics: nil, views: viewDict))
-        
-        self.view.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|[collection]|", options: [], metrics: nil, views: viewDict))
+        super.configureViews("Top Games", centerView: imageView, leftView: self.searchField, rightView: nil)
         
     }
     
@@ -137,7 +110,7 @@ class TwitchGamesViewController : LoadingViewController {
 ////////////////////////////////////////////
 
 
-extension TwitchGamesViewController : UICollectionViewDelegate {
+extension TwitchGamesViewController {
     
     func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
         let selectedGame = games[indexPath.row]
@@ -210,19 +183,19 @@ extension TwitchGamesViewController : UICollectionViewDelegateFlowLayout {
 // MARK - UICollectionViewDataSource interface
 //////////////////////////////////////////////
 
-extension TwitchGamesViewController : UICollectionViewDataSource {
+extension TwitchGamesViewController {
     
-    func numberOfSectionsInCollectionView(collectionView: UICollectionView) -> Int {
+    override func numberOfSectionsInCollectionView(collectionView: UICollectionView) -> Int {
         //The number of sections
         return 1
     }
     
-    func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+    override func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         // If the count of games allows the current row to be full
         return games.count
     }
     
-    func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
+    override func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
         let cell : ItemCellView = collectionView.dequeueReusableCellWithReuseIdentifier(ItemCellView.CELL_IDENTIFIER, forIndexPath: indexPath) as! ItemCellView
         cell.setRepresentedItem(games[indexPath.row])
         return cell
