@@ -101,6 +101,10 @@ $app->get('/oauth/twitch/{uuid}/{access_code}', function(Request $request, $uuid
     }
 });
 
+$app->get('/customurl', function(Request $request) use($app) {
+	return $app['twig']->render('acceptUrl.twig');
+});
+
 $app->post('/oauth/twitch/refresh', function(Request $request) use($app) {
     //TODO: Use the refresh token to generate a new token
     //NOTE(Olivier): Twitch does not expire tokens yet so do not bother implementing this
