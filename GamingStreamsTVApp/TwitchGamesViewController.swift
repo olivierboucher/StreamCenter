@@ -24,20 +24,7 @@ class TwitchGamesViewController : LoadingViewController {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
         
-        let longPressRecognizer = UILongPressGestureRecognizer(target: self, action: "handleLongPress:")
-        longPressRecognizer.cancelsTouchesInView = true
-        self.view.addGestureRecognizer(longPressRecognizer)
-        
         configureViews()
-    }
-    
-    override func handleLongPress(recognizer: UILongPressGestureRecognizer) {
-        //sup
-        if recognizer.state == .Began {
-            HitboxAPI.getLiveStreams(0, limit: LOADING_BUFFER) { (streams, error) -> () in
-                print(streams)
-            }
-        }
     }
     
     /*
@@ -52,6 +39,18 @@ class TwitchGamesViewController : LoadingViewController {
         if self.games.count == 0 {
             loadContent()
         }
+    }
+    
+    override func viewDidAppear(animated: Bool) {
+        super.viewDidAppear(animated)
+        if let token = TokenHelper.getTwitchToken() {
+            print("token is: \(token)")
+            return
+        }
+        let title = "Scan the QR code below or go to the link provided.\nOnce you have received your authentication code, enter it below."
+        let qrController = QRCodeViewController(title: title, baseURL: "http://streamcenterapp.com/oauth/twitch/")
+        qrController.delegate = self
+        presentViewController(qrController, animated: true, completion: nil)
     }
     
     override func didReceiveMemoryWarning() {
@@ -75,7 +74,6 @@ class TwitchGamesViewController : LoadingViewController {
             
             self.games = games
             dispatch_async(dispatch_get_main_queue(), {
-                
                 self.removeLoadingView()
                 self.collectionView.reloadData()
             })
@@ -91,8 +89,11 @@ class TwitchGamesViewController : LoadingViewController {
         self.searchField.delegate = self
         self.searchField.textAlignment = .Center
         
+        let imageView = UIImageView(image: UIImage(named: "twitch"))
+        imageView.contentMode = .ScaleAspectFit
+        
         //do the top bar first
-        self.topBar = TopBarView(frame: CGRectZero, withMainTitle: "Top Games", leftView: self.searchField)
+        self.topBar = TopBarView(frame: CGRectZero, withMainTitle: "Top Games", centerView: imageView, leftView: self.searchField)
         self.topBar.translatesAutoresizingMaskIntoConstraints = false
         self.view.addSubview(self.topBar)
         
@@ -243,11 +244,15 @@ extension TwitchGamesViewController : UITextFieldDelegate {
 }
 
 //////////////////////////////////////////////
-// MARK - UISearchResultsUpdating interface
+// MARK - QRCodeDelegate interface
 //////////////////////////////////////////////
 
-//extension TwitchGamesViewController : UISearchResultsUpdating {
-//    func updateSearchResultsForSearchController(searchController: UISearchController) {
-//        print("doesn't do anything yet")
-//    }
-//}
+extension TwitchGamesViewController: QRCodeDelegate {
+    
+    func qrCodeViewControllerFinished(success: Bool, data: [String : AnyObject]?) {
+        dispatch_async(dispatch_get_main_queue()) { () -> Void in
+            self.dismissViewControllerAnimated(true, completion: nil)
+        }
+    }
+    
+}
