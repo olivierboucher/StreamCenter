@@ -56,6 +56,7 @@ class HitboxVideoViewController : UIViewController {
     
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(animated)
+        print("media transcoding: \(media.transcoding)")
         HitboxAPI.getStreamInfo(forMediaId: self.media.userMediaId) { (streamVideos, error) -> () in
             
             if let streamVideos = streamVideos where streamVideos.count > 0 {
@@ -120,7 +121,6 @@ class HitboxVideoViewController : UIViewController {
             self.view.addGestureRecognizer(longPressRecognizer)
         }
         
-        
         self.videoView = VideoView(frame: self.view.bounds)
         self.videoView?.setPlayer(self.videoPlayer!)
         self.videoView?.setVideoFillMode(AVLayerVideoGravityResizeAspect)
@@ -143,6 +143,10 @@ class HitboxVideoViewController : UIViewController {
                 player.play()
             }
         }
+    }
+    
+    func itemFailed(notification: NSNotification) {
+        print("shit: \(notification)")
     }
     
     /*

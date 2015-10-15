@@ -18,6 +18,7 @@ class HitboxMedia: CellItem {
     private(set) var userMediaId : String!
     private(set) var countries : [String]?
     private(set) var chatEnabled = false
+    private(set) var transcoding = -1
     
     private var mImage: UIImage?
     
@@ -58,6 +59,10 @@ class HitboxMedia: CellItem {
         
         if let chat = dict["media_chat_enabled"] as? String where chat == "1" {
             self.chatEnabled = true
+        }
+        
+        if let strTranscoding = dict["media_transcoding"] as? String, transcoding = Int(strTranscoding) {
+            self.transcoding = transcoding
         }
     }
     

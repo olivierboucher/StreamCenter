@@ -124,7 +124,7 @@ class HitboxAPI {
     //https://api.hitbox.tv/mediainfo/live/458643
     static func getStreamInfo(forMediaId mediaId: String, completionHandler: (streamVideos: [HitboxStreamVideo]?, error: HitboxError?) -> ()) {
         let urlString = "http://www.hitbox.tv/api/player/config/live/\(mediaId)"
-        print("getting stream info for media id: \(mediaId) - \(urlString)")
+        print("getting stream info for: \(urlString)")
         Alamofire.request(.GET, urlString)
             .responseJSON { (response) -> Void in
                 //do the stuff
@@ -137,6 +137,12 @@ class HitboxAPI {
                                     streamVideos.append(video)
                                 }
                             }
+                            
+//                            //this is no longer necessary, it was to try and get a rtmp stream but AVPlayer doesn't support that
+//                            if streamVideos.count == 0 {
+//                                //rtmp://edge.live.hitbox.tv/live/youplay
+//                                streamVideos += HitboxStreamVideo.alternativeCreation(playlist.first)
+//                            }
                             completionHandler(streamVideos: streamVideos, error: nil)
                             return
                         }
