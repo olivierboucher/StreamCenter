@@ -10,12 +10,6 @@ import UIKit
 
 class QRCustomVideoViewController: QRCodeViewController {
     
-    override var UUID: String {
-        get {
-            return ""
-        }
-    }
-    
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -29,7 +23,7 @@ class QRCustomVideoViewController: QRCodeViewController {
     
     init() {
         let title = "Scan the QR code below to be taken to a web page where you can enter a custom url.\nOnce you have received a response code from the website, enter it below."
-        super.init(title: title, baseURL: "http://streamcenterapp.com/customurl/")
+        super.init(title: title, url: "http://streamcenterapp.com/customurl/")
         self.delegate = self
         self.title = "Custom Video"
     }
@@ -49,22 +43,7 @@ class QRCustomVideoViewController: QRCodeViewController {
     */
     
     override func processCode() {
-        guard let code = codeField.text else {
-            print("no code")
-            return
-        }
-        
-        TwitchApi.authenticate(withCode: code, andUUID: UUID) { (token, error) -> () in
-            print(token)
-            guard let token = token else {
-                dispatch_async(dispatch_get_main_queue(), { () -> Void in
-                    self.titleLabel.text = "\(error)\nPlease ensure that your code is correct and press Authenticate again."
-                })
-                return
-            }
-            TokenHelper.storeTwitchToken(token)
-            self.delegate?.qrCodeViewControllerFinished(true, data: nil)
-        }
+        //implement this
     }
 
 }

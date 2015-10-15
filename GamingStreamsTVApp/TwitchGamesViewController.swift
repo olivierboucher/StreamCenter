@@ -18,6 +18,7 @@ class TwitchGamesViewController : LoadingViewController {
     
     private var searchField: UITextField!
     private var games = [TwitchGame]()
+    private var authButton: UIButton?
     
     convenience init(){
         self.init(nibName: nil, bundle: nil)
@@ -43,18 +44,6 @@ class TwitchGamesViewController : LoadingViewController {
         if self.games.count == 0 {
             loadContent()
         }
-    }
-    
-    override func viewDidAppear(animated: Bool) {
-        super.viewDidAppear(animated)
-        if let token = TokenHelper.getTwitchToken() {
-            print("token is: \(token)")
-            return
-        }
-        let title = "Scan the QR code below or go to the link provided.\nOnce you have received your authentication code, enter it below."
-        let qrController = QRCodeViewController(title: title, baseURL: "http://streamcenterapp.com/oauth/twitch/")
-        qrController.delegate = self
-        presentViewController(qrController, animated: true, completion: nil)
     }
     
     override func didReceiveMemoryWarning() {
@@ -93,11 +82,24 @@ class TwitchGamesViewController : LoadingViewController {
         self.searchField.delegate = self
         self.searchField.textAlignment = .Center
         
+        if TokenHelper.getTwitchToken() == nil {
+            self.authButton = UIButton(type: .System)
+            self.authButton?.translatesAutoresizingMaskIntoConstraints = false
+            self.authButton?.setTitle("Authenticate", forState: .Normal)
+            self.authButton?.addTarget(self, action: Selector("authorizeUser"), forControlEvents: .PrimaryActionTriggered)
+        }
+        
         let imageView = UIImageView(image: UIImage(named: "twitch"))
         imageView.contentMode = .ScaleAspectFit
         
-        super.configureViews("Top Games", centerView: imageView, leftView: self.searchField, rightView: nil)
+        super.configureViews("Top Games", centerView: imageView, leftView: self.searchField, rightView: self.authButton)
         
+    }
+    
+    func authorizeUser() {
+        let qrController = TwitchAuthViewController()
+        qrController.delegate = self
+        presentViewController(qrController, animated: true, completion: nil)
     }
     
     override func reloadContent() {
@@ -224,6 +226,10 @@ extension TwitchGamesViewController: QRCodeDelegate {
     
     func qrCodeViewControllerFinished(success: Bool, data: [String : AnyObject]?) {
         dispatch_async(dispatch_get_main_queue()) { () -> Void in
+            if success {
+                self.authButton?.removeFromSuperview()
+                self.authButton = nil
+            }
             self.dismissViewControllerAnimated(true, completion: nil)
         }
     }

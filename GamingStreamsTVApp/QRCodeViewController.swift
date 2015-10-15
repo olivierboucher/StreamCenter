@@ -14,24 +14,15 @@ protocol QRCodeDelegate {
 
 class QRCodeViewController: UIViewController {
     
-    //    let UUID = NSUUID().UUIDString
-    let uuid = String.randomStringWithLength(12)
-    var UUID: String {
-        get {
-            return uuid
-        }
-    }
-    
     let codeField = UITextField()
     let titleLabel = UILabel()
     
     var delegate: QRCodeDelegate?
     
-    init(title: String, baseURL: String) {
+    init(title: String, url: String) {
         super.init(nibName: nil, bundle: nil)
         
-        let authenticationUrlString = "\(baseURL)\(UUID)"
-        
+        let authenticationUrlString = url
         
         self.titleLabel.translatesAutoresizingMaskIntoConstraints = false
         self.titleLabel.font = UIFont.systemFontOfSize(45, weight: UIFontWeightSemibold)
@@ -108,21 +99,7 @@ class QRCodeViewController: UIViewController {
     }
     
     func processCode() {
-        guard let code = codeField.text else {
-            print("no code")
-            return
-        }
-        
-        TwitchApi.authenticate(withCode: code, andUUID: UUID) { (token, error) -> () in
-            print(token)
-            guard let token = token else {
-                dispatch_async(dispatch_get_main_queue(), { () -> Void in
-                    self.titleLabel.text = "\(error)\nPlease ensure that your code is correct and press Authenticate again."
-                })
-                return
-            }
-            TokenHelper.storeTwitchToken(token)
-            self.delegate?.qrCodeViewControllerFinished(true, data: nil)
-        }
+        //do nothing
+        return
     }
 }
