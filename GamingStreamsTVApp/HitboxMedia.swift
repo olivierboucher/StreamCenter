@@ -12,9 +12,11 @@ class HitboxMedia: CellItem {
     
     private(set) var id : Int!
     private(set) var name : String!
-    private(set) var viewers : Int!
-    private(set) var thumbnail: String!
-    private(set) var userMediaId: String!
+    private(set) var displayName : String?
+    private(set) var views : Int!
+    private(set) var thumbnail : String!
+    private(set) var userMediaId : String!
+    private(set) var countries : [String]?
     
     private var mImage: UIImage?
     
@@ -28,7 +30,7 @@ class HitboxMedia: CellItem {
         guard let thumb = dict["media_thumbnail"] as? String else {
             return nil
         }
-        guard let viewers = dict["category_viewers"] as? String, intViewers = Int(viewers) else {
+        guard let viewers = dict["media_views"] as? String, intViews = Int(viewers) else {
             return nil
         }
         guard let channelDict = dict["channel"] as? [String : AnyObject], userMediaId = channelDict["user_media_id"] as? String else {
@@ -38,8 +40,16 @@ class HitboxMedia: CellItem {
         self.id = intId
         self.name = name
         self.thumbnail = thumb
-        self.viewers = intViewers
+        self.views = intViews
         self.userMediaId = userMediaId
+        
+        if let countries = dict["media_countries"] as? [String] {
+            self.countries = countries
+        }
+        
+        if let displayName = dict["media_display_name"] as? String {
+            self.displayName = displayName
+        }
     }
     
     var urlTemplate: String? {
@@ -56,8 +66,8 @@ class HitboxMedia: CellItem {
     
     var subtitle: String {
         get {
-            if viewers > 0 {
-                return "\(viewers) viewers"
+            if views > 0 {
+                return "\(views) views"
             } else {
                 return " "
             }

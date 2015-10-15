@@ -12,8 +12,9 @@ class HitboxGame: CellItem {
     
     private(set) var id : Int!
     private(set) var name : String!
+    private(set) var shortName : String?
     private(set) var viewers : Int!
-    private(set) var thumbnail: String!
+    private(set) var thumbnail : String!
     
     private var mImage: UIImage?
     
@@ -35,6 +36,10 @@ class HitboxGame: CellItem {
         self.name = name
         self.thumbnail = thumb
         self.viewers = intViewers
+        
+        if let shortName = dict["category_name_short"] as? String {
+            self.shortName = shortName
+        }
     }
     
     var urlTemplate: String? {
