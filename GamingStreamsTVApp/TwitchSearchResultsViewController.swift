@@ -16,6 +16,16 @@ private enum SearchType {
 class TwitchSearchResultsViewController: LoadingViewController {
     
     private let LOADING_BUFFER = 20
+    override var ITEMS_INSETS_X: CGFloat {
+        get {
+            switch searchType {
+            case .Game:
+                return 25
+            case .Stream:
+                return 45
+            }
+        }
+    }
     
     private var searchType = SearchType.Game
     
@@ -130,15 +140,6 @@ class TwitchSearchResultsViewController: LoadingViewController {
             return 3
         }
     }
-    
-    var itemInset: CGFloat {
-        switch searchType {
-        case .Game:
-            return 25
-        case .Stream:
-            return 45
-        }
-    }
 
 }
 
@@ -208,7 +209,7 @@ extension TwitchSearchResultsViewController : UICollectionViewDelegateFlowLayout
     func collectionView(collectionView: UICollectionView,
         layout collectionViewLayout: UICollectionViewLayout,
         sizeForItemAtIndexPath indexPath: NSIndexPath) -> CGSize {
-            let width = collectionView.bounds.width / CGFloat(numberOfColumns) - CGFloat(itemInset * 2)
+            let width = collectionView.bounds.width / CGFloat(numberOfColumns) - CGFloat(ITEMS_INSETS_X * 2)
             var height: CGFloat!
             
             switch searchType {
@@ -224,11 +225,11 @@ extension TwitchSearchResultsViewController : UICollectionViewDelegateFlowLayout
     func collectionView(collectionView: UICollectionView,
         layout collectionViewLayout: UICollectionViewLayout,
         insetForSectionAtIndex section: Int) -> UIEdgeInsets {
-            return UIEdgeInsets(top: TOP_BAR_HEIGHT + ITEMS_INSETS_Y, left: itemInset, bottom: ITEMS_INSETS_Y, right: itemInset)
+            return UIEdgeInsets(top: TOP_BAR_HEIGHT + ITEMS_INSETS_Y, left: ITEMS_INSETS_X, bottom: ITEMS_INSETS_Y, right: ITEMS_INSETS_X)
     }
     
     func collectionView(collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAtIndex section: Int) -> CGFloat {
-        return itemInset
+        return ITEMS_INSETS_X
     }
 }
 

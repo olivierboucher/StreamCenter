@@ -52,12 +52,17 @@ class HitboxVideoViewController : UIViewController {
         gestureRecognizer.allowedPressTypes = [UIPressType.Menu.rawValue]
         gestureRecognizer.cancelsTouchesInView = true
         self.view.addGestureRecognizer(gestureRecognizer)
-        
+    }
+    
+    override func viewDidAppear(animated: Bool) {
+        super.viewDidAppear(animated)
+        print("media transcoding: \(media.transcoding)")
         HitboxAPI.getStreamInfo(forMediaId: self.media.userMediaId) { (streamVideos, error) -> () in
             
             if let streamVideos = streamVideos where streamVideos.count > 0 {
                 self.streamVideos = streamVideos
                 self.currentStreamVideo = streamVideos[0]
+                
                 let streamAsset = AVURLAsset(URL: self.currentStreamVideo!.url)
                 let streamItem = AVPlayerItem(asset: streamAsset)
                 
@@ -65,6 +70,16 @@ class HitboxVideoViewController : UIViewController {
                 
                 dispatch_async(dispatch_get_main_queue(),{
                     self.initializePlayerView()
+                })
+            } else {
+                let alert = UIAlertController(title: "Uh-Oh!", message: "There seems to be an issue with the stream. We're very sorry about that.", preferredStyle: .Alert)
+                
+                alert.addAction(UIAlertAction(title: "Ok", style: .Cancel, handler: { (action) -> Void in
+                    self.dismissViewControllerAnimated(true, completion: nil)
+                }))
+                
+                dispatch_async(dispatch_get_main_queue(), { () -> Void in
+                    self.presentViewController(alert, animated: true, completion: nil)
                 })
             }
         }
@@ -106,7 +121,6 @@ class HitboxVideoViewController : UIViewController {
             self.view.addGestureRecognizer(longPressRecognizer)
         }
         
-        
         self.videoView = VideoView(frame: self.view.bounds)
         self.videoView?.setPlayer(self.videoPlayer!)
         self.videoView?.setVideoFillMode(AVLayerVideoGravityResizeAspect)
@@ -129,6 +143,10 @@ class HitboxVideoViewController : UIViewController {
                 player.play()
             }
         }
+    }
+    
+    func itemFailed(notification: NSNotification) {
+        print("shit: \(notification)")
     }
     
     /*

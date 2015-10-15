@@ -37,6 +37,7 @@
 		09EB6D461BB4A8BE003EB244 /* CATextLayerVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09EB6D451BB4A8BE003EB244 /* CATextLayerVC.swift */; };
 		A5E7DC008D2754CA1EC6CFC5 /* Pods_GamingStreamsTVApp.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 73B61525F92468AED0A0EE8C /* Pods_GamingStreamsTVApp.framework */; };
 		B44A44671BC6CAB800F399EC /* ItemCellView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B44A44661BC6CAB800F399EC /* ItemCellView.swift */; };
+		B4A2E6CD1BCFC84E0094AECA /* HitboxSearchResultsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4A2E6CC1BCFC84E0094AECA /* HitboxSearchResultsViewController.swift */; };
 		B4A67BBC1BCBDF8B003E3B6F /* UIColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4A67BBB1BCBDF8B003E3B6F /* UIColor.swift */; };
 		B4A67BBE1BCBE4CB003E3B6F /* TwitchSearchResultsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4A67BBD1BCBE4CB003E3B6F /* TwitchSearchResultsViewController.swift */; };
 		B4BDA2581BCD282C000DD1C8 /* ScrollingLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4BDA2571BCD282C000DD1C8 /* ScrollingLabel.swift */; };
@@ -104,6 +105,7 @@
 		73B61525F92468AED0A0EE8C /* Pods_GamingStreamsTVApp.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_GamingStreamsTVApp.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		90FBC40A14CD24160B58953A /* Pods-GamingStreamsTVApp.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-GamingStreamsTVApp.release.xcconfig"; path = "Pods/Target Support Files/Pods-GamingStreamsTVApp/Pods-GamingStreamsTVApp.release.xcconfig"; sourceTree = "<group>"; };
 		B44A44661BC6CAB800F399EC /* ItemCellView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ItemCellView.swift; sourceTree = "<group>"; };
+		B4A2E6CC1BCFC84E0094AECA /* HitboxSearchResultsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HitboxSearchResultsViewController.swift; sourceTree = "<group>"; };
 		B4A67BBB1BCBDF8B003E3B6F /* UIColor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIColor.swift; sourceTree = "<group>"; };
 		B4A67BBD1BCBE4CB003E3B6F /* TwitchSearchResultsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TwitchSearchResultsViewController.swift; sourceTree = "<group>"; };
 		B4BDA2571BCD282C000DD1C8 /* ScrollingLabel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ScrollingLabel.swift; sourceTree = "<group>"; };
@@ -278,6 +280,7 @@
 			children = (
 				B4D88D2B1BCF35DD00C1DF87 /* HitboxGamesViewController.swift */,
 				B4D88D2D1BCF35E500C1DF87 /* HitboxStreamsViewController.swift */,
+				B4A2E6CC1BCFC84E0094AECA /* HitboxSearchResultsViewController.swift */,
 				B4E9F7FB1BCF600C0026708F /* HitboxVideoViewController.swift */,
 			);
 			name = Hitbox;
@@ -444,6 +447,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B4A2E6CD1BCFC84E0094AECA /* HitboxSearchResultsViewController.swift in Sources */,
 				090AB8FD1BA616A900CDB05D /* TwitchApi.swift in Sources */,
 				B4E9F8001BCF83CC0026708F /* TwitchAuthViewController.swift in Sources */,
 				090AB8FE1BA616A900CDB05D /* TwitchGame.swift in Sources */,

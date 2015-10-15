@@ -53,12 +53,16 @@ class HitboxAPI {
         }
     }
     
-    static func getGames(offset: Int, limit: Int, completionHandler: (games: [HitboxGame]?, error: HitboxError?) -> ()) {
+    static func getGames(offset: Int, limit: Int, searchTerm: String? = nil, completionHandler: (games: [HitboxGame]?, error: HitboxError?) -> ()) {
         let urlString = "https://api.hitbox.tv/games"
         
-        Alamofire.request(.GET, urlString, parameters:
-            [   "limit"         : limit,
-                "liveonly"      : "true"    ])
+        var parameters: [String : AnyObject] = ["limit" : limit, "liveonly" : "true"]
+        
+        if let term = searchTerm {
+            parameters["q"] = term
+        }
+        
+        Alamofire.request(.GET, urlString, parameters: parameters)
             .responseJSON { (response) -> Void in
                 //do the stuff
                 if(response.result.isSuccess) {
@@ -120,19 +124,25 @@ class HitboxAPI {
     //https://api.hitbox.tv/mediainfo/live/458643
     static func getStreamInfo(forMediaId mediaId: String, completionHandler: (streamVideos: [HitboxStreamVideo]?, error: HitboxError?) -> ()) {
         let urlString = "http://www.hitbox.tv/api/player/config/live/\(mediaId)"
-        
+        print("getting stream info for: \(urlString)")
         Alamofire.request(.GET, urlString)
             .responseJSON { (response) -> Void in
                 //do the stuff
                 if(response.result.isSuccess) {
                     if let baseDict = response.result.value as? [String : AnyObject] {
-                        if let playlist = baseDict["playlist"] as? [[String : AnyObject]], bitrates = playlist[0]["bitrates"] as? [[String : AnyObject]] {
+                        if let playlist = baseDict["playlist"] as? [[String : AnyObject]], bitrates = playlist.first?["bitrates"] as? [[String : AnyObject]] {
                             var streamVideos = [HitboxStreamVideo]()
                             for bitrate in bitrates {
                                 if let video = HitboxStreamVideo(dict: bitrate) {
                                     streamVideos.append(video)
                                 }
                             }
+                            
+//                            //this is no longer necessary, it was to try and get a rtmp stream but AVPlayer doesn't support that
+//                            if streamVideos.count == 0 {
+//                                //rtmp://edge.live.hitbox.tv/live/youplay
+//                                streamVideos += HitboxStreamVideo.alternativeCreation(playlist.first)
+//                            }
                             completionHandler(streamVideos: streamVideos, error: nil)
                             return
                         }
@@ -147,37 +157,6 @@ class HitboxAPI {
         }
     }
     
-    static func getLiveStreams(offset: Int, limit: Int, completionHandler: (streams: [HitboxMedia]?, error: HitboxError?) -> ()) {
-        let urlString = "https://api.hitbox.tv/media/live/list"
-        
-        Alamofire.request(.GET, urlString, parameters:
-            [   "limit"         : limit,
-                "start"         : offset,
-                "publicOnly"    : true      ])
-        .responseJSON { (response) -> Void in
-            //do the stuff
-            if response.result.isSuccess {
-                if let baseDict = response.result.value as? [String : AnyObject] {
-                    if let streamsDicts = baseDict["livestream"] as? [[String : AnyObject]] {
-                        var streams = [HitboxMedia]()
-                        for streamRaw in streamsDicts {
-                            if let stream = HitboxMedia(dict: streamRaw) {
-                                streams.append(stream)
-                            }
-                        }
-                        completionHandler(streams: streams, error: nil)
-                        return
-                    }
-                }
-                completionHandler(streams: nil, error: .JSONError)
-                return
-            }
-            else {
-                completionHandler(streams: nil, error: .URLError)
-                return
-            }
-        }
-    }
     
     static func authenticate(withUserName username: String, password: String, completionHandler: (success: Bool, error: HitboxError?) -> ()) {
         
