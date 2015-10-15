@@ -30,23 +30,28 @@
 		09CE598A1BAF5F870054EB71 /* NSQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09CE59891BAF5F870054EB71 /* NSQueue.swift */; };
 		09CE598C1BAF963C0054EB71 /* ConcurrencyHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09CE598B1BAF963C0054EB71 /* ConcurrencyHelpers.swift */; };
 		09D098251BA7666200E7E6FC /* TwitchStreamsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09D098241BA7666200E7E6FC /* TwitchStreamsViewController.swift */; };
-		09D098291BA77FAB00E7E6FC /* VideoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09D098281BA77FAB00E7E6FC /* VideoViewController.swift */; };
+		09D098291BA77FAB00E7E6FC /* TwitchVideoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09D098281BA77FAB00E7E6FC /* TwitchVideoViewController.swift */; };
 		09D0982B1BA782C800E7E6FC /* VideoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09D0982A1BA782C800E7E6FC /* VideoView.swift */; };
 		09E33CC91BB5B2DF000702E2 /* Dictionary.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09E33CC81BB5B2DF000702E2 /* Dictionary.swift */; };
 		09EB6D3E1BB484F7003EB244 /* String.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09EB6D3D1BB484F7003EB244 /* String.swift */; };
 		09EB6D461BB4A8BE003EB244 /* CATextLayerVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09EB6D451BB4A8BE003EB244 /* CATextLayerVC.swift */; };
 		A5E7DC008D2754CA1EC6CFC5 /* Pods_GamingStreamsTVApp.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 73B61525F92468AED0A0EE8C /* Pods_GamingStreamsTVApp.framework */; };
-		B443D6591BCD915700CAC88B /* TwitchSearchResultsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B443D6581BCD915700CAC88B /* TwitchSearchResultsViewController.swift */; };
-		B443D65A1BCD916700CAC88B /* (null) in Sources */ = {isa = PBXBuildFile; };
 		B44A44671BC6CAB800F399EC /* ItemCellView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B44A44661BC6CAB800F399EC /* ItemCellView.swift */; };
-		B4542FDE1BCD987F0099D14B /* ScrollingLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4542FDD1BCD987F0099D14B /* ScrollingLabel.swift */; };
-		B46307981BCEE55B005F705E /* SourceTabController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B46307971BCEE55B005F705E /* SourceTabController.swift */; };
 		B4A67BBC1BCBDF8B003E3B6F /* UIColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4A67BBB1BCBDF8B003E3B6F /* UIColor.swift */; };
-		B4DFFA331BCCB22900D177AE /* HitboxAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4DFFA321BCCB22900D177AE /* HitboxAPI.swift */; };
-		B4DFFA351BCCB29000D177AE /* HitboxMedia.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4DFFA341BCCB29000D177AE /* HitboxMedia.swift */; };
-		B4DFFA371BCCBA6100D177AE /* HitboxGamesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4DFFA361BCCBA6100D177AE /* HitboxGamesViewController.swift */; };
-		B4DFFA391BCCBFBA00D177AE /* HitboxGame.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4DFFA381BCCBFBA00D177AE /* HitboxGame.swift */; };
-		B4DFFA3B1BCCC88E00D177AE /* HitboxStreamsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4DFFA3A1BCCC88E00D177AE /* HitboxStreamsViewController.swift */; };
+		B4A67BBE1BCBE4CB003E3B6F /* TwitchSearchResultsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4A67BBD1BCBE4CB003E3B6F /* TwitchSearchResultsViewController.swift */; };
+		B4BDA2581BCD282C000DD1C8 /* ScrollingLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4BDA2571BCD282C000DD1C8 /* ScrollingLabel.swift */; };
+		B4D15C7C1BCDCBA2006FFB5D /* QRCodeGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4D15C7B1BCDCBA2006FFB5D /* QRCodeGenerator.swift */; };
+		B4D15C7E1BCDCCB3006FFB5D /* QRCodeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4D15C7D1BCDCCB3006FFB5D /* QRCodeViewController.swift */; };
+		B4D15C801BCDD3E3006FFB5D /* TokenHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4D15C7F1BCDD3E3006FFB5D /* TokenHelper.swift */; };
+		B4D15C821BCDFC6C006FFB5D /* Keychain.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4D15C811BCDFC6C006FFB5D /* Keychain.swift */; };
+		B4D88D2C1BCF35DD00C1DF87 /* HitboxGamesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4D88D2B1BCF35DD00C1DF87 /* HitboxGamesViewController.swift */; };
+		B4D88D2E1BCF35E500C1DF87 /* HitboxStreamsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4D88D2D1BCF35E500C1DF87 /* HitboxStreamsViewController.swift */; };
+		B4D88D321BCF35F100C1DF87 /* HitboxAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4D88D2F1BCF35F100C1DF87 /* HitboxAPI.swift */; };
+		B4D88D331BCF35F100C1DF87 /* HitboxGame.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4D88D301BCF35F100C1DF87 /* HitboxGame.swift */; };
+		B4D88D341BCF35F100C1DF87 /* HitboxMedia.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4D88D311BCF35F100C1DF87 /* HitboxMedia.swift */; };
+		B4E9F7FA1BCF385A0026708F /* SourceTabController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4E9F7F91BCF385A0026708F /* SourceTabController.swift */; };
+		B4FB52B21BCF282000C57B0B /* CustomVideoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4FB52B11BCF282000C57B0B /* CustomVideoViewController.swift */; };
+		B4FB52B41BCF2CC100C57B0B /* QRCustomVideoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4FB52B31BCF2CC100C57B0B /* QRCustomVideoViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -88,23 +93,29 @@
 		09CE59891BAF5F870054EB71 /* NSQueue.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NSQueue.swift; sourceTree = "<group>"; };
 		09CE598B1BAF963C0054EB71 /* ConcurrencyHelpers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConcurrencyHelpers.swift; sourceTree = "<group>"; };
 		09D098241BA7666200E7E6FC /* TwitchStreamsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TwitchStreamsViewController.swift; sourceTree = "<group>"; };
-		09D098281BA77FAB00E7E6FC /* VideoViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VideoViewController.swift; sourceTree = "<group>"; };
+		09D098281BA77FAB00E7E6FC /* TwitchVideoViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TwitchVideoViewController.swift; sourceTree = "<group>"; };
 		09D0982A1BA782C800E7E6FC /* VideoView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VideoView.swift; sourceTree = "<group>"; };
 		09E33CC81BB5B2DF000702E2 /* Dictionary.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Dictionary.swift; sourceTree = "<group>"; };
 		09EB6D3D1BB484F7003EB244 /* String.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = String.swift; sourceTree = "<group>"; };
 		09EB6D451BB4A8BE003EB244 /* CATextLayerVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CATextLayerVC.swift; sourceTree = "<group>"; };
 		73B61525F92468AED0A0EE8C /* Pods_GamingStreamsTVApp.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_GamingStreamsTVApp.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		90FBC40A14CD24160B58953A /* Pods-GamingStreamsTVApp.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-GamingStreamsTVApp.release.xcconfig"; path = "Pods/Target Support Files/Pods-GamingStreamsTVApp/Pods-GamingStreamsTVApp.release.xcconfig"; sourceTree = "<group>"; };
-		B443D6581BCD915700CAC88B /* TwitchSearchResultsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TwitchSearchResultsViewController.swift; sourceTree = "<group>"; };
 		B44A44661BC6CAB800F399EC /* ItemCellView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ItemCellView.swift; sourceTree = "<group>"; };
-		B4542FDD1BCD987F0099D14B /* ScrollingLabel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ScrollingLabel.swift; sourceTree = "<group>"; };
-		B46307971BCEE55B005F705E /* SourceTabController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SourceTabController.swift; sourceTree = "<group>"; };
 		B4A67BBB1BCBDF8B003E3B6F /* UIColor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIColor.swift; sourceTree = "<group>"; };
-		B4DFFA321BCCB22900D177AE /* HitboxAPI.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HitboxAPI.swift; sourceTree = "<group>"; };
-		B4DFFA341BCCB29000D177AE /* HitboxMedia.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HitboxMedia.swift; sourceTree = "<group>"; };
-		B4DFFA361BCCBA6100D177AE /* HitboxGamesViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HitboxGamesViewController.swift; sourceTree = "<group>"; };
-		B4DFFA381BCCBFBA00D177AE /* HitboxGame.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HitboxGame.swift; sourceTree = "<group>"; };
-		B4DFFA3A1BCCC88E00D177AE /* HitboxStreamsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HitboxStreamsViewController.swift; sourceTree = "<group>"; };
+		B4A67BBD1BCBE4CB003E3B6F /* TwitchSearchResultsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TwitchSearchResultsViewController.swift; sourceTree = "<group>"; };
+		B4BDA2571BCD282C000DD1C8 /* ScrollingLabel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ScrollingLabel.swift; sourceTree = "<group>"; };
+		B4D15C7B1BCDCBA2006FFB5D /* QRCodeGenerator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QRCodeGenerator.swift; sourceTree = "<group>"; };
+		B4D15C7D1BCDCCB3006FFB5D /* QRCodeViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QRCodeViewController.swift; sourceTree = "<group>"; };
+		B4D15C7F1BCDD3E3006FFB5D /* TokenHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TokenHelper.swift; sourceTree = "<group>"; };
+		B4D15C811BCDFC6C006FFB5D /* Keychain.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Keychain.swift; sourceTree = "<group>"; };
+		B4D88D2B1BCF35DD00C1DF87 /* HitboxGamesViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HitboxGamesViewController.swift; sourceTree = "<group>"; };
+		B4D88D2D1BCF35E500C1DF87 /* HitboxStreamsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HitboxStreamsViewController.swift; sourceTree = "<group>"; };
+		B4D88D2F1BCF35F100C1DF87 /* HitboxAPI.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HitboxAPI.swift; sourceTree = "<group>"; };
+		B4D88D301BCF35F100C1DF87 /* HitboxGame.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HitboxGame.swift; sourceTree = "<group>"; };
+		B4D88D311BCF35F100C1DF87 /* HitboxMedia.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HitboxMedia.swift; sourceTree = "<group>"; };
+		B4E9F7F91BCF385A0026708F /* SourceTabController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SourceTabController.swift; sourceTree = "<group>"; };
+		B4FB52B11BCF282000C57B0B /* CustomVideoViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomVideoViewController.swift; sourceTree = "<group>"; };
+		B4FB52B31BCF2CC100C57B0B /* QRCustomVideoViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QRCustomVideoViewController.swift; sourceTree = "<group>"; };
 		DC2A8ED48462858490AD4901 /* Pods-GamingStreamsTVApp.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-GamingStreamsTVApp.debug.xcconfig"; path = "Pods/Target Support Files/Pods-GamingStreamsTVApp/Pods-GamingStreamsTVApp.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -170,13 +181,13 @@
 		090AB9051BA6366500CDB05D /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				B4542FDD1BCD987F0099D14B /* ScrollingLabel.swift */,
 				B44A44661BC6CAB800F399EC /* ItemCellView.swift */,
 				09D0982A1BA782C800E7E6FC /* VideoView.swift */,
 				090AB9081BA8454500CDB05D /* TopBarView.swift */,
 				090AB90C1BA9B0F100CDB05D /* LoadingView.swift */,
 				090AB90E1BA9BBE300CDB05D /* ErrorView.swift */,
 				090AB9261BB579A300CDB05D /* ModalMenuView.swift */,
+				B4BDA2571BCD282C000DD1C8 /* ScrollingLabel.swift */,
 			);
 			name = Views;
 			sourceTree = "<group>";
@@ -203,6 +214,7 @@
 		09199A1E1BBAD0D000B10543 /* Abstract */ = {
 			isa = PBXGroup;
 			children = (
+				B4D15C7D1BCDCCB3006FFB5D /* QRCodeViewController.swift */,
 				09199A1C1BBAC67F00B10543 /* LoadingViewController.swift */,
 			);
 			name = Abstract;
@@ -216,6 +228,9 @@
 				09CE59891BAF5F870054EB71 /* NSQueue.swift */,
 				09CE598B1BAF963C0054EB71 /* ConcurrencyHelpers.swift */,
 				09EB6D451BB4A8BE003EB244 /* CATextLayerVC.swift */,
+				B4D15C7B1BCDCBA2006FFB5D /* QRCodeGenerator.swift */,
+				B4D15C7F1BCDD3E3006FFB5D /* TokenHelper.swift */,
+				B4D15C811BCDFC6C006FFB5D /* Keychain.swift */,
 				09199A1B1BBABC9100B10543 /* Extensions */,
 			);
 			name = Helpers;
@@ -235,9 +250,10 @@
 		09D098231BA7663A00E7E6FC /* ViewControllers */ = {
 			isa = PBXGroup;
 			children = (
-				B46307971BCEE55B005F705E /* SourceTabController.swift */,
-				B4542FDF1BCD9BC30099D14B /* Twitch */,
+				B4E9F7F91BCF385A0026708F /* SourceTabController.swift */,
 				B4542FE01BCD9BCE0099D14B /* Hitbox */,
+				B4FB52AF1BCF27E600C57B0B /* Twitch */,
+				B4FB52B01BCF280900C57B0B /* Custom */,
 				09199A1E1BBAD0D000B10543 /* Abstract */,
 			);
 			name = ViewControllers;
@@ -251,22 +267,11 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
-		B4542FDF1BCD9BC30099D14B /* Twitch */ = {
-			isa = PBXGroup;
-			children = (
-				090AB8E31BA5BFDF00CDB05D /* TwitchGamesViewController.swift */,
-				09D098241BA7666200E7E6FC /* TwitchStreamsViewController.swift */,
-				B443D6581BCD915700CAC88B /* TwitchSearchResultsViewController.swift */,
-				09D098281BA77FAB00E7E6FC /* VideoViewController.swift */,
-			);
-			name = Twitch;
-			sourceTree = "<group>";
-		};
 		B4542FE01BCD9BCE0099D14B /* Hitbox */ = {
 			isa = PBXGroup;
 			children = (
-				B4DFFA361BCCBA6100D177AE /* HitboxGamesViewController.swift */,
-				B4DFFA3A1BCCC88E00D177AE /* HitboxStreamsViewController.swift */,
+				B4D88D2B1BCF35DD00C1DF87 /* HitboxGamesViewController.swift */,
+				B4D88D2D1BCF35E500C1DF87 /* HitboxStreamsViewController.swift */,
 			);
 			name = Hitbox;
 			sourceTree = "<group>";
@@ -274,11 +279,31 @@
 		B4DFFA311BCCB21100D177AE /* HitboxAPI */ = {
 			isa = PBXGroup;
 			children = (
-				B4DFFA321BCCB22900D177AE /* HitboxAPI.swift */,
-				B4DFFA381BCCBFBA00D177AE /* HitboxGame.swift */,
-				B4DFFA341BCCB29000D177AE /* HitboxMedia.swift */,
+				B4D88D2F1BCF35F100C1DF87 /* HitboxAPI.swift */,
+				B4D88D301BCF35F100C1DF87 /* HitboxGame.swift */,
+				B4D88D311BCF35F100C1DF87 /* HitboxMedia.swift */,
 			);
 			name = HitboxAPI;
+			sourceTree = "<group>";
+		};
+		B4FB52AF1BCF27E600C57B0B /* Twitch */ = {
+			isa = PBXGroup;
+			children = (
+				090AB8E31BA5BFDF00CDB05D /* TwitchGamesViewController.swift */,
+				09D098241BA7666200E7E6FC /* TwitchStreamsViewController.swift */,
+				B4A67BBD1BCBE4CB003E3B6F /* TwitchSearchResultsViewController.swift */,
+				09D098281BA77FAB00E7E6FC /* TwitchVideoViewController.swift */,
+			);
+			name = Twitch;
+			sourceTree = "<group>";
+		};
+		B4FB52B01BCF280900C57B0B /* Custom */ = {
+			isa = PBXGroup;
+			children = (
+				B4FB52B31BCF2CC100C57B0B /* QRCustomVideoViewController.swift */,
+				B4FB52B11BCF282000C57B0B /* CustomVideoViewController.swift */,
+			);
+			name = Custom;
 			sourceTree = "<group>";
 		};
 		F869E16742CCA364171847D9 /* Pods */ = {
@@ -412,42 +437,47 @@
 			files = (
 				090AB8FD1BA616A900CDB05D /* TwitchApi.swift in Sources */,
 				090AB8FE1BA616A900CDB05D /* TwitchGame.swift in Sources */,
-				09D098291BA77FAB00E7E6FC /* VideoViewController.swift in Sources */,
+				09D098291BA77FAB00E7E6FC /* TwitchVideoViewController.swift in Sources */,
 				090AB9271BB579A300CDB05D /* ModalMenuView.swift in Sources */,
-				B4DFFA371BCCBA6100D177AE /* HitboxGamesViewController.swift in Sources */,
 				B4A67BBC1BCBDF8B003E3B6F /* UIColor.swift in Sources */,
+				B4D88D331BCF35F100C1DF87 /* HitboxGame.swift in Sources */,
+				B4BDA2581BCD282C000DD1C8 /* ScrollingLabel.swift in Sources */,
 				090AB8FF1BA616A900CDB05D /* TwitchChannel.swift in Sources */,
+				B4FB52B41BCF2CC100C57B0B /* QRCustomVideoViewController.swift in Sources */,
 				090AB90F1BA9BBE300CDB05D /* ErrorView.swift in Sources */,
 				090AB9091BA8454500CDB05D /* TopBarView.swift in Sources */,
 				090AB90D1BA9B0F100CDB05D /* LoadingView.swift in Sources */,
+				B4D88D2E1BCF35E500C1DF87 /* HitboxStreamsViewController.swift in Sources */,
 				09CE59821BAE15280054EB71 /* TwitchChatHandler.swift in Sources */,
+				B4D88D2C1BCF35DD00C1DF87 /* HitboxGamesViewController.swift in Sources */,
 				09CE597F1BAE08B10054EB71 /* IRCHandler.swift in Sources */,
-				B443D65A1BCD916700CAC88B /* (null) in Sources */,
 				09CE59881BAF55CE0054EB71 /* TwitchChatMessageQueue.swift in Sources */,
-				B46307981BCEE55B005F705E /* SourceTabController.swift in Sources */,
 				090AB9241BB36BC100CDB05D /* TwitchChatMessageView.swift in Sources */,
 				090AB9001BA616A900CDB05D /* TwitchStream.swift in Sources */,
 				09CE598A1BAF5F870054EB71 /* NSQueue.swift in Sources */,
 				09EB6D3E1BB484F7003EB244 /* String.swift in Sources */,
-				B4DFFA391BCCBFBA00D177AE /* HitboxGame.swift in Sources */,
+				B4D88D321BCF35F100C1DF87 /* HitboxAPI.swift in Sources */,
 				09EB6D461BB4A8BE003EB244 /* CATextLayerVC.swift in Sources */,
 				09199A1D1BBAC67F00B10543 /* LoadingViewController.swift in Sources */,
-				B443D6591BCD915700CAC88B /* TwitchSearchResultsViewController.swift in Sources */,
-				B4542FDE1BCD987F0099D14B /* ScrollingLabel.swift in Sources */,
 				090AB9221BB3699700CDB05D /* TwitchChatView.swift in Sources */,
+				B4A67BBE1BCBE4CB003E3B6F /* TwitchSearchResultsViewController.swift in Sources */,
+				B4D15C7C1BCDCBA2006FFB5D /* QRCodeGenerator.swift in Sources */,
 				090AB9011BA616A900CDB05D /* TwitchStreamVideo.swift in Sources */,
 				090AB9021BA616A900CDB05D /* M3UParser.swift in Sources */,
+				B4D15C7E1BCDCCB3006FFB5D /* QRCodeViewController.swift in Sources */,
 				09E33CC91BB5B2DF000702E2 /* Dictionary.swift in Sources */,
 				090AB9031BA616A900CDB05D /* AppDelegate.swift in Sources */,
-				B4DFFA331BCCB22900D177AE /* HitboxAPI.swift in Sources */,
+				B4FB52B21BCF282000C57B0B /* CustomVideoViewController.swift in Sources */,
+				B4D15C801BCDD3E3006FFB5D /* TokenHelper.swift in Sources */,
+				B4D88D341BCF35F100C1DF87 /* HitboxMedia.swift in Sources */,
+				B4E9F7FA1BCF385A0026708F /* SourceTabController.swift in Sources */,
 				09D098251BA7666200E7E6FC /* TwitchStreamsViewController.swift in Sources */,
-				B4DFFA351BCCB29000D177AE /* HitboxMedia.swift in Sources */,
 				090AB9041BA616A900CDB05D /* TwitchGamesViewController.swift in Sources */,
 				B44A44671BC6CAB800F399EC /* ItemCellView.swift in Sources */,
-				B4DFFA3B1BCCC88E00D177AE /* HitboxStreamsViewController.swift in Sources */,
 				09D0982B1BA782C800E7E6FC /* VideoView.swift in Sources */,
 				09CE59861BAF55BD0054EB71 /* TwitchChatMessage.swift in Sources */,
 				09CE598C1BAF963C0054EB71 /* ConcurrencyHelpers.swift in Sources */,
+				B4D15C821BCDFC6C006FFB5D /* Keychain.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

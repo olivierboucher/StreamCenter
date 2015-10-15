@@ -187,7 +187,7 @@ extension TwitchSearchResultsViewController : UICollectionViewDelegate {
             self.presentViewController(streamViewController, animated: true, completion: nil)
         case .Stream:
             let selectedStream = streams[indexPath.row]
-            let videoViewController = VideoViewController(stream: selectedStream)
+            let videoViewController = TwitchVideoViewController(stream: selectedStream)
             
             self.presentViewController(videoViewController, animated: true, completion: nil)
         }

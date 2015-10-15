@@ -15,8 +15,9 @@ class SourceTabController: UITabBarController {
         
         let twitch = TwitchGamesViewController()
         let hitbox = HitboxGamesViewController()
+        let custom = QRCustomVideoViewController()
         
-        setViewControllers([twitch, hitbox], animated: false)
+        setViewControllers([twitch, hitbox, custom], animated: false)
     }
 
     override func viewDidLoad() {

@@ -8,7 +8,7 @@ import UIKit
 import Foundation
 
 
-class TwitchStreamsViewController : LoadingViewController {
+class TwitchStreamsViewController: LoadingViewController {
     private let LOADING_BUFFER = 12
     private let NUM_COLUMNS = 3
     private let ITEMS_INSETS_X : CGFloat = 45
@@ -115,7 +115,7 @@ extension TwitchStreamsViewController : UICollectionViewDelegate {
     
     func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
         let selectedStream = streams[indexPath.row]
-        let videoViewController = VideoViewController(stream: selectedStream)
+        let videoViewController = TwitchVideoViewController(stream: selectedStream)
         
         self.presentViewController(videoViewController, animated: true, completion: nil)
     }

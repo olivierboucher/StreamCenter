@@ -6,12 +6,6 @@
 
 import UIKit
 
-enum SourceAPI: String {
-    case Twitch
-    case Hitbox
-    case Youtube
-}
-
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
