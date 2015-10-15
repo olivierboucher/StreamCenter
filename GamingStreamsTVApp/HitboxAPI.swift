@@ -58,8 +58,7 @@ class HitboxAPI {
         
         Alamofire.request(.GET, urlString, parameters:
             [   "limit"         : limit,
-                "liveonly"      : true,
-                "q"             : "league of legends"   ])
+                "liveonly"      : "true"    ])
             .responseJSON { (response) -> Void in
                 //do the stuff
                 if(response.result.isSuccess) {
@@ -157,7 +156,7 @@ class HitboxAPI {
                 "publicOnly"    : true      ])
         .responseJSON { (response) -> Void in
             //do the stuff
-            if(response.result.isSuccess) {
+            if response.result.isSuccess {
                 if let baseDict = response.result.value as? [String : AnyObject] {
                     if let streamsDicts = baseDict["livestream"] as? [[String : AnyObject]] {
                         var streams = [HitboxMedia]()
@@ -176,6 +175,29 @@ class HitboxAPI {
             else {
                 completionHandler(streams: nil, error: .URLError)
                 return
+            }
+        }
+    }
+    
+    static func authenticate(withUserName username: String, password: String, completionHandler: (success: Bool, error: HitboxError?) -> ()) {
+        
+        let urlString = "https://www.hitbox.tv/api/auth/login"
+        Alamofire.request(.POST, urlString, parameters:
+            [   "login"         : username,
+                "pass"          : password,
+                "rememberme"    : ""        ])
+        .responseJSON { (response) -> Void in
+            if response.result.isSuccess {
+                if let baseDict = response.result.value as? [String : AnyObject] {
+                    if let dataDict = baseDict["data"] as? [String : AnyObject], token = dataDict["authToken"] as? String {
+                        TokenHelper.storeHitboxToken(token)
+                        completionHandler(success: true, error: nil)
+                        return
+                    }
+                }
+                completionHandler(success: false, error: .NoAuthTokenError)
+            } else {
+                completionHandler(success: false, error: .URLError)
             }
         }
     }

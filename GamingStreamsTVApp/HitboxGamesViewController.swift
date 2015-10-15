@@ -19,6 +19,7 @@ class HitboxGamesViewController : LoadingViewController {
     }
     
     private var searchField: UITextField!
+    private var authButton : UIButton?
     private var games = [HitboxGame]()
     
     convenience init() {
@@ -28,6 +29,7 @@ class HitboxGamesViewController : LoadingViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         // Do any additional setup after loading the view, typically from a nib.
         configureViews()
     }
@@ -83,11 +85,66 @@ class HitboxGamesViewController : LoadingViewController {
         self.searchField.delegate = self
         self.searchField.textAlignment = .Center
         
+        if TokenHelper.getHitboxToken() == nil {
+            self.authButton = UIButton(type: .System)
+            self.authButton?.translatesAutoresizingMaskIntoConstraints = false
+            self.authButton?.setTitle("Authenticate", forState: .Normal)
+            self.authButton?.addTarget(self, action: Selector("authorizeUser"), forControlEvents: .PrimaryActionTriggered)
+        }
+        
         let imageView = UIImageView(image: UIImage(named: "hitbox"))
         imageView.contentMode = .ScaleAspectFit
         
-        super.configureViews("Top Games", centerView: imageView, leftView: self.searchField, rightView: nil)
+        super.configureViews("Top Games", centerView: imageView, leftView: self.searchField, rightView: self.authButton)
         
+    }
+    
+    func authorizeUser() {
+        let alert = UIAlertController(title: "Authenticate", message: "To authenticate with the Hitbox API, please enter your username and password", preferredStyle: .Alert)
+        
+        alert.addAction(UIAlertAction(title: "Cancel", style: .Cancel, handler: nil))
+        
+        alert.addTextFieldWithConfigurationHandler { (textField) -> Void in
+            textField.placeholder = "username"
+            textField.autocapitalizationType = .None
+        }
+        
+        alert.addTextFieldWithConfigurationHandler { (textField) -> Void in
+            textField.placeholder = "password"
+            textField.secureTextEntry = true
+        }
+        
+        alert.addAction(UIAlertAction(title: "Authorize", style: .Default, handler: { (action) -> Void in
+            guard let username = alert.textFields?[0].text, password = alert.textFields?[1].text where !username.isEmpty && !password.isEmpty else {
+                return
+            }
+            self.performAuthorization(withUsername: username, andPassword: password)
+        }))
+        
+        self.presentViewController(alert, animated: true, completion: nil)
+    }
+    
+    func performAuthorization(withUsername username: String, andPassword password: String) {
+        HitboxAPI.authenticate(withUserName: username, password: password) { (success, error) -> () in
+            let title = success ? "Nice!" : "Uh-oh"
+            var message = success ? "You authenticated with Hitbox" : "The authentication attempt was unsuccessful: "
+            
+            if let error = error {
+                message += error.errorDescription
+            }
+            
+            let alert = UIAlertController(title: title, message: message, preferredStyle: .Alert)
+            
+            alert.addAction(UIAlertAction(title: success ? "Cool" : "Ok", style: .Cancel, handler: nil))
+            
+            dispatch_async(dispatch_get_main_queue(), { () -> Void in
+                if success {
+                    self.authButton?.removeFromSuperview()
+                    self.authButton = nil
+                }
+                self.presentViewController(alert, animated: true, completion: nil)
+            })
+        }
     }
     
     override func reloadContent() {
@@ -110,37 +167,6 @@ extension HitboxGamesViewController {
         self.presentViewController(streamsViewController, animated: true, completion: nil)
     }
     
-//    func collectionView(collectionView: UICollectionView, willDisplayCell cell: UICollectionViewCell, forItemAtIndexPath indexPath: NSIndexPath) {
-//        if(indexPath.row == self.games.count - 1){
-//            HitboxAPI.getLivegames(games.count, limit: LOADING_BUFFER, completionHandler: { (games, error) -> () in
-//                
-//                guard let games = games where games.count > 0 else {
-//                    return
-//                }
-//                
-//                var paths = [NSIndexPath]()
-//                
-//                let filteredgames = games.filter({
-//                    let streamID = $0.id
-//                    if let _ = self.games.indexOf({$0.id == streamID}) {
-//                        return false
-//                    }
-//                    return true
-//                })
-//                
-//                for i in 0..<filteredgames.count {
-//                    paths.append(NSIndexPath(forItem: i + self.games.count, inSection: 0))
-//                }
-//                
-//                self.collectionView!.performBatchUpdates({
-//                    self.games.appendContentsOf(filteredgames)
-//                    
-//                    self.collectionView!.insertItemsAtIndexPaths(paths)
-//                    
-//                    }, completion: nil)
-//            })
-//        }
-//    }
 }
 
 //////////////////////////////////////////////////////
