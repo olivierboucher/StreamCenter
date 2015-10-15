@@ -118,6 +118,36 @@ class HitboxAPI {
         }
     }
     
+    //https://api.hitbox.tv/mediainfo/live/458643
+    static func getStreamInfo(forMediaId mediaId: Int, offset: Int, limit: Int, completionHandler: (streams: [HitboxMedia]?, error: HitboxError?) -> ()) {
+        let urlString = "https://api.hitbox.tv/mediainfo/live/\(mediaId)"
+        
+        Alamofire.request(.GET, urlString)
+            .responseJSON { (response) -> Void in
+                //do the stuff
+                if(response.result.isSuccess) {
+                    if let baseDict = response.result.value as? [String : AnyObject] {
+                        if let streamsDicts = baseDict["livestream"] as? [[String : AnyObject]] {
+                            var streams = [HitboxMedia]()
+                            for streamRaw in streamsDicts {
+                                if let stream = HitboxMedia(dict: streamRaw) {
+                                    streams.append(stream)
+                                }
+                            }
+                            completionHandler(streams: streams, error: nil)
+                            return
+                        }
+                    }
+                    completionHandler(streams: nil, error: .JSONError)
+                    return
+                }
+                else {
+                    completionHandler(streams: nil, error: .URLError)
+                    return
+                }
+        }
+    }
+    
     static func getLiveStreams(offset: Int, limit: Int, completionHandler: (streams: [HitboxMedia]?, error: HitboxError?) -> ()) {
         let urlString = "https://api.hitbox.tv/media/live/list"
         
