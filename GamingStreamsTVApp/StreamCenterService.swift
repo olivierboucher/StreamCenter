@@ -84,6 +84,9 @@ class StreamCenterService {
         .responseJSON { response in
             //this is the response
             print(response)
+            //here's a test url
+//            completionHandler(url: "http://qthttp.apple.com.edgesuite.net/1010qwoeiuryfg/sl.m3u8", error: nil)
+//            return
             
             if response.result.isSuccess {
                 if let dictionary = response.result.value as? [String : AnyObject] {
