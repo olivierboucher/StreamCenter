@@ -1,5 +1,5 @@
 //
-//  VideoViewController.swift
+//  TwitchVideoViewController.swift
 //  GamingStreamsTVApp
 //
 //  Created by Olivier Boucher on 2015-09-14.
@@ -16,7 +16,7 @@ enum StreamSourceQuality: String {
     case Low
 }
 
-class VideoViewController : UIViewController {
+class TwitchVideoViewController : UIViewController {
     private var videoView : VideoView?
     private var videoPlayer : AVPlayer?
     private var streams : [TwitchStreamVideo]?
@@ -98,7 +98,6 @@ class VideoViewController : UIViewController {
                 dispatch_async(dispatch_get_main_queue(),{
                     self.initializePlayerView()
                 })
-                
             }
         }
     }
@@ -111,14 +110,12 @@ class VideoViewController : UIViewController {
     */
     override func viewWillDisappear(animated: Bool) {
         
-        if self.chatView != nil && self.view.subviews.contains(self.chatView!) {
-            self.chatView!.stopDisplayingMessages()
-            self.chatView!.removeFromSuperview()
-            self.chatView = nil
-        }
+        self.chatView?.stopDisplayingMessages()
+        self.chatView?.removeFromSuperview()
+        self.chatView = nil
         
-        self.videoView!.removeFromSuperview()
-        self.videoView!.setPlayer(nil)
+        self.videoView?.removeFromSuperview()
+        self.videoView?.setPlayer(nil)
         self.videoView = nil
         self.videoPlayer = nil
 
@@ -242,10 +239,10 @@ class VideoViewController : UIViewController {
     
     func showChat() {
         //Resize video view
-        var frame = self.videoView!.frame
-        frame.size.width -= 400
-        frame.size.height -= 225
-        frame.origin.y += (225/2)
+        var frame = self.videoView?.frame
+        frame?.size.width -= 400
+        frame?.size.height -= 225
+        frame?.origin.y += (225/2)
         
         
         
@@ -265,7 +262,9 @@ class VideoViewController : UIViewController {
         //animate the showing of the chat view
         UIView.animateWithDuration(0.5) { () -> Void in
             self.chatView!.frame = CGRect(x: self.view.bounds.width - 400, y: 0, width: 400, height: self.view!.bounds.height)
-            self.videoView!.frame = frame
+            if let videoView = self.videoView, frame = frame {
+                videoView.frame = frame
+            }
         }
     }
     
@@ -307,6 +306,7 @@ class VideoViewController : UIViewController {
                         let streamItem = AVPlayerItem(asset: streamAsset)
                         self.videoPlayer?.replaceCurrentItemWithPlayerItem(streamItem)
                         dismissMenu()
+                        return
                     }
                 }
             }

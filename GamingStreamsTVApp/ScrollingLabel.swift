@@ -151,16 +151,4 @@ class ScrollingLabel: UIView {
             return self.textLayer.preferredFrameSize()
         }
     }
-    
-//    var realSize: CGSize? {
-//        guard let text = text else {
-//            return nil
-//        }
-//        let attrString = CFAttributedStringCreate(nil, text, [NSFontAttributeName : font] as [String : AnyObject])
-//        let framesetter = CTFramesetterCreateWithAttributedString(attrString)
-//        let targetSize = CGSizeMake(CGFloat.max, self.bounds.height);
-//        let fitSize = CTFramesetterSuggestFrameSizeWithConstraints(framesetter, CFRangeMake(0, text.characters.count), nil, targetSize, nil)
-//        return fitSize
-//    }
-    
 }

@@ -1,5 +1,5 @@
 //
-//  SearchResultsViewController.swift
+//  TwitchSearchResultsViewController.swift
 //  GamingStreamsTVApp
 //
 //  Created by Brendan Kirchner on 10/12/15.
@@ -13,7 +13,7 @@ private enum SearchType {
     case Stream
 }
 
-class SearchResultsViewController: LoadingViewController {
+class TwitchSearchResultsViewController: LoadingViewController {
     
     private let LOADING_BUFFER = 20
     
@@ -102,38 +102,7 @@ class SearchResultsViewController: LoadingViewController {
         self.searchTypeControl.setTitleTextAttributes([NSForegroundColorAttributeName : UIColor(white: 0.45, alpha: 1)], forState: .Normal)
         self.searchTypeControl.addTarget(self, action: Selector("changedSearchType:"), forControlEvents: .ValueChanged)
         
-        //do the top bar first
-        self.topBar = TopBarView(frame: CGRectZero, withMainTitle: "Search Results - \(searchTerm)", leftView: self.searchTypeControl)
-        self.topBar.translatesAutoresizingMaskIntoConstraints = false
-        self.view.addSubview(self.topBar)
-        
-        //then do the collection view
-        let layout : UICollectionViewFlowLayout = UICollectionViewFlowLayout()
-        layout.scrollDirection = UICollectionViewScrollDirection.Vertical
-        layout.minimumLineSpacing = 50
-        
-        self.collectionView = UICollectionView(frame: CGRectZero, collectionViewLayout: layout)
-        self.collectionView.translatesAutoresizingMaskIntoConstraints = false
-        self.collectionView.registerClass(ItemCellView.classForCoder(), forCellWithReuseIdentifier: ItemCellView.CELL_IDENTIFIER)
-        self.collectionView.dataSource = self
-        self.collectionView.delegate = self
-        self.collectionView.contentInset = UIEdgeInsets(top: TOP_BAR_HEIGHT + ITEMS_INSETS_Y, left: itemInset, bottom: ITEMS_INSETS_Y, right: itemInset)
-        
-        self.view.addSubview(self.collectionView)
-        self.view.bringSubviewToFront(self.topBar)
-        self.view.bringSubviewToFront(self.searchTypeControl)
-        
-        let viewDict = ["topbar" : topBar, "collection" : collectionView]
-        
-        self.topBar.addConstraint(NSLayoutConstraint(item: topBar, attribute: .Height, relatedBy: .Equal, toItem: nil, attribute: .NotAnAttribute, multiplier: 1.0, constant: TOP_BAR_HEIGHT))
-        
-        self.view.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|[topbar]", options: [], metrics: nil, views: viewDict))
-        
-        self.view.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|[collection]|", options: [], metrics: nil, views: viewDict))
-        
-        self.view.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|[topbar]|", options: [], metrics: nil, views: viewDict))
-        
-        self.view.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|[collection]|", options: [], metrics: nil, views: viewDict))
+        super.configureViews("Search Results - \(searchTerm)", centerView: nil, leftView: self.searchTypeControl, rightView: nil)
     }
     
     override func reloadContent() {
@@ -177,17 +146,17 @@ class SearchResultsViewController: LoadingViewController {
 // MARK - UICollectionViewDelegate interface
 ////////////////////////////////////////////
 
-extension SearchResultsViewController : UICollectionViewDelegate {
+extension TwitchSearchResultsViewController {
     
     func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
         switch searchType {
         case .Game:
             let selectedGame = games[indexPath.row]
-            let streamViewController = StreamsViewController(game: selectedGame)
+            let streamViewController = TwitchStreamsViewController(game: selectedGame)
             self.presentViewController(streamViewController, animated: true, completion: nil)
         case .Stream:
             let selectedStream = streams[indexPath.row]
-            let videoViewController = VideoViewController(stream: selectedStream)
+            let videoViewController = TwitchVideoViewController(stream: selectedStream)
             
             self.presentViewController(videoViewController, animated: true, completion: nil)
         }
@@ -234,7 +203,7 @@ extension SearchResultsViewController : UICollectionViewDelegate {
 // MARK - UICollectionViewDelegateFlowLayout interface
 //////////////////////////////////////////////////////
 
-extension SearchResultsViewController : UICollectionViewDelegateFlowLayout {
+extension TwitchSearchResultsViewController : UICollectionViewDelegateFlowLayout {
     
     func collectionView(collectionView: UICollectionView,
         layout collectionViewLayout: UICollectionViewLayout,
@@ -267,13 +236,13 @@ extension SearchResultsViewController : UICollectionViewDelegateFlowLayout {
 // MARK - UICollectionViewDataSource interface
 //////////////////////////////////////////////
 
-extension SearchResultsViewController : UICollectionViewDataSource {
+extension TwitchSearchResultsViewController {
     
-    func numberOfSectionsInCollectionView(collectionView: UICollectionView) -> Int {
+    override func numberOfSectionsInCollectionView(collectionView: UICollectionView) -> Int {
         return 1
     }
     
-    func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+    override func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         // If the count of streams allows the current row to be full
         switch searchType {
         case .Game:
@@ -283,7 +252,7 @@ extension SearchResultsViewController : UICollectionViewDataSource {
         }
     }
     
-    func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
+    override func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
         let cell : ItemCellView = collectionView.dequeueReusableCellWithReuseIdentifier(ItemCellView.CELL_IDENTIFIER, forIndexPath: indexPath) as! ItemCellView
         switch searchType {
         case .Game:
