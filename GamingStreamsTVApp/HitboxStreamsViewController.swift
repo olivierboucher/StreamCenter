@@ -85,10 +85,10 @@ class HitboxStreamsViewController : LoadingViewController {
 extension HitboxStreamsViewController {
     
     func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
-//        let selectedStream = streams[indexPath.row]
-//        let videoViewController = VideoViewController(stream: selectedStream)
-//        
-//        self.presentViewController(videoViewController, animated: true, completion: nil)
+        let selectedStream = streams[indexPath.row]
+        let videoViewController = HitboxVideoViewController(media: selectedStream)
+        
+        self.presentViewController(videoViewController, animated: true, completion: nil)
     }
 }
 

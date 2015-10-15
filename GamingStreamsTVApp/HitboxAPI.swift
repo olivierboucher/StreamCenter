@@ -11,7 +11,49 @@ import Alamofire
 
 class HitboxAPI {
     
-    static func getGames(offset: Int, limit: Int, completionHandler: (games: [HitboxGame]?, error: NSError?) -> ()) {
+    enum HitboxError: ErrorType {
+        case URLError
+        case JSONError
+        case AuthError
+        case NoAuthTokenError
+        case OtherError
+        
+        var errorDescription: String {
+            get {
+                switch self {
+                case .URLError:
+                    return "There was an error with the request."
+                case .JSONError:
+                    return "There was an error parsing the JSON."
+                case .AuthError:
+                    return "The user is not authenticated."
+                case .NoAuthTokenError:
+                    return "There was no auth token provided in the response data."
+                case .OtherError:
+                    return "An unidentified error occured."
+                }
+            }
+        }
+        
+        var recoverySuggestion: String {
+            get {
+                switch self {
+                case .URLError:
+                    return "Please make sure that the url is formatted correctly."
+                case .JSONError:
+                    return "Please check the request information and response."
+                case .AuthError:
+                    return "Please make sure to authenticate with Twitch before attempting to load this data."
+                case .NoAuthTokenError:
+                    return "Please check the server logs and response."
+                case .OtherError:
+                    return "Sorry, there's no provided solution for this error."
+                }
+            }
+        }
+    }
+    
+    static func getGames(offset: Int, limit: Int, completionHandler: (games: [HitboxGame]?, error: HitboxError?) -> ()) {
         let urlString = "https://api.hitbox.tv/games"
         
         Alamofire.request(.GET, urlString, parameters:
@@ -33,27 +75,17 @@ class HitboxAPI {
                             return
                         }
                     }
-                    let userInfo = [
-                        NSLocalizedDescriptionKey : String("Operation was unsuccessful."),
-                        NSLocalizedFailureReasonErrorKey: String("Could not parse data to a valid NSDictionnary object"),
-                        NSLocalizedRecoverySuggestionErrorKey: String("Please ensure that the provided url is valid")
-                    ]
-                    completionHandler(games: nil, error: NSError(domain: "HitboxAPI", code: 3, userInfo: userInfo))
+                    completionHandler(games: nil, error: .JSONError)
                     return
                 }
                 else {
-                    let userInfo = [
-                        NSLocalizedDescriptionKey : String("Operation was unsuccessful."),
-                        NSLocalizedFailureReasonErrorKey: String("The operation returned an error : %@", response.result.error.debugDescription),
-                        NSLocalizedRecoverySuggestionErrorKey: String("Please ensure that the provided channel is valid")
-                    ]
-                    completionHandler(games: nil, error: NSError(domain: "HitboxAPI", code: 1, userInfo: userInfo))
+                    completionHandler(games: nil, error: .URLError)
                     return
                 }
         }
     }
     
-    static func getLiveStreams(forGame gameid: Int, offset: Int, limit: Int, completionHandler: (streams: [HitboxMedia]?, error: NSError?) -> ()) {
+    static func getLiveStreams(forGame gameid: Int, offset: Int, limit: Int, completionHandler: (streams: [HitboxMedia]?, error: HitboxError?) -> ()) {
         let urlString = "https://api.hitbox.tv/media/live/list"
         
         Alamofire.request(.GET, urlString, parameters:
@@ -76,27 +108,47 @@ class HitboxAPI {
                         return
                     }
                 }
-                let userInfo = [
-                    NSLocalizedDescriptionKey : String("Operation was unsuccessful."),
-                    NSLocalizedFailureReasonErrorKey: String("Could not parse data to a valid NSDictionnary object"),
-                    NSLocalizedRecoverySuggestionErrorKey: String("Please ensure that the provided url is valid")
-                ]
-                completionHandler(streams: nil, error: NSError(domain: "HitboxAPI", code: 3, userInfo: userInfo))
+                completionHandler(streams: nil, error: .JSONError)
                 return
             }
             else {
-                let userInfo = [
-                    NSLocalizedDescriptionKey : String("Operation was unsuccessful."),
-                    NSLocalizedFailureReasonErrorKey: String("The operation returned an error : %@", response.result.error.debugDescription),
-                    NSLocalizedRecoverySuggestionErrorKey: String("Please ensure that the provided channel is valid")
-                ]
-                completionHandler(streams: nil, error: NSError(domain: "HitboxAPI", code: 1, userInfo: userInfo))
+                completionHandler(streams: nil, error: .URLError)
                 return
             }
         }
     }
     
-    static func getLiveStreams(offset: Int, limit: Int, completionHandler: (streams: [HitboxMedia]?, error: NSError?) -> ()) {
+    //https://api.hitbox.tv/mediainfo/live/458643
+    static func getStreamInfo(forMediaId mediaId: String, completionHandler: (streamVideos: [HitboxStreamVideo]?, error: HitboxError?) -> ()) {
+        let urlString = "http://www.hitbox.tv/api/player/config/live/\(mediaId)"
+        
+        Alamofire.request(.GET, urlString)
+            .responseJSON { (response) -> Void in
+                //do the stuff
+                if(response.result.isSuccess) {
+                    if let baseDict = response.result.value as? [String : AnyObject] {
+                        if let playlist = baseDict["playlist"] as? [[String : AnyObject]], bitrates = playlist[0]["bitrates"] as? [[String : AnyObject]] {
+                            var streamVideos = [HitboxStreamVideo]()
+                            for bitrate in bitrates {
+                                if let video = HitboxStreamVideo(dict: bitrate) {
+                                    streamVideos.append(video)
+                                }
+                            }
+                            completionHandler(streamVideos: streamVideos, error: nil)
+                            return
+                        }
+                    }
+                    completionHandler(streamVideos: nil, error: .JSONError)
+                    return
+                }
+                else {
+                    completionHandler(streamVideos: nil, error: .URLError)
+                    return
+                }
+        }
+    }
+    
+    static func getLiveStreams(offset: Int, limit: Int, completionHandler: (streams: [HitboxMedia]?, error: HitboxError?) -> ()) {
         let urlString = "https://api.hitbox.tv/media/live/list"
         
         Alamofire.request(.GET, urlString, parameters:
@@ -118,21 +170,11 @@ class HitboxAPI {
                         return
                     }
                 }
-                let userInfo = [
-                    NSLocalizedDescriptionKey : String("Operation was unsuccessful."),
-                    NSLocalizedFailureReasonErrorKey: String("Could not parse data to a valid NSDictionnary object"),
-                    NSLocalizedRecoverySuggestionErrorKey: String("Please ensure that the provided url is valid")
-                ]
-                completionHandler(streams: nil, error: NSError(domain: "HitboxAPI", code: 3, userInfo: userInfo))
+                completionHandler(streams: nil, error: .JSONError)
                 return
             }
             else {
-                let userInfo = [
-                    NSLocalizedDescriptionKey : String("Operation was unsuccessful."),
-                    NSLocalizedFailureReasonErrorKey: String("The operation returned an error : %@", response.result.error.debugDescription),
-                    NSLocalizedRecoverySuggestionErrorKey: String("Please ensure that the provided channel is valid")
-                ]
-                completionHandler(streams: nil, error: NSError(domain: "HitboxAPI", code: 1, userInfo: userInfo))
+                completionHandler(streams: nil, error: .URLError)
                 return
             }
         }

@@ -14,6 +14,7 @@ class HitboxMedia: CellItem {
     private(set) var name : String!
     private(set) var viewers : Int!
     private(set) var thumbnail: String!
+    private(set) var userMediaId: String!
     
     private var mImage: UIImage?
     
@@ -30,11 +31,15 @@ class HitboxMedia: CellItem {
         guard let viewers = dict["category_viewers"] as? String, intViewers = Int(viewers) else {
             return nil
         }
+        guard let channelDict = dict["channel"] as? [String : AnyObject], userMediaId = channelDict["user_media_id"] as? String else {
+            return nil
+        }
         
         self.id = intId
         self.name = name
         self.thumbnail = thumb
         self.viewers = intViewers
+        self.userMediaId = userMediaId
     }
     
     var urlTemplate: String? {

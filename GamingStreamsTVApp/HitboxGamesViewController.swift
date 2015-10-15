@@ -83,38 +83,10 @@ class HitboxGamesViewController : LoadingViewController {
         self.searchField.delegate = self
         self.searchField.textAlignment = .Center
         
-        //do the top bar first
-        self.topBar = TopBarView(frame: CGRectZero, withMainTitle: "Hitbox Games", leftView: self.searchField)
-        self.topBar.translatesAutoresizingMaskIntoConstraints = false
-        self.view.addSubview(self.topBar)
+        let imageView = UIImageView(image: UIImage(named: "hitbox"))
+        imageView.contentMode = .ScaleAspectFit
         
-        //then do the collection view
-        let layout : UICollectionViewFlowLayout = UICollectionViewFlowLayout()
-        layout.scrollDirection = UICollectionViewScrollDirection.Vertical
-        layout.minimumInteritemSpacing = ITEMS_INSETS_X
-        layout.minimumLineSpacing = 50
-        
-        self.collectionView = UICollectionView(frame: CGRectZero, collectionViewLayout: layout)
-        self.collectionView.translatesAutoresizingMaskIntoConstraints = false
-        self.collectionView.registerClass(ItemCellView.classForCoder(), forCellWithReuseIdentifier: ItemCellView.CELL_IDENTIFIER)
-        self.collectionView.dataSource = self
-        self.collectionView.delegate = self
-        self.collectionView.contentInset = UIEdgeInsets(top: TOP_BAR_HEIGHT + ITEMS_INSETS_Y, left: ITEMS_INSETS_X, bottom: ITEMS_INSETS_Y, right: ITEMS_INSETS_X)
-        
-        self.view.addSubview(self.collectionView)
-        self.view.bringSubviewToFront(self.topBar)
-        
-        let viewDict = ["topbar" : topBar, "collection" : collectionView]
-        
-        self.view.addConstraint(NSLayoutConstraint(item: topBar, attribute: .Height, relatedBy: .Equal, toItem: nil, attribute: .NotAnAttribute, multiplier: 1.0, constant: TOP_BAR_HEIGHT))
-        
-        self.view.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|[topbar]", options: [], metrics: nil, views: viewDict))
-        
-        self.view.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|[collection]|", options: [], metrics: nil, views: viewDict))
-        
-        self.view.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|[topbar]|", options: [], metrics: nil, views: viewDict))
-        
-        self.view.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|[collection]|", options: [], metrics: nil, views: viewDict))
+        super.configureViews("Top Games", centerView: imageView, leftView: self.searchField, rightView: nil)
         
     }
     
