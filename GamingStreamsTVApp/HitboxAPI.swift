@@ -53,12 +53,16 @@ class HitboxAPI {
         }
     }
     
-    static func getGames(offset: Int, limit: Int, completionHandler: (games: [HitboxGame]?, error: HitboxError?) -> ()) {
+    static func getGames(offset: Int, limit: Int, searchTerm: String? = nil, completionHandler: (games: [HitboxGame]?, error: HitboxError?) -> ()) {
         let urlString = "https://api.hitbox.tv/games"
         
-        Alamofire.request(.GET, urlString, parameters:
-            [   "limit"         : limit,
-                "liveonly"      : "true"    ])
+        var parameters: [String : AnyObject] = ["limit" : limit, "liveonly" : "true"]
+        
+        if let term = searchTerm {
+            parameters["q"] = term
+        }
+        
+        Alamofire.request(.GET, urlString, parameters: parameters)
             .responseJSON { (response) -> Void in
                 //do the stuff
                 if(response.result.isSuccess) {
@@ -126,7 +130,7 @@ class HitboxAPI {
                 //do the stuff
                 if(response.result.isSuccess) {
                     if let baseDict = response.result.value as? [String : AnyObject] {
-                        if let playlist = baseDict["playlist"] as? [[String : AnyObject]], bitrates = playlist[0]["bitrates"] as? [[String : AnyObject]] {
+                        if let playlist = baseDict["playlist"] as? [[String : AnyObject]], bitrates = playlist.first?["bitrates"] as? [[String : AnyObject]] {
                             var streamVideos = [HitboxStreamVideo]()
                             for bitrate in bitrates {
                                 if let video = HitboxStreamVideo(dict: bitrate) {
@@ -147,37 +151,6 @@ class HitboxAPI {
         }
     }
     
-    static func getLiveStreams(offset: Int, limit: Int, completionHandler: (streams: [HitboxMedia]?, error: HitboxError?) -> ()) {
-        let urlString = "https://api.hitbox.tv/media/live/list"
-        
-        Alamofire.request(.GET, urlString, parameters:
-            [   "limit"         : limit,
-                "start"         : offset,
-                "publicOnly"    : true      ])
-        .responseJSON { (response) -> Void in
-            //do the stuff
-            if response.result.isSuccess {
-                if let baseDict = response.result.value as? [String : AnyObject] {
-                    if let streamsDicts = baseDict["livestream"] as? [[String : AnyObject]] {
-                        var streams = [HitboxMedia]()
-                        for streamRaw in streamsDicts {
-                            if let stream = HitboxMedia(dict: streamRaw) {
-                                streams.append(stream)
-                            }
-                        }
-                        completionHandler(streams: streams, error: nil)
-                        return
-                    }
-                }
-                completionHandler(streams: nil, error: .JSONError)
-                return
-            }
-            else {
-                completionHandler(streams: nil, error: .URLError)
-                return
-            }
-        }
-    }
     
     static func authenticate(withUserName username: String, password: String, completionHandler: (success: Bool, error: HitboxError?) -> ()) {
         

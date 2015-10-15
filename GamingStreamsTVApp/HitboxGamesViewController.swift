@@ -81,7 +81,7 @@ class HitboxGamesViewController : LoadingViewController {
         //then do the search bar
         self.searchField = UITextField(frame: CGRectZero)
         self.searchField.translatesAutoresizingMaskIntoConstraints = false
-        self.searchField.placeholder = "Search Games or games"
+        self.searchField.placeholder = "Search Games"
         self.searchField.delegate = self
         self.searchField.textAlignment = .Center
         
@@ -222,12 +222,12 @@ extension HitboxGamesViewController {
 extension HitboxGamesViewController : UITextFieldDelegate {
     
     func textFieldDidEndEditing(textField: UITextField) {
-//        guard let term = textField.text where !term.isEmpty else {
-//            return
-//        }
-//        
-//        let searchViewController = TwitchSearchResultsViewController(seatchTerm: term)
-//        presentViewController(searchViewController, animated: true, completion: nil)
+        guard let term = textField.text where !term.isEmpty else {
+            return
+        }
+        
+        let searchViewController = HitboxSearchResultsViewController(seatchTerm: term)
+        presentViewController(searchViewController, animated: true, completion: nil)
     }
 }
 

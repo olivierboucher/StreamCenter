@@ -17,10 +17,12 @@ class HitboxMedia: CellItem {
     private(set) var thumbnail : String!
     private(set) var userMediaId : String!
     private(set) var countries : [String]?
+    private(set) var chatEnabled = false
     
     private var mImage: UIImage?
     
     init?(dict: [String : AnyObject]) {
+        
         guard let id = dict["media_id"] as? String, intId = Int(id) else {
             return nil
         }
@@ -33,7 +35,10 @@ class HitboxMedia: CellItem {
         guard let viewers = dict["media_views"] as? String, intViews = Int(viewers) else {
             return nil
         }
-        guard let channelDict = dict["channel"] as? [String : AnyObject], userMediaId = channelDict["user_media_id"] as? String else {
+        guard let channelDict = dict["channel"] as? [String : AnyObject] else {
+            return nil
+        }
+        guard let userMediaId = channelDict["user_media_id"] as? String else {
             return nil
         }
         
@@ -49,6 +54,10 @@ class HitboxMedia: CellItem {
         
         if let displayName = dict["media_display_name"] as? String {
             self.displayName = displayName
+        }
+        
+        if let chat = dict["media_chat_enabled"] as? String where chat == "1" {
+            self.chatEnabled = true
         }
     }
     
