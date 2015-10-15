@@ -76,16 +76,14 @@ class TwitchVideoViewController : UIViewController {
                 MenuOption(title: StreamSourceQuality.Low.rawValue, enabled: false, onClick: self.handleQualityChange)
             ]
         ]
-        
+    }
+    
+    override func viewDidAppear(animated: Bool) {
+        super.viewDidAppear(animated)
         TwitchApi.getStreamsForChannel(self.currentStream!.channel.name) {
             (streams, error) in
             
-            if(error != nil) {
-                print("Error getting stream video data")
-                print(error)
-            }
-            
-            if let streams = streams {
+            if let streams = streams where streams.count > 0 {
                 self.streams = streams
                 self.currentStreamVideo = streams[0]
                 let streamAsset = AVURLAsset(URL: self.currentStreamVideo!.url)
@@ -95,6 +93,16 @@ class TwitchVideoViewController : UIViewController {
                 
                 dispatch_async(dispatch_get_main_queue(),{
                     self.initializePlayerView()
+                })
+            } else {
+                let alert = UIAlertController(title: "Uh-Oh!", message: "There seems to be an issue with the stream. We're very sorry about that.", preferredStyle: .Alert)
+                
+                alert.addAction(UIAlertAction(title: "Ok", style: .Cancel, handler: { (action) -> Void in
+                    self.dismissViewControllerAnimated(true, completion: nil)
+                }))
+                
+                dispatch_async(dispatch_get_main_queue(), { () -> Void in
+                    self.presentViewController(alert, animated: true, completion: nil)
                 })
             }
         }

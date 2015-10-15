@@ -27,6 +27,12 @@ struct HitboxStreamVideo {
         guard let isDefault = dict["isDefault"] as? Bool else {
             return nil
         }
+        
+        //check if the url is valid, for some reason the API returns shit
+        guard NSURLConnection.canHandleRequest(NSURLRequest(URL: url)) else {
+            return nil
+        }
+        
         self.url = url
         self.bitrate = bitrate
         self.label = label

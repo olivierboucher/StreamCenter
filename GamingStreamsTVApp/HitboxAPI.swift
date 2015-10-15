@@ -124,7 +124,7 @@ class HitboxAPI {
     //https://api.hitbox.tv/mediainfo/live/458643
     static func getStreamInfo(forMediaId mediaId: String, completionHandler: (streamVideos: [HitboxStreamVideo]?, error: HitboxError?) -> ()) {
         let urlString = "http://www.hitbox.tv/api/player/config/live/\(mediaId)"
-        
+        print("getting stream info for media id: \(mediaId) - \(urlString)")
         Alamofire.request(.GET, urlString)
             .responseJSON { (response) -> Void in
                 //do the stuff
