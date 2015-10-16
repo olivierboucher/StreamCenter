@@ -1,13 +1,14 @@
 //
-//  TwitchStreamsViewController.swift
+//  MyTwitchViewController.swift
 //  GamingStreamsTVApp
 //
-//  Created by Olivier Boucher on 2015-09-14.
+//  Created by Brendan Kirchner on 10/16/15.
+//  Copyright © 2015 Rivus Media Inc. All rights reserved.
+//
 
 import UIKit
-import Foundation
 
-class TwitchStreamsViewController: LoadingViewController {
+class MyTwitchViewController: LoadingViewController {
     private let LOADING_BUFFER = 12
     
     override var NUM_COLUMNS: Int {
@@ -45,11 +46,11 @@ class TwitchStreamsViewController: LoadingViewController {
     * viewWillAppear(animated: Bool)
     *
     * Overrides the super function to reload the collection view with fresh data
-    * 
+    *
     */
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
-
+        
         if self.streams.count == 0 {
             loadContent()
         }
@@ -62,9 +63,7 @@ class TwitchStreamsViewController: LoadingViewController {
     func loadContent() {
         self.removeErrorView()
         self.displayLoadingView("Loading Streams...")
-        TwitchApi.getTopStreamsForGameWithOffset(self.game!.name, offset: 0, limit: 20) {
-            (streams, error) in
-            
+        TwitchApi.getStreamsThatUserIsFollowing(0, limit: LOADING_BUFFER) { (streams, error) -> () in
             guard let streams = streams else {
                 dispatch_async(dispatch_get_main_queue(), {
                     self.removeLoadingView()
@@ -82,7 +81,7 @@ class TwitchStreamsViewController: LoadingViewController {
     }
     
     private func configureViews() {
-        super.configureViews("Live Streams - \(self.game!.name)", centerView: nil, leftView: nil, rightView: nil)
+        super.configureViews("Subscribed Streams", centerView: nil, leftView: nil, rightView: nil)
     }
     
     override func reloadContent() {
@@ -91,7 +90,7 @@ class TwitchStreamsViewController: LoadingViewController {
     }
     
     override func loadMore() {
-        TwitchApi.getTopStreamsForGameWithOffset(self.game!.name, offset: self.streams.count, limit: LOADING_BUFFER) {
+        TwitchApi.getStreamsThatUserIsFollowing(self.streams.count, limit: LOADING_BUFFER) {
             (streams, error) in
             
             guard let streams = streams else {
@@ -135,7 +134,7 @@ class TwitchStreamsViewController: LoadingViewController {
 // MARK - UICollectionViewDelegate interface
 ////////////////////////////////////////////
 
-extension TwitchStreamsViewController {
+extension MyTwitchViewController {
     
     func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
         let selectedStream = streams[indexPath.row]
