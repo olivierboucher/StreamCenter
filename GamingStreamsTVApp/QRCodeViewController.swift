@@ -89,9 +89,6 @@ class QRCodeViewController: UIViewController {
     
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
-        if self.delegate == nil {
-            NSException(name: "Unimplemented Exception", reason: "You must set a delegate for QRCodeViewController instances", userInfo: nil).raise()
-        }
     }
     
     func dismiss() {
