@@ -26,6 +26,27 @@
         }
         h1, h2, h3, h4, h5, h6 {
             text-align: center;
+            color:#FFFFFF;
+        }
+        body {
+            background-color: #1C84E4;
+        }
+        .btn-default:hover {
+            border-color: transparent;
+        }
+        .btn-default {
+            border-color: transparent;
+        }
+        .form-control {
+            border: 0 solid transparent;
+        }
+        .well {
+            background-color: #3E94E4;
+            border: 0 solid transparent;
+        }
+        #lock-icon-holder {
+            max-width: 150px;
+            margin: 0 auto;
         }
     </style>
 </head>
@@ -36,6 +57,7 @@
                 padding: 15px;
                 margin: 0 auto;
                 text-align: center; ">
+        <div id="lock-icon-holder"><img class="img-responsive" src="../assets/img/FlatLockIcon.png"/></div>
         <h2>Your StreamCenter Code</h2>
         <div class="well">
             <h1>{{ accessCode|upper }}</h1>
