@@ -96,15 +96,11 @@ $app->post('/customurl', function(Request $request) use ($app) {
         $url = $request->get('urlInput');
         if (!filter_var($url, FILTER_VALIDATE_URL) === false) {
 
-            $code = substr(md5(microtime()),rand(0,26),5);
-            $app['monolog']->addInfo("GENERATED NEW CODE: $code FOR URL: $url");
-
-            $stmt = $app['db']->prepare('INSERT INTO custom_urls(url, generated_date, code) VALUES(:url, :generated_date, :code)');
+            $stmt = $app['db']->prepare('SELECT addNewCustomURL(:url)');
             $stmt->bindValue("url", $url);
-            $stmt->bindValue("generated_date", new DateTime(), 'datetime');
-            $stmt->bindValue("code", $code);
-
             $stmt->execute();
+
+            $code = $stmt->fetchColumn(0);
 
             return $app['twig']->render('displayCode.twig', array(
                 'accessCode' => $code,
