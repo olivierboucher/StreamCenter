@@ -14,7 +14,7 @@ enum ServiceError: ErrorType {
     case JSONError
     case AuthError
     case NoAuthTokenError
-    case OtherError
+    case OtherError(String)
     
     var errorDescription: String {
         get {
@@ -27,8 +27,8 @@ enum ServiceError: ErrorType {
                 return "The user is not authenticated."
             case .NoAuthTokenError:
                 return "There was no auth token provided in the response data."
-            case .OtherError:
-                return "An unidentified error occured."
+            case .OtherError(let message):
+                return message
             }
         }
     }
@@ -44,7 +44,7 @@ enum ServiceError: ErrorType {
                 return "Please make sure to authenticate with Twitch before attempting to load this data."
             case .NoAuthTokenError:
                 return "Please check the server logs and response."
-            case .OtherError:
+            case .OtherError(let _): //change _ to a message if you want to be able to return it
                 return "Sorry, there's no provided solution for this error."
             }
         }
@@ -79,7 +79,7 @@ class StreamCenterService {
     }
     
     static func getCustomURL(fromCode code: String, completionHandler: (url: String?, error: ServiceError?) -> ()) {
-        let urlString = "http://streamcenterapp.com/customURL/\(code)"
+        let urlString = "http://streamcenterapp.com/customurl/\(code)"
         Alamofire.request(.GET, urlString)
         .responseJSON { response in
             //this is the response
@@ -90,8 +90,12 @@ class StreamCenterService {
             
             if response.result.isSuccess {
                 if let dictionary = response.result.value as? [String : AnyObject] {
-                    if let urlString = dictionary["customurl"] as? String {
+                    if let urlString = dictionary["url"] as? String {
                         completionHandler(url: urlString, error: nil)
+                        return
+                    }
+                    if let errorMessage = dictionary["message"] as? String {
+                        completionHandler(url: nil, error: .OtherError(errorMessage))
                         return
                     }
                 }
