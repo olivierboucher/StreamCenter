@@ -79,7 +79,7 @@ class StreamCenterService {
     }
     
     static func getCustomURL(fromCode code: String, completionHandler: (url: String?, error: ServiceError?) -> ()) {
-        let urlString = "http://streamcenterapp.com/customURL/\(code)"
+        let urlString = "http://streamcenterapp.com/customurl/\(code)"
         Alamofire.request(.GET, urlString)
         .responseJSON { response in
             //this is the response
@@ -87,7 +87,7 @@ class StreamCenterService {
             
             if response.result.isSuccess {
                 if let dictionary = response.result.value as? [String : AnyObject] {
-                    if let urlString = dictionary["customurl"] as? String {
+                    if let urlString = dictionary["url"] as? String {
                         completionHandler(url: urlString, error: nil)
                         return
                     }
