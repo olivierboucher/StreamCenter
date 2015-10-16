@@ -15,7 +15,7 @@
     <![endif]-->
 
     <style type="text/css">
-    h1 {
+        h1 {
             margin: 0;
         }
         h2 {
@@ -24,6 +24,10 @@
         h1, h2, h3, h4, h5, h6 {
             text-align: center;
         }
+        #urlInput {
+            margin-bottom: 15px;
+        }
+
     </style>
 </head>
 
@@ -33,10 +37,14 @@
                 padding: 15px;
                 margin: 0 auto;
                 text-align: center; ">
-            <h2>Your StreamCenter Code</h2>
+            <h2>Request a custom feed</h2>
 
             <div class="well">
-                <input id="urlEntry" type="text" placeholder="Enter a URL">
+                <form method="post" action="/customurl">
+                    <input id="urlInput" name="urlInput" class="form-control" placeholder="http://example.com" type="url" required aria-required="true">
+                    <input type="hidden" name="csrfToken" value="{{ csrf_token }}"/>
+                    <button class="btn btn-primary" type="submit">Validate</button>
+                </form>
             </div>
         </div>
     </div>
