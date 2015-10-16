@@ -11,10 +11,22 @@ import UIKit
 class HitboxGamesViewController : LoadingViewController {
         
     private let LOADING_BUFFER = 20
-    private let NUM_COLUMNS = 5
+    
+    override var NUM_COLUMNS: Int {
+        get {
+            return 5
+        }
+    }
+    
     override var ITEMS_INSETS_X : CGFloat {
         get {
             return 25
+        }
+    }
+    
+    override var HEIGHT_RATIO: CGFloat {
+        get {
+            return 1.39705882353
         }
     }
     
@@ -151,6 +163,46 @@ class HitboxGamesViewController : LoadingViewController {
         loadContent()
         super.reloadContent()
     }
+    
+    override func loadMore() {
+        HitboxAPI.getGames(games.count, limit: LOADING_BUFFER, completionHandler: { (games, error) -> () in
+            guard let games = games where games.count > 0 else {
+                return
+            }
+            
+            var paths = [NSIndexPath]()
+            
+            let filteredGames = games.filter({
+                let gameId = $0.id
+                if let _ = self.games.indexOf({$0.id == gameId}) {
+                    return false
+                }
+                return true
+            })
+            
+            for i in 0..<filteredGames.count {
+                paths.append(NSIndexPath(forItem: i + self.games.count, inSection: 0))
+            }
+            
+            self.collectionView.performBatchUpdates({
+                self.games.appendContentsOf(filteredGames)
+                
+                self.collectionView.insertItemsAtIndexPaths(paths)
+                
+                }, completion: nil)
+        })
+    }
+    
+    override var itemCount: Int {
+        get {
+            return games.count
+        }
+    }
+    
+    override func getItemAtIndex(index: Int) -> CellItem {
+        return games[index]
+    }
+    
 }
 
 ////////////////////////////////////////////
@@ -167,83 +219,6 @@ extension HitboxGamesViewController {
         self.presentViewController(streamsViewController, animated: true, completion: nil)
     }
     
-    func collectionView(collectionView: UICollectionView, willDisplayCell cell: UICollectionViewCell, forItemAtIndexPath indexPath: NSIndexPath) {
-        if(indexPath.row == self.games.count - 1){
-            HitboxAPI.getGames(games.count, limit: LOADING_BUFFER, completionHandler: { (games, error) -> () in
-                guard let games = games where games.count > 0 else {
-                    return
-                }
-                
-                var paths = [NSIndexPath]()
-                
-                let filteredGames = games.filter({
-                    let gameId = $0.id
-                    if let _ = self.games.indexOf({$0.id == gameId}) {
-                        return false
-                    }
-                    return true
-                })
-                
-                for i in 0..<filteredGames.count {
-                    paths.append(NSIndexPath(forItem: i + self.games.count, inSection: 0))
-                }
-                
-                self.collectionView.performBatchUpdates({
-                    self.games.appendContentsOf(filteredGames)
-                    
-                    self.collectionView.insertItemsAtIndexPaths(paths)
-                    
-                    }, completion: nil)
-            })
-        }
-    }
-    
-}
-
-//////////////////////////////////////////////////////
-// MARK - UICollectionViewDelegateFlowLayout interface
-//////////////////////////////////////////////////////
-
-extension HitboxGamesViewController : UICollectionViewDelegateFlowLayout {
-    
-    func collectionView(collectionView: UICollectionView,
-        layout collectionViewLayout: UICollectionViewLayout,
-        sizeForItemAtIndexPath indexPath: NSIndexPath) -> CGSize {
-            let width = collectionView.bounds.width / CGFloat(NUM_COLUMNS) - CGFloat(ITEMS_INSETS_X * 2)
-            //Computed using the ratio from sampled from
-            let height = (width * GAME_IMG_HEIGHT_RATIO) + ItemCellView.LABEL_HEIGHT * 2 //There 2 labels, top & bottom
-            
-            return CGSize(width: width, height: height)
-    }
-    
-    func collectionView(collectionView: UICollectionView,
-        layout collectionViewLayout: UICollectionViewLayout,
-        insetForSectionAtIndex section: Int) -> UIEdgeInsets {
-            return UIEdgeInsets(top: TOP_BAR_HEIGHT + ITEMS_INSETS_Y, left: ITEMS_INSETS_X, bottom: ITEMS_INSETS_Y, right: ITEMS_INSETS_X)
-    }
-}
-
-//////////////////////////////////////////////
-// MARK - UICollectionViewDataSource interface
-//////////////////////////////////////////////
-
-extension HitboxGamesViewController {
-    
-    override func numberOfSectionsInCollectionView(collectionView: UICollectionView) -> Int {
-        //The number of sections
-        return 1
-    }
-    
-    override func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        // If the count of games allows the current row to be full
-        return games.count
-    }
-    
-    override func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
-        let cell : ItemCellView = collectionView.dequeueReusableCellWithReuseIdentifier(ItemCellView.CELL_IDENTIFIER, forIndexPath: indexPath) as! ItemCellView
-        cell.setRepresentedItem(games[indexPath.row])
-        return cell
-    }
 }
 
 //////////////////////////////////////////////
@@ -261,13 +236,3 @@ extension HitboxGamesViewController : UITextFieldDelegate {
         presentViewController(searchViewController, animated: true, completion: nil)
     }
 }
-
-//////////////////////////////////////////////
-// MARK - UISearchResultsUpdating interface
-//////////////////////////////////////////////
-
-//extension HitboxgamesViewController : UISearchResultsUpdating {
-//    func updateSearchResultsForSearchController(searchController: UISearchController) {
-//        print("doesn't do anything yet")
-//    }
-//}
