@@ -23,7 +23,7 @@ class QRCustomVideoViewController: QRCodeViewController {
     
     init() {
         let title = "Scan the QR code below to be taken to a web page where you can enter a custom url.\nOnce you have received a response code from the website, enter it below."
-        super.init(title: title, url: "http://streamcenterapp.com/customurl/")
+        super.init(title: title, url: "http://streamcenterapp.com/customurl")
         self.title = "Custom Video"
     }
 
