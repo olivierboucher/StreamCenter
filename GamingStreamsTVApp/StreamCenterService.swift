@@ -44,7 +44,7 @@ enum ServiceError: ErrorType {
                 return "Please make sure to authenticate with Twitch before attempting to load this data."
             case .NoAuthTokenError:
                 return "Please check the server logs and response."
-            case .OtherError(let _): //change _ to a message if you want to be able to return it
+            case .OtherError(let _): //change _ to a named variable if you want to be able to return it
                 return "Sorry, there's no provided solution for this error."
             }
         }
