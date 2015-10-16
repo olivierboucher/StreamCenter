@@ -33,7 +33,8 @@ enum ServiceError: ErrorType {
         }
     }
     
-    var recoverySuggestion: String {
+    //only use this top log, do not present this to the user
+    var developerSuggestion: String {
         get {
             switch self {
             case .URLError:
@@ -44,7 +45,7 @@ enum ServiceError: ErrorType {
                 return "Please make sure to authenticate with Twitch before attempting to load this data."
             case .NoAuthTokenError:
                 return "Please check the server logs and response."
-            case .OtherError(let _): //change _ to a named variable if you want to be able to return it
+            case .OtherError: //change to case .OtherError(let message):if you want to be able to utilize an error message
                 return "Sorry, there's no provided solution for this error."
             }
         }
@@ -58,7 +59,6 @@ class StreamCenterService {
         Alamofire.request(.GET, urlString)
             .responseJSON { response in
                 //sup
-                print(response)
                 
                 if response.result.isSuccess {
                     if let dictionary = response.result.value as? [String : AnyObject] {
@@ -82,8 +82,7 @@ class StreamCenterService {
         let urlString = "http://streamcenterapp.com/customurl/\(code)"
         Alamofire.request(.GET, urlString)
         .responseJSON { response in
-            //this is the response
-            print(response)
+            
             //here's a test url
 //            completionHandler(url: "http://qthttp.apple.com.edgesuite.net/1010qwoeiuryfg/sl.m3u8", error: nil)
 //            return

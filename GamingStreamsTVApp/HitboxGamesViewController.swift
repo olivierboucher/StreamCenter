@@ -167,6 +167,37 @@ extension HitboxGamesViewController {
         self.presentViewController(streamsViewController, animated: true, completion: nil)
     }
     
+    func collectionView(collectionView: UICollectionView, willDisplayCell cell: UICollectionViewCell, forItemAtIndexPath indexPath: NSIndexPath) {
+        if(indexPath.row == self.games.count - 1){
+            HitboxAPI.getGames(games.count, limit: LOADING_BUFFER, completionHandler: { (games, error) -> () in
+                guard let games = games where games.count > 0 else {
+                    return
+                }
+                
+                var paths = [NSIndexPath]()
+                
+                let filteredGames = games.filter({
+                    let gameId = $0.id
+                    if let _ = self.games.indexOf({$0.id == gameId}) {
+                        return false
+                    }
+                    return true
+                })
+                
+                for i in 0..<filteredGames.count {
+                    paths.append(NSIndexPath(forItem: i + self.games.count, inSection: 0))
+                }
+                
+                self.collectionView.performBatchUpdates({
+                    self.games.appendContentsOf(filteredGames)
+                    
+                    self.collectionView.insertItemsAtIndexPaths(paths)
+                    
+                    }, completion: nil)
+            })
+        }
+    }
+    
 }
 
 //////////////////////////////////////////////////////

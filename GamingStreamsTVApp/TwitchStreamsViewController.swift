@@ -94,7 +94,7 @@ extension TwitchStreamsViewController {
     }
     
     func collectionView(collectionView: UICollectionView, willDisplayCell cell: UICollectionViewCell, forItemAtIndexPath indexPath: NSIndexPath) {
-        if (indexPath.row == self.streams.count - 1){
+        if (indexPath.row == self.streams.count - 1) {
             TwitchApi.getTopStreamsForGameWithOffset(self.game!.name, offset: self.streams.count, limit: LOADING_BUFFER) {
                 (streams, error) in
                 

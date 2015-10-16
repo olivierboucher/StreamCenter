@@ -90,6 +90,36 @@ extension HitboxStreamsViewController {
         
         self.presentViewController(videoViewController, animated: true, completion: nil)
     }
+    
+    func collectionView(collectionView: UICollectionView, willDisplayCell cell: UICollectionViewCell, forItemAtIndexPath indexPath: NSIndexPath) {
+        if indexPath.row == self.streams.count - 1 {
+            HitboxAPI.getLiveStreams(forGame: self.game.id, offset: streams.count, limit: LOADING_BUFFER, completionHandler: { (streams, error) -> () in
+                guard let streams = streams else {
+                    return
+                }
+                var paths = [NSIndexPath]()
+                
+                let filteredStreams = streams.filter({
+                    let streamId = $0.id
+                    if let _ = self.streams.indexOf({$0.id == streamId}) {
+                        return false
+                    }
+                    return true
+                })
+                
+                for i in 0..<filteredStreams.count {
+                    paths.append(NSIndexPath(forItem: i + self.streams.count, inSection: 0))
+                }
+                
+                self.collectionView.performBatchUpdates({
+                    self.streams.appendContentsOf(filteredStreams)
+                    
+                    self.collectionView.insertItemsAtIndexPaths(paths)
+                    
+                    }, completion: nil)
+            })
+        }
+    }
 }
 
 //////////////////////////////////////////////////////
