@@ -46,6 +46,7 @@
 		B4D15C7E1BCDCCB3006FFB5D /* QRCodeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4D15C7D1BCDCCB3006FFB5D /* QRCodeViewController.swift */; };
 		B4D15C801BCDD3E3006FFB5D /* TokenHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4D15C7F1BCDD3E3006FFB5D /* TokenHelper.swift */; };
 		B4D15C821BCDFC6C006FFB5D /* Keychain.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4D15C811BCDFC6C006FFB5D /* Keychain.swift */; };
+		B4D3103B1BD154320091448F /* UIView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4D3103A1BD154320091448F /* UIView.swift */; };
 		B4D88D2C1BCF35DD00C1DF87 /* HitboxGamesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4D88D2B1BCF35DD00C1DF87 /* HitboxGamesViewController.swift */; };
 		B4D88D2E1BCF35E500C1DF87 /* HitboxStreamsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4D88D2D1BCF35E500C1DF87 /* HitboxStreamsViewController.swift */; };
 		B4D88D321BCF35F100C1DF87 /* HitboxAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4D88D2F1BCF35F100C1DF87 /* HitboxAPI.swift */; };
@@ -115,6 +116,7 @@
 		B4D15C7D1BCDCCB3006FFB5D /* QRCodeViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QRCodeViewController.swift; sourceTree = "<group>"; };
 		B4D15C7F1BCDD3E3006FFB5D /* TokenHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TokenHelper.swift; sourceTree = "<group>"; };
 		B4D15C811BCDFC6C006FFB5D /* Keychain.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Keychain.swift; sourceTree = "<group>"; };
+		B4D3103A1BD154320091448F /* UIView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIView.swift; sourceTree = "<group>"; };
 		B4D88D2B1BCF35DD00C1DF87 /* HitboxGamesViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HitboxGamesViewController.swift; sourceTree = "<group>"; };
 		B4D88D2D1BCF35E500C1DF87 /* HitboxStreamsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HitboxStreamsViewController.swift; sourceTree = "<group>"; };
 		B4D88D2F1BCF35F100C1DF87 /* HitboxAPI.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HitboxAPI.swift; sourceTree = "<group>"; };
@@ -217,6 +219,7 @@
 				09EB6D3D1BB484F7003EB244 /* String.swift */,
 				09E33CC81BB5B2DF000702E2 /* Dictionary.swift */,
 				B4A67BBB1BCBDF8B003E3B6F /* UIColor.swift */,
+				B4D3103A1BD154320091448F /* UIView.swift */,
 			);
 			name = Extensions;
 			sourceTree = "<group>";
@@ -453,6 +456,7 @@
 				B4A2E6CD1BCFC84E0094AECA /* HitboxSearchResultsViewController.swift in Sources */,
 				090AB8FD1BA616A900CDB05D /* TwitchApi.swift in Sources */,
 				B4E9F8001BCF83CC0026708F /* TwitchAuthViewController.swift in Sources */,
+				B4D3103B1BD154320091448F /* UIView.swift in Sources */,
 				090AB8FE1BA616A900CDB05D /* TwitchGame.swift in Sources */,
 				09D098291BA77FAB00E7E6FC /* TwitchVideoViewController.swift in Sources */,
 				090AB9271BB579A300CDB05D /* ModalMenuView.swift in Sources */,
