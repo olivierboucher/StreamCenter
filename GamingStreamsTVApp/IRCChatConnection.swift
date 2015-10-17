@@ -25,7 +25,7 @@ class IRCChatConnection {
     
     private var chatConnection : GCDAsyncSocket?
     private var connectionQueue : dispatch_queue_t
-    private let queueLock : dispatch_semaphore_t
+    private let sendQueueLock : dispatch_semaphore_t
     private var sendQueue : [AnyObject]
     private var status : ChatConnectionStatus
     private var lastConnectAttempt : NSDate?
@@ -65,7 +65,7 @@ class IRCChatConnection {
         connectionQueue = dispatch_queue_create("com.twitch.ircchatconnection", queueAttr)
         status = .Disconnected
         sendQueue = [AnyObject]()
-        queueLock = dispatch_semaphore_create(1)
+        sendQueueLock = dispatch_semaphore_create(1)
     }
     
     func connect() {
@@ -114,11 +114,11 @@ class IRCChatConnection {
     
     private func resetSendQueueInterval() {
         self.stopSendQueue()
-        dispatch_semaphore_wait(queueLock, DISPATCH_TIME_FOREVER)
+        dispatch_semaphore_wait(sendQueueLock, DISPATCH_TIME_FOREVER)
         if (self.sendQueue.count > 0){
             startSendQueue()
         }
-        dispatch_semaphore_signal(queueLock)
+        dispatch_semaphore_signal(sendQueueLock)
     }
     
     private func startSendQueue() {
@@ -138,12 +138,12 @@ class IRCChatConnection {
     }
     
     private func _sendQueue() {
-        dispatch_semaphore_wait(queueLock, DISPATCH_TIME_FOREVER)
+        dispatch_semaphore_wait(sendQueueLock, DISPATCH_TIME_FOREVER)
         if (self.sendQueue.count <= 0){
             sendQueueProcessing = false
             return
         }
-        dispatch_semaphore_signal(queueLock)
+        dispatch_semaphore_signal(sendQueueLock)
         
         if queueWait != nil && queueWait?.timeIntervalSinceNow > 0 {
             let dispatchTime: dispatch_time_t = dispatch_time(DISPATCH_TIME_NOW, Int64(queueWait!.timeIntervalSinceNow * Double(NSEC_PER_SEC)))
@@ -153,7 +153,7 @@ class IRCChatConnection {
             return
         }
         
-        dispatch_semaphore_wait(queueLock, DISPATCH_TIME_FOREVER)
+        dispatch_semaphore_wait(sendQueueLock, DISPATCH_TIME_FOREVER)
         
         //        NSData *data = nil;
         //        @synchronized( _sendQueue ) {
@@ -172,7 +172,7 @@ class IRCChatConnection {
         //            [strongSelf _writeDataToServer:data];
         //            });
         
-        dispatch_semaphore_signal(queueLock)
+        dispatch_semaphore_signal(sendQueueLock)
     }
 }
 
