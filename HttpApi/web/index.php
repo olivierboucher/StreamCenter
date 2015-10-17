@@ -249,5 +249,18 @@ $app->get('/oauth/redirect/twitch', function(Request $request) use($app) {
     ));
 });
 
+$app->error(function (\Exception $e, $code) use ($app) {
+    switch ($code) {
+        case 404:
+            return $app['twig']->render('display404.twig');
+            break;
+        default:
+            return $app['twig']->render('displayError.twig', array(
+                "message" => "We are sorry, an unknown error happened.",
+                "backUrl" => "/",
+            ));
+    }
+});
+
 
 $app->run();
