@@ -40,7 +40,12 @@ class TwitchAuthViewController: QRCodeViewController {
             print(token)
             guard let token = token else {
                 dispatch_async(dispatch_get_main_queue(), { () -> Void in
-                    self.titleLabel.text = "\(error)\nPlease ensure that your code is correct and press Process again."
+                    self.titleLabel.textColor = UIColor.redColor()
+                    if let error = error {
+                        self.titleLabel.text = "\(error.errorDescription)\nPlease ensure that your code is correct and press 'Process' again."
+                    } else {
+                        self.titleLabel.text = "An unknown error occured.\nPlease ensure that your code is correct and press 'Process' again."
+                    }
                 })
                 return
             }

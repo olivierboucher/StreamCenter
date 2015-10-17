@@ -49,8 +49,8 @@ class ItemCellView: UICollectionViewCell {
         self.subtitleLabel = UILabel()
         self.titleLabel.translatesAutoresizingMaskIntoConstraints = false
         self.subtitleLabel.translatesAutoresizingMaskIntoConstraints = false
-        self.titleLabel.alpha = 0
-        self.subtitleLabel.alpha = 0
+        self.titleLabel.alpha = 0.5
+        self.subtitleLabel.alpha = 0.5
         self.titleLabel.font = UIFont.systemFontOfSize(30, weight: UIFontWeightSemibold)
         self.subtitleLabel.font = UIFont.systemFontOfSize(30, weight: UIFontWeightThin)
         self.titleLabel.textColor = UIColor.whiteColor()
@@ -70,8 +70,7 @@ class ItemCellView: UICollectionViewCell {
         
         self.contentView.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:[imageGuide]-5-[title(\(ItemCellView.LABEL_HEIGHT))]-5-[subtitle(\(ItemCellView.LABEL_HEIGHT))]|", options: [], metrics: nil, views: viewDict))
         
-        self.imageView.addConstraint(NSLayoutConstraint(item: activityIndicator, attribute: NSLayoutAttribute.CenterX, relatedBy: .Equal, toItem: imageView, attribute: .CenterX, multiplier: 1.0, constant: 0))
-        self.imageView.addConstraint(NSLayoutConstraint(item: activityIndicator, attribute: NSLayoutAttribute.CenterY, relatedBy: .Equal, toItem: imageView, attribute: .CenterY, multiplier: 1.0, constant: 0))
+        self.imageView.addCenterConstraints(toView: self.activityIndicator)
         
     }
     
@@ -175,8 +174,8 @@ class ItemCellView: UICollectionViewCell {
         }
         else if(context.previouslyFocusedView == self) {
             coordinator.addCoordinatedAnimations({
-                self.titleLabel.alpha = 0
-                self.subtitleLabel.alpha = 0
+                self.titleLabel.alpha = 0.5
+                self.subtitleLabel.alpha = 0.5
                 self.titleLabel.endScrolling()
                 },
                 completion: nil

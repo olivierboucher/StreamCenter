@@ -9,7 +9,7 @@
 import UIKit
 
 class QRCustomVideoViewController: QRCodeViewController {
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -40,10 +40,11 @@ class QRCustomVideoViewController: QRCodeViewController {
         StreamCenterService.getCustomURL(fromCode: code) { (url, error) -> () in
             guard let url = url else {
                 dispatch_async(dispatch_get_main_queue(), { () -> Void in
+                    self.titleLabel.textColor = UIColor.redColor()
                     if let error = error {
-                        self.titleLabel.text = "\(error.errorDescription)\nPlease ensure that your code is correct and press Process again."
+                        self.titleLabel.text = "\(error.errorDescription)\nPlease ensure that your code is correct and press 'Process' again."
                     } else {
-                        self.titleLabel.text = "An unknown error occured.\nPlease ensure that your code is correct and press Process again."
+                        self.titleLabel.text = "An unknown error occured.\nPlease ensure that your code is correct and press 'Process' again."
                     }
                 })
                 return

@@ -1,5 +1,5 @@
 //
-//  TwitchStreamsViewController.swift
+//  HitboxStreamsViewController.swift
 //  GamingStreamsTVApp
 //
 //  Created by Olivier Boucher on 2015-09-14.
@@ -8,7 +8,7 @@ import UIKit
 import Foundation
 
 
-class TwitchStreamsViewController: LoadingViewController {
+class HitboxStreamsViewController : LoadingViewController {
     private let LOADING_BUFFER = 12
     private let NUM_COLUMNS = 3
     override var ITEMS_INSETS_X : CGFloat {
@@ -17,10 +17,10 @@ class TwitchStreamsViewController: LoadingViewController {
         }
     }
     
-    private var game : TwitchGame!
-    private var streams = [TwitchStream]()
+    private var game : HitboxGame!
+    private var streams = [HitboxMedia]()
     
-    convenience init(game : TwitchGame){
+    convenience init(game : HitboxGame){
         self.init(nibName: nil, bundle: nil)
         self.game = game
     }
@@ -34,11 +34,11 @@ class TwitchStreamsViewController: LoadingViewController {
     * viewWillAppear(animated: Bool)
     *
     * Overrides the super function to reload the collection view with fresh data
-    * 
+    *
     */
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
-
+        
         if self.streams.count == 0 {
             loadContent()
         }
@@ -51,9 +51,7 @@ class TwitchStreamsViewController: LoadingViewController {
     func loadContent() {
         self.removeErrorView()
         self.displayLoadingView("Loading Streams...")
-        TwitchApi.getTopStreamsForGameWithOffset(self.game!.name, offset: 0, limit: 20) {
-            (streams, error) in
-            
+        HitboxAPI.getLiveStreams(forGame: game.id, offset: 0, limit: LOADING_BUFFER) { (streams, error) -> () in
             guard let streams = streams else {
                 dispatch_async(dispatch_get_main_queue(), {
                     self.removeLoadingView()
@@ -84,20 +82,18 @@ class TwitchStreamsViewController: LoadingViewController {
 // MARK - UICollectionViewDelegate interface
 ////////////////////////////////////////////
 
-extension TwitchStreamsViewController {
+extension HitboxStreamsViewController {
     
     func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
         let selectedStream = streams[indexPath.row]
-        let videoViewController = TwitchVideoViewController(stream: selectedStream)
+        let videoViewController = HitboxVideoViewController(media: selectedStream)
         
         self.presentViewController(videoViewController, animated: true, completion: nil)
     }
     
     func collectionView(collectionView: UICollectionView, willDisplayCell cell: UICollectionViewCell, forItemAtIndexPath indexPath: NSIndexPath) {
-        if (indexPath.row == self.streams.count - 1) {
-            TwitchApi.getTopStreamsForGameWithOffset(self.game!.name, offset: self.streams.count, limit: LOADING_BUFFER) {
-                (streams, error) in
-                
+        if indexPath.row == self.streams.count - 1 {
+            HitboxAPI.getLiveStreams(forGame: self.game.id, offset: streams.count, limit: LOADING_BUFFER, completionHandler: { (streams, error) -> () in
                 guard let streams = streams else {
                     return
                 }
@@ -114,14 +110,14 @@ extension TwitchStreamsViewController {
                 for i in 0..<filteredStreams.count {
                     paths.append(NSIndexPath(forItem: i + self.streams.count, inSection: 0))
                 }
-                    
+                
                 self.collectionView.performBatchUpdates({
                     self.streams.appendContentsOf(filteredStreams)
-                
+                    
                     self.collectionView.insertItemsAtIndexPaths(paths)
-                
-                }, completion: nil)
-            }
+                    
+                    }, completion: nil)
+            })
         }
     }
 }
@@ -130,7 +126,7 @@ extension TwitchStreamsViewController {
 // MARK - UICollectionViewDelegateFlowLayout interface
 //////////////////////////////////////////////////////
 
-extension TwitchStreamsViewController {
+extension HitboxStreamsViewController : UICollectionViewDelegateFlowLayout {
     
     func collectionView(collectionView: UICollectionView,
         layout collectionViewLayout: UICollectionViewLayout,
@@ -153,7 +149,7 @@ extension TwitchStreamsViewController {
 // MARK - UICollectionViewDataSource interface
 //////////////////////////////////////////////
 
-extension TwitchStreamsViewController {
+extension HitboxStreamsViewController {
     
     override func numberOfSectionsInCollectionView(collectionView: UICollectionView) -> Int {
         //The number of possible rows

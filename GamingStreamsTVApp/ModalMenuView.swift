@@ -193,19 +193,22 @@ struct MenuOption {
     let disabledTitle : String
     var isEnabled : Bool
     var clickCallback : (sender: MenuItemView?)->()
+    var parameters : [String : AnyObject]?
     
-    init(enabledTitle : String, disabledTitle : String, enabled : Bool, onClick : (sender : MenuItemView?)->()) {
+    init(enabledTitle : String, disabledTitle : String, enabled : Bool, parameters: [String : AnyObject]? = nil, onClick : (sender : MenuItemView?)->()) {
         self.enabledTitle = enabledTitle
         self.disabledTitle = disabledTitle
         self.isEnabled = enabled
         self.clickCallback = onClick
+        self.parameters = parameters
     }
     
-    init(title : String, enabled : Bool, onClick : (sender : MenuItemView?)->()) {
+    init(title : String, enabled : Bool, parameters: [String : AnyObject]? = nil, onClick : (sender : MenuItemView?)->()) {
         self.enabledTitle = title
         self.disabledTitle = title
         self.isEnabled = enabled
         self.clickCallback = onClick
+        self.parameters = parameters
     }
     
 }

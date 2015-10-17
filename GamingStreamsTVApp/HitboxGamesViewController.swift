@@ -1,13 +1,15 @@
 //
-//  ViewController.swift
-//  TestTVApp
+//  HitboxGamesViewController.swift
+//  GamingStreamsTVApp
 //
-//  Created by Olivier Boucher on 2015-09-13.
+//  Created by Brendan Kirchner on 10/13/15.
+//  Copyright © 2015 Rivus Media Inc. All rights reserved.
+//
 
 import UIKit
 
-class TwitchGamesViewController : LoadingViewController {
-
+class HitboxGamesViewController : LoadingViewController {
+        
     private let LOADING_BUFFER = 20
     private let NUM_COLUMNS = 5
     override var ITEMS_INSETS_X : CGFloat {
@@ -17,18 +19,18 @@ class TwitchGamesViewController : LoadingViewController {
     }
     
     private var searchField: UITextField!
-    private var games = [TwitchGame]()
-    private var authButton: UIButton?
+    private var authButton : UIButton?
+    private var games = [HitboxGame]()
     
-    convenience init(){
+    convenience init() {
         self.init(nibName: nil, bundle: nil)
-        title = "Twitch"
+        title = "Hitbox"
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view, typically from a nib.
         
+        // Do any additional setup after loading the view, typically from a nib.
         configureViews()
     }
     
@@ -54,9 +56,9 @@ class TwitchGamesViewController : LoadingViewController {
     func loadContent() {
         self.removeErrorView()
         self.displayLoadingView("Loading Games...")
-        TwitchApi.getTopGamesWithOffset(0, limit: 17) {
-            (games, error) in
-            
+        
+        //right now this is hardcoded to search for league of legends
+        HitboxAPI.getGames(0, limit: LOADING_BUFFER) { (games, error) -> () in
             guard let games = games else {
                 dispatch_async(dispatch_get_main_queue(), {
                     self.removeLoadingView()
@@ -67,6 +69,7 @@ class TwitchGamesViewController : LoadingViewController {
             
             self.games = games
             dispatch_async(dispatch_get_main_queue(), {
+                
                 self.removeLoadingView()
                 self.collectionView.reloadData()
             })
@@ -78,18 +81,18 @@ class TwitchGamesViewController : LoadingViewController {
         //then do the search bar
         self.searchField = UITextField(frame: CGRectZero)
         self.searchField.translatesAutoresizingMaskIntoConstraints = false
-        self.searchField.placeholder = "Search Games or Streams"
+        self.searchField.placeholder = "Search Games"
         self.searchField.delegate = self
         self.searchField.textAlignment = .Center
         
-        if TokenHelper.getTwitchToken() == nil {
+        if TokenHelper.getHitboxToken() == nil {
             self.authButton = UIButton(type: .System)
             self.authButton?.translatesAutoresizingMaskIntoConstraints = false
             self.authButton?.setTitle("Authenticate", forState: .Normal)
             self.authButton?.addTarget(self, action: Selector("authorizeUser"), forControlEvents: .PrimaryActionTriggered)
         }
         
-        let imageView = UIImageView(image: UIImage(named: "twitch"))
+        let imageView = UIImageView(image: UIImage(named: "hitbox"))
         imageView.contentMode = .ScaleAspectFit
         
         super.configureViews("Top Games", centerView: imageView, leftView: self.searchField, rightView: self.authButton)
@@ -97,9 +100,51 @@ class TwitchGamesViewController : LoadingViewController {
     }
     
     func authorizeUser() {
-        let qrController = TwitchAuthViewController()
-        qrController.delegate = self
-        presentViewController(qrController, animated: true, completion: nil)
+        let alert = UIAlertController(title: "Authenticate", message: "To authenticate with the Hitbox API, please enter your username and password", preferredStyle: .Alert)
+        
+        alert.addAction(UIAlertAction(title: "Cancel", style: .Cancel, handler: nil))
+        
+        alert.addTextFieldWithConfigurationHandler { (textField) -> Void in
+            textField.placeholder = "username"
+            textField.autocapitalizationType = .None
+        }
+        
+        alert.addTextFieldWithConfigurationHandler { (textField) -> Void in
+            textField.placeholder = "password"
+            textField.secureTextEntry = true
+        }
+        
+        alert.addAction(UIAlertAction(title: "Authorize", style: .Default, handler: { (action) -> Void in
+            guard let username = alert.textFields?[0].text, password = alert.textFields?[1].text where !username.isEmpty && !password.isEmpty else {
+                return
+            }
+            self.performAuthorization(withUsername: username, andPassword: password)
+        }))
+        
+        self.presentViewController(alert, animated: true, completion: nil)
+    }
+    
+    func performAuthorization(withUsername username: String, andPassword password: String) {
+        HitboxAPI.authenticate(withUserName: username, password: password) { (success, error) -> () in
+            let title = success ? "Nice!" : "Uh-oh"
+            var message = success ? "You authenticated with Hitbox" : "The authentication attempt was unsuccessful: "
+            
+            if let error = error {
+                message += error.errorDescription
+            }
+            
+            let alert = UIAlertController(title: title, message: message, preferredStyle: .Alert)
+            
+            alert.addAction(UIAlertAction(title: success ? "Cool" : "Ok", style: .Cancel, handler: nil))
+            
+            dispatch_async(dispatch_get_main_queue(), { () -> Void in
+                if success {
+                    self.authButton?.removeFromSuperview()
+                    self.authButton = nil
+                }
+                self.presentViewController(alert, animated: true, completion: nil)
+            })
+        }
     }
     
     override func reloadContent() {
@@ -113,20 +158,18 @@ class TwitchGamesViewController : LoadingViewController {
 ////////////////////////////////////////////
 
 
-extension TwitchGamesViewController {
+extension HitboxGamesViewController {
     
     func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
         let selectedGame = games[indexPath.row]
-        let streamsViewController = TwitchStreamsViewController(game: selectedGame)
+        let streamsViewController = HitboxStreamsViewController(game: selectedGame)
         
         self.presentViewController(streamsViewController, animated: true, completion: nil)
     }
     
     func collectionView(collectionView: UICollectionView, willDisplayCell cell: UICollectionViewCell, forItemAtIndexPath indexPath: NSIndexPath) {
         if(indexPath.row == self.games.count - 1){
-            TwitchApi.getTopGamesWithOffset(games.count, limit: LOADING_BUFFER) {
-                (games, error) in
-                
+            HitboxAPI.getGames(games.count, limit: LOADING_BUFFER, completionHandler: { (games, error) -> () in
                 guard let games = games where games.count > 0 else {
                     return
                 }
@@ -151,16 +194,17 @@ extension TwitchGamesViewController {
                     self.collectionView.insertItemsAtIndexPaths(paths)
                     
                     }, completion: nil)
-            }
+            })
         }
     }
+    
 }
 
 //////////////////////////////////////////////////////
 // MARK - UICollectionViewDelegateFlowLayout interface
 //////////////////////////////////////////////////////
 
-extension TwitchGamesViewController : UICollectionViewDelegateFlowLayout {
+extension HitboxGamesViewController : UICollectionViewDelegateFlowLayout {
     
     func collectionView(collectionView: UICollectionView,
         layout collectionViewLayout: UICollectionViewLayout,
@@ -183,7 +227,7 @@ extension TwitchGamesViewController : UICollectionViewDelegateFlowLayout {
 // MARK - UICollectionViewDataSource interface
 //////////////////////////////////////////////
 
-extension TwitchGamesViewController {
+extension HitboxGamesViewController {
     
     override func numberOfSectionsInCollectionView(collectionView: UICollectionView) -> Int {
         //The number of sections
@@ -206,32 +250,24 @@ extension TwitchGamesViewController {
 // MARK - UITextFieldDelegate interface
 //////////////////////////////////////////////
 
-extension TwitchGamesViewController : UITextFieldDelegate {
+extension HitboxGamesViewController : UITextFieldDelegate {
     
     func textFieldDidEndEditing(textField: UITextField) {
         guard let term = textField.text where !term.isEmpty else {
             return
         }
         
-        let searchViewController = TwitchSearchResultsViewController(seatchTerm: term)
+        let searchViewController = HitboxSearchResultsViewController(seatchTerm: term)
         presentViewController(searchViewController, animated: true, completion: nil)
     }
 }
 
 //////////////////////////////////////////////
-// MARK - QRCodeDelegate interface
+// MARK - UISearchResultsUpdating interface
 //////////////////////////////////////////////
 
-extension TwitchGamesViewController: QRCodeDelegate {
-    
-    func qrCodeViewControllerFinished(success: Bool, data: [String : AnyObject]?) {
-        dispatch_async(dispatch_get_main_queue()) { () -> Void in
-            if success {
-                self.authButton?.removeFromSuperview()
-                self.authButton = nil
-            }
-            self.dismissViewControllerAnimated(true, completion: nil)
-        }
-    }
-    
-}
+//extension HitboxgamesViewController : UISearchResultsUpdating {
+//    func updateSearchResultsForSearchController(searchController: UISearchController) {
+//        print("doesn't do anything yet")
+//    }
+//}
