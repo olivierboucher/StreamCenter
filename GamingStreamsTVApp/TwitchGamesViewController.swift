@@ -104,7 +104,6 @@ class TwitchGamesViewController : LoadingViewController {
             self.twitchButton?.setTitle("My Twitch", forState: .Normal)
             self.twitchButton?.addTarget(self, action: Selector("goToMyTwitch"), forControlEvents: .PrimaryActionTriggered)
         } else {
-            
             self.twitchButton?.setTitle("Authenticate", forState: .Normal)
             self.twitchButton?.addTarget(self, action: Selector("authorizeUser"), forControlEvents: .PrimaryActionTriggered)
         }

@@ -276,6 +276,68 @@ class TwitchApi {
         }
     }
     
+    static func getUser() {
+        guard let token = TokenHelper.getTwitchToken() else {
+            //do we want to actually return an erro?
+            print("you can't get the user info without having an auth token")
+            return
+        }
+        let urlString = "https://api.twitch.tv/kraken/user"
+        Alamofire.request(.GET, urlString, parameters: ["oauth_token" : token]).responseJSON { response in
+            if response.result.isSuccess {
+                //we are going to get the user but we could also get their logo if we want to display it
+                if let dictionary = response.result.value as? [String : AnyObject] {
+                    if let username = dictionary["name"] as? String {
+                        TokenHelper.storeTwitchUsername(username)
+                        return
+                    }
+                }
+                print("could not get user object due to a json error")
+            } else {
+                print("could not get user object due to a request error")
+            }
+        }
+    }
+    
+    static func checkIfUserIsSubscribedToChannel(channelName channel: String, completionHandler: (subscribed: Bool, error:ServiceError?) -> ()) {
+        guard let token = TokenHelper.getTwitchToken(), username = TokenHelper.getTwitchUsername() else {
+            completionHandler(subscribed: false, error: .AuthError)
+            return
+        }
+        let urlString = "https://api.twitch.tv/kraken/users/\(username)/follows/channels/\(channel)"
+        Alamofire.request(.GET, urlString, parameters: ["oauth_token" : token]).responseJSON { response in
+            if response.result.isSuccess {
+                if let dictionary = response.result.value as? [String : AnyObject] {
+                    if let _ = dictionary["error"] as? String {
+                        //don't return an error, because this just means that the user is not subscribed
+                        completionHandler(subscribed: false, error: nil)
+                    } else {
+                        completionHandler(subscribed: true, error: nil)
+                    }
+                    return
+                }
+                completionHandler(subscribed: false, error: .JSONError)
+            } else {
+                completionHandler(subscribed: false, error: .URLError)
+            }
+        }
+    }
+    
+    static func followOrUnFollowChannel(channelName channel: String, follow: Bool, completionHandler: (success: Bool, error: ServiceError?) -> ()) {
+        guard let token = TokenHelper.getTwitchToken(), username = TokenHelper.getTwitchUsername() else {
+            completionHandler(success: false, error: .AuthError)
+            return
+        }
+        let urlString = "https://api.twitch.tv/kraken/users/\(username)/follows/channels/\(channel)"
+        Alamofire.request(follow ? .PUT : .DELETE, urlString, parameters: ["oauth_token" : token]).responseJSON { response in
+            if response.result.isSuccess {
+                completionHandler(success: true, error: nil)
+            } else {
+                completionHandler(success: false, error: .URLError)
+            }
+        }
+    }
+    
     static func getEmoteUrlStringFromId(id : String) -> String {
         return  "http://static-cdn.jtvnw.net/emoticons/v1/\(id)/1.0"
     }

@@ -56,32 +56,29 @@ class StreamCenterService {
     
     static func authenticateTwitch(withCode code: String, andUUID UUID: String, completionHandler: (token: String?, error: ServiceError?) -> ()) {
         let urlString = "http://streamcenterapp.com/oauth/twitch/\(UUID)/\(code)"
-        Alamofire.request(.GET, urlString)
-            .responseJSON { response in
-                //sup
-                
-                if response.result.isSuccess {
-                    if let dictionary = response.result.value as? [String : AnyObject] {
-                        guard let token = dictionary["access_token"] as? String, date = dictionary["generated_date"] as? String else {
-                            completionHandler(token: nil, error: .NoAuthTokenError)
-                            return
-                        }
-                        print(date)
-                        //date is formatted: '2015-10-13 20:35:12'
-                        completionHandler(token: token, error: nil)
+        Alamofire.request(.GET, urlString).responseJSON { response in
+            //sup
+            
+            if response.result.isSuccess {
+                if let dictionary = response.result.value as? [String : AnyObject] {
+                    guard let token = dictionary["access_token"] as? String, date = dictionary["generated_date"] as? String else {
+                        completionHandler(token: nil, error: .NoAuthTokenError)
+                        return
                     }
-                } else {
-                    completionHandler(token: nil, error: .URLError)
-                    return
+                    print(date)
+                    //date is formatted: '2015-10-13 20:35:12'
+                    completionHandler(token: token, error: nil)
                 }
-                
+            } else {
+                completionHandler(token: nil, error: .URLError)
+                return
+            }
         }
     }
     
     static func getCustomURL(fromCode code: String, completionHandler: (url: String?, error: ServiceError?) -> ()) {
         let urlString = "http://streamcenterapp.com/customurl/\(code)"
-        Alamofire.request(.GET, urlString)
-        .responseJSON { response in
+        Alamofire.request(.GET, urlString).responseJSON { response in
             
             //here's a test url
 //            completionHandler(url: "http://qthttp.apple.com.edgesuite.net/1010qwoeiuryfg/sl.m3u8", error: nil)

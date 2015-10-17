@@ -38,6 +38,7 @@ class TwitchStreamsViewController: LoadingViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         self.configureViews()
     }
     
