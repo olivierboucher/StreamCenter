@@ -248,6 +248,7 @@ class TwitchApi {
         Alamofire.request(.GET, streamsUrlString, parameters :
             [   "limit"         : limit,
                 "offset"        : offset,
+                "stream_type"   : "live",
                 "oauth_token"   : token     ])
             .responseJSON { response in
                 
