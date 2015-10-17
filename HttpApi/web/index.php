@@ -107,10 +107,15 @@ $app->post('/customurl', function(Request $request) use ($app) {
             ));
 
         } else {
+	        return $app['twig']->render('displayError.twig', array(
+		    	"message" => "Provided url is invalid"
+			));
+/*
             return $app->json(array(
                 "error" => "Bad request",
                 "message" => "Provided data is invalid"
             ), 400);
+*/
         }
     }
     else {

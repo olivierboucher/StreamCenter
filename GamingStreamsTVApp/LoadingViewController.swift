@@ -111,7 +111,7 @@ class LoadingViewController : UIViewController {
     func configureViews(topBarTitle: String, centerView: UIView? = nil, leftView: UIView? = nil, rightView: UIView? = nil) {
         
         //do the top bar first
-        self.topBar = TopBarView(frame: CGRectZero, withMainTitle: "Top Games", centerView: centerView, leftView: leftView, rightView: rightView)
+        self.topBar = TopBarView(frame: CGRectZero, withMainTitle: topBarTitle, centerView: centerView, leftView: leftView, rightView: rightView)
         self.topBar.translatesAutoresizingMaskIntoConstraints = false
         self.view.addSubview(self.topBar)
         
@@ -165,7 +165,6 @@ class LoadingViewController : UIViewController {
             self.view.removeGestureRecognizer(recognizer)
             reloadContent()
         }
-        
     }
 }
 

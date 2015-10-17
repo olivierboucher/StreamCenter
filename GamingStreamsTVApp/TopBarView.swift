@@ -34,6 +34,7 @@ class TopBarView : UIVisualEffectView {
         self.contentView.addSubview(self.titleView)
         
         if let leftView = leftView {
+            leftView.translatesAutoresizingMaskIntoConstraints = false
             let viewDict = ["title" : titleView, "left" : leftView]
             self.contentView.addSubview(leftView)
             self.contentView.addConstraint(NSLayoutConstraint(item: leftView, attribute: .Width, relatedBy: .Equal, toItem: self.contentView, attribute: .Width, multiplier: 0.275, constant: 1.0))
@@ -43,6 +44,7 @@ class TopBarView : UIVisualEffectView {
         }
         
         if let rightView = rightView {
+            rightView.translatesAutoresizingMaskIntoConstraints = false
             let viewDict = ["title" : titleView, "right" : rightView]
             self.contentView.addSubview(rightView)
             self.contentView.addConstraint(NSLayoutConstraint(item: rightView, attribute: .Width, relatedBy: .Equal, toItem: self.contentView, attribute: .Width, multiplier: 0.275, constant: 1.0))
