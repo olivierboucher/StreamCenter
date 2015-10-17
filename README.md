@@ -2,7 +2,7 @@
 
 StreamCenter is a tvOS project that aims at providing various video feeds to the AppleTV.
 
-**NOTE:** Master is currently broken, please use develop until we get to a stable version.
+**NOTE:** Our web api is currently in dev mode, you may see non-critial error messages.
 
 # Running the Project
 
@@ -18,4 +18,8 @@ Make sure you open GamingStreamsTVApp.xcworkspace to include the generated Pods 
 ![Imgur](http://i.imgur.com/V2v5FND.png)
 ![Imgur](http://i.imgur.com/HvWh6PI.png)
 ![Imgur](http://i.imgur.com/PhUoqOB.jpg)
+
+# Contributing
+Huge thanks to @waterskier2007 for the support.  
+If anyone wishes to contribute, just email us for info.
 
