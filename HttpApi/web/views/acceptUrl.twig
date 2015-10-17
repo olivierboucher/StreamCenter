@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1"><!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+
+    <title>StreamCenter URL Entry</title><!-- Bootstrap -->
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" rel="stylesheet" integrity="sha256-MfvZlkHCEqatNoGiOXveE8FIwMzZg4W85qfrfIFBfYc= sha512-dTfge/zgoMYpP7QbHy4gWMEGsbsdZeCXz7irItjcC3sPUFtf0kuFbDz/ixG7ArTxmDjLXDmezHubeNikyKGVyQ==" crossorigin="anonymous" type="text/css"><!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <style type="text/css">
+        h1 {
+            margin: 0;
+        }
+        h2 {
+            font-size: 20px;
+        }
+        h1, h2, h3, h4, h5, h6 {
+            text-align: center;
+            color:#FFFFFF;
+        }
+        #urlInput {
+            margin-bottom: 15px;
+        }
+        body {
+            background-color: #1C84E4;
+        }
+        .btn-default:hover {
+            border-color: transparent;
+        }
+        .btn-default {
+            border-color: transparent;
+        }
+        .form-control {
+            border: 0 solid transparent;
+        }
+        .well {
+            background-color: #3E94E4;
+            border: 0 solid transparent;
+        }
+        #film-icon-holder {
+            max-width: 150px;
+            margin: 0 auto;
+        }
+
+    </style>
+</head>
+
+<body>
+    <div class="container center">
+        <div style="max-width: 330px;
+                padding: 15px;
+                margin: 0 auto;
+                text-align: center; ">
+            <div id="film-icon-holder"><img class="img-responsive" src="../assets/img/FilmIcon.png"/></div>
+            <h2>Request a custom feed</h2>
+
+            <div class="well">
+                <form method="post" action="/customurl">
+                    <input id="urlInput" name="urlInput" class="form-control" placeholder="http://example.com" type="url" required aria-required="true">
+                    <input type="hidden" name="csrfToken" value="{{ csrf_token }}"/>
+                    <button class="btn btn-default" type="submit">Validate</button>
+
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

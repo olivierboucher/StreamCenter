@@ -3,14 +3,12 @@
 //  GamingStreamsTVApp
 //
 //  Created by Olivier Boucher on 2015-09-25.
-//  Copyright © 2015 Rivus Media Inc. All rights reserved.
-//
 
 import UIKit
 import Foundation
 
 class ModalMenuView : UIView {
-    let menuOptions : Dictionary<String, Array<MenuOption>>
+    let menuOptions : [String : [MenuOption]]
     let menuSize : CGSize
     let menuItemSize : CGSize
     var menuItemCount : Int {
@@ -23,7 +21,7 @@ class ModalMenuView : UIView {
         }
     }
     
-    init(frame: CGRect, options: Dictionary<String, Array<MenuOption>>, size : CGSize) {
+    init(frame: CGRect, options: [String : [MenuOption]], size : CGSize) {
         self.menuSize = size
         self.menuOptions = options
         self.menuItemSize = ModalMenuView.requiredMenuItemHeightToFit(menuOptions, menuSize: size)
@@ -38,11 +36,11 @@ class ModalMenuView : UIView {
     required init?(coder aDecoder: NSCoder) {
         self.menuSize = CGSize(width: 0, height: 0)
         self.menuItemSize = CGSize(width: 0, height: 0)
-        self.menuOptions = Dictionary<String, Array<MenuOption>>()
+        self.menuOptions = [String : [MenuOption]]()
         super.init(coder: aDecoder)
     }
     
-    static func requiredMenuItemHeightToFit(menuOptions : Dictionary<String, Array<MenuOption>>, menuSize : CGSize) -> CGSize {
+    static func requiredMenuItemHeightToFit(menuOptions : [String : [MenuOption]], menuSize : CGSize) -> CGSize {
         var count : CGFloat = 0
         for menuOptionsArray in menuOptions {
             count += CGFloat(1 + menuOptionsArray.1.count)
@@ -89,7 +87,7 @@ class ModalMenuView : UIView {
 
 class MenuItemView : UIView {
     var option : MenuOption
-    var title : UILabel? = nil
+    var title : UILabel!
     var gestureRecognizer : UITapGestureRecognizer?
     
     init(frame: CGRect, option: MenuOption) {
@@ -103,10 +101,10 @@ class MenuItemView : UIView {
         
         self.title = UILabel(frame: self.bounds)
         
-        self.title!.text = self.option.isEnabled ? self.option.enabledTitle : self.option.disabledTitle
-        self.title!.textAlignment = NSTextAlignment.Center
-        self.title!.font = UIFont.systemFontOfSize(self.bounds.height * 0.7, weight: 0)
-        self.title!.textColor = UIColor.whiteColor()
+        self.title.text = self.option.isEnabled ? self.option.enabledTitle : self.option.disabledTitle
+        self.title.textAlignment = NSTextAlignment.Center
+        self.title.font = UIFont.systemFontOfSize(self.bounds.height * 0.7, weight: 0)
+        self.title.textColor = UIColor.whiteColor()
         
         self.userInteractionEnabled = true
         
@@ -196,7 +194,7 @@ struct MenuOption {
     var isEnabled : Bool
     var clickCallback : (sender: MenuItemView?)->()
     
-    init(enabledTitle : String, disabledTitle : String, enabled : Bool, onClick : (sender :MenuItemView?)->()) {
+    init(enabledTitle : String, disabledTitle : String, enabled : Bool, onClick : (sender : MenuItemView?)->()) {
         self.enabledTitle = enabledTitle
         self.disabledTitle = disabledTitle
         self.isEnabled = enabled

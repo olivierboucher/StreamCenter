@@ -3,8 +3,6 @@
 //  TestTVApp
 //
 //  Created by Olivier Boucher on 2015-09-13.
-//  Copyright © 2015 Rivus Media Inc. All rights reserved.
-//
 
 import UIKit
 
@@ -15,12 +13,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
-        let window = UIWindow.init(frame: UIScreen.mainScreen().bounds);
-        window.rootViewController = GamesViewController();
-        window.makeKeyAndVisible();
-        self.window = window;
+        let window = UIWindow.init(frame: UIScreen.mainScreen().bounds)
+        window.rootViewController = TwitchGamesViewController()
+        window.makeKeyAndVisible()
+        self.window = window
         
-        return true;
+        return true
     }
 
     func applicationWillResignActive(application: UIApplication) {
@@ -34,7 +32,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 
     func applicationWillEnterForeground(application: UIApplication) {
-        // Called as part of the transition from the background to the inactive state; here you can undo many of the changes made on entering the background.
+        // Called as part of the transition from the background to the inactive state here you can undo many of the changes made on entering the background.
     }
 
     func applicationDidBecomeActive(application: UIApplication) {
@@ -44,7 +42,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func applicationWillTerminate(application: UIApplication) {
         // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
     }
-
 
 }
 

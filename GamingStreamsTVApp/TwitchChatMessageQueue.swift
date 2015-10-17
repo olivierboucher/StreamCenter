@@ -3,8 +3,7 @@
 //  GamingStreamsTVApp
 //
 //  Created by Olivier Boucher on 2015-09-20.
-//  Copyright © 2015 Rivus Media Inc. All rights reserved.
-//
+
 import Alamofire
 import UIKit
 import Foundation
@@ -34,8 +33,8 @@ class TwitchChatMessageQueue {
     }
     
     func addNewMessage(message : TwitchChatMessage) {
-        dispatch_semaphore_wait(self.mqMutex, DISPATCH_TIME_FOREVER);
-        //NSLog("Message added")
+        // For the data integrity - multiple threads can be accessing at the same time
+        dispatch_semaphore_wait(self.mqMutex, DISPATCH_TIME_FOREVER)
         messageQueue.offer(message)
         dispatch_semaphore_signal(self.mqMutex)
         
@@ -45,9 +44,10 @@ class TwitchChatMessageQueue {
     }
     
     func processAvailableMessages() {
-        //NSLog("Process batch start")
-        var messagesArray = Array<TwitchChatMessage>()
-        dispatch_semaphore_wait(self.mqMutex, DISPATCH_TIME_FOREVER);
+        var messagesArray = [TwitchChatMessage]()
+        // For data integrity - We do not want any thread adding messages as
+        // we are polling from the queue
+        dispatch_semaphore_wait(self.mqMutex, DISPATCH_TIME_FOREVER)
         while(true){
             if let message = self.messageQueue.poll() as! TwitchChatMessage? {
                 messagesArray.append(message)
@@ -58,14 +58,15 @@ class TwitchChatMessageQueue {
         }
         dispatch_semaphore_signal(self.mqMutex)
         
+        // We stop if there's not message to process, it will be reactivated when
+        // we recieve a new message
         if messagesArray.count == 0 {
-            //NSLog("Process batch stop, nothing to poll from")
             self.stopProcessing()
             return
         }
         
         for message : TwitchChatMessage in messagesArray {
-            let metaByLine = message.rawMetadata.componentsSeparatedByString(";");
+            let metaByLine = message.rawMetadata.componentsSeparatedByString(";")
             
             for singleMeta in metaByLine {
                 // key = [0] and value = [1]
@@ -164,7 +165,7 @@ class TwitchChatMessageQueue {
         
         
         if(message.emotes.count > 0) {
-            var removedChars = -(message.sender!.characters.count + 2); //Because ranges are based on rawMessage
+            var removedChars = -(message.sender!.characters.count + 2) //Because ranges are based on rawMessage
             for emote in message.emotes {
                 let attachment = NSTextAttachment()
                 let emoteImage = UIImage(data: self.delegate.getEmoteDataFromCache(emote.0)!)
@@ -180,13 +181,17 @@ class TwitchChatMessageQueue {
                     let rmCount = string.substringWithRange(string.rangeFromNSRange(range)!).characters.count - attachString.length
                     if fixedRange.location + fixedRange.length <= attrMsg.length {
                         removedChars += rmCount
-                        attrMsg.replaceCharactersInRange(fixedRange, withAttributedString: attachString)
+                        if attachString != "\\U0000fffc" {
+                            attrMsg.replaceCharactersInRange(fixedRange, withAttributedString: attachString)
+                        } else {
+                            print("didn't add")
+                        }
                     }
                 }
             }
         }
         
-        attrMsg.addAttribute(NSForegroundColorAttributeName, value: UIColor.blackColor(), range: NSMakeRange(0, attrMsg.length))
+        attrMsg.addAttribute(NSForegroundColorAttributeName, value: UIColor.lightGrayColor(), range: NSMakeRange(0, attrMsg.length))
         attrMsg.addAttribute(NSForegroundColorAttributeName, value: message.senderDisplayColor!.toUIColorFromHex()!, range: NSMakeRange(0, message.sender!.characters.count))
         attrMsg.addAttribute(NSFontAttributeName, value: UIFont.systemFontOfSize(18), range: NSMakeRange(0, attrMsg.length))
         

@@ -3,16 +3,14 @@
 //  GamingStreamsTVApp
 //
 //  Created by Olivier Boucher on 2015-09-20.
-//  Copyright © 2015 Rivus Media Inc. All rights reserved.
-//
 
 import Foundation
 
 class NSQueue<T : AnyObject> {
-    private var array : Array<T>
+    private var array : [T]
     
     init() {
-        array = Array<T>()
+        array = [T]()
     }
     
     func offer(element : T) {
