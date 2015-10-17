@@ -23,9 +23,30 @@
         }
         h1, h2, h3, h4, h5, h6 {
             text-align: center;
+            color:#FFFFFF;
         }
         #urlInput {
             margin-bottom: 15px;
+        }
+        body {
+            background-color: #1C84E4;
+        }
+        .btn-default:hover {
+            border-color: transparent;
+        }
+        .btn-default {
+            border-color: transparent;
+        }
+        .form-control {
+            border: 0 solid transparent;
+        }
+        .well {
+            background-color: #3E94E4;
+            border: 0 solid transparent;
+        }
+        #film-icon-holder {
+            max-width: 150px;
+            margin: 0 auto;
         }
 
     </style>
@@ -37,13 +58,15 @@
                 padding: 15px;
                 margin: 0 auto;
                 text-align: center; ">
+            <div id="film-icon-holder"><img class="img-responsive" src="../assets/img/FilmIcon.png"/></div>
             <h2>Request a custom feed</h2>
 
             <div class="well">
                 <form method="post" action="/customurl">
                     <input id="urlInput" name="urlInput" class="form-control" placeholder="http://example.com" type="url" required aria-required="true">
                     <input type="hidden" name="csrfToken" value="{{ csrf_token }}"/>
-                    <button class="btn btn-primary" type="submit">Validate</button>
+                    <button class="btn btn-default" type="submit">Validate</button>
+
                 </form>
             </div>
         </div>
