@@ -33,6 +33,7 @@
 		09D098291BA77FAB00E7E6FC /* TwitchVideoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09D098281BA77FAB00E7E6FC /* TwitchVideoViewController.swift */; };
 		09D0982B1BA782C800E7E6FC /* VideoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09D0982A1BA782C800E7E6FC /* VideoView.swift */; };
 		09D6E7E01BD2C38100E88371 /* TwitchChatMessageQueueTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09D6E7DF1BD2C38100E88371 /* TwitchChatMessageQueueTest.swift */; };
+		09D6E7E21BD2D25400E88371 /* IRCChatConnection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09D6E7E11BD2D25400E88371 /* IRCChatConnection.swift */; };
 		09E33CC91BB5B2DF000702E2 /* Dictionary.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09E33CC81BB5B2DF000702E2 /* Dictionary.swift */; };
 		09EB6D3E1BB484F7003EB244 /* String.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09EB6D3D1BB484F7003EB244 /* String.swift */; };
 		09EB6D461BB4A8BE003EB244 /* CATextLayerVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09EB6D451BB4A8BE003EB244 /* CATextLayerVC.swift */; };
@@ -116,6 +117,7 @@
 		09D6E7D51BD2A3B300E88371 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		09D6E7DE1BD2C38000E88371 /* GamingStreamsTVAppTests-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "GamingStreamsTVAppTests-Bridging-Header.h"; sourceTree = "<group>"; };
 		09D6E7DF1BD2C38100E88371 /* TwitchChatMessageQueueTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TwitchChatMessageQueueTest.swift; sourceTree = "<group>"; };
+		09D6E7E11BD2D25400E88371 /* IRCChatConnection.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IRCChatConnection.swift; sourceTree = "<group>"; };
 		09E33CC81BB5B2DF000702E2 /* Dictionary.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Dictionary.swift; sourceTree = "<group>"; };
 		09EB6D3D1BB484F7003EB244 /* String.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = String.swift; sourceTree = "<group>"; };
 		09EB6D451BB4A8BE003EB244 /* CATextLayerVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CATextLayerVC.swift; sourceTree = "<group>"; };
@@ -260,6 +262,7 @@
 		09CE59831BAE456D0054EB71 /* Helpers */ = {
 			isa = PBXGroup;
 			children = (
+				09D6E7E11BD2D25400E88371 /* IRCChatConnection.swift */,
 				B4A2E6CE1BD01AEF0094AECA /* StreamCenterService.swift */,
 				09CE597E1BAE08B10054EB71 /* IRCHandler.swift */,
 				090AB8F31BA5DA1400CDB05D /* M3UParser.swift */,
@@ -562,6 +565,7 @@
 				B4D88D321BCF35F100C1DF87 /* HitboxAPI.swift in Sources */,
 				09EB6D461BB4A8BE003EB244 /* CATextLayerVC.swift in Sources */,
 				09199A1D1BBAC67F00B10543 /* LoadingViewController.swift in Sources */,
+				09D6E7E21BD2D25400E88371 /* IRCChatConnection.swift in Sources */,
 				090AB9221BB3699700CDB05D /* TwitchChatView.swift in Sources */,
 				B4A67BBE1BCBE4CB003E3B6F /* TwitchSearchResultsViewController.swift in Sources */,
 				B4D15C7C1BCDCBA2006FFB5D /* QRCodeGenerator.swift in Sources */,
