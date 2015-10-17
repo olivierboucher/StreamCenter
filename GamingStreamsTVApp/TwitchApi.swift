@@ -276,10 +276,11 @@ class TwitchApi {
         }
     }
     
-    static func getUser() {
+    static func getUser(completionHandler: (user: TwitchUser?, error: ServiceError?) -> ()) {
         guard let token = TokenHelper.getTwitchToken() else {
             //do we want to actually return an erro?
             print("you can't get the user info without having an auth token")
+            completionHandler(user: nil, error: .AuthError)
             return
         }
         let urlString = "https://api.twitch.tv/kraken/user"
@@ -287,14 +288,17 @@ class TwitchApi {
             if response.result.isSuccess {
                 //we are going to get the user but we could also get their logo if we want to display it
                 if let dictionary = response.result.value as? [String : AnyObject] {
-                    if let username = dictionary["name"] as? String {
-                        TokenHelper.storeTwitchUsername(username)
+                    if let user = TwitchUser(dict: dictionary) {
+                        TokenHelper.storeTwitchUsername(user.name)
+                        completionHandler(user: user, error: nil)
                         return
                     }
                 }
                 print("could not get user object due to a json error")
+                completionHandler(user: nil, error: .JSONError)
             } else {
                 print("could not get user object due to a request error")
+                completionHandler(user: nil, error: .URLError)
             }
         }
     }
@@ -306,17 +310,18 @@ class TwitchApi {
         }
         let urlString = "https://api.twitch.tv/kraken/users/\(username)/follows/channels/\(channel)"
         Alamofire.request(.GET, urlString, parameters: ["oauth_token" : token]).responseJSON { response in
+            print("status code: \(response.response?.statusCode)")
             if response.result.isSuccess {
-                if let dictionary = response.result.value as? [String : AnyObject] {
-                    if let _ = dictionary["error"] as? String {
-                        //don't return an error, because this just means that the user is not subscribed
-                        completionHandler(subscribed: false, error: nil)
-                    } else {
-                        completionHandler(subscribed: true, error: nil)
-                    }
-                    return
-                }
-                completionHandler(subscribed: false, error: .JSONError)
+//                if let dictionary = response.result.value as? [String : AnyObject] {
+//                    if let _ = dictionary["error"] as? String {
+//                        //don't return an error, because this just means that the user is not subscribed
+//                        completionHandler(subscribed: false, error: nil)
+//                    } else {
+//                        completionHandler(subscribed: true, error: nil)
+//                    }
+//                    return
+//                }
+                completionHandler(subscribed: response.response?.statusCode != 404, error: nil)
             } else {
                 completionHandler(subscribed: false, error: .URLError)
             }
@@ -335,6 +340,22 @@ class TwitchApi {
             } else {
                 completionHandler(success: false, error: .URLError)
             }
+        }
+    }
+    
+    static func getUserProfileImage(forUser user: TwitchUser, completionHandler: (image: UIImage?) -> ()) {
+        guard let logoURL = user.logoURL else {
+            completionHandler(image: nil)
+            return
+        }
+        Alamofire.request(.GET, logoURL).responseData { response in
+            if response.result.isSuccess {
+                if let data = response.result.value, image = UIImage(data: data) {
+                    completionHandler(image: image)
+                    return
+                }
+            }
+            completionHandler(image: nil)
         }
     }
     

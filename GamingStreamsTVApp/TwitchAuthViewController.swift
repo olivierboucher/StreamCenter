@@ -50,7 +50,9 @@ class TwitchAuthViewController: QRCodeViewController {
                 return
             }
             TokenHelper.storeTwitchToken(token)
-            TwitchApi.getUser()
+            TwitchApi.getUser({ (user, error) -> () in
+                print(user)
+            })
             self.delegate?.qrCodeViewControllerFinished(true, data: nil)
         }
     }

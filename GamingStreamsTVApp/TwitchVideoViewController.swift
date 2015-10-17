@@ -24,7 +24,7 @@ class TwitchVideoViewController : UIViewController {
     private var currentStreamVideo: TwitchStreamVideo?
     private var chatView : TwitchChatView?
     private var modalMenu : ModalMenuView?
-    private var modalMenuOptions : [String : [MenuOption]]?
+    private var modalMenuOptions : [String : [MenuOption]]!
     
     private var leftSwipe: UISwipeGestureRecognizer!
     private var rightSwipe: UISwipeGestureRecognizer!
@@ -85,7 +85,7 @@ class TwitchVideoViewController : UIViewController {
                 print("error checking if user is subscribed: \(error?.errorDescription)")
                 return
             }
-            self.modalMenuOptions?["Manage Subscription"] = [MenuOption(enabledTitle: "Follow this channel", disabledTitle: "Unfollow this channel", enabled: !subscribed, onClick: self.handleSubscribe)]
+            self.modalMenuOptions["Manage Subscription"] = [MenuOption(enabledTitle: "Follow this channel", disabledTitle: "Unfollow this channel", enabled: !subscribed, onClick: self.handleSubscribe)]
         }
     }
     
@@ -177,7 +177,7 @@ class TwitchVideoViewController : UIViewController {
         if longPressRecognizer.state == UIGestureRecognizerState.Began {
             if self.modalMenu == nil {
                 modalMenu = ModalMenuView(frame: self.view.bounds,
-                    options: self.modalMenuOptions!,
+                    options: self.modalMenuOptions,
                     size: CGSize(width: self.view.bounds.width/3, height: self.view.bounds.height/1.5))
                 
                 modalMenu!.center = self.view.center
