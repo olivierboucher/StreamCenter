@@ -32,7 +32,7 @@
 		09D098251BA7666200E7E6FC /* TwitchStreamsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09D098241BA7666200E7E6FC /* TwitchStreamsViewController.swift */; };
 		09D098291BA77FAB00E7E6FC /* TwitchVideoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09D098281BA77FAB00E7E6FC /* TwitchVideoViewController.swift */; };
 		09D0982B1BA782C800E7E6FC /* VideoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09D0982A1BA782C800E7E6FC /* VideoView.swift */; };
-		09D6E7DB1BD2A3D400E88371 /* TwitchChatMessageQueueTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09D6E7CA1BD2A34800E88371 /* TwitchChatMessageQueueTest.swift */; };
+		09D6E7E01BD2C38100E88371 /* TwitchChatMessageQueueTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09D6E7DF1BD2C38100E88371 /* TwitchChatMessageQueueTest.swift */; };
 		09E33CC91BB5B2DF000702E2 /* Dictionary.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09E33CC81BB5B2DF000702E2 /* Dictionary.swift */; };
 		09EB6D3E1BB484F7003EB244 /* String.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09EB6D3D1BB484F7003EB244 /* String.swift */; };
 		09EB6D461BB4A8BE003EB244 /* CATextLayerVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09EB6D451BB4A8BE003EB244 /* CATextLayerVC.swift */; };
@@ -112,9 +112,10 @@
 		09D098241BA7666200E7E6FC /* TwitchStreamsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TwitchStreamsViewController.swift; sourceTree = "<group>"; };
 		09D098281BA77FAB00E7E6FC /* TwitchVideoViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TwitchVideoViewController.swift; sourceTree = "<group>"; };
 		09D0982A1BA782C800E7E6FC /* VideoView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VideoView.swift; sourceTree = "<group>"; };
-		09D6E7CA1BD2A34800E88371 /* TwitchChatMessageQueueTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TwitchChatMessageQueueTest.swift; path = ../TwitchChatMessageQueueTest.swift; sourceTree = "<group>"; };
 		09D6E7D11BD2A3B300E88371 /* GamingStreamsTVAppTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = GamingStreamsTVAppTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		09D6E7D51BD2A3B300E88371 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		09D6E7DE1BD2C38000E88371 /* GamingStreamsTVAppTests-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "GamingStreamsTVAppTests-Bridging-Header.h"; sourceTree = "<group>"; };
+		09D6E7DF1BD2C38100E88371 /* TwitchChatMessageQueueTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TwitchChatMessageQueueTest.swift; sourceTree = "<group>"; };
 		09E33CC81BB5B2DF000702E2 /* Dictionary.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Dictionary.swift; sourceTree = "<group>"; };
 		09EB6D3D1BB484F7003EB244 /* String.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = String.swift; sourceTree = "<group>"; };
 		09EB6D451BB4A8BE003EB244 /* CATextLayerVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CATextLayerVC.swift; sourceTree = "<group>"; };
@@ -316,7 +317,8 @@
 		09D6E7DD1BD2A3F100E88371 /* Chat */ = {
 			isa = PBXGroup;
 			children = (
-				09D6E7CA1BD2A34800E88371 /* TwitchChatMessageQueueTest.swift */,
+				09D6E7DF1BD2C38100E88371 /* TwitchChatMessageQueueTest.swift */,
+				09D6E7DE1BD2C38000E88371 /* GamingStreamsTVAppTests-Bridging-Header.h */,
 			);
 			name = Chat;
 			sourceTree = "<group>";
@@ -429,6 +431,7 @@
 		090AB8D61BA5BFDF00CDB05D /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
+				LastSwiftUpdateCheck = 0710;
 				LastUpgradeCheck = 0710;
 				ORGANIZATIONNAME = "Rivus Media Inc";
 				TargetAttributes = {
@@ -587,7 +590,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				09D6E7DB1BD2A3D400E88371 /* TwitchChatMessageQueueTest.swift in Sources */,
+				09D6E7E01BD2C38100E88371 /* TwitchChatMessageQueueTest.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -715,10 +718,13 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
+				CLANG_ENABLE_MODULES = YES;
 				INFOPLIST_FILE = GamingStreamsTVAppTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.rivusmedia.GamingStreamsTVAppTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "GamingStreamsTVAppTests/GamingStreamsTVAppTests-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/GamingStreamsTVApp.app/GamingStreamsTVApp";
 			};
 			name = Debug;
@@ -727,10 +733,12 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
+				CLANG_ENABLE_MODULES = YES;
 				INFOPLIST_FILE = GamingStreamsTVAppTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.rivusmedia.GamingStreamsTVAppTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "GamingStreamsTVAppTests/GamingStreamsTVAppTests-Bridging-Header.h";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/GamingStreamsTVApp.app/GamingStreamsTVApp";
 			};
 			name = Release;
@@ -763,6 +771,7 @@
 				09D6E7DA1BD2A3B300E88371 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
