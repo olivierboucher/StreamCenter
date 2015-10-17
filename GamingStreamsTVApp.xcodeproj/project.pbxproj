@@ -32,6 +32,7 @@
 		09D098251BA7666200E7E6FC /* TwitchStreamsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09D098241BA7666200E7E6FC /* TwitchStreamsViewController.swift */; };
 		09D098291BA77FAB00E7E6FC /* TwitchVideoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09D098281BA77FAB00E7E6FC /* TwitchVideoViewController.swift */; };
 		09D0982B1BA782C800E7E6FC /* VideoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09D0982A1BA782C800E7E6FC /* VideoView.swift */; };
+		09D6E7DB1BD2A3D400E88371 /* TwitchChatMessageQueueTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09D6E7CA1BD2A34800E88371 /* TwitchChatMessageQueueTest.swift */; };
 		09E33CC91BB5B2DF000702E2 /* Dictionary.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09E33CC81BB5B2DF000702E2 /* Dictionary.swift */; };
 		09EB6D3E1BB484F7003EB244 /* String.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09EB6D3D1BB484F7003EB244 /* String.swift */; };
 		09EB6D461BB4A8BE003EB244 /* CATextLayerVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09EB6D451BB4A8BE003EB244 /* CATextLayerVC.swift */; };
@@ -59,6 +60,16 @@
 		B4FB52B21BCF282000C57B0B /* CustomVideoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4FB52B11BCF282000C57B0B /* CustomVideoViewController.swift */; };
 		B4FB52B41BCF2CC100C57B0B /* QRCustomVideoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4FB52B31BCF2CC100C57B0B /* QRCustomVideoViewController.swift */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		09D6E7D61BD2A3B300E88371 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 090AB8D61BA5BFDF00CDB05D /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 090AB8DD1BA5BFDF00CDB05D;
+			remoteInfo = GamingStreamsTVApp;
+		};
+/* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
 		09CE597D1BADBBC70054EB71 /* Embed Frameworks */ = {
@@ -101,6 +112,9 @@
 		09D098241BA7666200E7E6FC /* TwitchStreamsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TwitchStreamsViewController.swift; sourceTree = "<group>"; };
 		09D098281BA77FAB00E7E6FC /* TwitchVideoViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TwitchVideoViewController.swift; sourceTree = "<group>"; };
 		09D0982A1BA782C800E7E6FC /* VideoView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VideoView.swift; sourceTree = "<group>"; };
+		09D6E7CA1BD2A34800E88371 /* TwitchChatMessageQueueTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TwitchChatMessageQueueTest.swift; path = ../TwitchChatMessageQueueTest.swift; sourceTree = "<group>"; };
+		09D6E7D11BD2A3B300E88371 /* GamingStreamsTVAppTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = GamingStreamsTVAppTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		09D6E7D51BD2A3B300E88371 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		09E33CC81BB5B2DF000702E2 /* Dictionary.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Dictionary.swift; sourceTree = "<group>"; };
 		09EB6D3D1BB484F7003EB244 /* String.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = String.swift; sourceTree = "<group>"; };
 		09EB6D451BB4A8BE003EB244 /* CATextLayerVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CATextLayerVC.swift; sourceTree = "<group>"; };
@@ -140,6 +154,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		09D6E7CE1BD2A3B300E88371 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -147,6 +168,7 @@
 			isa = PBXGroup;
 			children = (
 				090AB8E01BA5BFDF00CDB05D /* GamingStreamsTVApp */,
+				09D6E7D21BD2A3B300E88371 /* GamingStreamsTVAppTests */,
 				090AB8DF1BA5BFDF00CDB05D /* Products */,
 				F869E16742CCA364171847D9 /* Pods */,
 				334A70E19B5807FD4AAD28B4 /* Frameworks */,
@@ -157,6 +179,7 @@
 			isa = PBXGroup;
 			children = (
 				090AB8DE1BA5BFDF00CDB05D /* GamingStreamsTVApp.app */,
+				09D6E7D11BD2A3B300E88371 /* GamingStreamsTVAppTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -273,6 +296,31 @@
 			name = ViewControllers;
 			sourceTree = "<group>";
 		};
+		09D6E7D21BD2A3B300E88371 /* GamingStreamsTVAppTests */ = {
+			isa = PBXGroup;
+			children = (
+				09D6E7DC1BD2A3E700E88371 /* TwitchAPI */,
+				09D6E7D51BD2A3B300E88371 /* Info.plist */,
+			);
+			path = GamingStreamsTVAppTests;
+			sourceTree = "<group>";
+		};
+		09D6E7DC1BD2A3E700E88371 /* TwitchAPI */ = {
+			isa = PBXGroup;
+			children = (
+				09D6E7DD1BD2A3F100E88371 /* Chat */,
+			);
+			name = TwitchAPI;
+			sourceTree = "<group>";
+		};
+		09D6E7DD1BD2A3F100E88371 /* Chat */ = {
+			isa = PBXGroup;
+			children = (
+				09D6E7CA1BD2A34800E88371 /* TwitchChatMessageQueueTest.swift */,
+			);
+			name = Chat;
+			sourceTree = "<group>";
+		};
 		334A70E19B5807FD4AAD28B4 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
@@ -357,6 +405,24 @@
 			productReference = 090AB8DE1BA5BFDF00CDB05D /* GamingStreamsTVApp.app */;
 			productType = "com.apple.product-type.application";
 		};
+		09D6E7D01BD2A3B300E88371 /* GamingStreamsTVAppTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 09D6E7D81BD2A3B300E88371 /* Build configuration list for PBXNativeTarget "GamingStreamsTVAppTests" */;
+			buildPhases = (
+				09D6E7CD1BD2A3B300E88371 /* Sources */,
+				09D6E7CE1BD2A3B300E88371 /* Frameworks */,
+				09D6E7CF1BD2A3B300E88371 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				09D6E7D71BD2A3B300E88371 /* PBXTargetDependency */,
+			);
+			name = GamingStreamsTVAppTests;
+			productName = GamingStreamsTVAppTests;
+			productReference = 09D6E7D11BD2A3B300E88371 /* GamingStreamsTVAppTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -368,6 +434,10 @@
 				TargetAttributes = {
 					090AB8DD1BA5BFDF00CDB05D = {
 						CreatedOnToolsVersion = 7.1;
+					};
+					09D6E7D01BD2A3B300E88371 = {
+						CreatedOnToolsVersion = 7.1;
+						TestTargetID = 090AB8DD1BA5BFDF00CDB05D;
 					};
 				};
 			};
@@ -385,6 +455,7 @@
 			projectRoot = "";
 			targets = (
 				090AB8DD1BA5BFDF00CDB05D /* GamingStreamsTVApp */,
+				09D6E7D01BD2A3B300E88371 /* GamingStreamsTVAppTests */,
 			);
 		};
 /* End PBXProject section */
@@ -395,6 +466,13 @@
 			buildActionMask = 2147483647;
 			files = (
 				090AB8E91BA5BFDF00CDB05D /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		09D6E7CF1BD2A3B300E88371 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -505,7 +583,23 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		09D6E7CD1BD2A3B300E88371 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				09D6E7DB1BD2A3D400E88371 /* TwitchChatMessageQueueTest.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		09D6E7D71BD2A3B300E88371 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 090AB8DD1BA5BFDF00CDB05D /* GamingStreamsTVApp */;
+			targetProxy = 09D6E7D61BD2A3B300E88371 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		090AB8EB1BA5BFDF00CDB05D /* Debug */ = {
@@ -617,6 +711,30 @@
 			};
 			name = Release;
 		};
+		09D6E7D91BD2A3B300E88371 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				INFOPLIST_FILE = GamingStreamsTVAppTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.rivusmedia.GamingStreamsTVAppTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/GamingStreamsTVApp.app/GamingStreamsTVApp";
+			};
+			name = Debug;
+		};
+		09D6E7DA1BD2A3B300E88371 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				INFOPLIST_FILE = GamingStreamsTVAppTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.rivusmedia.GamingStreamsTVAppTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/GamingStreamsTVApp.app/GamingStreamsTVApp";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -637,6 +755,14 @@
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
+		};
+		09D6E7D81BD2A3B300E88371 /* Build configuration list for PBXNativeTarget "GamingStreamsTVAppTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				09D6E7D91BD2A3B300E88371 /* Debug */,
+				09D6E7DA1BD2A3B300E88371 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
 		};
 /* End XCConfigurationList section */
 	};

@@ -27,6 +27,9 @@
         h2 {
             font-size: 20px;
         }
+        h3 {
+            font-size: 15px;
+        }
         h1, h2, h3, h4, h5, h6 {
             text-align: center;
             color:#FFFFFF;
@@ -47,7 +50,7 @@
             background-color: #3E94E4;
             border: 0 solid transparent;
         }
-        #lock-icon-holder {
+        #danger-icon-holder {
             max-width: 150px;
             margin: 0 auto;
         }
@@ -60,12 +63,13 @@
                 padding: 15px;
                 margin: 0 auto;
                 text-align: center; ">
-        <div id="lock-icon-holder"><img class="img-responsive" src="../assets/img/FlatLockIcon.png"/></div>
+        <div id="danger-icon-holder"><img class="img-responsive" src="../assets/img/DangerIcon.png"/></div>
         <h2>Sorry, there was an error</h2>
         <div class="well">
-            <h1>{{ message }}</h1>
+            <h3>{{ message }}</h3>
+            <a class="btn btn-default" href="{{ backUrl }}">Go back</a>
         </div>
-        <small style="color: #d3d3d3">Generated on {{ "now"|date('Y-m-d\\TH:i:sP') }}</small>
+        <!--<small style="color: #d3d3d3">Generated on {{ "now"|date('Y-m-d\\TH:i:sP') }}</small>-->
 
     </div>
 
