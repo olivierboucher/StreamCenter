@@ -21,26 +21,18 @@ class TwitchChatView : UIView, TwitchChatHandlerConsumer {
         
         self.chatHandler.consumer = self
         
-        self.backgroundColor = "#2E2E2E".toUIColorFromHex()
+        self.backgroundColor = UIColor(hexString: "#19191F")
         
         let topLayer = CATextLayerVC()
         topLayer.frame = CGRect(x: 0, y: 0, width: self.bounds.width, height: 75)
         topLayer.foregroundColor = UIColor.whiteColor().CGColor
-        topLayer.backgroundColor = "#555555".toUIColorFromHex()?.CGColor
+        topLayer.backgroundColor = UIColor(hexString: "#19191F")?.CGColor
         topLayer.alignmentMode = kCAAlignmentCenter
         topLayer.font = CGFontCreateWithFontName(UIFont.systemFontOfSize(30).fontName as NSString)
         topLayer.fontSize = 30
         topLayer.contentsScale = UIScreen.mainScreen().scale
         topLayer.string = "#" + self.channel.name
         topLayer.zPosition = 999999999
-        
-        let shadowPath = UIBezierPath.init(rect: CGRect(x: 0, y: topLayer.frame.height, width: self.bounds.width, height: 1))
-        
-        topLayer.masksToBounds = false
-        topLayer.shadowColor = "#333333".toUIColorFromHex()?.CGColor
-        topLayer.shadowOffset = CGSize(width: 0, height: 0.5)
-        topLayer.shadowOpacity = 0.5
-        topLayer.shadowPath = shadowPath.CGPath
         
         self.layer.addSublayer(topLayer)
     }

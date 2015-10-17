@@ -128,7 +128,7 @@ class TwitchChatMessageQueue {
             }
             
             if message.senderDisplayColor == nil {
-                message.senderDisplayColor = "#555555"
+                message.senderDisplayColor = "#F40202"
             }
             
             message.completeMessage = self.getAttributedStringForMessage(message)
@@ -191,7 +191,7 @@ class TwitchChatMessageQueue {
             }
         }
         
-        attrMsg.addAttribute(NSForegroundColorAttributeName, value: UIColor.lightGrayColor(), range: NSMakeRange(0, attrMsg.length))
+        attrMsg.addAttribute(NSForegroundColorAttributeName, value: UIColor(hexString: "#888897")!, range: NSMakeRange(0, attrMsg.length))
         attrMsg.addAttribute(NSForegroundColorAttributeName, value: message.senderDisplayColor!.toUIColorFromHex()!, range: NSMakeRange(0, message.sender!.characters.count))
         attrMsg.addAttribute(NSFontAttributeName, value: UIFont.systemFontOfSize(18), range: NSMakeRange(0, attrMsg.length))
         
