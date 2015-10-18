@@ -20,7 +20,7 @@ class TwitchChatMessageQueue {
     var processTimer : dispatch_source_t?
     var timerPaused : Bool = true
     let delegate : TwitchChatMessageQueueDelegate
-    let messageQueue : NSQueue<TwitchChatMessage>
+    let messageQueue : Queue<TwitchChatMessage>
     let mqMutex : dispatch_semaphore_t
     
     
@@ -29,7 +29,7 @@ class TwitchChatMessageQueue {
         let queueAttr = dispatch_queue_attr_make_with_qos_class(DISPATCH_QUEUE_SERIAL, QOS_CLASS_BACKGROUND, 0)
         self.opQueue = dispatch_queue_create("com.twitch.chatmq", queueAttr)
         self.delegate = delegate
-        self.messageQueue = NSQueue<TwitchChatMessage>()
+        self.messageQueue = Queue<TwitchChatMessage>()
     }
     
     func addNewMessage(message : TwitchChatMessage) {
@@ -49,7 +49,7 @@ class TwitchChatMessageQueue {
         // we are polling from the queue
         dispatch_semaphore_wait(self.mqMutex, DISPATCH_TIME_FOREVER)
         while(true){
-            if let message = self.messageQueue.poll() as! TwitchChatMessage? {
+            if let message = self.messageQueue.poll() {
                 messagesArray.append(message)
             }
             else {
@@ -65,15 +65,11 @@ class TwitchChatMessageQueue {
             return
         }
         
-        for message : TwitchChatMessage in messagesArray {
-            let metaByLine = message.rawMetadata.componentsSeparatedByString(";")
+        for var message : TwitchChatMessage in messagesArray {
             
-            for singleMeta in metaByLine {
-                // key = [0] and value = [1]
-                let keyValue = singleMeta.componentsSeparatedByString("=")
-                
-                if keyValue[0] == "emotes" && !keyValue[1].isEmpty  {
-                    let emotesById = keyValue[1].containsString("/") ? keyValue[1].componentsSeparatedByString("/") : [keyValue[1]]
+            if let emoteString = message.rawIntentOrTags["emotes"] {
+                if emoteString.characters.count > 0 {
+                    let emotesById = emoteString.containsString("/") ? emoteString.componentsSeparatedByString("/") : [emoteString]
                     
                     let downloadGroup = dispatch_group_create()
                     
@@ -97,7 +93,7 @@ class TwitchChatMessageQueue {
                             }
                             
                         }
-
+                        
                         if !self.delegate.hasEmoteInCache(emoteId){
                             dispatch_group_enter(downloadGroup)
                             Alamofire.request(.GET, TwitchApi.getEmoteUrlStringFromId(emoteId)).response() {
@@ -114,11 +110,20 @@ class TwitchChatMessageQueue {
                     }
                     dispatch_group_wait(downloadGroup, DISPATCH_TIME_FOREVER)
                 }
-                else if keyValue[0] == "display-name" && !keyValue[1].isEmpty  {
-                    message.sender = self.sanitizedIRCString(keyValue[1])
+            }
+            
+            if let displayNameString = message.rawIntentOrTags["display-name"] {
+                if displayNameString.characters.count > 0 {
+                    message.sender = self.sanitizedIRCString(displayNameString)
                 }
-                else if keyValue[0] == "@color" && !keyValue[1].isEmpty  {
-                    message.senderDisplayColor = keyValue[1]
+                else {
+                    message.sender = "Unknown"
+                }
+            }
+            
+            if let colorString = message.rawIntentOrTags["color"] {
+                if colorString.characters.count == 7 {
+                    message.senderDisplayColor = colorString
                 }
             }
             
@@ -202,10 +207,10 @@ class TwitchChatMessageQueue {
         //https://github.com/ircv3/ircv3-specifications/blob/master/core/message-tags-3.2.md#escaping-values
         
         return string.stringByReplacingOccurrencesOfString("\\:", withString: ";")
-                .stringByReplacingOccurrencesOfString("\\s", withString: "")
-                .stringByReplacingOccurrencesOfString("\\\\", withString: "\\")
-                .stringByReplacingOccurrencesOfString("\\r", withString: "\r")
-                .stringByReplacingOccurrencesOfString("\\n", withString: "\n")
+            .stringByReplacingOccurrencesOfString("\\s", withString: "")
+            .stringByReplacingOccurrencesOfString("\\\\", withString: "\\")
+            .stringByReplacingOccurrencesOfString("\\r", withString: "\r")
+            .stringByReplacingOccurrencesOfString("\\n", withString: "\n")
         
     }
     

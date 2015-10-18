@@ -54,6 +54,19 @@ class TwitchChatManager {
     }
     
     private func handleMsg(sender : String?, user : String?, host : String?, command : String?, intentOrTags : [String : String], parameters : [String]) -> () {
+        //parameters[0] is the channel
+        //parameters[1] is the message
+        guard let sender = sender as String! else {
+            return
+        }
+        
+        guard parameters.count == 2 else {
+            return
+        }
+        
+        let msg = TwitchChatMessage(rawMessage: parameters[1], rawSender: sender, intentOrTags: intentOrTags)
+        
+        messageQueue?.addNewMessage(msg)
         print("Recieved msg")
     }
     

@@ -6,11 +6,11 @@
 
 import Foundation
 
-class TwitchChatMessage {
+struct TwitchChatMessage {
     //Raw Data
     let rawSender : String
     let rawMessage : String
-    let rawMetadata : String
+    let rawIntentOrTags : [String : String]
     //Clean data
     var sender : String?
     var emotes = [String : [NSRange]]()
@@ -18,9 +18,9 @@ class TwitchChatMessage {
     //Processed message
     var completeMessage : NSAttributedString?
     
-    init(rawMessage : String, rawSender : String, metadata : String) {
+    init(rawMessage : String, rawSender : String, intentOrTags : [String : String]) {
         self.rawMessage = rawMessage
         self.rawSender = rawSender
-        self.rawMetadata = metadata
+        self.rawIntentOrTags = intentOrTags
     }
 }

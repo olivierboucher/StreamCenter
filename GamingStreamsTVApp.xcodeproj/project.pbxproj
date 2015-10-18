@@ -24,10 +24,9 @@
 		090AB9271BB579A300CDB05D /* ModalMenuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 090AB9261BB579A300CDB05D /* ModalMenuView.swift */; };
 		09199A1D1BBAC67F00B10543 /* LoadingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09199A1C1BBAC67F00B10543 /* LoadingViewController.swift */; };
 		09CE597F1BAE08B10054EB71 /* IRCHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09CE597E1BAE08B10054EB71 /* IRCHandler.swift */; };
-		09CE59821BAE15280054EB71 /* TwitchChatHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09CE59811BAE15280054EB71 /* TwitchChatHandler.swift */; };
 		09CE59861BAF55BD0054EB71 /* TwitchChatMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09CE59851BAF55BD0054EB71 /* TwitchChatMessage.swift */; };
 		09CE59881BAF55CE0054EB71 /* TwitchChatMessageQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09CE59871BAF55CE0054EB71 /* TwitchChatMessageQueue.swift */; };
-		09CE598A1BAF5F870054EB71 /* NSQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09CE59891BAF5F870054EB71 /* NSQueue.swift */; };
+		09CE598A1BAF5F870054EB71 /* Queue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09CE59891BAF5F870054EB71 /* Queue.swift */; };
 		09CE598C1BAF963C0054EB71 /* ConcurrencyHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09CE598B1BAF963C0054EB71 /* ConcurrencyHelpers.swift */; };
 		09D098251BA7666200E7E6FC /* TwitchStreamsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09D098241BA7666200E7E6FC /* TwitchStreamsViewController.swift */; };
 		09D098291BA77FAB00E7E6FC /* TwitchVideoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09D098281BA77FAB00E7E6FC /* TwitchVideoViewController.swift */; };
@@ -112,10 +111,9 @@
 		090AB9261BB579A300CDB05D /* ModalMenuView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ModalMenuView.swift; sourceTree = "<group>"; };
 		09199A1C1BBAC67F00B10543 /* LoadingViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoadingViewController.swift; sourceTree = "<group>"; };
 		09CE597E1BAE08B10054EB71 /* IRCHandler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IRCHandler.swift; sourceTree = "<group>"; };
-		09CE59811BAE15280054EB71 /* TwitchChatHandler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TwitchChatHandler.swift; sourceTree = "<group>"; };
 		09CE59851BAF55BD0054EB71 /* TwitchChatMessage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TwitchChatMessage.swift; sourceTree = "<group>"; };
 		09CE59871BAF55CE0054EB71 /* TwitchChatMessageQueue.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TwitchChatMessageQueue.swift; sourceTree = "<group>"; };
-		09CE59891BAF5F870054EB71 /* NSQueue.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NSQueue.swift; sourceTree = "<group>"; };
+		09CE59891BAF5F870054EB71 /* Queue.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Queue.swift; sourceTree = "<group>"; };
 		09CE598B1BAF963C0054EB71 /* ConcurrencyHelpers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConcurrencyHelpers.swift; sourceTree = "<group>"; };
 		09D098241BA7666200E7E6FC /* TwitchStreamsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TwitchStreamsViewController.swift; sourceTree = "<group>"; };
 		09D098281BA77FAB00E7E6FC /* TwitchVideoViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TwitchVideoViewController.swift; sourceTree = "<group>"; };
@@ -281,7 +279,7 @@
 				B4A2E6CE1BD01AEF0094AECA /* StreamCenterService.swift */,
 				09CE597E1BAE08B10054EB71 /* IRCHandler.swift */,
 				090AB8F31BA5DA1400CDB05D /* M3UParser.swift */,
-				09CE59891BAF5F870054EB71 /* NSQueue.swift */,
+				09CE59891BAF5F870054EB71 /* Queue.swift */,
 				09CE598B1BAF963C0054EB71 /* ConcurrencyHelpers.swift */,
 				09EB6D451BB4A8BE003EB244 /* CATextLayerVC.swift */,
 				B4D15C7B1BCDCBA2006FFB5D /* QRCodeGenerator.swift */,
@@ -297,7 +295,6 @@
 			children = (
 				09D6E7EE1BD3FD5100E88371 /* TwitchChatManager.swift */,
 				09D6E7F21BD401E700E88371 /* TwitchChatConsumer.swift */,
-				09CE59811BAE15280054EB71 /* TwitchChatHandler.swift */,
 				09CE59851BAF55BD0054EB71 /* TwitchChatMessage.swift */,
 				09CE59871BAF55CE0054EB71 /* TwitchChatMessageQueue.swift */,
 				090AB91A1BB3698800CDB05D /* Views */,
@@ -584,13 +581,12 @@
 				090AB9091BA8454500CDB05D /* TopBarView.swift in Sources */,
 				090AB90D1BA9B0F100CDB05D /* LoadingView.swift in Sources */,
 				B4D88D2E1BCF35E500C1DF87 /* HitboxStreamsViewController.swift in Sources */,
-				09CE59821BAE15280054EB71 /* TwitchChatHandler.swift in Sources */,
 				B4D88D2C1BCF35DD00C1DF87 /* HitboxGamesViewController.swift in Sources */,
 				09CE597F1BAE08B10054EB71 /* IRCHandler.swift in Sources */,
 				09CE59881BAF55CE0054EB71 /* TwitchChatMessageQueue.swift in Sources */,
 				090AB9241BB36BC100CDB05D /* TwitchChatMessageView.swift in Sources */,
 				090AB9001BA616A900CDB05D /* TwitchStream.swift in Sources */,
-				09CE598A1BAF5F870054EB71 /* NSQueue.swift in Sources */,
+				09CE598A1BAF5F870054EB71 /* Queue.swift in Sources */,
 				09EB6D3E1BB484F7003EB244 /* String.swift in Sources */,
 				B4D88D321BCF35F100C1DF87 /* HitboxAPI.swift in Sources */,
 				09D6E7ED1BD3FBCD00E88371 /* IRCConnectionDelegate.swift in Sources */,
