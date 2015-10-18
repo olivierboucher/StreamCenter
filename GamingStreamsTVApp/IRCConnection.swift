@@ -10,7 +10,6 @@ import Foundation
 import CocoaAsyncSocket
 
 
-
 class IRCConnection {
     
     enum ChatConnectionStatus {
@@ -20,28 +19,47 @@ class IRCConnection {
         case Connected
         case Suspended
     }
+    
+    //Constants
     private let PING_SERVER_INTERVAL : Double = 120
     private let QUEUE_WAIT_BEFORE_CONNECTED : Double = 120
     private let MAXIMUM_COMMAND_LENGHT : Int = 510
     private let END_CAPABILITY_TIMEOUT_DELAY : Double = 45
     
+    //GCD
     private var chatConnection : GCDAsyncSocket?
     private var connectionQueue : dispatch_queue_t
     private let sendQueueLock : dispatch_semaphore_t
+    
+    //Send queue
     private var sendQueue : [NSData]
+    private var sendQueueProcessing : Bool = false
+    private var queueWait : NSDate?
+    
+    //Connection state
     private var status : ChatConnectionStatus
-    private var credentials : IRCCredentials?
-    private var capabilities : IRCCapabilities?
+    private var connectedDate : NSDate?
     private var lastConnectAttempt : NSDate?
     private var lastCommand : NSDate?
-    private var queueWait : NSDate?
-    private var nextPingTimeInterval : NSDate?
-    private var server : String?
-    private var realServer : String?
-    private var sendQueueProcessing : Bool = false
-    private var connectedDate : NSDate?
+    
+    //Capability request state
+    private var capabilities : IRCCapabilities?
     private var sendEndCapabilityCommandAtTime : NSDate?
     private var sentEndCapabilityCommand : Bool = false
+    
+    //Ping - keep alive
+    private var nextPingTimeInterval : NSDate?
+    
+    //Credentials
+    private var credentials : IRCCredentials?
+    
+    //Server state
+    private var server : String?
+    private var realServer : String?
+    
+////////////////////////////////////////
+// MARK - Computed properties
+////////////////////////////////////////
     
     private var recentlyConnected : Bool {
         get {
@@ -70,6 +88,10 @@ class IRCConnection {
         }
     }
     
+////////////////////////////////////////
+// MARK - Lifecycle
+////////////////////////////////////////
+    
     init? () {
         let queueAttr = dispatch_queue_attr_make_with_qos_class(DISPATCH_QUEUE_SERIAL, QOS_CLASS_BACKGROUND, 0)
         connectionQueue = dispatch_queue_create("com.twitch.ircchatconnection", queueAttr)
@@ -77,6 +99,10 @@ class IRCConnection {
         sendQueue = [NSData]()
         sendQueueLock = dispatch_semaphore_create(1)
     }
+    
+////////////////////////////////////////
+// MARK - Public methods
+////////////////////////////////////////
     
     func connect(credentials : IRCCredentials, capabilities : IRCCapabilities) {
         if status != .Disconnected &&
@@ -90,10 +116,14 @@ class IRCConnection {
         queueWait = NSDate(timeIntervalSinceNow: QUEUE_WAIT_BEFORE_CONNECTED)
         
         willConnect()
-        _connect()
+        connect()
     }
     
-    private func _connect() {
+////////////////////////////////////////
+// MARK - Connection
+////////////////////////////////////////
+    
+    private func connect() {
         chatConnection = GCDAsyncSocket(delegate: self, delegateQueue: connectionQueue, socketQueue: connectionQueue)
         chatConnection?.IPv6Enabled = true
         chatConnection?.IPv4PreferredOverIPv6 = true
@@ -125,6 +155,10 @@ class IRCConnection {
         
     }
     
+////////////////////////////////////////
+// MARK - Send Queue
+////////////////////////////////////////
+    
     private func resetSendQueueInterval() {
         self.stopSendQueue()
         dispatch_semaphore_wait(sendQueueLock, DISPATCH_TIME_FOREVER)
@@ -142,7 +176,7 @@ class IRCConnection {
         let timeInterval = (queueWait != nil && queueWait!.timeIntervalSinceNow > 0) ? queueWait!.timeIntervalSinceNow : minimumSendQueueDelay
         let dispatchTime: dispatch_time_t = dispatch_time(DISPATCH_TIME_NOW, Int64(timeInterval * Double(NSEC_PER_SEC)))
         dispatch_after(dispatchTime, dispatch_get_main_queue(), {
-            self._sendQueue()
+            self.treatSendQueue()
         })
     }
     
@@ -150,7 +184,7 @@ class IRCConnection {
         sendQueueProcessing = false
     }
     
-    private func _sendQueue() {
+    private func treatSendQueue() {
         dispatch_semaphore_wait(sendQueueLock, DISPATCH_TIME_FOREVER)
         if (self.sendQueue.count <= 0){
             sendQueueProcessing = false
@@ -161,7 +195,7 @@ class IRCConnection {
         if queueWait != nil && queueWait?.timeIntervalSinceNow > 0 {
             let dispatchTime: dispatch_time_t = dispatch_time(DISPATCH_TIME_NOW, Int64(queueWait!.timeIntervalSinceNow * Double(NSEC_PER_SEC)))
             dispatch_after(dispatchTime, dispatch_get_main_queue(), {
-                self._sendQueue()
+                self.treatSendQueue()
             })
             return
         }
@@ -177,7 +211,7 @@ class IRCConnection {
             let dispatchTime: dispatch_time_t = dispatch_time(DISPATCH_TIME_NOW, Int64(delay * Double(NSEC_PER_SEC)))
             
             dispatch_after(dispatchTime, dispatch_get_main_queue(), {
-                self._sendQueue()
+                self.treatSendQueue()
             })
         }
         else {
@@ -189,6 +223,10 @@ class IRCConnection {
             self.writeDataToServer(data!)
         })
     }
+    
+////////////////////////////////////////
+// MARK - Outgoing data
+////////////////////////////////////////
     
     private func writeDataToServer(data : NSData) {
         // IRC messages are always lines of characters terminated with a CR-LF
@@ -225,42 +263,7 @@ class IRCConnection {
 //        [[NSNotificationCenter chatCenter] postNotificationOnMainThreadWithName:MVChatConnectionGotRawMessageNotification object:self userInfo:@{ @"message": [mutableString copy], @"messageData": data, @"outbound": @(YES) }];
 
     }
-
-    private func cancelScheduledSendEndCapabilityCommand() {
-        sendEndCapabilityCommandAtTime = nil
-    }
     
-    private func sendEndCapabilityCommandAfterTimeout() {
-        cancelScheduledSendEndCapabilityCommand()
-        
-        sendEndCapabilityCommandAtTime = NSDate(timeIntervalSinceReferenceDate: NSDate.timeIntervalSinceReferenceDate().advancedBy(END_CAPABILITY_TIMEOUT_DELAY))
-        
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, Int64((UInt64(END_CAPABILITY_TIMEOUT_DELAY) * NSEC_PER_SEC))), connectionQueue, {
-            self.sendEndCapabilityCommand(forcefully: false)
-        })
-        
-    }
-    
-    private func sendEndCapabilityCommandSoon() {
-        cancelScheduledSendEndCapabilityCommand()
-        
-        sendEndCapabilityCommandAtTime = NSDate(timeIntervalSinceReferenceDate: NSDate.timeIntervalSinceReferenceDate().advancedBy(1))
-        
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, Int64((UInt64(END_CAPABILITY_TIMEOUT_DELAY) * NSEC_PER_SEC))), connectionQueue, {
-            self.sendEndCapabilityCommand(forcefully: false)
-        })
-    }
-    
-    private func sendEndCapabilityCommand(forcefully force : Bool) {
-        if sentEndCapabilityCommand { return }
-        
-        if !force && sendEndCapabilityCommandAtTime == nil { return }
-        
-        sentEndCapabilityCommand = true
-        
-        sendStringMessage("CAP END", immedtiately: true)
-    }
-
     private func sendStringMessage(message : String, immedtiately now : Bool) {
         sendRawMessage(message.dataUsingEncoding(NSUTF8StringEncoding)!, immeditately: now)
     }
@@ -298,7 +301,50 @@ class IRCConnection {
             }
         }
     }
+
+////////////////////////////////////////
+// MARK - Capability requests
+////////////////////////////////////////
+
+    private func cancelScheduledSendEndCapabilityCommand() {
+        sendEndCapabilityCommandAtTime = nil
+    }
     
+    private func sendEndCapabilityCommandAfterTimeout() {
+        cancelScheduledSendEndCapabilityCommand()
+        
+        sendEndCapabilityCommandAtTime = NSDate(timeIntervalSinceReferenceDate: NSDate.timeIntervalSinceReferenceDate().advancedBy(END_CAPABILITY_TIMEOUT_DELAY))
+        
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, Int64((UInt64(END_CAPABILITY_TIMEOUT_DELAY) * NSEC_PER_SEC))), connectionQueue, {
+            self.sendEndCapabilityCommand(forcefully: false)
+        })
+        
+    }
+    
+    private func sendEndCapabilityCommandSoon() {
+        cancelScheduledSendEndCapabilityCommand()
+        
+        sendEndCapabilityCommandAtTime = NSDate(timeIntervalSinceReferenceDate: NSDate.timeIntervalSinceReferenceDate().advancedBy(1))
+        
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, Int64((UInt64(END_CAPABILITY_TIMEOUT_DELAY) * NSEC_PER_SEC))), connectionQueue, {
+            self.sendEndCapabilityCommand(forcefully: false)
+        })
+    }
+    
+    private func sendEndCapabilityCommand(forcefully force : Bool) {
+        if sentEndCapabilityCommand { return }
+        
+        if !force && sendEndCapabilityCommandAtTime == nil { return }
+        
+        sentEndCapabilityCommand = true
+        
+        sendStringMessage("CAP END", immedtiately: true)
+    }
+    
+////////////////////////////////////////
+// MARK - Pinging
+////////////////////////////////////////
+
     private func pingServer() {
         let server = realServer == nil ? self.server : realServer
         sendStringMessage("PING \(server)", immedtiately: true)
@@ -323,6 +369,10 @@ class IRCConnection {
             }
         })
     }
+    
+////////////////////////////////////////
+// MARK - Incoming data
+////////////////////////////////////////
 
     private func readNextMessageFromServer() {
         // IRC messages end in \x0D\x0A, but some non-compliant servers only use \x0A during the connecting phase
@@ -530,6 +580,10 @@ class IRCConnection {
 //        }
     }
 }
+
+////////////////////////////////////////
+// MARK - GCDAsyncSocketDelegate protocol
+////////////////////////////////////////
 
 extension IRCConnection : GCDAsyncSocketDelegate {
     @objc
