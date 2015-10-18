@@ -27,6 +27,13 @@ extension String {
             return self.substringWithRange(Range(start: subStart, end: subEnd))
         }
     }
+    subscript (i: Int) -> Character {
+        return self[self.startIndex.advancedBy(i)]
+    }
+    
+    subscript (i: Int) -> String {
+        return String(self[i] as Character)
+    }
     func substring(from: Int) -> String {
         let end = self.characters.count
         return self[from..<end]

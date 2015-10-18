@@ -380,75 +380,89 @@ class IRCConnection {
     }
     
     private func processIncomingMessage(data : NSData, fromServer : Bool) {
-//        - (void) _processIncomingMessage:(NSData *) data fromServer:(BOOL) fromServer {
-//            NSString *rawString = [self _newStringWithBytes:[data bytes] length:data.length];
-//            
-//            const char *line = (const char *)[data bytes];
-//            NSUInteger len = data.length;
-//            const char *end = line + len - 2; // minus the line endings
-//            
-//            if( *end != '\x0D' )
-//            end = line + len - 1; // this server only uses \x0A for the message line ending, lets work with it
-//            
-//            const char *sender = NULL;
-//            NSUInteger senderLength = 0;
-//            const char *user = NULL;
-//            NSUInteger userLength = 0;
-//            const char *host = NULL;
-//            NSUInteger hostLength = 0;
-//            const char *command = NULL;
-//            NSUInteger commandLength = 0;
-//            const char *intentOrTags = NULL;
-//            NSUInteger intentOrTagsLength = 0;
-//            
-//            NSMutableArray *parameters = [[NSMutableArray alloc] initWithCapacity:15];
-//            
-//            // Parsing as defined in 2.3.1 at http://www.irchelp.org/irchelp/rfc/rfc2812.txt
-//            // With support for IRCv3.2 extensions
-//            
-//            if( len <= 2 )
-//            goto end; // bad message
-//            
-//            #define checkAndMarkIfDone() if( line == end ) done = YES
-//            #define consumeWhitespace() while( *line == ' ' && line != end && ! done ) line++
-//            #define notEndOfLine() line != end && ! done
-//            
-//            BOOL done = NO;
-//            if( notEndOfLine() ) {
-//                if( *line == '@' ) {
-//                    intentOrTags = ++line;
-//                    // IRCv3.2
-//                    // @intent=ACTION;aaa=bbb;ccc;example.com/ddd=eee
-//                    while( notEndOfLine() && *line != ' ' ) line++;
-//                    intentOrTagsLength = (line - intentOrTags);
-//                    checkAndMarkIfDone();
-//                    consumeWhitespace();
-//                }
-//                
-//                if( notEndOfLine() && *line == ':' ) {
-//                    // prefix: ':' <sender> [ '!' <user> ] [ '@' <host> ] ' ' { ' ' }
-//                    sender = ++line;
-//                    while( notEndOfLine() && *line != ' ' && *line != '!' && *line != '@' ) line++;
-//                    senderLength = (line - sender);
-//                    checkAndMarkIfDone();
-//                    
-//                    if( ! done && *line == '!' ) {
-//                        user = ++line;
-//                        while( notEndOfLine() && *line != ' ' && *line != '@' ) line++;
-//                        userLength = (line - user);
-//                        checkAndMarkIfDone();
-//                    }
-//                    
-//                    if( ! done && *line == '@' ) {
-//                        host = ++line;
-//                        while( notEndOfLine() && *line != ' ' ) line++;
-//                        hostLength = (line - host);
-//                        checkAndMarkIfDone();
-//                    }
-//                    
-//                    if( ! done ) line++;
-//                    consumeWhitespace();
-//                }
+
+        if var messageString = String(data: data, encoding: NSUTF8StringEncoding) {
+            //TODO(Olivier): Check if line ending causes problems
+            //const char *line = (const char *)[data bytes];
+            //            NSUInteger len = data.length;
+            //            const char *end = line + len - 2; // minus the line endings
+            //
+            //            if( *end != '\x0D' )
+            //            end = line + len - 1; // this server only uses \x0A for the message line ending, lets work with it
+            var currentIndex = 0
+            let len = messageString.characters.count
+            var sender : String?
+            var user : String?
+            var host : String?
+            var command : String?
+            var intentOrTags : String?
+            var parameters = [String]()
+            
+            var done : Bool = false
+            
+            func checkAndMarkIfDone() { if currentIndex == len - 1 { done = true } }
+            func consumeWhitespace() { while(messageString[currentIndex] == " " && currentIndex != len - 1 && !done) { currentIndex++ } }
+            func notEndOfLine() -> Bool { return currentIndex != len - 1 && !done }
+            
+            if len > 2 {
+                if notEndOfLine() {
+                    if messageString[currentIndex] == "@" {
+                        let startIndex = currentIndex++
+                        while notEndOfLine() && messageString[currentIndex] != " " { currentIndex++ }
+                        let endIndex = currentIndex
+                        
+                        intentOrTags = messageString[startIndex...endIndex]
+                        checkAndMarkIfDone()
+                        consumeWhitespace()
+                    }
+                }
+                
+                if notEndOfLine() && messageString[currentIndex] == ":" {
+                    // prefix: ':' <sender> [ '!' <user> ] [ '@' <host> ] ' ' { ' ' }
+                    let senderStartIndex = currentIndex++
+                    while notEndOfLine() &&
+                        messageString[currentIndex] != " " &&
+                        messageString[currentIndex] != "!" &&
+                        messageString[currentIndex] != "@"
+                        { currentIndex++ }
+                    let senderEndIndex = currentIndex
+                    
+                    sender = messageString[senderStartIndex...senderEndIndex]
+                    checkAndMarkIfDone()
+                    
+                    if !done && messageString[currentIndex] != "!" {
+                        let userStartIndex = currentIndex++
+                        while notEndOfLine() &&
+                            messageString[currentIndex] != " " &&
+                            messageString[currentIndex] != "@"
+                            { currentIndex++ }
+                        let userEndIndex = currentIndex
+                        
+                        user = messageString[userStartIndex...userEndIndex]
+                        checkAndMarkIfDone()
+                    }
+                    
+                    if !done && messageString[currentIndex] != "@" {
+                        let hostStartIndex = currentIndex++
+                        while notEndOfLine() && messageString[currentIndex] != " " { currentIndex++ }
+                        let hostEndIndex = currentIndex
+                        
+                        host = messageString[hostStartIndex...hostEndIndex]
+                        checkAndMarkIfDone()
+                    }
+                    
+                    if !done { currentIndex++ }
+                    consumeWhitespace()
+                }
+                
+                
+                
+            }
+            else {
+                //Bad message
+            }
+        }
+        
 //                
 //                if( notEndOfLine() ) {
 //                    // command: <letter> { <letter> } | <number> <number> <number>
