@@ -37,6 +37,8 @@
 		09D6E7E41BD3065200E88371 /* NSData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09D6E7E31BD3065200E88371 /* NSData.swift */; };
 		09D6E7E71BD30E7D00E88371 /* IRCCredentials.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09D6E7E61BD30E7D00E88371 /* IRCCredentials.swift */; };
 		09D6E7E91BD30F1800E88371 /* IRCCapabilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09D6E7E81BD30F1800E88371 /* IRCCapabilities.swift */; };
+		09D6E7EB1BD3F8E900E88371 /* IRCCommandHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09D6E7EA1BD3F8E900E88371 /* IRCCommandHandler.swift */; };
+		09D6E7ED1BD3FBCD00E88371 /* IRCConnectionDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09D6E7EC1BD3FBCD00E88371 /* IRCConnectionDelegate.swift */; };
 		09E33CC91BB5B2DF000702E2 /* Dictionary.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09E33CC81BB5B2DF000702E2 /* Dictionary.swift */; };
 		09EB6D3E1BB484F7003EB244 /* String.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09EB6D3D1BB484F7003EB244 /* String.swift */; };
 		09EB6D461BB4A8BE003EB244 /* CATextLayerVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09EB6D451BB4A8BE003EB244 /* CATextLayerVC.swift */; };
@@ -124,6 +126,8 @@
 		09D6E7E31BD3065200E88371 /* NSData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NSData.swift; sourceTree = "<group>"; };
 		09D6E7E61BD30E7D00E88371 /* IRCCredentials.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IRCCredentials.swift; sourceTree = "<group>"; };
 		09D6E7E81BD30F1800E88371 /* IRCCapabilities.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IRCCapabilities.swift; sourceTree = "<group>"; };
+		09D6E7EA1BD3F8E900E88371 /* IRCCommandHandler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IRCCommandHandler.swift; sourceTree = "<group>"; };
+		09D6E7EC1BD3FBCD00E88371 /* IRCConnectionDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IRCConnectionDelegate.swift; sourceTree = "<group>"; };
 		09E33CC81BB5B2DF000702E2 /* Dictionary.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Dictionary.swift; sourceTree = "<group>"; };
 		09EB6D3D1BB484F7003EB244 /* String.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = String.swift; sourceTree = "<group>"; };
 		09EB6D451BB4A8BE003EB244 /* CATextLayerVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CATextLayerVC.swift; sourceTree = "<group>"; };
@@ -339,6 +343,8 @@
 				09D6E7E11BD2D25400E88371 /* IRCConnection.swift */,
 				09D6E7E61BD30E7D00E88371 /* IRCCredentials.swift */,
 				09D6E7E81BD30F1800E88371 /* IRCCapabilities.swift */,
+				09D6E7EA1BD3F8E900E88371 /* IRCCommandHandler.swift */,
+				09D6E7EC1BD3FBCD00E88371 /* IRCConnectionDelegate.swift */,
 			);
 			name = IRC;
 			sourceTree = "<group>";
@@ -581,10 +587,12 @@
 				09CE598A1BAF5F870054EB71 /* NSQueue.swift in Sources */,
 				09EB6D3E1BB484F7003EB244 /* String.swift in Sources */,
 				B4D88D321BCF35F100C1DF87 /* HitboxAPI.swift in Sources */,
+				09D6E7ED1BD3FBCD00E88371 /* IRCConnectionDelegate.swift in Sources */,
 				09EB6D461BB4A8BE003EB244 /* CATextLayerVC.swift in Sources */,
 				09D6E7E71BD30E7D00E88371 /* IRCCredentials.swift in Sources */,
 				09199A1D1BBAC67F00B10543 /* LoadingViewController.swift in Sources */,
 				09D6E7E21BD2D25400E88371 /* IRCConnection.swift in Sources */,
+				09D6E7EB1BD3F8E900E88371 /* IRCCommandHandler.swift in Sources */,
 				090AB9221BB3699700CDB05D /* TwitchChatView.swift in Sources */,
 				B4A67BBE1BCBE4CB003E3B6F /* TwitchSearchResultsViewController.swift in Sources */,
 				09D6E7E41BD3065200E88371 /* NSData.swift in Sources */,

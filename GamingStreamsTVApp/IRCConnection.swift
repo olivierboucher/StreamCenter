@@ -41,6 +41,7 @@ class IRCConnection {
     private var connectedDate : NSDate?
     private var lastConnectAttempt : NSDate?
     private var lastCommand : NSDate?
+    private var lastError : NSError?
     
     //Capability request state
     private var capabilities : IRCCapabilities?
@@ -56,6 +57,12 @@ class IRCConnection {
     //Server state
     private var server : String?
     private var realServer : String?
+    
+    //Commands
+    var commandHandlers = [String : IRCCommandHandler]()
+    
+    //Delegate
+    let delegate : IRCConnectionDelegate
     
 ////////////////////////////////////////
 // MARK - Computed properties
@@ -92,12 +99,13 @@ class IRCConnection {
 // MARK - Lifecycle
 ////////////////////////////////////////
     
-    init? () {
+    init (delegate : IRCConnectionDelegate) {
         let queueAttr = dispatch_queue_attr_make_with_qos_class(DISPATCH_QUEUE_SERIAL, QOS_CLASS_BACKGROUND, 0)
         connectionQueue = dispatch_queue_create("com.twitch.ircchatconnection", queueAttr)
         status = .Disconnected
         sendQueue = [NSData]()
         sendQueueLock = dispatch_semaphore_create(1)
+        self.delegate = delegate
     }
     
 ////////////////////////////////////////
@@ -114,8 +122,7 @@ class IRCConnection {
         self.capabilities = capabilities
         lastConnectAttempt = NSDate()
         queueWait = NSDate(timeIntervalSinceNow: QUEUE_WAIT_BEFORE_CONNECTED)
-        
-        willConnect()
+
         connect()
     }
     
@@ -139,20 +146,16 @@ class IRCConnection {
         }
     }
     
-    private func willConnect() {
-//        MVAssertMainThreadRequired();
-//        MVSafeAdoptAssign( _lastError, nil );
-//        
-//        _nextAltNickIndex = 0;
-//        _status = MVChatConnectionConnectingStatus;
-//        
-//        [[self localUser] _setIdentified:NO];
-//        
-//        [[NSNotificationCenter chatCenter] postNotificationName:MVChatConnectionWillConnectNotification object:self];
+    private func didConnect() {
+        delegate.IRCConnectionDidConnect()
     }
     
     private func didNotConnect() {
-        
+        delegate.IRCConnectionDidNotConnect()
+    }
+    
+    private func didDisconnect() {
+        delegate.IRCConnectionDidDisconnect()
     }
     
 ////////////////////////////////////////
@@ -455,143 +458,69 @@ class IRCConnection {
                     consumeWhitespace()
                 }
                 
+                if notEndOfLine() {
+                    // command: <letter> { <letter> } | <number> <number> <number>
+                    // letter: 'a' ... 'z' | 'A' ... 'Z'
+                    // number: '0' ... '9'
+                    let cmdStartIndex = currentIndex
+                    while notEndOfLine() && messageString[currentIndex] != " " { currentIndex++ }
+                    let cmdEndIndex = currentIndex
+                    
+                    command = messageString[cmdStartIndex...cmdEndIndex]
+                    
+                    checkAndMarkIfDone()
+                    if !done { currentIndex++ }
+                    consumeWhitespace()
+                }
                 
+                while notEndOfLine() {
+                    // params: [ ':' <trailing data> | <letter> { <letter> } ] [ ' ' { ' ' } ] [ <params> ]
+                    var currentParameter : String?
+                    
+                    if messageString[currentIndex] == ":" {
+                        let currentParamStartIndex = currentIndex++
+                        
+                        currentParameter = messageString[currentParamStartIndex...len - 1]
+                    }
+                    else {
+                        let currentParamStartIndex = currentIndex
+                        while notEndOfLine() && messageString[currentIndex] != " " { currentIndex++ }
+                        let currentParamEndIndex = currentIndex
+                        
+                        currentParameter = messageString[currentParamStartIndex...currentParamEndIndex]
+                        
+                        checkAndMarkIfDone()
+                        if !done { currentIndex++ }
+                    }
+                    
+                    if let param = currentParameter as String! {
+                        parameters.append(param)
+                    }
+                    
+                    consumeWhitespace()
+                }
+            }
+            
+            var intentOrTagDict = [String : String]()
+            
+            for anItentOrTag in intentOrTags!.componentsSeparatedByString(";") {
+                let intentOrTagPair = anItentOrTag.componentsSeparatedByString("=")
                 
+                if intentOrTagPair.count != 2 { continue }
+                
+                intentOrTagDict[intentOrTagPair[0]] = intentOrTagPair[1]
             }
-            else {
-                //Bad message
+            //[[NSNotificationCenter chatCenter] postNotificationOnMainThreadWithName:MVChatConnectionGotRawMessageNotification object:self userInfo:@{ @"message": rawString, @"messageData": data, @"sender": (senderString ?: @""), @"command": (commandString ?: @""), @"parameters": parameters, @"outbound": @(NO), @"fromServer": @(fromServer), @"message-tags": intentOrTagsDictionary }]
+            
+            if let handler = commandHandlers[command!] {
+                handler.handleCommand(sender, user: user, host: host, command: command, intentOrTags: intentOrTagDict, parameters: parameters)
             }
+            
+            pingServerAfterInterval()
         }
-        
-//                
-//                if( notEndOfLine() ) {
-//                    // command: <letter> { <letter> } | <number> <number> <number>
-//                    // letter: 'a' ... 'z' | 'A' ... 'Z'
-//                    // number: '0' ... '9'
-//                    command = line;
-//                    while( notEndOfLine() && *line != ' ' ) line++;
-//                    commandLength = (line - command);
-//                    checkAndMarkIfDone();
-//                    
-//                    if( ! done ) line++;
-//                    consumeWhitespace();
-//                }
-//                
-//                while( notEndOfLine() ) {
-//                    // params: [ ':' <trailing data> | <letter> { <letter> } ] [ ' ' { ' ' } ] [ <params> ]
-//                    const char *currentParameter = NULL;
-//                    id param = nil;
-//                    if( *line == ':' ) {
-//                        currentParameter = ++line;
-//                        param = [[NSMutableData alloc] initWithBytes:currentParameter length:(end - currentParameter)];
-//                        done = YES;
-//                    } else {
-//                        currentParameter = line;
-//                        while( notEndOfLine() && *line != ' ' ) line++;
-//                        param = [self _newStringWithBytes:currentParameter length:(line - currentParameter)];
-//                        checkAndMarkIfDone();
-//                        if( ! done ) line++;
-//                    }
-//                    
-//                    if( param ) [parameters addObject:param];
-//                    
-//                    consumeWhitespace();
-//                }
-//            }
-//            
-//            #undef checkAndMarkIfDone
-//            #undef consumeWhitespace
-//            #undef notEndOfLine
-//            
-//            end:
-//            {
-//                NSString *senderString = [self _newStringWithBytes:sender length:senderLength];
-//                NSString *commandString = ((command && commandLength) ? [[NSString alloc] initWithBytes:command length:commandLength encoding:NSASCIIStringEncoding] : nil);
-//                
-//                NSString *intentOrTagsString = [self _newStringWithBytes:intentOrTags length:intentOrTagsLength];
-//                NSMutableDictionary *intentOrTagsDictionary = [NSMutableDictionary dictionary];
-//                for( NSString *anIntentOrTag in [intentOrTagsString componentsSeparatedByString:@";"] ) {
-//                    NSArray *intentOrTagPair = [anIntentOrTag componentsSeparatedByString:@"="];
-//                    if (intentOrTagPair.count != 2) continue;
-//                    intentOrTagsDictionary[intentOrTagPair[0]] = intentOrTagPair[1];
-//                }
-//                
-//                [[NSNotificationCenter chatCenter] postNotificationOnMainThreadWithName:MVChatConnectionGotRawMessageNotification object:self userInfo:@{ @"message": rawString, @"messageData": data, @"sender": (senderString ?: @""), @"command": (commandString ?: @""), @"parameters": parameters, @"outbound": @(NO), @"fromServer": @(fromServer), @"message-tags": intentOrTagsDictionary }];
-//                
-//                BOOL hasTagsToSend = !!intentOrTagsDictionary.allKeys.count;
-//                NSString *selectorString = nil;
-//                SEL selector = NULL;
-//                if( hasTagsToSend ) {
-//                    selectorString = [[NSString alloc] initWithFormat:@"_handle%@WithParameters:tags:fromSender:", (commandString ? [commandString capitalizedString] : @"Unknown")];
-//                    selector = NSSelectorFromString(selectorString);
-//                    
-//                    NSString *timestampString = intentOrTagsDictionary[@"time"];
-//                    if (timestampString.length) {
-//                        // threadsafe as of iOS 7
-//                        NSDateFormatter *dateFormatter = [NSThread currentThread].threadDictionary[@"IRCv32ServerTimeDateFormatter"];
-//                        if (!dateFormatter) {
-//                            dateFormatter = [[NSDateFormatter alloc] init];
-//                            dateFormatter.locale = [NSLocale localeWithLocaleIdentifier:@"en_US_POSIX"];
-//                            dateFormatter.dateFormat = @"yyyy-MM-dd'T'HH:mm:ss.SSSZ";
-//                            
-//                            [NSThread currentThread].threadDictionary[@"IRCv32ServerTimeDateFormatter"] = dateFormatter;
-//                        }
-//                        
-//                        NSDate *timestamp = [dateFormatter dateFromString:timestampString];
-//                        if (timestamp)
-//                        intentOrTagsDictionary[@"time"] = timestamp;
-//                        else [intentOrTagsDictionary removeObjectForKey:@"time"]; // failed to convert string to date, drop any invalid data
-//                    }
-//                }
-//                
-//                if( selector == NULL || ![self respondsToSelector:selector] ) {
-//                    selectorString = [[NSString alloc] initWithFormat:@"_handle%@WithParameters:fromSender:", (commandString ? [commandString capitalizedString] : @"Unknown")];
-//                    selector = NSSelectorFromString(selectorString);
-//                    hasTagsToSend = NO; // if we don't support sending tags to the command or numeric, pretend we don't have tags to send
-//                }
-//                
-//                if( [self respondsToSelector:selector] ) {
-//                    MVChatUser *chatUser = nil;
-//                    // if user is not null that shows it was a user not a server sender.
-//                    // the sender was also a user if senderString equals the current local nickname (some bouncers will do this).
-//                    if( ( senderString.length && user && userLength ) || [senderString isEqualToString:_currentNickname] ) {
-//                        chatUser = [self chatUserWithUniqueIdentifier:senderString];
-//                        if( ! [chatUser address] && host && hostLength ) {
-//                            NSString *hostString = [self _newStringWithBytes:host length:hostLength];
-//                            [chatUser _setAddress:hostString];
-//                        }
-//                        
-//                        if( ! [chatUser username] ) {
-//                            NSString *userString = [self _newStringWithBytes:user length:userLength];
-//                            [chatUser _setUsername:userString];
-//                        }
-//                    }
-//                    
-//                    id chatSender = ( chatUser ? (id) chatUser : (id) senderString );
-//                    
-//                    @try {
-//                        if( hasTagsToSend ) {
-//                            NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:[self methodSignatureForSelector:selector]];
-//                            invocation.target = self;
-//                            invocation.selector = selector;
-//                            [invocation setArgument:&parameters atIndex:2];
-//                            [invocation setArgument:&intentOrTagsDictionary atIndex:3];
-//                            [invocation setArgument:&chatSender atIndex:4];
-//                            [invocation invoke];
-//                        } else {
-//                            #pragma clang diagnostic push
-//                            #pragma clang diagnostic ignored "-Warc-performSelector-leaks"
-//                            [self performSelector:selector withObject:parameters withObject:chatSender];
-//                            #pragma clang diagnostic pop
-//                        }
-//                    } @catch (NSException *e) {
-//                        NSLog(@"Exception handling command %@: %@", NSStringFromSelector(selector), e);
-//                    }
-//                }
-//                
-//                [self _pingServerAfterInterval];
-//            }
-//        }
+        else {
+            //Could not convert data to utf8 string
+        }
     }
 }
 
@@ -617,6 +546,10 @@ extension IRCConnection : GCDAsyncSocketDelegate {
         sendStringMessage("NICK \(credentials?.nick)", immedtiately: true)
         //TODO(Olivier): In with twitch we don't deal with the USER ... command. Implement it if necessary
         //[self sendRawMessageImmediatelyWithFormat:@"USER %@ 0 * :%@", username, ( _realName.length ? _realName : @"Anonymous User" )];
+        
+        dispatch_async(dispatch_get_main_queue(), {
+            self.didConnect()
+        })
 
         pingServerAfterInterval()
 
@@ -632,5 +565,32 @@ extension IRCConnection : GCDAsyncSocketDelegate {
     @objc
     func socketDidDisconnect(sock: GCDAsyncSocket!, withError err: NSError!) {
         
+        if sock != chatConnection { return }
+        
+        lastError = err
+        
+        dispatch_async(dispatch_get_main_queue(), {
+            self.stopSendQueue()
+        })
+        
+        dispatch_semaphore_wait(sendQueueLock, DISPATCH_TIME_FOREVER)
+        self.sendQueue.removeAll()
+        dispatch_semaphore_signal(sendQueueLock)
+        
+        if status == .Connecting {
+            if lastError == nil {
+                dispatch_async(dispatch_get_main_queue(), {
+                    self.didNotConnect()
+                })
+            }
+        }
+        else {
+            if lastError != nil && status != .Disconnected {
+                status = .Disconnected
+                dispatch_async(dispatch_get_main_queue(), {
+                    self.didDisconnect()
+                })
+            }
+        }
     }
 }
