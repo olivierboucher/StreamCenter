@@ -25,10 +25,13 @@ class IRCCapabilities {
     
     func getIRCCommandString() -> String? {
         if capabilities.count > 0 {
-            var cmd = "CAP REQ : "
+            var cmd = "CAP REQ :"
         
-            for cap in capabilities {
-                cmd += cap
+            for i in 0..<capabilities.count {
+                cmd += capabilities[i]
+                if i != capabilities.count - 1 {
+                    cmd += " "
+                }
             }
         
             return cmd

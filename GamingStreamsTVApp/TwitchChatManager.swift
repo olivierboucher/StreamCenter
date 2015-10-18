@@ -38,20 +38,27 @@ class TwitchChatManager {
         connection!.connect(IRCEndpoint(host: "irc.twitch.tv", port: 6667), credentials: credentials!, capabilities: capabilities)
     }
     
+    func joinTwitchChannel(channel : TwitchChannel) {
+        let dispatchTime: dispatch_time_t = dispatch_time(DISPATCH_TIME_NOW, Int64(3 * Double(NSEC_PER_SEC)))
+        dispatch_after(dispatchTime, dispatch_get_main_queue(), {
+            connection?.sendStringMessage("JOIN #\(channel.name)", immedtiately: true)
+        })
+    }
+    
 /////////////////////////////////////////
 // MARK - Command handlers
 /////////////////////////////////////////
     
     private func handlePing(sender : String?, user : String?, host : String?, command : String?, intentOrTags : [String : String], parameters : [String]) -> () {
-        
+        print("Recieved ping")
     }
     
     private func handleMsg(sender : String?, user : String?, host : String?, command : String?, intentOrTags : [String : String], parameters : [String]) -> () {
-        
+        print("Recieved msg")
     }
     
     private func handle433(sender : String?, user : String?, host : String?, command : String?, intentOrTags : [String : String], parameters : [String]) -> () {
-        
+        print("Recieved 433")
     }
 }
 
@@ -81,12 +88,12 @@ extension TwitchChatManager : TwitchChatMessageQueueDelegate {
 
 extension TwitchChatManager : IRCConnectionDelegate {
     func IRCConnectionDidConnect() {
-        
+        print("DID CONNECT")
     }
     func IRCConnectionDidDisconnect() {
-        
+        print("DID DISCONNECT")
     }
     func IRCConnectionDidNotConnect() {
-        
+        print("DID NOT CONNECT")
     }
 }

@@ -8,9 +8,9 @@ import UIKit
 import Foundation
 
 
-class TwitchChatView : UIView, TwitchChatHandlerConsumer {
+class TwitchChatView : UIView, TwitchChatConsumer {
     let channel : TwitchChannel!
-    let chatHandler = TwitchChatHandler()
+    var chatMgr : TwitchChatManager? = nil
     var shouldConsume = false
     var messageViews = [TwitchChatMessageView]()
     
@@ -19,7 +19,7 @@ class TwitchChatView : UIView, TwitchChatHandlerConsumer {
         self.channel = channel
         super.init(frame: frame)
         
-        self.chatHandler.consumer = self
+        self.chatMgr = TwitchChatManager(consumer: self)
         
         self.backgroundColor = "#2E2E2E".toUIColorFromHex()
         
@@ -47,21 +47,21 @@ class TwitchChatView : UIView, TwitchChatHandlerConsumer {
     
     required init?(coder aDecoder: NSCoder) {
         self.channel = nil
+        self.chatMgr = nil
         super.init(coder: aDecoder)
     }
     
     
     func startDisplayingMessages() {
         self.shouldConsume = true
-        self.chatHandler.anonymousConnect()
-        self.chatHandler.startLoop()
-        self.chatHandler.joinTwitchChannel(self.channel)
+        self.chatMgr!.connectAnonymously()
+        self.chatMgr!.joinTwitchChannel(self.channel)
     }
     
     func stopDisplayingMessages() {
         self.shouldConsume = false
-        self.chatHandler.stopLoop()
-        self.chatHandler.disconnect()
+        //self.chatHandler.stopLoop()
+        //self.chatHandler.disconnect()
     }
     
     func messageReadyForDisplay(message: TwitchChatMessage) {

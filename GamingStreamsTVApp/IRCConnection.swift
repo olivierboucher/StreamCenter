@@ -149,6 +149,10 @@ class IRCConnection {
     }
     
     private func didConnect() {
+        status = .Connected
+        connectedDate = NSDate()
+        queueWait = NSDate(timeIntervalSinceNow: 0.5)
+        resetSendQueueInterval()
         delegate.IRCConnectionDidConnect()
     }
     
@@ -261,6 +265,8 @@ class IRCConnection {
         }
         
         chatConnection!.writeData(vdata, withTimeout: -1, tag: 0)
+        
+        //print("WROTE: \(String(data: vdata, encoding: NSUTF8StringEncoding))")
 //        
 //        NSMutableString *mutableString = [string mutableCopy];
 //        [mutableString replaceOccurrencesOfRegex:@"(^PASS |^AUTHENTICATE (?!\\+$|PLAIN$)|IDENTIFY (?:[^ ]+ )?|(?:LOGIN|AUTH|JOIN) [^ ]+ )[^ ]+$" withString:@"$1********" options:NSRegularExpressionCaseInsensitive range:NSMakeRange(0, string.length) error:NULL];
@@ -269,11 +275,12 @@ class IRCConnection {
 
     }
     
-    private func sendStringMessage(message : String, immedtiately now : Bool) {
+    func sendStringMessage(message : String, immedtiately now : Bool) {
         sendRawMessage(message.dataUsingEncoding(NSUTF8StringEncoding)!, immeditately: now)
     }
     
-    private func sendRawMessage(raw : NSData, immeditately now : Bool) {
+    func sendRawMessage(raw : NSData, immeditately now : Bool) {
+        //print("QUEING: \(String(data: raw, encoding: NSUTF8StringEncoding)!)")
         var nnow = now
         if !nnow {
             dispatch_semaphore_wait(sendQueueLock, DISPATCH_TIME_FOREVER)
@@ -282,6 +289,7 @@ class IRCConnection {
         }
         
         if nnow {
+            //print("Queue wait time internal since now: \(queueWait!.timeIntervalSinceNow)")
             nnow = queueWait == nil || queueWait!.timeIntervalSinceNow <= 0
         }
         if nnow {
@@ -412,11 +420,12 @@ class IRCConnection {
             if len > 2 {
                 if notEndOfLine() {
                     if messageString[currentIndex] == "@" {
-                        let startIndex = currentIndex++
+                        currentIndex++
+                        let startIndex = currentIndex
                         while notEndOfLine() && messageString[currentIndex] != " " { currentIndex++ }
                         let endIndex = currentIndex
                         
-                        intentOrTags = messageString[startIndex...endIndex]
+                        intentOrTags = messageString[startIndex...endIndex-1]
                         checkAndMarkIfDone()
                         consumeWhitespace()
                     }
@@ -424,7 +433,8 @@ class IRCConnection {
                 
                 if notEndOfLine() && messageString[currentIndex] == ":" {
                     // prefix: ':' <sender> [ '!' <user> ] [ '@' <host> ] ' ' { ' ' }
-                    let senderStartIndex = currentIndex++
+                    currentIndex++
+                    let senderStartIndex = currentIndex
                     while notEndOfLine() &&
                         messageString[currentIndex] != " " &&
                         messageString[currentIndex] != "!" &&
@@ -432,27 +442,29 @@ class IRCConnection {
                         { currentIndex++ }
                     let senderEndIndex = currentIndex
                     
-                    sender = messageString[senderStartIndex...senderEndIndex]
+                    sender = messageString[senderStartIndex...senderEndIndex-1]
                     checkAndMarkIfDone()
                     
                     if !done && messageString[currentIndex] != "!" {
-                        let userStartIndex = currentIndex++
+                        currentIndex++
+                        let userStartIndex = currentIndex
                         while notEndOfLine() &&
                             messageString[currentIndex] != " " &&
                             messageString[currentIndex] != "@"
                             { currentIndex++ }
                         let userEndIndex = currentIndex
                         
-                        user = messageString[userStartIndex...userEndIndex]
+                        user = messageString[userStartIndex...userEndIndex-1]
                         checkAndMarkIfDone()
                     }
                     
                     if !done && messageString[currentIndex] != "@" {
-                        let hostStartIndex = currentIndex++
+                        currentIndex++
+                        let hostStartIndex = currentIndex
                         while notEndOfLine() && messageString[currentIndex] != " " { currentIndex++ }
                         let hostEndIndex = currentIndex
                         
-                        host = messageString[hostStartIndex...hostEndIndex]
+                        host = messageString[hostStartIndex...hostEndIndex-1]
                         checkAndMarkIfDone()
                     }
                     
@@ -468,7 +480,7 @@ class IRCConnection {
                     while notEndOfLine() && messageString[currentIndex] != " " { currentIndex++ }
                     let cmdEndIndex = currentIndex
                     
-                    command = messageString[cmdStartIndex...cmdEndIndex]
+                    command = messageString[cmdStartIndex...cmdEndIndex-1]
                     
                     checkAndMarkIfDone()
                     if !done { currentIndex++ }
@@ -480,16 +492,18 @@ class IRCConnection {
                     var currentParameter : String?
                     
                     if messageString[currentIndex] == ":" {
-                        let currentParamStartIndex = currentIndex++
+                        currentIndex++
+                        let currentParamStartIndex = currentIndex
                         
                         currentParameter = messageString[currentParamStartIndex...len - 1]
+                        currentIndex = len - 1
                     }
                     else {
                         let currentParamStartIndex = currentIndex
                         while notEndOfLine() && messageString[currentIndex] != " " { currentIndex++ }
                         let currentParamEndIndex = currentIndex
                         
-                        currentParameter = messageString[currentParamStartIndex...currentParamEndIndex]
+                        currentParameter = messageString[currentParamStartIndex...currentParamEndIndex-1]
                         
                         checkAndMarkIfDone()
                         if !done { currentIndex++ }
@@ -505,13 +519,16 @@ class IRCConnection {
             
             var intentOrTagDict = [String : String]()
             
-            for anItentOrTag in intentOrTags!.componentsSeparatedByString(";") {
-                let intentOrTagPair = anItentOrTag.componentsSeparatedByString("=")
-                
-                if intentOrTagPair.count != 2 { continue }
-                
-                intentOrTagDict[intentOrTagPair[0]] = intentOrTagPair[1]
+            if let intentOrTags = intentOrTags as String! {
+                for anItentOrTag in intentOrTags.componentsSeparatedByString(";") {
+                    let intentOrTagPair = anItentOrTag.componentsSeparatedByString("=")
+                    
+                    if intentOrTagPair.count != 2 { continue }
+                    
+                    intentOrTagDict[intentOrTagPair[0]] = intentOrTagPair[1]
+                }
             }
+            
             //[[NSNotificationCenter chatCenter] postNotificationOnMainThreadWithName:MVChatConnectionGotRawMessageNotification object:self userInfo:@{ @"message": rawString, @"messageData": data, @"sender": (senderString ?: @""), @"command": (commandString ?: @""), @"parameters": parameters, @"outbound": @(NO), @"fromServer": @(fromServer), @"message-tags": intentOrTagsDictionary }]
             
             if let handler = commandHandlers[command!] {
@@ -534,20 +551,22 @@ extension IRCConnection : GCDAsyncSocketDelegate {
     @objc
     func socket(sock: GCDAsyncSocket!, didConnectToHost host: String!, port: UInt16) {
 
+        
+        
+        if credentials?.password?.characters.count > 0 {
+            sendStringMessage("PASS \(credentials!.password!)", immedtiately: true)
+        }
+        
+        sendStringMessage("NICK \(credentials!.nick)", immedtiately: true)
+        //TODO(Olivier): In with twitch we don't deal with the USER ... command. Implement it if necessary
+        //[self sendRawMessageImmediatelyWithFormat:@"USER %@ 0 * :%@", username, ( _realName.length ? _realName : @"Anonymous User" )];
+        
         sendEndCapabilityCommandAfterTimeout()
         
         let capabilitiesCommand = capabilities!.getIRCCommandString()
         if let cmd = capabilitiesCommand as String! {
             sendStringMessage(cmd, immedtiately: true)
         }
-        
-        if credentials?.password?.characters.count > 0 {
-            sendStringMessage("PASS \(credentials?.password)", immedtiately: true)
-        }
-        
-        sendStringMessage("NICK \(credentials?.nick)", immedtiately: true)
-        //TODO(Olivier): In with twitch we don't deal with the USER ... command. Implement it if necessary
-        //[self sendRawMessageImmediatelyWithFormat:@"USER %@ 0 * :%@", username, ( _realName.length ? _realName : @"Anonymous User" )];
         
         dispatch_async(dispatch_get_main_queue(), {
             self.didConnect()
@@ -560,6 +579,7 @@ extension IRCConnection : GCDAsyncSocketDelegate {
     
     @objc
     func socket(sock: GCDAsyncSocket!, didReadData data: NSData!, withTag tag: Int) {
+        //print("READ: \(String(data: data, encoding: NSUTF8StringEncoding))")
         processIncomingMessage(data, fromServer: true)
         readNextMessageFromServer()
     }
