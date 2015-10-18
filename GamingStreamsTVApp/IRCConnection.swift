@@ -20,9 +20,10 @@ class IRCConnection {
         case Connected
         case Suspended
     }
-    
+    private let PING_SERVER_INTERVAL : Double = 120
     private let QUEUE_WAIT_BEFORE_CONNECTED : Double = 120
     private let MAXIMUM_COMMAND_LENGHT : Int = 510
+    private let END_CAPABILITY_TIMEOUT_DELAY : Double = 45
     
     private var chatConnection : GCDAsyncSocket?
     private var connectionQueue : dispatch_queue_t
@@ -34,8 +35,13 @@ class IRCConnection {
     private var lastConnectAttempt : NSDate?
     private var lastCommand : NSDate?
     private var queueWait : NSDate?
+    private var nextPingTimeInterval : NSDate?
+    private var server : String?
+    private var realServer : String?
     private var sendQueueProcessing : Bool = false
     private var connectedDate : NSDate?
+    private var sendEndCapabilityCommandAtTime : NSDate?
+    private var sentEndCapabilityCommand : Bool = false
     
     private var recentlyConnected : Bool {
         get {
@@ -220,48 +226,46 @@ class IRCConnection {
 
     }
 
-//    - (void) _cancelScheduledSendEndCapabilityCommand {
-//    _sendEndCapabilityCommandAtTime = 0.;
-//    }
-//    
-//    - (void) _sendEndCapabilityCommandAfterTimeout {
-//    [self _cancelScheduledSendEndCapabilityCommand];
-//    
-//    _sendEndCapabilityCommandAtTime = [NSDate timeIntervalSinceReferenceDate] + JVEndCapabilityTimeoutDelay;
-//    
-//    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(JVEndCapabilityTimeoutDelay * NSEC_PER_SEC)), _connectionQueue, ^{
-//    [self _sendEndCapabilityCommandForcefully:NO];
-//    });
-//    }
-//    
-//    - (void) _sendEndCapabilityCommandSoon {
-//    [self _cancelScheduledSendEndCapabilityCommand];
-//    
-//    _sendEndCapabilityCommandAtTime = [NSDate timeIntervalSinceReferenceDate] + 1.;
-//    
-//    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1. * NSEC_PER_SEC)), _connectionQueue, ^{
-//    [self _sendEndCapabilityCommandForcefully:NO];
-//    });
-//    }
-//    
-//    - (void) _sendEndCapabilityCommandForcefully:(BOOL) forcefully {
-//    if( _sentEndCapabilityCommand )
-//    return;
-//    
-//    if( !forcefully && (!_sendEndCapabilityCommandAtTime || [NSDate timeIntervalSinceReferenceDate] < _sendEndCapabilityCommandAtTime))
-//    return;
-//    
-//    [self _cancelScheduledSendEndCapabilityCommand];
-//    
-//    _sentEndCapabilityCommand = YES;
-//    
-//    [self sendRawMessageImmediatelyWithFormat:@"CAP END"];
-//    }
-    func sendStringMessage(message : String, immedtiately now : Bool) {
+    private func cancelScheduledSendEndCapabilityCommand() {
+        sendEndCapabilityCommandAtTime = nil
+    }
+    
+    private func sendEndCapabilityCommandAfterTimeout() {
+        cancelScheduledSendEndCapabilityCommand()
+        
+        sendEndCapabilityCommandAtTime = NSDate(timeIntervalSinceReferenceDate: NSDate.timeIntervalSinceReferenceDate().advancedBy(END_CAPABILITY_TIMEOUT_DELAY))
+        
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, Int64((UInt64(END_CAPABILITY_TIMEOUT_DELAY) * NSEC_PER_SEC))), connectionQueue, {
+            self.sendEndCapabilityCommand(forcefully: false)
+        })
+        
+    }
+    
+    private func sendEndCapabilityCommandSoon() {
+        cancelScheduledSendEndCapabilityCommand()
+        
+        sendEndCapabilityCommandAtTime = NSDate(timeIntervalSinceReferenceDate: NSDate.timeIntervalSinceReferenceDate().advancedBy(1))
+        
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, Int64((UInt64(END_CAPABILITY_TIMEOUT_DELAY) * NSEC_PER_SEC))), connectionQueue, {
+            self.sendEndCapabilityCommand(forcefully: false)
+        })
+    }
+    
+    private func sendEndCapabilityCommand(forcefully force : Bool) {
+        if sentEndCapabilityCommand { return }
+        
+        if !force && sendEndCapabilityCommandAtTime == nil { return }
+        
+        sentEndCapabilityCommand = true
+        
+        sendStringMessage("CAP END", immedtiately: true)
+    }
+
+    private func sendStringMessage(message : String, immedtiately now : Bool) {
         sendRawMessage(message.dataUsingEncoding(NSUTF8StringEncoding)!, immeditately: now)
     }
     
-    func sendRawMessage(raw : NSData, immeditately now : Bool) {
+    private func sendRawMessage(raw : NSData, immeditately now : Bool) {
         var nnow = now
         if !nnow {
             dispatch_semaphore_wait(sendQueueLock, DISPATCH_TIME_FOREVER)
@@ -294,15 +298,245 @@ class IRCConnection {
             }
         }
     }
+    
+    private func pingServer() {
+        let server = realServer == nil ? self.server : realServer
+        sendStringMessage("PING \(server)", immedtiately: true)
+    }
+    
+    private func pingServerAfterInterval() {
+        if status != .Connecting &&
+           status != .Connected
+        { return }
+        
+        nextPingTimeInterval = NSDate(timeIntervalSinceReferenceDate: NSDate.timeIntervalSinceReferenceDate().advancedBy(PING_SERVER_INTERVAL))
+        let delayInSeconds = UInt64(PING_SERVER_INTERVAL + 1)
+        
+        let popTime = dispatch_time(DISPATCH_TIME_NOW, Int64(delayInSeconds * NSEC_PER_SEC))
+        
+        dispatch_after(popTime, connectionQueue, {
+            let nowTimeInterval = NSDate.timeIntervalSinceReferenceDate()
+            
+            if self.nextPingTimeInterval!.timeIntervalSinceReferenceDate < nowTimeInterval {
+                self.nextPingTimeInterval = NSDate(timeIntervalSinceReferenceDate: nowTimeInterval.advancedBy(self.PING_SERVER_INTERVAL))
+                self.pingServer()
+            }
+        })
+    }
+
+    private func readNextMessageFromServer() {
+        // IRC messages end in \x0D\x0A, but some non-compliant servers only use \x0A during the connecting phase
+        chatConnection?.readDataToData(GCDAsyncSocket.LFData(), withTimeout: -1, tag: 0)
+    }
+    
+    private func processIncomingMessage(data : NSData, fromServer : Bool) {
+//        - (void) _processIncomingMessage:(NSData *) data fromServer:(BOOL) fromServer {
+//            NSString *rawString = [self _newStringWithBytes:[data bytes] length:data.length];
+//            
+//            const char *line = (const char *)[data bytes];
+//            NSUInteger len = data.length;
+//            const char *end = line + len - 2; // minus the line endings
+//            
+//            if( *end != '\x0D' )
+//            end = line + len - 1; // this server only uses \x0A for the message line ending, lets work with it
+//            
+//            const char *sender = NULL;
+//            NSUInteger senderLength = 0;
+//            const char *user = NULL;
+//            NSUInteger userLength = 0;
+//            const char *host = NULL;
+//            NSUInteger hostLength = 0;
+//            const char *command = NULL;
+//            NSUInteger commandLength = 0;
+//            const char *intentOrTags = NULL;
+//            NSUInteger intentOrTagsLength = 0;
+//            
+//            NSMutableArray *parameters = [[NSMutableArray alloc] initWithCapacity:15];
+//            
+//            // Parsing as defined in 2.3.1 at http://www.irchelp.org/irchelp/rfc/rfc2812.txt
+//            // With support for IRCv3.2 extensions
+//            
+//            if( len <= 2 )
+//            goto end; // bad message
+//            
+//            #define checkAndMarkIfDone() if( line == end ) done = YES
+//            #define consumeWhitespace() while( *line == ' ' && line != end && ! done ) line++
+//            #define notEndOfLine() line != end && ! done
+//            
+//            BOOL done = NO;
+//            if( notEndOfLine() ) {
+//                if( *line == '@' ) {
+//                    intentOrTags = ++line;
+//                    // IRCv3.2
+//                    // @intent=ACTION;aaa=bbb;ccc;example.com/ddd=eee
+//                    while( notEndOfLine() && *line != ' ' ) line++;
+//                    intentOrTagsLength = (line - intentOrTags);
+//                    checkAndMarkIfDone();
+//                    consumeWhitespace();
+//                }
+//                
+//                if( notEndOfLine() && *line == ':' ) {
+//                    // prefix: ':' <sender> [ '!' <user> ] [ '@' <host> ] ' ' { ' ' }
+//                    sender = ++line;
+//                    while( notEndOfLine() && *line != ' ' && *line != '!' && *line != '@' ) line++;
+//                    senderLength = (line - sender);
+//                    checkAndMarkIfDone();
+//                    
+//                    if( ! done && *line == '!' ) {
+//                        user = ++line;
+//                        while( notEndOfLine() && *line != ' ' && *line != '@' ) line++;
+//                        userLength = (line - user);
+//                        checkAndMarkIfDone();
+//                    }
+//                    
+//                    if( ! done && *line == '@' ) {
+//                        host = ++line;
+//                        while( notEndOfLine() && *line != ' ' ) line++;
+//                        hostLength = (line - host);
+//                        checkAndMarkIfDone();
+//                    }
+//                    
+//                    if( ! done ) line++;
+//                    consumeWhitespace();
+//                }
+//                
+//                if( notEndOfLine() ) {
+//                    // command: <letter> { <letter> } | <number> <number> <number>
+//                    // letter: 'a' ... 'z' | 'A' ... 'Z'
+//                    // number: '0' ... '9'
+//                    command = line;
+//                    while( notEndOfLine() && *line != ' ' ) line++;
+//                    commandLength = (line - command);
+//                    checkAndMarkIfDone();
+//                    
+//                    if( ! done ) line++;
+//                    consumeWhitespace();
+//                }
+//                
+//                while( notEndOfLine() ) {
+//                    // params: [ ':' <trailing data> | <letter> { <letter> } ] [ ' ' { ' ' } ] [ <params> ]
+//                    const char *currentParameter = NULL;
+//                    id param = nil;
+//                    if( *line == ':' ) {
+//                        currentParameter = ++line;
+//                        param = [[NSMutableData alloc] initWithBytes:currentParameter length:(end - currentParameter)];
+//                        done = YES;
+//                    } else {
+//                        currentParameter = line;
+//                        while( notEndOfLine() && *line != ' ' ) line++;
+//                        param = [self _newStringWithBytes:currentParameter length:(line - currentParameter)];
+//                        checkAndMarkIfDone();
+//                        if( ! done ) line++;
+//                    }
+//                    
+//                    if( param ) [parameters addObject:param];
+//                    
+//                    consumeWhitespace();
+//                }
+//            }
+//            
+//            #undef checkAndMarkIfDone
+//            #undef consumeWhitespace
+//            #undef notEndOfLine
+//            
+//            end:
+//            {
+//                NSString *senderString = [self _newStringWithBytes:sender length:senderLength];
+//                NSString *commandString = ((command && commandLength) ? [[NSString alloc] initWithBytes:command length:commandLength encoding:NSASCIIStringEncoding] : nil);
+//                
+//                NSString *intentOrTagsString = [self _newStringWithBytes:intentOrTags length:intentOrTagsLength];
+//                NSMutableDictionary *intentOrTagsDictionary = [NSMutableDictionary dictionary];
+//                for( NSString *anIntentOrTag in [intentOrTagsString componentsSeparatedByString:@";"] ) {
+//                    NSArray *intentOrTagPair = [anIntentOrTag componentsSeparatedByString:@"="];
+//                    if (intentOrTagPair.count != 2) continue;
+//                    intentOrTagsDictionary[intentOrTagPair[0]] = intentOrTagPair[1];
+//                }
+//                
+//                [[NSNotificationCenter chatCenter] postNotificationOnMainThreadWithName:MVChatConnectionGotRawMessageNotification object:self userInfo:@{ @"message": rawString, @"messageData": data, @"sender": (senderString ?: @""), @"command": (commandString ?: @""), @"parameters": parameters, @"outbound": @(NO), @"fromServer": @(fromServer), @"message-tags": intentOrTagsDictionary }];
+//                
+//                BOOL hasTagsToSend = !!intentOrTagsDictionary.allKeys.count;
+//                NSString *selectorString = nil;
+//                SEL selector = NULL;
+//                if( hasTagsToSend ) {
+//                    selectorString = [[NSString alloc] initWithFormat:@"_handle%@WithParameters:tags:fromSender:", (commandString ? [commandString capitalizedString] : @"Unknown")];
+//                    selector = NSSelectorFromString(selectorString);
+//                    
+//                    NSString *timestampString = intentOrTagsDictionary[@"time"];
+//                    if (timestampString.length) {
+//                        // threadsafe as of iOS 7
+//                        NSDateFormatter *dateFormatter = [NSThread currentThread].threadDictionary[@"IRCv32ServerTimeDateFormatter"];
+//                        if (!dateFormatter) {
+//                            dateFormatter = [[NSDateFormatter alloc] init];
+//                            dateFormatter.locale = [NSLocale localeWithLocaleIdentifier:@"en_US_POSIX"];
+//                            dateFormatter.dateFormat = @"yyyy-MM-dd'T'HH:mm:ss.SSSZ";
+//                            
+//                            [NSThread currentThread].threadDictionary[@"IRCv32ServerTimeDateFormatter"] = dateFormatter;
+//                        }
+//                        
+//                        NSDate *timestamp = [dateFormatter dateFromString:timestampString];
+//                        if (timestamp)
+//                        intentOrTagsDictionary[@"time"] = timestamp;
+//                        else [intentOrTagsDictionary removeObjectForKey:@"time"]; // failed to convert string to date, drop any invalid data
+//                    }
+//                }
+//                
+//                if( selector == NULL || ![self respondsToSelector:selector] ) {
+//                    selectorString = [[NSString alloc] initWithFormat:@"_handle%@WithParameters:fromSender:", (commandString ? [commandString capitalizedString] : @"Unknown")];
+//                    selector = NSSelectorFromString(selectorString);
+//                    hasTagsToSend = NO; // if we don't support sending tags to the command or numeric, pretend we don't have tags to send
+//                }
+//                
+//                if( [self respondsToSelector:selector] ) {
+//                    MVChatUser *chatUser = nil;
+//                    // if user is not null that shows it was a user not a server sender.
+//                    // the sender was also a user if senderString equals the current local nickname (some bouncers will do this).
+//                    if( ( senderString.length && user && userLength ) || [senderString isEqualToString:_currentNickname] ) {
+//                        chatUser = [self chatUserWithUniqueIdentifier:senderString];
+//                        if( ! [chatUser address] && host && hostLength ) {
+//                            NSString *hostString = [self _newStringWithBytes:host length:hostLength];
+//                            [chatUser _setAddress:hostString];
+//                        }
+//                        
+//                        if( ! [chatUser username] ) {
+//                            NSString *userString = [self _newStringWithBytes:user length:userLength];
+//                            [chatUser _setUsername:userString];
+//                        }
+//                    }
+//                    
+//                    id chatSender = ( chatUser ? (id) chatUser : (id) senderString );
+//                    
+//                    @try {
+//                        if( hasTagsToSend ) {
+//                            NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:[self methodSignatureForSelector:selector]];
+//                            invocation.target = self;
+//                            invocation.selector = selector;
+//                            [invocation setArgument:&parameters atIndex:2];
+//                            [invocation setArgument:&intentOrTagsDictionary atIndex:3];
+//                            [invocation setArgument:&chatSender atIndex:4];
+//                            [invocation invoke];
+//                        } else {
+//                            #pragma clang diagnostic push
+//                            #pragma clang diagnostic ignored "-Warc-performSelector-leaks"
+//                            [self performSelector:selector withObject:parameters withObject:chatSender];
+//                            #pragma clang diagnostic pop
+//                        }
+//                    } @catch (NSException *e) {
+//                        NSLog(@"Exception handling command %@: %@", NSStringFromSelector(selector), e);
+//                    }
+//                }
+//                
+//                [self _pingServerAfterInterval];
+//            }
+//        }
+    }
 }
 
 extension IRCConnection : GCDAsyncSocketDelegate {
     @objc
     func socket(sock: GCDAsyncSocket!, didConnectToHost host: String!, port: UInt16) {
 
-//        { // schedule an end to the capability negotiation in case it stalls the connection
-//            [self _sendEndCapabilityCommandAfterTimeout];
-//            
+        sendEndCapabilityCommandAfterTimeout()
+        
         let capabilitiesCommand = capabilities!.getIRCCommandString()
         if let cmd = capabilitiesCommand as String! {
             sendStringMessage(cmd, immedtiately: true)
@@ -312,26 +546,19 @@ extension IRCConnection : GCDAsyncSocketDelegate {
             sendStringMessage("PASS \(credentials?.password)", immedtiately: true)
         }
         
-        self.sendStringMessage("NICK \(credentials?.nick)", immedtiately: true)
+        sendStringMessage("NICK \(credentials?.nick)", immedtiately: true)
         //TODO(Olivier): In with twitch we don't deal with the USER ... command. Implement it if necessary
         //[self sendRawMessageImmediatelyWithFormat:@"USER %@ 0 * :%@", username, ( _realName.length ? _realName : @"Anonymous User" )];
 
-//        dispatch_async(dispatch_get_main_queue(), ^{
-//        [self performSelector:@selector(_periodicEvents) withObject:nil afterDelay:JVPeriodicEventsInterval];
-//        });
-//        
-//        [self _pingServerAfterInterval];
-//        
-//        [self _readNextMessageFromServer];
+        pingServerAfterInterval()
+
+        readNextMessageFromServer()
     }
     
     @objc
     func socket(sock: GCDAsyncSocket!, didReadData data: NSData!, withTag tag: Int) {
-//        @autoreleasepool {
-//            [self _processIncomingMessage:data fromServer:YES];
-//            
-//            [self _readNextMessageFromServer];
-//        }
+        processIncomingMessage(data, fromServer: true)
+        readNextMessageFromServer()
     }
     
     @objc
