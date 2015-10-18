@@ -12,6 +12,8 @@ import CocoaAsyncSocket
 
 class IRCConnection {
     
+    typealias CommandHandlerFunc = ((sender : String?, user : String?, host : String?, command : String?, intentOrTags : [String : String], parameters : [String]) -> ())
+    
     enum ChatConnectionStatus {
         case Disconnected
         case ServerDisconnected
@@ -59,7 +61,7 @@ class IRCConnection {
     private var realServer : String?
     
     //Commands
-    var commandHandlers = [String : IRCCommandHandler]()
+    var commandHandlers = [String : CommandHandlerFunc]()
     
     //Delegate
     let delegate : IRCConnectionDelegate
@@ -112,7 +114,7 @@ class IRCConnection {
 // MARK - Public methods
 ////////////////////////////////////////
     
-    func connect(credentials : IRCCredentials, capabilities : IRCCapabilities) {
+    func connect(endpoint : IRCEndpoint, credentials : IRCCredentials, capabilities : IRCCapabilities) {
         if status != .Disconnected &&
            status != .ServerDisconnected &&
            status != .Suspended
@@ -123,20 +125,20 @@ class IRCConnection {
         lastConnectAttempt = NSDate()
         queueWait = NSDate(timeIntervalSinceNow: QUEUE_WAIT_BEFORE_CONNECTED)
 
-        connect()
+        connect(endpoint)
     }
     
 ////////////////////////////////////////
 // MARK - Connection
 ////////////////////////////////////////
     
-    private func connect() {
+    private func connect(endpoint : IRCEndpoint) {
         chatConnection = GCDAsyncSocket(delegate: self, delegateQueue: connectionQueue, socketQueue: connectionQueue)
         chatConnection?.IPv6Enabled = true
         chatConnection?.IPv4PreferredOverIPv6 = true
         
         do {
-            try chatConnection?.connectToHost("", onPort: 6667)
+            try chatConnection?.connectToHost(endpoint.host, onPort: endpoint.port)
             resetSendQueueInterval()
         }
         catch _ {
@@ -513,7 +515,7 @@ class IRCConnection {
             //[[NSNotificationCenter chatCenter] postNotificationOnMainThreadWithName:MVChatConnectionGotRawMessageNotification object:self userInfo:@{ @"message": rawString, @"messageData": data, @"sender": (senderString ?: @""), @"command": (commandString ?: @""), @"parameters": parameters, @"outbound": @(NO), @"fromServer": @(fromServer), @"message-tags": intentOrTagsDictionary }]
             
             if let handler = commandHandlers[command!] {
-                handler.handleCommand(sender, user: user, host: host, command: command, intentOrTags: intentOrTagDict, parameters: parameters)
+                handler(sender: sender, user: user, host: host, command: command, intentOrTags: intentOrTagDict, parameters: parameters)
             }
             
             pingServerAfterInterval()
@@ -539,7 +541,7 @@ extension IRCConnection : GCDAsyncSocketDelegate {
             sendStringMessage(cmd, immedtiately: true)
         }
         
-        if credentials?.password.characters.count > 0 {
+        if credentials?.password?.characters.count > 0 {
             sendStringMessage("PASS \(credentials?.password)", immedtiately: true)
         }
         

@@ -9,7 +9,7 @@
 import Foundation
 
 struct IRCCredentials {
-    var username : String
-    var password : String
+    var username : String?
+    var password : String?
     var nick : String
 }
