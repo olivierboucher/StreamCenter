@@ -31,7 +31,6 @@ class TwitchGamesViewController : LoadingViewController {
     private var searchField: UITextField!
     private var games = [TwitchGame]()
     private var twitchButton: UIButton?
-    private var myTwitchToken: String?
     
     convenience init(){
         self.init(nibName: nil, bundle: nil)
@@ -95,16 +94,12 @@ class TwitchGamesViewController : LoadingViewController {
         self.searchField.delegate = self
         self.searchField.textAlignment = .Center
         
-        self.twitchButton = UIButton(type: .System)
-        self.twitchButton?.translatesAutoresizingMaskIntoConstraints = false
-        self.twitchButton?.setTitleColor(UIColor.darkGrayColor(), forState: .Normal)
         
-        if let token = TokenHelper.getTwitchToken() {
-            myTwitchToken = token
-            self.twitchButton?.setTitle("My Twitch", forState: .Normal)
-            self.twitchButton?.addTarget(self, action: Selector("goToMyTwitch"), forControlEvents: .PrimaryActionTriggered)
-        } else {
-            
+        
+        if TokenHelper.getTwitchToken() == nil {
+            self.twitchButton = UIButton(type: .System)
+            self.twitchButton?.translatesAutoresizingMaskIntoConstraints = false
+            self.twitchButton?.setTitleColor(UIColor.darkGrayColor(), forState: .Normal)
             self.twitchButton?.setTitle("Authenticate", forState: .Normal)
             self.twitchButton?.addTarget(self, action: Selector("authorizeUser"), forControlEvents: .PrimaryActionTriggered)
         }
@@ -120,12 +115,6 @@ class TwitchGamesViewController : LoadingViewController {
         let qrController = TwitchAuthViewController()
         qrController.delegate = self
         presentViewController(qrController, animated: true, completion: nil)
-    }
-    
-    func goToMyTwitch() {
-        let myTwitchController = MyTwitchViewController()
-        
-        self.presentViewController(myTwitchController, animated: true, completion: nil)
     }
     
     override func reloadContent() {
@@ -216,9 +205,7 @@ extension TwitchGamesViewController: QRCodeDelegate {
     func qrCodeViewControllerFinished(success: Bool, data: [String : AnyObject]?) {
         dispatch_async(dispatch_get_main_queue()) { () -> Void in
             if success {
-                self.twitchButton?.setTitle("My Twitch", forState: .Normal)
-                self.twitchButton?.removeTarget(nil, action: Selector(), forControlEvents: .AllEvents)
-                self.twitchButton?.addTarget(self, action: Selector("goToMyTwitch"), forControlEvents: .PrimaryActionTriggered)
+                self.twitchButton?.removeFromSuperview()
             }
             self.dismissViewControllerAnimated(true, completion: nil)
         }
