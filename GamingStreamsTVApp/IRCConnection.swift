@@ -278,12 +278,6 @@ class IRCConnection {
         chatConnection!.writeData(vdata, withTimeout: -1, tag: 0)
         
         //print("WROTE: \(String(data: vdata, encoding: NSUTF8StringEncoding))")
-//        
-//        NSMutableString *mutableString = [string mutableCopy];
-//        [mutableString replaceOccurrencesOfRegex:@"(^PASS |^AUTHENTICATE (?!\\+$|PLAIN$)|IDENTIFY (?:[^ ]+ )?|(?:LOGIN|AUTH|JOIN) [^ ]+ )[^ ]+$" withString:@"$1********" options:NSRegularExpressionCaseInsensitive range:NSMakeRange(0, string.length) error:NULL];
-//        
-//        [[NSNotificationCenter chatCenter] postNotificationOnMainThreadWithName:MVChatConnectionGotRawMessageNotification object:self userInfo:@{ @"message": [mutableString copy], @"messageData": data, @"outbound": @(YES) }];
-
     }
     
     func sendStringMessage(message : String, immedtiately now : Bool) {
@@ -406,13 +400,6 @@ class IRCConnection {
     private func processIncomingMessage(data : NSData, fromServer : Bool) {
 
         if var messageString = String(data: data, encoding: NSUTF8StringEncoding) {
-            //TODO(Olivier): Check if line ending causes problems
-            //const char *line = (const char *)[data bytes];
-            //            NSUInteger len = data.length;
-            //            const char *end = line + len - 2; // minus the line endings
-            //
-            //            if( *end != '\x0D' )
-            //            end = line + len - 1; // this server only uses \x0A for the message line ending, lets work with it
             var currentIndex = 0
             let len = messageString.characters.count
             var sender : String?
@@ -539,8 +526,6 @@ class IRCConnection {
                     intentOrTagDict[intentOrTagPair[0]] = intentOrTagPair[1]
                 }
             }
-            
-            //[[NSNotificationCenter chatCenter] postNotificationOnMainThreadWithName:MVChatConnectionGotRawMessageNotification object:self userInfo:@{ @"message": rawString, @"messageData": data, @"sender": (senderString ?: @""), @"command": (commandString ?: @""), @"parameters": parameters, @"outbound": @(NO), @"fromServer": @(fromServer), @"message-tags": intentOrTagsDictionary }]
             
             if let handler = commandHandlers[command!] {
                 let msg = IRCMessage(sender: sender, user: user, host: host, command: command, intentOrTags: intentOrTagDict, parameters: parameters)
