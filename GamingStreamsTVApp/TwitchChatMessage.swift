@@ -16,7 +16,7 @@ struct TwitchChatMessage {
 
 extension IRCMessage {
     func toTwitchChatMessage() -> TwitchChatMessage? {
-        
+        print("\nMutating IRCMessage to TwitchChatMessage") //DEBUG
         guard parameters.count == 2 else {
             return nil
         }
@@ -32,6 +32,7 @@ extension IRCMessage {
         
         if let emoteString = self.intentOrTags["emotes"] {
             if emoteString.characters.count > 0 {
+                print("Emote string: \(emoteString)") //DEBUG
                 let emotesById = emoteString.containsString("/") ? emoteString.componentsSeparatedByString("/") : [emoteString]
                 
                 for emote in emotesById {
@@ -45,7 +46,7 @@ extension IRCMessage {
                         let start = Int(startEnd[0])
                         let end = Int(startEnd[1])
                         
-                        let range = NSMakeRange(start!, end! - start! + 1)
+                        let range = NSMakeRange(start!, end! - start!) //Was +1 before, don't know why lol
                         if emotes[emoteId] == nil {
                             emotes[emoteId] = [range]
                         }
@@ -57,9 +58,20 @@ extension IRCMessage {
             }
         }
         
+        //DEBUG
+        for emote in emotes {
+            print("Emote id: \(emote.0)")
+            for range in emote.1 {
+                print("\(range.location)-\(range.location + range.length)")
+            }
+        }
+        //END DEBUG
+        
         if let displayNameString = self.intentOrTags["display-name"] {
             if displayNameString.characters.count > 0 {
+                print("Display name: \(displayNameString)") //DEBUG
                 senderName = displayNameString.sanitizedIRCString()
+                print("Sanitized name: \(senderName)") //DEBUG
             }
         }
         
@@ -68,7 +80,7 @@ extension IRCMessage {
                 senderDisplayColor = colorString
             }
         }
-        
+        print("\n") //DEBUG
         return TwitchChatMessage(senderName: senderName, message: message, emotes: emotes, senderDisplayColor: senderDisplayColor)
     }
 }
