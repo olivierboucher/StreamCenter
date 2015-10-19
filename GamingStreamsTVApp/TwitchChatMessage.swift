@@ -10,13 +10,13 @@ struct TwitchChatMessage {
     
     var senderName : String
     var message : String
-    var emotes = [String : [NSRange]]()
+    var emotes = [String : String]()
     var senderDisplayColor : String
 }
 
 extension IRCMessage {
     func toTwitchChatMessage() -> TwitchChatMessage? {
-        print("\nMutating IRCMessage to TwitchChatMessage") //DEBUG
+        //print("\nMutating IRCMessage to TwitchChatMessage") //DEBUG
         guard parameters.count == 2 else {
             return nil
         }
@@ -28,11 +28,11 @@ extension IRCMessage {
         let message = parameters[1]
         var senderName = "Unknown"
         var senderDisplayColor = "#555555"
-        var emotes = [String : [NSRange]]()
+        var emotes = [String : String]()
         
         if let emoteString = self.intentOrTags["emotes"] {
             if emoteString.characters.count > 0 {
-                print("Emote string: \(emoteString)") //DEBUG
+                //print("Emote string: \(emoteString)") //DEBUG
                 let emotesById = emoteString.containsString("/") ? emoteString.componentsSeparatedByString("/") : [emoteString]
                 
                 for emote in emotesById {
@@ -41,37 +41,26 @@ extension IRCMessage {
                     let emoteId = rangesById[0]
                     let emoteRawRanges = rangesById[1].componentsSeparatedByString(",")
                     
-                    for rawRange in emoteRawRanges {
+                    if let rawRange = emoteRawRanges.first {
                         let startEnd = rawRange.componentsSeparatedByString("-")
-                        let start = Int(startEnd[0])
-                        let end = Int(startEnd[1])
-                        
-                        let range = NSMakeRange(start!, end! - start!) //Was +1 before, don't know why lol
-                        if emotes[emoteId] == nil {
-                            emotes[emoteId] = [range]
-                        }
-                        else {
-                            emotes[emoteId]?.append(range)
+                        if let start = Int(startEnd[0]){
+                            if let end = Int(startEnd[1]) {
+                                let emote = message[start...end]
+                                
+                                emotes[emoteId] = emote
+                            }
                         }
                     }
                 }
             }
         }
         
-        //DEBUG
-        for emote in emotes {
-            print("Emote id: \(emote.0)")
-            for range in emote.1 {
-                print("\(range.location)-\(range.location + range.length)")
-            }
-        }
-        //END DEBUG
         
         if let displayNameString = self.intentOrTags["display-name"] {
             if displayNameString.characters.count > 0 {
-                print("Display name: \(displayNameString)") //DEBUG
+                //print("Display name: \(displayNameString)") //DEBUG
                 senderName = displayNameString.sanitizedIRCString()
-                print("Sanitized name: \(senderName)") //DEBUG
+                //print("Sanitized name: \(senderName)") //DEBUG
             }
         }
         
@@ -80,7 +69,7 @@ extension IRCMessage {
                 senderDisplayColor = colorString
             }
         }
-        print("\n") //DEBUG
+        //print("\n") //DEBUG
         return TwitchChatMessage(senderName: senderName, message: message, emotes: emotes, senderDisplayColor: senderDisplayColor)
     }
 }

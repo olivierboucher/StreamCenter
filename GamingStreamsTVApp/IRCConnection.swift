@@ -521,7 +521,7 @@ class IRCConnection {
                     }
                     
                     if let param = currentParameter as String! {
-                        parameters.append(param)
+                        parameters.append(param.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceAndNewlineCharacterSet()))
                     }
                     
                     consumeWhitespace()
@@ -555,7 +555,8 @@ class IRCConnection {
     }
     
     private func handlePing(message : IRCMessage) -> () {
-        print("Got pinged")
+        //parameters[0] is the PONG response
+        sendStringMessage("PONG \(message.parameters[0])", immedtiately: true)
     }
 }
 

@@ -20,6 +20,14 @@ extension String {
 }
 
 extension String {
+    subscript (r : NSRange) -> String {
+        get {
+            return self[rangeFromNSRange(r)!]
+        }
+    }
+}
+
+extension String {
     subscript (r: Range<Int>) -> String {
         get {
             let subStart = self.startIndex.advancedBy(r.startIndex, limit: self.endIndex)

@@ -84,8 +84,9 @@ class TwitchChatMessageQueue {
                     }
                 }
                 dispatch_group_wait(downloadGroup, DISPATCH_TIME_FOREVER)
+                
+                delegate.handleProcessedAttributedString(self.getAttributedStringForMessage(twitchMessage))
             }
-            //TODO(Olivier): Process the message to an attributed string and then pass it to the delegate
         }
     }
     
@@ -111,40 +112,32 @@ class TwitchChatMessageQueue {
     
     private func getAttributedStringForMessage(message : TwitchChatMessage) -> NSAttributedString {
         
-        let attrMsg = NSMutableAttributedString(string: message.senderName + ": " + message.message)
+        let attrMsg = NSMutableAttributedString(string: message.message)
+        
+        for emote in message.emotes {
+            let attachment = NSTextAttachment()
+            let emoteImage = UIImage(data: self.delegate.getEmoteDataFromCache(emote.0)!)
+            attachment.image = emoteImage
+            let emoteString = NSAttributedString(attachment: attachment)
+
+            while true {
+                let range = attrMsg.mutableString.rangeOfString(emote.1)
+                
+                guard range.location != NSNotFound else {
+                    break;
+                }
+                
+                attrMsg.replaceCharactersInRange(range, withAttributedString: emoteString)
+            }
+        }
+        
+        attrMsg.insertAttributedString(NSAttributedString(string: "\(message.senderName): "), atIndex: 0)
+        
+        attrMsg.addAttribute(NSForegroundColorAttributeName, value: UIColor.lightGrayColor(), range: NSMakeRange(0, attrMsg.length))
+        attrMsg.addAttribute(NSForegroundColorAttributeName, value: message.senderDisplayColor.toUIColorFromHex()!, range: NSMakeRange(0, message.senderName.characters.count))
+        attrMsg.addAttribute(NSFontAttributeName, value: UIFont.systemFontOfSize(18), range: NSMakeRange(0, attrMsg.length))
+        
         
         return attrMsg
-//        if(message.emotes.count > 0) {
-//            var removedChars = -(message.sender!.characters.count + 2) //Because ranges are based on rawMessage
-//            for emote in message.emotes {
-//                let attachment = NSTextAttachment()
-//                let emoteImage = UIImage(data: self.delegate.getEmoteDataFromCache(emote.0)!)
-//                attachment.image = emoteImage
-//                
-//                let attachString = NSAttributedString(attachment: attachment)
-//                for range in emote.1{
-//                    var fixedRange = range
-//                    fixedRange.location -= removedChars
-//                    
-//                    let string = attrMsg.string
-//                    
-//                    let rmCount = string.substringWithRange(string.rangeFromNSRange(range)!).characters.count - attachString.length
-//                    if fixedRange.location + fixedRange.length <= attrMsg.length {
-//                        removedChars += rmCount
-//                        if attachString != "\\U0000fffc" {
-//                            attrMsg.replaceCharactersInRange(fixedRange, withAttributedString: attachString)
-//                        } else {
-//                            print("didn't add")
-//                        }
-//                    }
-//                }
-//            }
-        //}
-        
-//        attrMsg.addAttribute(NSForegroundColorAttributeName, value: UIColor.lightGrayColor(), range: NSMakeRange(0, attrMsg.length))
-//        attrMsg.addAttribute(NSForegroundColorAttributeName, value: message.senderDisplayColor!.toUIColorFromHex()!, range: NSMakeRange(0, message.sender!.characters.count))
-//        attrMsg.addAttribute(NSFontAttributeName, value: UIFont.systemFontOfSize(18), range: NSMakeRange(0, attrMsg.length))
-//        
-//        return attrMsg
     }
 }

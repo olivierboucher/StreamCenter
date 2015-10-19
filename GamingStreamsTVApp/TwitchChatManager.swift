@@ -44,7 +44,7 @@ class TwitchChatManager {
     func joinTwitchChannel(channel : TwitchChannel) {
         let dispatchTime: dispatch_time_t = dispatch_time(DISPATCH_TIME_NOW, Int64(3 * Double(NSEC_PER_SEC)))
         dispatch_after(dispatchTime, dispatch_get_main_queue(), {
-            connection?.sendStringMessage("JOIN #\(channel.name)", immedtiately: true)
+            self.connection?.sendStringMessage("JOIN #\(channel.name)", immedtiately: true)
         })
     }
     
@@ -62,7 +62,7 @@ class TwitchChatManager {
         }
         
         messageQueue?.addNewMessage(message)
-        print("Recieved msg")
+        //print("Recieved msg")
     }
     
     private func handle433(message : IRCMessage) -> () {
