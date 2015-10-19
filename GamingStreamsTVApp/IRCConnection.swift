@@ -12,7 +12,7 @@ import CocoaAsyncSocket
 
 class IRCConnection {
     
-    typealias CommandHandlerFunc = ((sender : String?, user : String?, host : String?, command : String?, intentOrTags : [String : String], parameters : [String]) -> ())
+    typealias CommandHandlerFunc = ((message : IRCMessage) -> ())
     
     enum ChatConnectionStatus {
         case Disconnected
@@ -108,6 +108,8 @@ class IRCConnection {
         sendQueue = [NSData]()
         sendQueueLock = dispatch_semaphore_create(1)
         self.delegate = delegate
+        
+        commandHandlers["PING"] = handlePing
     }
     
 ////////////////////////////////////////
@@ -128,6 +130,15 @@ class IRCConnection {
         connect(endpoint)
     }
     
+    func disconnect() {
+        status = .Disconnected
+        sendStringMessage("QUIT", immedtiately: true)
+        
+        let dispatchTime: dispatch_time_t = dispatch_time(DISPATCH_TIME_NOW, Int64(1 * Double(NSEC_PER_SEC)))
+        dispatch_after(dispatchTime, dispatch_get_main_queue(), {
+            self.chatConnection!.disconnectAfterWriting()
+        })
+    }
 ////////////////////////////////////////
 // MARK - Connection
 ////////////////////////////////////////
@@ -532,7 +543,8 @@ class IRCConnection {
             //[[NSNotificationCenter chatCenter] postNotificationOnMainThreadWithName:MVChatConnectionGotRawMessageNotification object:self userInfo:@{ @"message": rawString, @"messageData": data, @"sender": (senderString ?: @""), @"command": (commandString ?: @""), @"parameters": parameters, @"outbound": @(NO), @"fromServer": @(fromServer), @"message-tags": intentOrTagsDictionary }]
             
             if let handler = commandHandlers[command!] {
-                handler(sender: sender, user: user, host: host, command: command, intentOrTags: intentOrTagDict, parameters: parameters)
+                let msg = IRCMessage(sender: sender, user: user, host: host, command: command, intentOrTags: intentOrTagDict, parameters: parameters)
+                handler(message: msg)
             }
             
             pingServerAfterInterval()
@@ -540,6 +552,10 @@ class IRCConnection {
         else {
             //Could not convert data to utf8 string
         }
+    }
+    
+    private func handlePing(message : IRCMessage) -> () {
+        print("Got pinged")
     }
 }
 

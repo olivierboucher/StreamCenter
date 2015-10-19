@@ -9,5 +9,5 @@
 import Foundation
 
 protocol TwitchChatConsumer {
-    func messageReadyForDisplay(message: TwitchChatMessage)
+    func messageReadyForDisplay(message: NSAttributedString)
 }

@@ -76,3 +76,15 @@ extension String {
         return randomString
     }
 }
+
+extension String {
+    func sanitizedIRCString() -> String {
+        //https://github.com/ircv3/ircv3-specifications/blob/master/core/message-tags-3.2.md#escaping-values
+        return self
+            .stringByReplacingOccurrencesOfString("\\:", withString: ";")
+            .stringByReplacingOccurrencesOfString("\\s", withString: "")
+            .stringByReplacingOccurrencesOfString("\\\\", withString: "\\")
+            .stringByReplacingOccurrencesOfString("\\r", withString: "\r")
+            .stringByReplacingOccurrencesOfString("\\n", withString: "\n")
+    }
+}

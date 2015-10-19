@@ -60,14 +60,13 @@ class TwitchChatView : UIView, TwitchChatConsumer {
     
     func stopDisplayingMessages() {
         self.shouldConsume = false
-        //self.chatHandler.stopLoop()
-        //self.chatHandler.disconnect()
+        self.chatMgr!.disconnect()
     }
     
-    func messageReadyForDisplay(message: TwitchChatMessage) {
+    func messageReadyForDisplay(message: NSAttributedString) {
         if self.shouldConsume {
             dispatch_async(dispatch_get_main_queue(),{
-                let view = TwitchChatMessageView(message: message, width: self.bounds.width-40, position: CGPoint(x: 20, y: 0))
+                let view = ChatMessageView(message: message, width: self.bounds.width-40, position: CGPoint(x: 20, y: 0))
                 
                 var newFrame = view.frame
                 newFrame.origin.y = self.frame.height - view.frame.height

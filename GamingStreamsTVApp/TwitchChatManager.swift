@@ -28,7 +28,6 @@ class TwitchChatManager {
         connection = IRCConnection(delegate: self)
 
         //Command handlers
-        connection!.commandHandlers["PING"] = handlePing
         connection!.commandHandlers["PRIVMSG"] = handleMsg
         connection!.commandHandlers["433"] = handle433
     }
@@ -36,6 +35,10 @@ class TwitchChatManager {
     func connectAnonymously() {
         credentials = TwitchChatManager.generateAnonymousIRCCredentials()
         connection!.connect(IRCEndpoint(host: "irc.twitch.tv", port: 6667), credentials: credentials!, capabilities: capabilities)
+    }
+    
+    func disconnect() {
+        connection?.disconnect()
     }
     
     func joinTwitchChannel(channel : TwitchChannel) {
@@ -49,28 +52,20 @@ class TwitchChatManager {
 // MARK - Command handlers
 /////////////////////////////////////////
     
-    private func handlePing(sender : String?, user : String?, host : String?, command : String?, intentOrTags : [String : String], parameters : [String]) -> () {
-        print("Recieved ping")
-    }
-    
-    private func handleMsg(sender : String?, user : String?, host : String?, command : String?, intentOrTags : [String : String], parameters : [String]) -> () {
-        //parameters[0] is the channel
-        //parameters[1] is the message
-        guard let sender = sender as String! else {
+    private func handleMsg(message : IRCMessage) -> () {
+        guard let _ = message.sender as String! else {
             return
         }
         
-        guard parameters.count == 2 else {
+        guard message.parameters.count == 2 else {
             return
         }
         
-        let msg = TwitchChatMessage(rawMessage: parameters[1], rawSender: sender, intentOrTags: intentOrTags)
-        
-        messageQueue?.addNewMessage(msg)
+        messageQueue?.addNewMessage(message)
         print("Recieved msg")
     }
     
-    private func handle433(sender : String?, user : String?, host : String?, command : String?, intentOrTags : [String : String], parameters : [String]) -> () {
+    private func handle433(message : IRCMessage) -> () {
         print("Recieved 433")
     }
 }
@@ -81,7 +76,7 @@ class TwitchChatManager {
 
 extension TwitchChatManager : TwitchChatMessageQueueDelegate {
     
-    func handleProcessedTwitchMessage(message: TwitchChatMessage) {
+    func handleProcessedAttributedString(message: NSAttributedString) {
         self.consumer!.messageReadyForDisplay(message)
     }
     func handleNewEmoteDownloaded(id: String, data : NSData) {
