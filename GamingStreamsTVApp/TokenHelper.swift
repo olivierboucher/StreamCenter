@@ -12,18 +12,25 @@ class TokenHelper: NSObject {
     
     static let TWITCH_SERVICE = "com.StreamCenter.Twitch.SERVICE"
     static let TWITCH_TOKEN_KEY = "com.StreamCenter.Twitch.TOKEN_KEY"
+    static let TWITCH_USERNAME_KEY = "com.StreamCenter.Twitch.USERNAME_KEY"
     
     static let HITBOX_SERVICE = "com.StreamCenter.Hitbox.SERVICE"
     static let HITBOX_TOKEN_KEY = "com.StreamCenter.Hitbox.TOKEN_KEY"
     
     static func storeTwitchToken(token: String) {
-        let keychain = Keychain(service: TokenHelper.TWITCH_SERVICE)
-        keychain[TokenHelper.TWITCH_TOKEN_KEY] = token
+        TokenHelper.putString(token, key: TWITCH_TOKEN_KEY, service: TWITCH_SERVICE)
     }
     
     static func getTwitchToken() -> String? {
-        let keychain = Keychain(service: TokenHelper.TWITCH_SERVICE)
-        return keychain[TokenHelper.TWITCH_TOKEN_KEY]
+        return TokenHelper.getString(TWITCH_TOKEN_KEY, forService: TWITCH_SERVICE)
+    }
+    
+    static func storeTwitchUsername(username: String) {
+        TokenHelper.putString(username, key: TWITCH_USERNAME_KEY, service: TWITCH_SERVICE)
+    }
+    
+    static func getTwitchUsername() -> String? {
+        return TokenHelper.getString(TWITCH_USERNAME_KEY, forService: TWITCH_SERVICE)
     }
     
     static func removeTwitchToken() {
@@ -36,13 +43,11 @@ class TokenHelper: NSObject {
     }
     
     static func storeHitboxToken(token: String) {
-        let keychain = Keychain(service: TokenHelper.HITBOX_SERVICE)
-        keychain[TokenHelper.HITBOX_TOKEN_KEY] = token
+        TokenHelper.putString(token, key: HITBOX_TOKEN_KEY, service: HITBOX_SERVICE)
     }
     
     static func getHitboxToken() -> String? {
-        let keychain = Keychain(service: TokenHelper.HITBOX_SERVICE)
-        return keychain[TokenHelper.HITBOX_TOKEN_KEY]
+        return TokenHelper.getString(HITBOX_TOKEN_KEY, forService: HITBOX_SERVICE)
     }
     
     static func removeHitboxToken() {
@@ -52,6 +57,16 @@ class TokenHelper: NSObject {
         } catch {
             print("error removing hitbox token: \(error)")
         }
+    }
+    
+    static func getString(key: String, forService service: String) -> String? {
+        let keychain = Keychain(service: service)
+        return keychain[key]
+    }
+    
+    static func putString(value: String, key: String, service: String) {
+        let keychain = Keychain(service: service)
+        keychain[key] = value
     }
 
 }

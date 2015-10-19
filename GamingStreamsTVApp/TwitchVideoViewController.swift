@@ -20,11 +20,11 @@ class TwitchVideoViewController : UIViewController {
     private var videoView : VideoView?
     private var videoPlayer : AVPlayer?
     private var streams : [TwitchStreamVideo]?
-    private var currentStream : TwitchStream?
+    private var currentStream : TwitchStream!
     private var currentStreamVideo: TwitchStreamVideo?
     private var chatView : TwitchChatView?
     private var modalMenu : ModalMenuView?
-    private var modalMenuOptions : [String : [MenuOption]]?
+    private var modalMenuOptions : [String : [MenuOption]]!
     
     private var leftSwipe: UISwipeGestureRecognizer!
     private var rightSwipe: UISwipeGestureRecognizer!
@@ -76,6 +76,17 @@ class TwitchVideoViewController : UIViewController {
                 MenuOption(title: StreamSourceQuality.Low.rawValue, enabled: false, onClick: self.handleQualityChange)
             ]
         ]
+    }
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        TwitchApi.checkIfUserIsSubscribedToChannel(channelName: currentStream.channel.name) { (subscribed, error) -> () in
+            guard error == nil else {
+                print("error checking if user is subscribed: \(error?.errorDescription)")
+                return
+            }
+            self.modalMenuOptions["Manage Subscription"] = [MenuOption(enabledTitle: "Follow this channel", disabledTitle: "Unfollow this channel", enabled: !subscribed, onClick: self.handleSubscribe)]
+        }
     }
     
     override func viewDidAppear(animated: Bool) {
@@ -166,7 +177,7 @@ class TwitchVideoViewController : UIViewController {
         if longPressRecognizer.state == UIGestureRecognizerState.Began {
             if self.modalMenu == nil {
                 modalMenu = ModalMenuView(frame: self.view.bounds,
-                    options: self.modalMenuOptions!,
+                    options: self.modalMenuOptions,
                     size: CGSize(width: self.view.bounds.width/3, height: self.view.bounds.height/1.5))
                 
                 modalMenu!.center = self.view.center
@@ -317,6 +328,24 @@ class TwitchVideoViewController : UIViewController {
                 }
             }
         }
+    }
+    
+    func handleSubscribe(sender: MenuItemView?) {
+        print("subscribe")
+        guard let sender = sender else {
+            return
+        }
+        
+        TwitchApi.followOrUnFollowChannel(channelName: self.currentStream.channel.name, follow: sender.isOptionEnabled()) { (success, error) -> () in
+            if let error = error {
+                print("error following or unfollowing channel: \(error.errorDescription)")
+            }
+            if success {
+                sender.setOptionEnabled(!sender.isOptionEnabled())
+            }
+            self.dismissMenu()
+        }
+        
     }
     
     func pause() {

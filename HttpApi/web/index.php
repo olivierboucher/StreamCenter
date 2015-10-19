@@ -145,7 +145,7 @@ $app->get('/customurl/{code}', function(Request $request, $code) use($app) {
 
 $app->get('/oauth/twitch/{uuid}', function($uuid) use($app) {
 
-    return $app->redirect('https://api.twitch.tv/kraken/oauth2/authorize?response_type=code&client_id='. getenv('TWITCH_CLIENT_ID') .'&redirect_uri=http://streamcenterapp.com/oauth/redirect/twitch&scope=user_read channel_subscriptions user_subscriptions chat_login&state='. $uuid);
+    return $app->redirect('https://api.twitch.tv/kraken/oauth2/authorize?response_type=code&client_id='. getenv('TWITCH_CLIENT_ID') .'&redirect_uri=http://streamcenterapp.com/oauth/redirect/twitch&scope=user_read channel_subscriptions user_subscriptions chat_login user_follows_edit&state='. $uuid);
 });
 
 $app->get('/oauth/twitch/{uuid}/{access_code}', function(Request $request, $uuid, $access_code) use($app) {
