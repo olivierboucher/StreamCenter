@@ -27,7 +27,7 @@ extension IRCMessage {
         
         let message = parameters[1]
         var senderName = "Unknown"
-        var senderDisplayColor = "#555555"
+        var senderDisplayColor = "#FFFFFF"
         var emotes = [String : String]()
         
         if let emoteString = self.intentOrTags["emotes"] {
