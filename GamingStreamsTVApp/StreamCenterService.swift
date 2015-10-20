@@ -12,8 +12,10 @@ import Alamofire
 enum ServiceError: ErrorType {
     case URLError
     case JSONError
+    case DataError
     case AuthError
     case NoAuthTokenError
+    case APIKeyError
     case OtherError(String)
     
     var errorDescription: String {
@@ -23,10 +25,14 @@ enum ServiceError: ErrorType {
                 return "There was an error with the request."
             case .JSONError:
                 return "There was an error parsing the JSON."
+            case .DataError:
+                return "The response did not include valid data"
             case .AuthError:
                 return "The user is not authenticated."
             case .NoAuthTokenError:
                 return "There was no auth token provided in the response data."
+            case .APIKeyError:
+                return "You need to make sure to set the API Key"
             case .OtherError(let message):
                 return message
             }
@@ -41,10 +47,14 @@ enum ServiceError: ErrorType {
                 return "Please make sure that the url is formatted correctly."
             case .JSONError:
                 return "Please check the request information and response."
+            case .DataError:
+                return "Please check the request information and response."
             case .AuthError:
                 return "Please make sure to authenticate with Twitch before attempting to load this data."
             case .NoAuthTokenError:
                 return "Please check the server logs and response."
+            case .APIKeyError:
+                return "Set the API key before attempting to use the API"
             case .OtherError: //change to case .OtherError(let message):if you want to be able to utilize an error message
                 return "Sorry, there's no provided solution for this error."
             }

@@ -27,14 +27,25 @@ class YoutubeVideoViewController : UIViewController {
         
         self.view.backgroundColor = UIColor.blackColor()
         
-        let streamAsset = AVURLAsset(URL: currentStream.streamURL)
-        let streamItem = AVPlayerItem(asset: streamAsset)
         
-        self.videoPlayer = AVPlayer(playerItem: streamItem)
-        
-        dispatch_async(dispatch_get_main_queue(),{
-            self.initializePlayerView()
-        })
+    }
+    
+    override func viewDidAppear(animated: Bool) {
+        super.viewDidAppear(animated)
+        YoutubeGaming.getLiveStreamURL(forVideo: self.currentStream.id) { (url, error) -> () in
+            guard let url = url else {
+                print("no url for youtube stream - error: \(error?.errorDescription)")
+                return
+            }
+            let streamAsset = AVURLAsset(URL: url)
+            let streamItem = AVPlayerItem(asset: streamAsset)
+            
+            self.videoPlayer = AVPlayer(playerItem: streamItem)
+            
+            dispatch_async(dispatch_get_main_queue(),{
+                self.initializePlayerView()
+            })
+        }
     }
     
     /*

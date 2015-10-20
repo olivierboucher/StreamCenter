@@ -19,20 +19,56 @@ class YoutubeStream : CellItem {
     
     private var mImage: UIImage?
     
-    init(id : String, title : String, channelId : String, channelName : String, description : String, thumbnails : [YoutubeThumbnailResolution : String]?) {
-        self.id = id;
-        self.title = title;
-        self.channelId = channelId;
-        self.channelName = channelName;
-        self.description = description;
-        self.thumbnails = thumbnails;
-    }
-    
-    var streamURL: NSURL {
-        get {
-            return NSURL(string: "http://www.youtube.com/embed/\(id)?autoplay=1")!
+    init?(dict: [String : AnyObject]) {
+        guard let snippet = dict["snippet"] as? [String : AnyObject] else {
+            return nil
+        }
+        guard let id = dict["id"] as? [String : AnyObject], videoID = id["videoId"] as? String else {
+            return nil
+        }
+        guard let title = snippet["title"] as? String else {
+            return nil
+        }
+        guard let channelId = snippet["channelId"] as? String else {
+            return nil
+        }
+        guard let channelName = snippet["channelTitle"] as? String else {
+            return nil
+        }
+        guard let description = snippet["description"] as? String else {
+            return nil
+        }
+        
+        self.id = videoID
+        self.title = title
+        self.channelId = channelId
+        self.channelName = channelName
+        self.description = description
+        
+        guard let thumbnails = snippet["thumbnails"] as? [String : [String : String]] else {
+            return
+        }
+        
+        self.thumbnails = [YoutubeThumbnailResolution : String]()
+        
+        if let low = thumbnails["default"]?["url"] {
+            self.thumbnails![.Low] = low
+        }
+        
+        if let med = thumbnails["medium"]?["url"] {
+            self.thumbnails![.Medium] = med
+        }
+        
+        if let high = thumbnails["high"]?["url"] {
+            self.thumbnails![.High] = high
         }
     }
+    
+//    var streamURL: NSURL {
+//        get {
+//            return NSURL(string: "http://www.youtube.com/embed/\(id)?autoplay=1")!
+//        }
+//    }
     
     var urlTemplate: String? {
         get {

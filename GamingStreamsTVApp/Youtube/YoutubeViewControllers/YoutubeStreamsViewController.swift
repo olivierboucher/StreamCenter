@@ -25,7 +25,7 @@ class YoutubeStreamsViewController : LoadingViewController {
     
     override var HEIGHT_RATIO: CGFloat {
         get {
-            return 1.777777777
+            return 0.75
         }
     }
     
@@ -62,7 +62,7 @@ class YoutubeStreamsViewController : LoadingViewController {
         self.removeErrorView()
         self.displayLoadingView("Loading Games...")
         
-        YoutubeGaming.streamsWithPageToken(nil) { (streams, error) -> Void in
+        YoutubeGaming.getStreams { (streams, error) -> Void in
             
             guard let streams = streams else {
                 dispatch_async(dispatch_get_main_queue(), {
@@ -89,11 +89,11 @@ class YoutubeStreamsViewController : LoadingViewController {
 //        self.searchField.placeholder = "Search Games"
 //        self.searchField.delegate = self
 //        self.searchField.textAlignment = .Center
-//        
-//        let imageView = UIImageView(image: UIImage(named: "hitbox"))
-//        imageView.contentMode = .ScaleAspectFit
         
-        super.configureViews("Youtube", centerView: nil, leftView: nil, rightView: nil)
+        let imageView = UIImageView(image: UIImage(named: "youtube"))
+        imageView.contentMode = .ScaleAspectFit
+        
+        super.configureViews("Youtube", centerView: imageView, leftView: nil, rightView: nil)
         
     }
     
