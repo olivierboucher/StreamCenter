@@ -41,6 +41,9 @@ class TwitchGamesViewController : LoadingViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
+        
+//        TokenHelper.removeTwitchToken() //for testing
+        
         configureViews()
     }
     
