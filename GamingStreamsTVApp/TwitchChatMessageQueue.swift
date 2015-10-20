@@ -114,14 +114,14 @@ class TwitchChatMessageQueue {
         
         let attrMsg = NSMutableAttributedString(string: message.message)
         
-        for emote in message.emotes {
+        for (emoteID, emote) in message.emotes {
             let attachment = NSTextAttachment()
-            let emoteImage = UIImage(data: self.delegate.getEmoteDataFromCache(emote.0)!)
+            let emoteImage = UIImage(data: self.delegate.getEmoteDataFromCache(emoteID)!)
             attachment.image = emoteImage
             let emoteString = NSAttributedString(attachment: attachment)
 
             while true {
-                let range = attrMsg.mutableString.rangeOfString(emote.1)
+                let range = attrMsg.mutableString.rangeOfString(emote)
                 
                 guard range.location != NSNotFound else {
                     break;
