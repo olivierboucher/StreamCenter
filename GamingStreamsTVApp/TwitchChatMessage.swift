@@ -43,12 +43,10 @@ extension IRCMessage {
                     
                     if let rawRange = emoteRawRanges.first {
                         let startEnd = rawRange.componentsSeparatedByString("-")
-                        if let start = Int(startEnd[0]){
-                            if let end = Int(startEnd[1]) {
-                                let emote = message[start...end]
-                                
-                                emotes[emoteId] = emote
-                            }
+                        if let start = Int(startEnd[0]), end = Int(startEnd[1]) {
+                            let emote = message[start...end]
+                            
+                            emotes[emoteId] = emote
                         }
                     }
                 }
