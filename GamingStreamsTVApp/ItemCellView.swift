@@ -107,7 +107,7 @@ class ItemCellView: UICollectionViewCell {
     * Removes the loading indicator on download callback success
     */
     private func assignImageAndDisplay() {
-        self.downloadImageWithSize(self.imageView!.bounds.size) {
+        self.downloadImageWithSize(self.imageView.bounds.size) {
             (image, error) in
             
             if let image = image {
@@ -189,6 +189,12 @@ class ItemCellView: UICollectionViewCell {
             case is TwitchGame:
                 return 40
             case is TwitchStream:
+                return 22
+            case is HitboxGame:
+                return 40
+            case is HitboxMedia:
+                return 22
+            case is YoutubeStream:
                 return 22
             default:
                 return 22
