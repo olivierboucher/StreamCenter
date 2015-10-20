@@ -61,7 +61,10 @@ class HitboxChatMessageQueue {
             return
         }
         
-        //TODO: Process messages
+        //TODO(Olivier): Process messages by removing ":::5" and parsing the rest as JSON
+        //TODO(Olivier): Switch based on message type and process accordingly
+        //NOTE(Olivier): We may need to add delegate methods to notify control messages etc
+        
         
     }
     

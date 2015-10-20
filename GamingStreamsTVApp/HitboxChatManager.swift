@@ -50,9 +50,10 @@ class HitboxChatManager {
         }
     }
     
-    func connectAnonymously() {
+    func connectAnonymously(channel : String) {
         if let socket = chatConnection as WebSocket! {
             socket.connect()
+            //TODO(Olivier): Set credentials to anonymous & channel
         }
     }
 }
@@ -60,6 +61,7 @@ class HitboxChatManager {
 extension HitboxChatManager : WebSocketDelegate {
     func websocketDidConnect(socket: WebSocket) {
         status = .Connected
+        //TODO(Olivier): Check type of credentials and create join channel request -> send it
     }
     
     func websocketDidDisconnect(socket: WebSocket, error: NSError?) {
