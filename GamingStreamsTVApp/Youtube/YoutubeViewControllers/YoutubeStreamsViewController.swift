@@ -164,7 +164,7 @@ extension YoutubeStreamsViewController {
                     return
                 }
                 
-                var sections = Array<NSIndexSet>()
+                var sections = [NSIndexSet]()
                 
                 for var i = 0; i < streams.count / self.NUM_COLUMNS; i++ {
                     let section = self.collectionView!.numberOfSections() + i

@@ -14,12 +14,12 @@ class YoutubeStream : CellItem {
     private(set) var channelName: String = ""
     private(set) var description: String = ""
     private(set) var title: String = ""
-    private(set) var thumbnails : Dictionary<YoutubeThumbnailResolution, String>?
+    private(set) var thumbnails : [YoutubeThumbnailResolution : String]?
     private(set) var id : String = ""
     
     private var mImage: UIImage?
     
-    init(id : String, title : String, channelId : String, channelName : String, description : String, thumbnails : Dictionary<YoutubeThumbnailResolution, String>?) {
+    init(id : String, title : String, channelId : String, channelName : String, description : String, thumbnails : [YoutubeThumbnailResolution : String]?) {
         self.id = id;
         self.title = title;
         self.channelId = channelId;

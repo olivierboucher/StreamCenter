@@ -15,7 +15,7 @@ class YoutubeGaming {
     private static var APIKey: String?
     private static let baseURL: String = "https://www.googleapis.com/youtube/v3/search"
     
-    static var streams : Array<YoutubeStream>?
+    static var streams : [YoutubeStream]?
     
     /**
      Sets the API Key. Call this in applicationDidFinishLaunching.
@@ -32,7 +32,7 @@ class YoutubeGaming {
      
      - parameter pageToken: nil if you want the first 20 streams, otherwise, YoutubeGaming.nextPageToken
      */
-    static func streamsWithPageToken(var pageToken : String?, completionHandler : (Array<YoutubeStream>?, error: NSError?) -> Void) {
+    static func streamsWithPageToken(var pageToken : String?, completionHandler : ([YoutubeStream]?, error: NSError?) -> Void) {
         
         guard confirmAPIKey() else {
             
@@ -62,7 +62,7 @@ class YoutubeGaming {
             .responseJSON { response in
                 
                 if response.result.isSuccess {
-                    let parsedResponse = parseStreamResponse(response.result.value! as! Dictionary<String, AnyObject>)
+                    let parsedResponse = parseStreamResponse(response.result.value! as! [String : AnyObject])
                     completionHandler(parsedResponse, error: nil)
                 } else {
                     // Handle error here
@@ -83,9 +83,9 @@ class YoutubeGaming {
         return true
     }
     
-    private static func parseStreamResponse(data : Dictionary<String, AnyObject>) -> Array<YoutubeStream>? {
+    private static func parseStreamResponse(data : [String : AnyObject]) -> [YoutubeStream]? {
         
-        var parsedArray : Array<YoutubeStream>? = Array()
+        var parsedArray : [YoutubeStream]? = Array()
         
         if let nextPage = data["nextPageToken"] as? String {
             nextPageToken = nextPage
@@ -94,15 +94,15 @@ class YoutubeGaming {
             nextPageToken = ""
         }
         
-        if let streamsData : Array<AnyObject> = data["items"] as? [Dictionary<String, AnyObject>] {
+        if let streamsData = data["items"] as? [[String : AnyObject]] {
             
             for stream in streamsData {
                 print(stream)
                 
-                if let snippet : Dictionary<String, AnyObject> = stream["snippet"] as? Dictionary<String, AnyObject> {
-                    var thumbnails = snippet["thumbnails"]! as! Dictionary<String, Dictionary<String, String>>
+                if let snippet : [String : AnyObject] = stream["snippet"] as? [String : AnyObject] {
+                    var thumbnails = snippet["thumbnails"]! as! [String : [String : String]]
                     
-                    let id = stream["id"] as! Dictionary<String, String>
+                    let id = stream["id"] as! [String : String]
                     let videoId = id["videoId"]!
                     
                     let newStream = YoutubeStream(
