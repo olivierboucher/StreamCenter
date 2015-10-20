@@ -8,7 +8,7 @@ import UIKit
 import Foundation
 
 
-class TwitchChatView : UIView, TwitchChatConsumer {
+class TwitchChatView : UIView {
     let channel : TwitchChannel!
     var chatMgr : TwitchChatManager? = nil
     var shouldConsume = false
@@ -63,6 +63,9 @@ class TwitchChatView : UIView, TwitchChatConsumer {
         self.chatMgr!.disconnect()
     }
     
+}
+
+extension TwitchChatView : ChatManagerConsumer {
     func messageReadyForDisplay(message: NSAttributedString) {
         if self.shouldConsume {
             dispatch_async(dispatch_get_main_queue(),{
