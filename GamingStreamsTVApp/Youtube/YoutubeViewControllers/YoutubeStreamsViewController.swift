@@ -25,7 +25,7 @@ class YoutubeStreamsViewController : LoadingViewController {
     
     override var HEIGHT_RATIO: CGFloat {
         get {
-            return 1.777777777
+            return 0.75
         }
     }
     
