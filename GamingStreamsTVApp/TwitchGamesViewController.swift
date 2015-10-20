@@ -94,6 +94,7 @@ class TwitchGamesViewController : LoadingViewController {
         self.searchField.delegate = self
         self.searchField.textAlignment = .Center
         
+        
         self.twitchButton = UIButton(type: .System)
         self.twitchButton?.translatesAutoresizingMaskIntoConstraints = false
         self.twitchButton?.setTitleColor(UIColor.darkGrayColor(), forState: .Normal)
