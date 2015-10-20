@@ -116,7 +116,10 @@ class TwitchChatMessageQueue {
         
         for (emoteID, emote) in message.emotes {
             let attachment = NSTextAttachment()
-            let emoteImage = UIImage(data: self.delegate.getEmoteDataFromCache(emoteID)!)
+            guard let emoteData = self.delegate.getEmoteDataFromCache(emoteID) else {
+                continue
+            }
+            let emoteImage = UIImage(data: emoteData)
             attachment.image = emoteImage
             let emoteString = NSAttributedString(attachment: attachment)
 
@@ -124,7 +127,7 @@ class TwitchChatMessageQueue {
                 let range = attrMsg.mutableString.rangeOfString(emote)
                 
                 guard range.location != NSNotFound else {
-                    break;
+                    break
                 }
                 
                 attrMsg.replaceCharactersInRange(range, withAttributedString: emoteString)
@@ -134,7 +137,7 @@ class TwitchChatMessageQueue {
         attrMsg.insertAttributedString(NSAttributedString(string: "\(message.senderName): "), atIndex: 0)
         
         attrMsg.addAttribute(NSForegroundColorAttributeName, value: UIColor.lightGrayColor(), range: NSMakeRange(0, attrMsg.length))
-        attrMsg.addAttribute(NSForegroundColorAttributeName, value: message.senderDisplayColor.toUIColorFromHex()!, range: NSMakeRange(0, message.senderName.characters.count))
+        attrMsg.addAttribute(NSForegroundColorAttributeName, value: UIColor(hexString: message.senderDisplayColor), range: NSMakeRange(0, message.senderName.characters.count))
         attrMsg.addAttribute(NSFontAttributeName, value: UIFont.systemFontOfSize(18), range: NSMakeRange(0, attrMsg.length))
         
         
