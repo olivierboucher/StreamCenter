@@ -32,17 +32,10 @@ class YoutubeGaming {
      
      - parameter pageToken: nil if you want the first 20 streams, otherwise, YoutubeGaming.nextPageToken
      */
-    static func getStreams(withPageToken pageToken : String = "", completionHandler : ([YoutubeStream]?, error: NSError?) -> Void) {
+    static func getStreams(withPageToken pageToken : String = "", completionHandler : ([YoutubeStream]?, error: ServiceError?) -> Void) {
         
         guard let key = confirmAPIKey() else {
-            
-            let userInfo = [
-                NSLocalizedDescriptionKey : String("No API Key."),
-                NSLocalizedFailureReasonErrorKey: String("No API Key"),
-                NSLocalizedRecoverySuggestionErrorKey: String("Please ensure that you provide an API Key.")
-            ];
-            
-            completionHandler(nil, error: NSError(domain: "YoutubeGaming", code: 1, userInfo: userInfo));
+            completionHandler(nil, error: .APIKeyError);
             return
         }
         
@@ -62,7 +55,7 @@ class YoutubeGaming {
                     completionHandler(parsedResponse, error: nil)
                 } else {
                     // Handle error here
-                    completionHandler(nil, error: response.result.error)
+                    completionHandler(nil, error: .URLError)
                 }
         }
     }
