@@ -11,7 +11,7 @@ import UIKit
 
 extension UIColor {
     
-    convenience init?(hexString: String) {
+    convenience init(hexString: String) {
         var red:   CGFloat = 0.0
         var green: CGFloat = 0.0
         var blue:  CGFloat = 0.0
@@ -44,10 +44,12 @@ extension UIColor {
                     alpha = CGFloat(hexValue & 0x000000FF)         / 255.0
                 default:
                     NSLog("Invalid RGB Hex string, number of characters after '#' should be either 3, 4, 6 or 8")
-                    return nil
+                    self.init(red: 1, green: 1, blue: 1, alpha: 1)
+                    return
                 }
             } else {
-                return nil
+                self.init(red: 1, green: 1, blue: 1, alpha: 1)
+                return
             }
         }
         

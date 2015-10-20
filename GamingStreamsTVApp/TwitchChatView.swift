@@ -8,18 +8,18 @@ import UIKit
 import Foundation
 
 
-class TwitchChatView : UIView, TwitchChatHandlerConsumer {
+class TwitchChatView : UIView, TwitchChatConsumer {
     let channel : TwitchChannel!
-    let chatHandler = TwitchChatHandler()
+    var chatMgr : TwitchChatManager? = nil
     var shouldConsume = false
-    var messageViews = [TwitchChatMessageView]()
+    var messageViews = [ChatMessageView]()
     
     
     init(frame: CGRect, channel: TwitchChannel) {
         self.channel = channel
         super.init(frame: frame)
         
-        self.chatHandler.consumer = self
+        self.chatMgr = TwitchChatManager(consumer: self)
         
         self.backgroundColor = "#2E2E2E".toUIColorFromHex()
         
@@ -47,27 +47,26 @@ class TwitchChatView : UIView, TwitchChatHandlerConsumer {
     
     required init?(coder aDecoder: NSCoder) {
         self.channel = nil
+        self.chatMgr = nil
         super.init(coder: aDecoder)
     }
     
     
     func startDisplayingMessages() {
         self.shouldConsume = true
-        self.chatHandler.anonymousConnect()
-        self.chatHandler.startLoop()
-        self.chatHandler.joinTwitchChannel(self.channel)
+        self.chatMgr!.connectAnonymously()
+        self.chatMgr!.joinTwitchChannel(self.channel)
     }
     
     func stopDisplayingMessages() {
         self.shouldConsume = false
-        self.chatHandler.stopLoop()
-        self.chatHandler.disconnect()
+        self.chatMgr!.disconnect()
     }
     
-    func messageReadyForDisplay(message: TwitchChatMessage) {
+    func messageReadyForDisplay(message: NSAttributedString) {
         if self.shouldConsume {
             dispatch_async(dispatch_get_main_queue(),{
-                let view = TwitchChatMessageView(message: message, width: self.bounds.width-40, position: CGPoint(x: 20, y: 0))
+                let view = ChatMessageView(message: message, width: self.bounds.width-40, position: CGPoint(x: 20, y: 0))
                 
                 var newFrame = view.frame
                 newFrame.origin.y = self.frame.height - view.frame.height

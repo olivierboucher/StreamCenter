@@ -18,14 +18,17 @@
     <![endif]-->
 
     <style>
-	    body {
-		    background-color: #1C84E4;
-	    }
+        body {
+            background-color: #1C84E4;
+        }
         h1 {
             margin: 0;
         }
         h2 {
             font-size: 20px;
+        }
+        h3 {
+            font-size: 15px;
         }
         h1, h2, h3, h4, h5, h6 {
             text-align: center;
@@ -47,7 +50,7 @@
             background-color: #3E94E4;
             border: 0 solid transparent;
         }
-        #lock-icon-holder {
+        #danger-icon-holder {
             max-width: 150px;
             margin: 0 auto;
         }
@@ -60,12 +63,13 @@
                 padding: 15px;
                 margin: 0 auto;
                 text-align: center; ">
-        <div id="lock-icon-holder"><img class="img-responsive" src="../assets/img/FlatLockIcon.png"/></div>
-        <h2>Your StreamCenter Code</h2>
+        <div id="danger-icon-holder"><img class="img-responsive" src="../assets/img/404Icon.png"/></div>
+        <h2>The requested page cannot be found.</h2>
         <div class="well">
-            <h1>{{ accessCode|upper }}</h1>
+            <h3>Please return to the homepage.</h3>
+            <a class="btn btn-default" href="/">Homepage</a>
         </div>
-        <small style="color: #d3d3d3">Generated on {{ "now"|date('Y-m-d\\TH:i:sP') }}</small>
+        <!--<small style="color: #d3d3d3">Generated on {{ "now"|date('Y-m-d\\TH:i:sP') }}</small>-->
 
     </div>
 

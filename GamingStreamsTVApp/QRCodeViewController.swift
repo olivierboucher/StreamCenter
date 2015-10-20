@@ -48,17 +48,17 @@ class QRCodeViewController: UIViewController {
         authButton.addTarget(self, action: Selector("processCode"), forControlEvents: .PrimaryActionTriggered)
         authButton.setTitle("Process", forState: .Normal)
         
-        let dismissButton = UIButton(type: .System)
-        dismissButton.translatesAutoresizingMaskIntoConstraints = false
-        dismissButton.addTarget(self, action: Selector("dismiss"), forControlEvents: .PrimaryActionTriggered)
-        dismissButton.setTitle("Dismiss", forState: .Normal)
+        let cancelButton = UIButton(type: .System)
+        cancelButton.translatesAutoresizingMaskIntoConstraints = false
+        cancelButton.addTarget(self, action: Selector("cancel"), forControlEvents: .PrimaryActionTriggered)
+        cancelButton.setTitle("Cancel", forState: .Normal)
         
         self.view.addSubview(titleLabel)
         self.view.addSubview(imageView)
         self.view.addSubview(label)
         self.view.addSubview(codeField)
         self.view.addSubview(authButton)
-        self.view.addSubview(dismissButton)
+        self.view.addSubview(cancelButton)
         
         self.view.addConstraint(NSLayoutConstraint(item: imageView, attribute: .Height, relatedBy: .Equal, toItem: self.view, attribute: .Height, multiplier: 0.3, constant: 1.0))
         imageView.addConstraint(NSLayoutConstraint(item: imageView, attribute: .Width, relatedBy: .Equal, toItem: imageView, attribute: .Height, multiplier: 1.0, constant: 0.0))
@@ -78,8 +78,8 @@ class QRCodeViewController: UIViewController {
         self.view.addConstraint(NSLayoutConstraint(item: authButton, attribute: .Top, relatedBy: .Equal, toItem: self.codeField, attribute: .Bottom, multiplier: 1.0, constant: 30.0))
         self.view.addConstraint(NSLayoutConstraint(item: authButton, attribute: .CenterX, relatedBy: .Equal, toItem: self.view, attribute: .CenterX, multiplier: 1.0, constant: 0.0))
         
-        self.view.addConstraint(NSLayoutConstraint(item: dismissButton, attribute: .Top, relatedBy: .Equal, toItem: authButton, attribute: .Bottom, multiplier: 1.0, constant: 30.0))
-        self.view.addConstraint(NSLayoutConstraint(item: dismissButton, attribute: .CenterX, relatedBy: .Equal, toItem: self.view, attribute: .CenterX, multiplier: 1.0, constant: 0.0))
+        self.view.addConstraint(NSLayoutConstraint(item: cancelButton, attribute: .Top, relatedBy: .Equal, toItem: authButton, attribute: .Bottom, multiplier: 1.0, constant: 30.0))
+        self.view.addConstraint(NSLayoutConstraint(item: cancelButton, attribute: .CenterX, relatedBy: .Equal, toItem: self.view, attribute: .CenterX, multiplier: 1.0, constant: 0.0))
         
     }
 
@@ -89,12 +89,10 @@ class QRCodeViewController: UIViewController {
     
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
-        if self.delegate == nil {
-            NSException(name: "Unimplemented Exception", reason: "You must set a delegate for QRCodeViewController instances", userInfo: nil).raise()
-        }
     }
     
-    func dismiss() {
+    func cancel() {
+        self.codeField.text = ""
         dismissViewControllerAnimated(true, completion: nil)
     }
     

@@ -67,12 +67,85 @@ $app->register(new Silex\Provider\TwigServiceProvider(), array(
 ));
 
 /*
+ * SESSION
+ */
+
+$app->register(new Silex\Provider\SessionServiceProvider());
+$app['session']->start();
+
+/*
  * ROUTES
  */
 
+$app->get('/', function(Request $request) use($app) {
+    return $app['twig']->render('index.twig');
+});
+
+$app->get('/customurl', function(Request $request) use($app) {
+    $csrfToken = md5(uniqid(rand(), true));
+    $app['session']->set('csrf_token', $csrfToken);
+    return $app['twig']->render('acceptUrl.twig', array(
+        'csrf_token' => $csrfToken,
+    ));
+});
+
+$app->post('/customurl', function(Request $request) use ($app) {
+    $csrfCheck = $request->get('csrfToken') === $app['session']->get('csrf_token');
+
+    if($csrfCheck){
+        $url = $request->get('urlInput');
+        if (!filter_var($url, FILTER_VALIDATE_URL) === false) {
+
+            $stmt = $app['db']->prepare('SELECT addNewCustomURL(:url)');
+            $stmt->bindValue("url", $url);
+            $stmt->execute();
+
+            $code = $stmt->fetchColumn(0);
+
+            return $app['twig']->render('displayCode.twig', array(
+                'accessCode' => $code,
+            ));
+
+        } else {
+	        return $app['twig']->render('displayError.twig', array(
+		    	"message" => "Provided url is invalid",
+                "backUrl" => "/customurl",
+			));
+        }
+    }
+    else {
+        return $app->json(array(
+            "error" => "Bad request",
+            "message" => "Invalid CSRF token"
+        ), 400);
+    }
+});
+
+$app->get('/customurl/{code}', function(Request $request, $code) use($app) {
+    $stmt = $app['db']->prepare('SELECT * FROM custom_urls WHERE code=:code');
+    $stmt->bindValue("code", $code);
+    $stmt->execute();
+
+    $row = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    if ($row != false) {
+        return $app->json(array(
+            'id' => $row['id'],
+            'url' => $row['url'],
+            'generated_date' => $row['generated_date'],
+        ), 200);
+    }
+    else {
+        return $app->json(array(
+            "error" => "Not found",
+            "message" => "The provided code did not match any stored url."
+        ), 404);
+    }
+});
+
 $app->get('/oauth/twitch/{uuid}', function($uuid) use($app) {
 
-    return $app->redirect('https://api.twitch.tv/kraken/oauth2/authorize?response_type=code&client_id='. getenv('TWITCH_CLIENT_ID') .'&redirect_uri=http://streamcenterapp.com/oauth/redirect/twitch&scope=user_read channel_subscriptions user_subscriptions chat_login&state='. $uuid);
+    return $app->redirect('https://api.twitch.tv/kraken/oauth2/authorize?response_type=code&client_id='. getenv('TWITCH_CLIENT_ID') .'&redirect_uri=http://streamcenterapp.com/oauth/redirect/twitch&scope=user_read channel_subscriptions user_subscriptions chat_login user_follows_edit&state='. $uuid);
 });
 
 $app->get('/oauth/twitch/{uuid}/{access_code}', function(Request $request, $uuid, $access_code) use($app) {
@@ -95,15 +168,12 @@ $app->get('/oauth/twitch/{uuid}/{access_code}', function(Request $request, $uuid
     }
     else {
         return $app->json(array(
-            "Error" => "Unauthorized",
-            "Message" => "Please authenticate at http://streamcenterapp.com/oauth/twitch/{device_uuid} or provide a valid access_code"
+            "error" => "Unauthorized",
+            "message" => "Please authenticate at http://streamcenterapp.com/oauth/twitch/{device_uuid} or provide a valid access_code."
         ), 401);
     }
 });
 
-$app->get('/customurl', function(Request $request) use($app) {
-	return $app['twig']->render('acceptUrl.twig');
-});
 
 $app->post('/oauth/twitch/refresh', function(Request $request) use($app) {
     //TODO: Use the refresh token to generate a new token
@@ -177,6 +247,19 @@ $app->get('/oauth/redirect/twitch', function(Request $request) use($app) {
     return $app['twig']->render('displayCode.twig', array(
         'accessCode' => $accessCode,
     ));
+});
+
+$app->error(function (\Exception $e, $code) use ($app) {
+    switch ($code) {
+        case 404:
+            return $app['twig']->render('display404.twig');
+            break;
+        default:
+            return $app['twig']->render('displayError.twig', array(
+                "message" => "We are sorry, an unknown error happened.",
+                "backUrl" => "/",
+            ));
+    }
 });
 
 

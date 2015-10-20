@@ -8,14 +8,14 @@ import UIKit
 import Foundation
 
 
-class TwitchChatMessageView : UIView {
-    let completeMessage : NSAttributedString
+class ChatMessageView : UIView {
+    let message : NSAttributedString
     
-    init(message: TwitchChatMessage, width : CGFloat, position : CGPoint) {
+    init(message: NSAttributedString, width : CGFloat, position : CGPoint) {
         let maxSize = CGSize(width: width, height: 10000)
         let drawingOptions = NSStringDrawingOptions.UsesLineFragmentOrigin.union(NSStringDrawingOptions.UsesFontLeading)
-        let size = message.completeMessage!.boundingRectWithSize(maxSize, options: drawingOptions, context: nil)
-        self.completeMessage = message.completeMessage!
+        let size = message.boundingRectWithSize(maxSize, options: drawingOptions, context: nil)
+        self.message = message
         
         super.init(frame: CGRect(origin: position, size: CGSize(width: width, height: size.height+10)))
         
@@ -23,12 +23,12 @@ class TwitchChatMessageView : UIView {
     }
 
     required init?(coder aDecoder: NSCoder) {
-        self.completeMessage = NSAttributedString(string: "")
+        self.message = NSAttributedString(string: "")
         super.init(coder: aDecoder)
     }
     
     override func drawRect(rect: CGRect) {
         super.drawRect(rect)
-        completeMessage.drawInRect(rect)
+        message.drawInRect(rect)
     }
 }

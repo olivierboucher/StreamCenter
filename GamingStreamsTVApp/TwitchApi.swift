@@ -9,49 +9,12 @@ import Alamofire
 
 class TwitchApi {
     
-    enum TwitchError: ErrorType {
-        case URLError
-        case JSONError
-        case AuthError
-        case NoAuthTokenError
-        case OtherError
-        
-        var errorDescription: String {
-            get {
-                switch self {
-                case .URLError:
-                    return "There was an error with the request."
-                case .JSONError:
-                    return "There was an error parsing the JSON."
-                case .AuthError:
-                    return "The user is not authenticated."
-                case .NoAuthTokenError:
-                    return "There was no auth token provided in the response data."
-                case .OtherError:
-                    return "An unidentified error occured."
-                }
-            }
-        }
-        
-        var recoverySuggestion: String {
-            get {
-                switch self {
-                case .URLError:
-                    return "Please make sure that the url is formatted correctly."
-                case .JSONError:
-                    return "Please check the request information and response."
-                case .AuthError:
-                    return "Please make sure to authenticate with Twitch before attempting to load this data."
-                case .NoAuthTokenError:
-                    return "Please check the server logs and response."
-                case .OtherError:
-                    return "Sorry, there's no provided solution for this error."
-                }
-            }
-        }
-    }
-    
-    static func getStreamsForChannel(channel : String, completionHandler: (streams: [TwitchStreamVideo]?, error: TwitchError?) -> ()){
+    ///This is a method to retrieve Twitch streams for a provided channel
+    ///
+    /// - parameters:
+    ///     - channel: A string indicating the name of the channel that we are trying to get the stream info for
+    ///     - completionHandler: A closure providing results and an error (both optionals) to be executed once the request completes
+    static func getStreamsForChannel(channel : String, completionHandler: (streams: [TwitchStreamVideo]?, error: ServiceError?) -> ()){
         //First we build the url according to the channel we desire to get stream link
         let accessUrlString = String(format: "https://api.twitch.tv/api/channels/%@/access_token", channel)
         
@@ -103,7 +66,13 @@ class TwitchApi {
         
     }
     
-    static func getTopGamesWithOffset(offset : Int, limit : Int, completionHandler: (games: [TwitchGame]?, error: TwitchError?) -> ()) {
+    ///This is a method to retrieve the most popular Twitch games
+    ///
+    /// - parameters:
+    ///     - offset: An integer offset to load content after the primary results (useful when you reach the end of a scrolling list)
+    ///     - limit: The number of games to return
+    ///     - completionHandler: A closure providing results and an error (both optionals) to be executed once the request completes
+    static func getTopGamesWithOffset(offset : Int, limit : Int, completionHandler: (games: [TwitchGame]?, error: ServiceError?) -> ()) {
         //First we build the url according to the game we desire to get infos
         let gamesUrlString = "https://api.twitch.tv/kraken/games/top"
         
@@ -135,7 +104,14 @@ class TwitchApi {
         }
     }
     
-    static func getTopStreamsForGameWithOffset(game : String, offset : Int, limit : Int, completionHandler: (streams: [TwitchStream]?, error: TwitchError?) -> ()) {
+    ///This is a method to retrieve the most popular Twitch streams for a given game
+    ///
+    /// - parameters:
+    ///     - game: The game that we are attempting to get the streams for
+    ///     - offset: An integer offset to load content after the primary results (useful when you reach the end of a scrolling list)
+    ///     - limit: The number of streams to return
+    ///     - completionHandler: A closure providing results and an error (both optionals) to be executed once the request completes
+    static func getTopStreamsForGameWithOffset(game : String, offset : Int, limit : Int, completionHandler: (streams: [TwitchStream]?, error: ServiceError?) -> ()) {
         //First we build the url according to the game we desire to get infos
         let streamsUrlString = "https://api.twitch.tv/kraken/streams"
         
@@ -171,7 +147,14 @@ class TwitchApi {
         }
     }
     
-    static func getGamesWithSearchTerm(term: String, offset : Int, limit : Int, completionHandler: (games: [TwitchGame]?, error: TwitchError?) -> ()) {
+    ///This is a method to retrieve Twitch games based on a search term
+    ///
+    /// - parameters:
+    ///     - term: A search term
+    ///     - offset: An integer offset to load content after the primary results (useful when you reach the end of a scrolling list)
+    ///     - limit: The number of games to return
+    ///     - completionHandler: A closure providing results and an error (both optionals) to be executed once the request completes
+    static func getGamesWithSearchTerm(term: String, offset : Int, limit : Int, completionHandler: (games: [TwitchGame]?, error: ServiceError?) -> ()) {
         //First we build the url according to the game we desire to get infos
         let searchUrlString = "https://api.twitch.tv/kraken/search/games"
         
@@ -204,7 +187,14 @@ class TwitchApi {
         }
     }
     
-    static func getStreamsWithSearchTerm(term : String, offset : Int, limit : Int, completionHandler: (streams: [TwitchStream]?, error: TwitchError?) -> ()) {
+    ///This is a method to retrieve Twitch streams based on a search term
+    ///
+    /// - parameters:
+    ///     - term: A search term
+    ///     - offset: An integer offset to load content after the primary results (useful when you reach the end of a scrolling list)
+    ///     - limit: The number of streams to return
+    ///     - completionHandler: A closure providing results and an error (both optionals) to be executed once the request completes
+    static func getStreamsWithSearchTerm(term : String, offset : Int, limit : Int, completionHandler: (streams: [TwitchStream]?, error: ServiceError?) -> ()) {
         //First we build the url according to the game we desire to get infos
         let streamsUrlString = "https://api.twitch.tv/kraken/streams"
         
@@ -239,7 +229,14 @@ class TwitchApi {
         }
     }
     
-    static func getStreamsThatUserIsFollowing(offset : Int, limit : Int, completionHandler: (streams: [TwitchStream]?, error: TwitchError?) -> ()) {
+    ///This is a method to retrieve Twitch streams that a user is following
+    ///
+    /// - parameters:
+    ///     - term: A search term
+    ///     - offset: An integer offset to load content after the primary results (useful when you reach the end of a scrolling list)
+    ///     - limit: The number of games to return
+    ///     - completionHandler: A closure providing results and an error (both optionals) to be executed once the request completes
+    static func getStreamsThatUserIsFollowing(offset : Int, limit : Int, completionHandler: (streams: [TwitchStream]?, error: ServiceError?) -> ()) {
         
         guard let token = TokenHelper.getTwitchToken() else {
             completionHandler(streams: nil, error: .AuthError)
@@ -276,31 +273,6 @@ class TwitchApi {
                     completionHandler(streams: nil, error: .URLError)
                     return
                 }
-        }
-    }
-    
-    static func authenticate(withCode code: String, andUUID UUID: String, completionHandler: (token: String?, error: TwitchError?) -> ()) {
-        let urlString = "http://streamcenterapp.com/oauth/twitch/\(UUID)/\(code)"
-        Alamofire.request(.GET, urlString)
-            .responseJSON { response in
-                //sup
-                print(response)
-                
-                if response.result.isSuccess {
-                    if let dictionary = response.result.value as? [String : AnyObject] {
-                        guard let token = dictionary["access_token"] as? String, date = dictionary["generated_date"] as? String else {
-                            completionHandler(token: nil, error: .NoAuthTokenError)
-                            return
-                        }
-                        print(date)
-                        //date is formatted: '2015-10-13 20:35:12'
-                        completionHandler(token: token, error: nil)
-                    }
-                } else {
-                    completionHandler(token: nil, error: .URLError)
-                    return
-                }
-                
         }
     }
     

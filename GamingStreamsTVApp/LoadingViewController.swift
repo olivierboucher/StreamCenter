@@ -7,21 +7,38 @@
 import UIKit
 import Foundation
 
+protocol LoadController {
+    var itemCount: Int { get }
+    func getItemAtIndex(index: Int) -> CellItem
+}
+
 //NOTE(Olivier):
 //Swift doesn't provide any way to abstract a class like Java or C#
 //This is not a protocol because I don't want to copy this code in each controller
 
-class LoadingViewController : UIViewController {
+class LoadingViewController : UIViewController, LoadController {
     
     internal let TOP_BAR_HEIGHT : CGFloat = 100
-    var ITEMS_INSETS_X : CGFloat {
+    
+    internal var HEIGHT_RATIO: CGFloat {
+        get {
+            return 1.39705882353
+        }
+    }
+    
+    internal var ITEMS_INSETS_X : CGFloat {
         get {
             return 0
         }
     }
+    
+    internal var NUM_COLUMNS: Int {
+        get {
+            return 5
+        }
+    }
+    
     internal let ITEMS_INSETS_Y : CGFloat = 0
-    internal let GAME_IMG_HEIGHT_RATIO : CGFloat = 1.39705882353 //Computed from sampled image from twitch api
-    internal let STREAM_IMG_HEIGHT_RATIO : CGFloat = 1.777777777 //Computed from sampled image from twitch api
     
     internal var collectionView : UICollectionView!
     internal var topBar : TopBarView!
@@ -166,6 +183,26 @@ class LoadingViewController : UIViewController {
             reloadContent()
         }
     }
+    
+    /*
+    *
+    * Implement this on the child view controller to load more content
+    *
+    */
+    func loadMore() {
+        
+    }
+    
+    internal var itemCount: Int {
+        get {
+            return 0
+        }
+    }
+    
+    func getItemAtIndex(index: Int) -> CellItem {
+        return TwitchGame(id: 0, viewers: 0, channels: 0, name: "nothing", thumbnails: ["hello" : "world"], logos: ["hello" : "world"])
+    }
+    
 }
 
 ////////////////////////////////////////////
@@ -175,7 +212,37 @@ class LoadingViewController : UIViewController {
 
 extension LoadingViewController : UICollectionViewDelegate {
     
+    func collectionView(collectionView: UICollectionView, willDisplayCell cell: UICollectionViewCell, forItemAtIndexPath indexPath: NSIndexPath) {
+        if indexPath.row == self.itemCount - 1 {
+            loadMore()
+        }
+    }
+    
 }
+
+//////////////////////////////////////////////////////
+// MARK - UICollectionViewDelegateFlowLayout interface
+//////////////////////////////////////////////////////
+
+extension LoadingViewController: UICollectionViewDelegateFlowLayout {
+    
+    func collectionView(collectionView: UICollectionView,
+        layout collectionViewLayout: UICollectionViewLayout,
+        sizeForItemAtIndexPath indexPath: NSIndexPath) -> CGSize {
+            let width = collectionView.bounds.width / CGFloat(NUM_COLUMNS) - CGFloat(ITEMS_INSETS_X * 2)
+            let height = width * HEIGHT_RATIO + (ItemCellView.LABEL_HEIGHT * 2) //There 2 labels, top & bottom
+            
+            return CGSize(width: width, height: height)
+    }
+    
+    func collectionView(collectionView: UICollectionView,
+        layout collectionViewLayout: UICollectionViewLayout,
+        insetForSectionAtIndex section: Int) -> UIEdgeInsets {
+            return UIEdgeInsets(top: TOP_BAR_HEIGHT + ITEMS_INSETS_Y, left: ITEMS_INSETS_X, bottom: ITEMS_INSETS_Y, right: ITEMS_INSETS_X)
+    }
+    
+}
+
 
 //////////////////////////////////////////////
 // MARK - UICollectionViewDataSource interface
@@ -190,11 +257,12 @@ extension LoadingViewController : UICollectionViewDataSource {
     
     func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         // If the count of games allows the current row to be full
-        return 0
+        return self.itemCount
     }
     
     func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
         let cell : ItemCellView = collectionView.dequeueReusableCellWithReuseIdentifier(ItemCellView.CELL_IDENTIFIER, forIndexPath: indexPath) as! ItemCellView
+        cell.setRepresentedItem(self.getItemAtIndex(indexPath.row))
         return cell
     }
 }
