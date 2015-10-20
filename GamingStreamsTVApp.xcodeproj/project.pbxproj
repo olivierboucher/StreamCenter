@@ -23,6 +23,7 @@
 		090AB9241BB36BC100CDB05D /* ChatMessageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 090AB9231BB36BC100CDB05D /* ChatMessageView.swift */; };
 		090AB9271BB579A300CDB05D /* ModalMenuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 090AB9261BB579A300CDB05D /* ModalMenuView.swift */; };
 		091277701BD461DF0003036D /* IRCMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0912776F1BD461DF0003036D /* IRCMessage.swift */; };
+		091277721BD66C1C0003036D /* HitboxChatAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 091277711BD66C1C0003036D /* HitboxChatAPI.swift */; };
 		09199A1D1BBAC67F00B10543 /* LoadingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09199A1C1BBAC67F00B10543 /* LoadingViewController.swift */; };
 		09CE59861BAF55BD0054EB71 /* TwitchChatMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09CE59851BAF55BD0054EB71 /* TwitchChatMessage.swift */; };
 		09CE59881BAF55CE0054EB71 /* TwitchChatMessageQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09CE59871BAF55CE0054EB71 /* TwitchChatMessageQueue.swift */; };
@@ -110,6 +111,7 @@
 		090AB9231BB36BC100CDB05D /* ChatMessageView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChatMessageView.swift; sourceTree = "<group>"; };
 		090AB9261BB579A300CDB05D /* ModalMenuView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ModalMenuView.swift; sourceTree = "<group>"; };
 		0912776F1BD461DF0003036D /* IRCMessage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IRCMessage.swift; sourceTree = "<group>"; };
+		091277711BD66C1C0003036D /* HitboxChatAPI.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HitboxChatAPI.swift; sourceTree = "<group>"; };
 		09199A1C1BBAC67F00B10543 /* LoadingViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoadingViewController.swift; sourceTree = "<group>"; };
 		09CE59851BAF55BD0054EB71 /* TwitchChatMessage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TwitchChatMessage.swift; sourceTree = "<group>"; };
 		09CE59871BAF55CE0054EB71 /* TwitchChatMessageQueue.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TwitchChatMessageQueue.swift; sourceTree = "<group>"; };
@@ -374,6 +376,7 @@
 		B4DFFA311BCCB21100D177AE /* HitboxAPI */ = {
 			isa = PBXGroup;
 			children = (
+				091277711BD66C1C0003036D /* HitboxChatAPI.swift */,
 				B4D88D2F1BCF35F100C1DF87 /* HitboxAPI.swift */,
 				B4D88D301BCF35F100C1DF87 /* HitboxGame.swift */,
 				B4D88D311BCF35F100C1DF87 /* HitboxMedia.swift */,
@@ -598,6 +601,7 @@
 				090AB9221BB3699700CDB05D /* TwitchChatView.swift in Sources */,
 				B4A67BBE1BCBE4CB003E3B6F /* TwitchSearchResultsViewController.swift in Sources */,
 				09D6E7E41BD3065200E88371 /* NSData.swift in Sources */,
+				091277721BD66C1C0003036D /* HitboxChatAPI.swift in Sources */,
 				B4D15C7C1BCDCBA2006FFB5D /* QRCodeGenerator.swift in Sources */,
 				090AB9011BA616A900CDB05D /* TwitchStreamVideo.swift in Sources */,
 				090AB9021BA616A900CDB05D /* M3UParser.swift in Sources */,
