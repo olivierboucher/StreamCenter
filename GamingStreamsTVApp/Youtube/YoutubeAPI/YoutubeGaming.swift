@@ -11,6 +11,8 @@ import Alamofire
 
 class YoutubeGaming {
     
+//    YoutubeGaming.setAPIKey("AIzaSyAFLrfWAIk9gdaBbC3h7ymNpAtp9gLiWkY")
+    
     private static var nextPageToken: String = ""
     private static var APIKey: String?
     private static let baseURL: String = "https://www.googleapis.com/youtube/v3/search"
@@ -32,7 +34,7 @@ class YoutubeGaming {
      
      - parameter pageToken: nil if you want the first 20 streams, otherwise, YoutubeGaming.nextPageToken
      */
-    static func getStreams(withPageToken pageToken : String = "", completionHandler : ([YoutubeStream]?, error: ServiceError?) -> Void) {
+    static func getStreams(withPageToken pageToken : String = "", completionHandler : ([YoutubeStream]?, error: ServiceError?) -> ()) {
         
         guard let key = confirmAPIKey() else {
             completionHandler(nil, error: .APIKeyError);
@@ -57,6 +59,35 @@ class YoutubeGaming {
                     // Handle error here
                     completionHandler(nil, error: .URLError)
                 }
+        }
+    }
+    
+    static func getLiveStreamURL(forVideo videoID: String, completionHandler: (url: NSURL?, error: ServiceError?) -> ()) {
+        let urlString = "http://youtube.com/get_video_info?video_id=\(videoID)&el=player_embedded"
+        Alamofire.request(.GET, urlString, parameters:["video_id" : videoID, "el" : "player_embedded"]).responseString { response in
+            if response.result.isSuccess {
+                if let responseString = response.result.value {
+                    let parameters = responseString.componentsSeparatedByString("&")
+                    for parameter in parameters {
+                        if parameter.hasPrefix("hlsvp=") {
+                            guard let index = parameter.rangeOfString("hlsvp=") else {
+                                completionHandler(url: nil, error: .DataError)
+                                return
+                            }
+                            
+                            guard let parsedURLString = parameter.substringFromIndex(index.endIndex).stringByRemovingPercentEncoding, url = NSURL(string: parsedURLString) else {
+                                completionHandler(url: nil, error: .DataError)
+                                return
+                            }
+                            completionHandler(url: url, error: nil)
+                            return
+                        }
+                    }
+                }
+                completionHandler(url: nil, error: .DataError)
+            } else {
+                completionHandler(url: nil, error: .URLError)
+            }
         }
     }
     

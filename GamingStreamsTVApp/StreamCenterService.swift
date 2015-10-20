@@ -12,6 +12,7 @@ import Alamofire
 enum ServiceError: ErrorType {
     case URLError
     case JSONError
+    case DataError
     case AuthError
     case NoAuthTokenError
     case APIKeyError
@@ -24,6 +25,8 @@ enum ServiceError: ErrorType {
                 return "There was an error with the request."
             case .JSONError:
                 return "There was an error parsing the JSON."
+            case .DataError:
+                return "The response did not include valid data"
             case .AuthError:
                 return "The user is not authenticated."
             case .NoAuthTokenError:
@@ -43,6 +46,8 @@ enum ServiceError: ErrorType {
             case .URLError:
                 return "Please make sure that the url is formatted correctly."
             case .JSONError:
+                return "Please check the request information and response."
+            case .DataError:
                 return "Please check the request information and response."
             case .AuthError:
                 return "Please make sure to authenticate with Twitch before attempting to load this data."

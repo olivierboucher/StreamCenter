@@ -64,11 +64,11 @@ class YoutubeStream : CellItem {
         }
     }
     
-    var streamURL: NSURL {
-        get {
-            return NSURL(string: "http://www.youtube.com/embed/\(id)?autoplay=1")!
-        }
-    }
+//    var streamURL: NSURL {
+//        get {
+//            return NSURL(string: "http://www.youtube.com/embed/\(id)?autoplay=1")!
+//        }
+//    }
     
     var urlTemplate: String? {
         get {
