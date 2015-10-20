@@ -24,7 +24,7 @@ class YoutubeGaming {
      */
     static func setAPIKey(apiKey: String) {
         APIKey = apiKey
-        streams = Array()
+        streams = [YoutubeStream]()
     }
     
     /**
@@ -32,9 +32,9 @@ class YoutubeGaming {
      
      - parameter pageToken: nil if you want the first 20 streams, otherwise, YoutubeGaming.nextPageToken
      */
-    static func streamsWithPageToken(var pageToken : String?, completionHandler : ([YoutubeStream]?, error: NSError?) -> Void) {
+    static func getStreams(withPageToken pageToken : String = "", completionHandler : ([YoutubeStream]?, error: NSError?) -> Void) {
         
-        guard confirmAPIKey() else {
+        guard let key = confirmAPIKey() else {
             
             let userInfo = [
                 NSLocalizedDescriptionKey : String("No API Key."),
@@ -46,19 +46,15 @@ class YoutubeGaming {
             return
         }
         
-        if pageToken == nil {
-            pageToken = ""
-        }
-        
         Alamofire.request(.GET, baseURL, parameters:
-            ["part"           : "snippet",
-            "eventType"       : "live",
-            "type"            : "video",
-            "videoCategoryId"  : 20,
-            "regionCode"      : "US",
-            "maxResults"      : 20,
-            "pageToken"       : pageToken!,
-            "key"             : APIKey!])
+            ["part"             : "snippet",
+            "eventType"         : "live",
+            "type"              : "video",
+            "videoCategoryId"   : 20,
+            "regionCode"        : "US",
+            "maxResults"        : 20,
+            "pageToken"         : pageToken,
+            "key"               : key         ])
             .responseJSON { response in
                 
                 if response.result.isSuccess {
@@ -73,19 +69,19 @@ class YoutubeGaming {
     
     // MARK: - Private
     
-    private static func confirmAPIKey() -> Bool {
+    private static func confirmAPIKey() -> String? {
         
-        guard let _ = APIKey else {
+        guard let key = APIKey else {
             print("Please ensure that you provide an API Key.")
-            return false
+            return nil
         }
         
-        return true
+        return key
     }
     
     private static func parseStreamResponse(data : [String : AnyObject]) -> [YoutubeStream]? {
         
-        var parsedArray : [YoutubeStream]? = Array()
+        var parsedArray = [YoutubeStream]()
         
         if let nextPage = data["nextPageToken"] as? String {
             nextPageToken = nextPage
@@ -96,29 +92,11 @@ class YoutubeGaming {
         
         if let streamsData = data["items"] as? [[String : AnyObject]] {
             
-            for stream in streamsData {
-                print(stream)
+            for streamDict in streamsData {
                 
-                if let snippet : [String : AnyObject] = stream["snippet"] as? [String : AnyObject] {
-                    var thumbnails = snippet["thumbnails"]! as! [String : [String : String]]
-                    
-                    let id = stream["id"] as! [String : String]
-                    let videoId = id["videoId"]!
-                    
-                    let newStream = YoutubeStream(
-                        id: videoId,
-                        title: snippet["title"]! as! String,
-                        channelId: snippet["channelId"]! as! String,
-                        channelName: snippet["channelTitle"]! as! String,
-                        description: snippet["description"]! as! String,
-                        thumbnails: [
-                            YoutubeThumbnailResolution.Low : thumbnails["default"]!["url"]!,
-                            YoutubeThumbnailResolution.Medium : thumbnails["medium"]!["url"]!,
-                            YoutubeThumbnailResolution.High: thumbnails["high"]!["url"]!
-                        ])
-                    
-                    streams?.append(newStream)
-                    parsedArray?.append(newStream)
+                if let stream = YoutubeStream(dict: streamDict) {
+                    streams?.append(stream)
+                    parsedArray.append(stream)
                 }
             }
         }
