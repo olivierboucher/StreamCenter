@@ -181,15 +181,22 @@ class TwitchVideoViewController : UIViewController {
                     size: CGSize(width: self.view.bounds.width/3, height: self.view.bounds.height/1.5))
                 
                 modalMenu!.center = self.view.center
-                
-                modalMenu?.alpha = 0
-                self.view.addSubview(self.modalMenu!)
-                UIView.animateWithDuration(0.5, animations: { () -> Void in
-                    self.modalMenu?.alpha = 1
-                })
-            } else {
-                dismissMenu()
             }
+            
+            guard let modalMenu = self.modalMenu else {
+                return
+            }
+            
+            if modalMenu.isDescendantOfView(self.view) {
+                dismissMenu()
+            } else {
+                modalMenu.alpha = 0
+                self.view.addSubview(modalMenu)
+                UIView.animateWithDuration(0.5, animations: { () -> Void in
+                    modalMenu.alpha = 1
+                })
+            }
+            
         }
     }
     
@@ -217,7 +224,6 @@ class TwitchVideoViewController : UIViewController {
                     if finished {
                         modalMenu.removeFromSuperview()
                     }
-                    self.modalMenu = nil
                 })
 //                modalMenu.removeFromSuperview()
                 return true
@@ -336,16 +342,31 @@ class TwitchVideoViewController : UIViewController {
             return
         }
         
-        TwitchApi.followOrUnFollowChannel(channelName: self.currentStream.channel.name, follow: sender.isOptionEnabled()) { (success, error) -> () in
-            if let error = error {
-                print("error following or unfollowing channel: \(error.errorDescription)")
-            }
-            if success {
-                sender.setOptionEnabled(!sender.isOptionEnabled())
-            }
-            self.dismissMenu()
+        if sender.isOptionEnabled() {
+            TwitchApi.followChannel(channelName: self.currentStream.channel.name, completionHandler: { (success, error) -> () in
+                if let error = error {
+                    print("error following or unfollowing channel: \(error.errorDescription)")
+                }
+                dispatch_async(dispatch_get_main_queue(), { () -> Void in
+                    if success {
+                        sender.setOptionEnabled(false)
+                    }
+                    self.dismissMenu()
+                })
+            })
+        } else {
+            TwitchApi.unfollowChannel(channelName: self.currentStream.channel.name, completionHandler: { (success, error) -> () in
+                if let error = error {
+                    print("error following or unfollowing channel: \(error.errorDescription)")
+                }
+                dispatch_async(dispatch_get_main_queue(), { () -> Void in
+                    if success {
+                        sender.setOptionEnabled(true)
+                    }
+                    self.dismissMenu()
+                })
+            })
         }
-        
     }
     
     func pause() {

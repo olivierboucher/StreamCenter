@@ -41,6 +41,9 @@ class TwitchGamesViewController : LoadingViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
+        
+//        TokenHelper.removeTwitchToken() //for testing
+        
         configureViews()
     }
     
@@ -93,6 +96,7 @@ class TwitchGamesViewController : LoadingViewController {
         self.searchField.placeholder = "Search Games or Streams"
         self.searchField.delegate = self
         self.searchField.textAlignment = .Center
+        
         
         self.twitchButton = UIButton(type: .System)
         self.twitchButton?.translatesAutoresizingMaskIntoConstraints = false

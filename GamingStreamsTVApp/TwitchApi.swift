@@ -329,14 +329,29 @@ class TwitchApi {
         }
     }
     
-    static func followOrUnFollowChannel(channelName channel: String, follow: Bool, completionHandler: (success: Bool, error: ServiceError?) -> ()) {
+    static func followChannel(channelName channel: String, completionHandler: (success: Bool, error: ServiceError?) -> ()) {
         guard let token = TokenHelper.getTwitchToken(), username = TokenHelper.getTwitchUsername() else {
             completionHandler(success: false, error: .AuthError)
             return
         }
         let urlString = "https://api.twitch.tv/kraken/users/\(username)/follows/channels/\(channel)"
-        Alamofire.request(follow ? .PUT : .DELETE, urlString, parameters: ["oauth_token" : token]).responseJSON { response in
+        Alamofire.request(.PUT, urlString, parameters: ["oauth_token" : token]).responseJSON { response in
             if response.result.isSuccess {
+                completionHandler(success: true, error: nil)
+            } else {
+                completionHandler(success: false, error: .URLError)
+            }
+        }
+    }
+    
+    static func unfollowChannel(channelName channel: String, completionHandler: (success: Bool, error: ServiceError?) -> ()) {
+        guard let token = TokenHelper.getTwitchToken(), username = TokenHelper.getTwitchUsername() else {
+            completionHandler(success: false, error: .AuthError)
+            return
+        }
+        let urlString = "https://api.twitch.tv/kraken/users/\(username)/follows/channels/\(channel)"
+        Alamofire.request(.DELETE, urlString, parameters: ["oauth_token" : token]).response { (request, response, data, error) -> Void in
+            if response?.statusCode == 204 {
                 completionHandler(success: true, error: nil)
             } else {
                 completionHandler(success: false, error: .URLError)
