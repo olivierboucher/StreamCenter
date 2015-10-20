@@ -47,5 +47,33 @@ class HitboxChatAPI {
             completionHandler(result: nil, error: .URLError)
         }
     }
+    
+    static func getFirstAvailableWebSocket(completionHandler : (result: String?, error: ServiceError?) -> ()) {
+        HitboxChatAPI.getChatServers(){ serverURLs, error in
+            guard error != nil else {
+                completionHandler(result: nil, error: error!)
+                return
+            }
+            
+            guard let serverURls = serverURLs as [String]! where serverURls.count > 0 else {
+                completionHandler(result: nil, error: .OtherError("Invalid url array"))
+                return
+            }
+            
+            HitboxChatAPI.compileWebSocket(serverURls[0]){ socketURL, error in
+                guard error != nil else {
+                    completionHandler(result: nil, error: error!)
+                    return
+                }
+                
+                guard let socketURL = socketURL as String! else {
+                    completionHandler(result: nil, error: .OtherError("Invalid socket URL"))
+                    return
+                }
+                
+                completionHandler(result: socketURL, error: nil)
+            }
+        }
+    }
 
 }

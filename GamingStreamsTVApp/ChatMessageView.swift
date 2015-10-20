@@ -1,5 +1,5 @@
 //
-//  TwitchChatMessageView.swift
+//  ChatMessageView.swift
 //  GamingStreamsTVApp
 //
 //  Created by Olivier Boucher on 2015-09-23.
