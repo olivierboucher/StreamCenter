@@ -47,6 +47,7 @@
 		09F1060E1BD698F800DE0126 /* WebSocket.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09F1060D1BD698F800DE0126 /* WebSocket.swift */; };
 		09F106101BD6992200DE0126 /* SSLSecurity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09F1060F1BD6992200DE0126 /* SSLSecurity.swift */; };
 		09F106131BD6A5CE00DE0126 /* HitboxChatManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09F106121BD6A5CE00DE0126 /* HitboxChatManager.swift */; };
+		09F106151BD6AD8700DE0126 /* HitboxChatMessageQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09F106141BD6AD8700DE0126 /* HitboxChatMessageQueue.swift */; };
 		A5E7DC008D2754CA1EC6CFC5 /* Pods_GamingStreamsTVApp.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 73B61525F92468AED0A0EE8C /* Pods_GamingStreamsTVApp.framework */; };
 		B44A44671BC6CAB800F399EC /* ItemCellView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B44A44661BC6CAB800F399EC /* ItemCellView.swift */; };
 		B4A2E6CD1BCFC84E0094AECA /* HitboxSearchResultsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4A2E6CC1BCFC84E0094AECA /* HitboxSearchResultsViewController.swift */; };
@@ -141,6 +142,7 @@
 		09F1060D1BD698F800DE0126 /* WebSocket.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WebSocket.swift; sourceTree = "<group>"; };
 		09F1060F1BD6992200DE0126 /* SSLSecurity.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SSLSecurity.swift; sourceTree = "<group>"; };
 		09F106121BD6A5CE00DE0126 /* HitboxChatManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HitboxChatManager.swift; sourceTree = "<group>"; };
+		09F106141BD6AD8700DE0126 /* HitboxChatMessageQueue.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HitboxChatMessageQueue.swift; sourceTree = "<group>"; };
 		73B61525F92468AED0A0EE8C /* Pods_GamingStreamsTVApp.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_GamingStreamsTVApp.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		90FBC40A14CD24160B58953A /* Pods-GamingStreamsTVApp.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-GamingStreamsTVApp.release.xcconfig"; path = "Pods/Target Support Files/Pods-GamingStreamsTVApp/Pods-GamingStreamsTVApp.release.xcconfig"; sourceTree = "<group>"; };
 		B44A44661BC6CAB800F399EC /* ItemCellView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ItemCellView.swift; sourceTree = "<group>"; };
@@ -374,6 +376,7 @@
 			isa = PBXGroup;
 			children = (
 				09F106121BD6A5CE00DE0126 /* HitboxChatManager.swift */,
+				09F106141BD6AD8700DE0126 /* HitboxChatMessageQueue.swift */,
 			);
 			name = Chat;
 			sourceTree = "<group>";
@@ -612,6 +615,7 @@
 				090AB9091BA8454500CDB05D /* TopBarView.swift in Sources */,
 				090AB90D1BA9B0F100CDB05D /* LoadingView.swift in Sources */,
 				B4D88D2E1BCF35E500C1DF87 /* HitboxStreamsViewController.swift in Sources */,
+				09F106151BD6AD8700DE0126 /* HitboxChatMessageQueue.swift in Sources */,
 				B4D88D2C1BCF35DD00C1DF87 /* HitboxGamesViewController.swift in Sources */,
 				09CE59881BAF55CE0054EB71 /* TwitchChatMessageQueue.swift in Sources */,
 				090AB9241BB36BC100CDB05D /* ChatMessageView.swift in Sources */,

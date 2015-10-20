@@ -41,8 +41,8 @@ class HitboxChatManager {
     }
     
     func connectAnonymously() {
-        if status == .Connected {
-            
+        if let socket = chatConnection as WebSocket! {
+            socket.connect()
         }
     }
 }
