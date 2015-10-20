@@ -21,6 +21,8 @@ class HitboxChatManager {
     private let consumer : ChatManagerConsumer
     private let opQueue : dispatch_queue_t
     private var messageQueue : HitboxChatMessageQueue?
+    private var credentials : HitboxChatCredentials?
+    private var currentChannel : String?
     
     init(consumer : ChatManagerConsumer) {
         status = .Disconnected
@@ -52,8 +54,9 @@ class HitboxChatManager {
     
     func connectAnonymously(channel : String) {
         if let socket = chatConnection as WebSocket! {
+            credentials = HitboxChatCredentials.anonymous()
+            currentChannel = channel.lowercaseString
             socket.connect()
-            //TODO(Olivier): Set credentials to anonymous & channel
         }
     }
 }
@@ -61,7 +64,11 @@ class HitboxChatManager {
 extension HitboxChatManager : WebSocketDelegate {
     func websocketDidConnect(socket: WebSocket) {
         status = .Connected
-        //TODO(Olivier): Check type of credentials and create join channel request -> send it
+        guard let joinMsg = credentials!.getJoinMessage(currentChannel!) else {
+            print("Impossible to generate join message from credentials")
+            return
+        }
+        socket.writeString(joinMsg)
     }
     
     func websocketDidDisconnect(socket: WebSocket, error: NSError?) {
