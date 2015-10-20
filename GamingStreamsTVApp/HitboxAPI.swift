@@ -53,10 +53,19 @@ class HitboxAPI {
         }
     }
     
+    
+    
+    ///This is a method to retrieve the most popular Hitbox games and we filter it to only games that have streams with content that is live at the moment
+    ///
+    /// - parameters:
+    ///     - offset: An integer offset to load content after the primary results (useful when you reach the end of a scrolling list)
+    ///     - limit: The number of games to return
+    ///     - searchTerm: An optional search term
+    ///     - completionHandler: A closure providing results and an error (both optionals) to be executed once the request completes
     static func getGames(offset: Int, limit: Int, searchTerm: String? = nil, completionHandler: (games: [HitboxGame]?, error: HitboxError?) -> ()) {
         let urlString = "https://api.hitbox.tv/games"
         
-        var parameters: [String : AnyObject] = ["limit" : limit, "liveonly" : "true"]
+        var parameters: [String : AnyObject] = ["limit" : limit, "liveonly" : "true", "offset" : offset]
         
         if let term = searchTerm {
             parameters["q"] = term
@@ -88,6 +97,13 @@ class HitboxAPI {
         }
     }
     
+    ///This is a method to retrieve the Hitbox streams for a specific game
+    ///
+    /// - parameters:
+    ///     - forGame: An integer gameID for given HitboxGame. This is called the category_id in the Hitbox API
+    ///     - offset: An integer offset to load content after the primary results (useful when you reach the end of a scrolling list)
+    ///     - limit: The number of games to return
+    ///     - completionHandler: A closure providing results and an error (both optionals) to be executed once the request completes
     static func getLiveStreams(forGame gameid: Int, offset: Int, limit: Int, completionHandler: (streams: [HitboxMedia]?, error: HitboxError?) -> ()) {
         let urlString = "https://api.hitbox.tv/media/live/list"
         
@@ -121,7 +137,11 @@ class HitboxAPI {
         }
     }
     
-    //https://api.hitbox.tv/mediainfo/live/458643
+    ///This is a method to retrieve the stream links and information for a given Hitbox Stream
+    ///
+    /// - parameters:
+    ///     - forMediaID: A media ID for a given stream. In the Hitbox API they call it the user_media_id
+    ///     - completionHandler: A closure providing results and an error (both optionals) to be executed once the request completes
     static func getStreamInfo(forMediaId mediaId: String, completionHandler: (streamVideos: [HitboxStreamVideo]?, error: HitboxError?) -> ()) {
         let urlString = "http://www.hitbox.tv/api/player/config/live/\(mediaId)"
         print("getting stream info for: \(urlString)")
@@ -157,7 +177,12 @@ class HitboxAPI {
         }
     }
     
-    
+    ///This is a method to authenticate with the HitboxAPI. It takes a username and password and if it's successful it will store the token in the User's Keychain
+    ///
+    /// - parameters:
+    ///     - username: A username
+    ///     - password: A password
+    ///     - completionHandler: A closure providing a boolean indicating if the authentication was successful and an optional error if it was not successful
     static func authenticate(withUserName username: String, password: String, completionHandler: (success: Bool, error: HitboxError?) -> ()) {
         
         let urlString = "https://www.hitbox.tv/api/auth/login"

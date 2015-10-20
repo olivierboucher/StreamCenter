@@ -9,6 +9,11 @@ import Alamofire
 
 class TwitchApi {
     
+    ///This is a method to retrieve Twitch streams for a provided channel
+    ///
+    /// - parameters:
+    ///     - channel: A string indicating the name of the channel that we are trying to get the stream info for
+    ///     - completionHandler: A closure providing results and an error (both optionals) to be executed once the request completes
     static func getStreamsForChannel(channel : String, completionHandler: (streams: [TwitchStreamVideo]?, error: ServiceError?) -> ()){
         //First we build the url according to the channel we desire to get stream link
         let accessUrlString = String(format: "https://api.twitch.tv/api/channels/%@/access_token", channel)
@@ -61,6 +66,12 @@ class TwitchApi {
         
     }
     
+    ///This is a method to retrieve the most popular Twitch games
+    ///
+    /// - parameters:
+    ///     - offset: An integer offset to load content after the primary results (useful when you reach the end of a scrolling list)
+    ///     - limit: The number of games to return
+    ///     - completionHandler: A closure providing results and an error (both optionals) to be executed once the request completes
     static func getTopGamesWithOffset(offset : Int, limit : Int, completionHandler: (games: [TwitchGame]?, error: ServiceError?) -> ()) {
         //First we build the url according to the game we desire to get infos
         let gamesUrlString = "https://api.twitch.tv/kraken/games/top"
@@ -93,6 +104,13 @@ class TwitchApi {
         }
     }
     
+    ///This is a method to retrieve the most popular Twitch streams for a given game
+    ///
+    /// - parameters:
+    ///     - game: The game that we are attempting to get the streams for
+    ///     - offset: An integer offset to load content after the primary results (useful when you reach the end of a scrolling list)
+    ///     - limit: The number of streams to return
+    ///     - completionHandler: A closure providing results and an error (both optionals) to be executed once the request completes
     static func getTopStreamsForGameWithOffset(game : String, offset : Int, limit : Int, completionHandler: (streams: [TwitchStream]?, error: ServiceError?) -> ()) {
         //First we build the url according to the game we desire to get infos
         let streamsUrlString = "https://api.twitch.tv/kraken/streams"
@@ -129,6 +147,13 @@ class TwitchApi {
         }
     }
     
+    ///This is a method to retrieve Twitch games based on a search term
+    ///
+    /// - parameters:
+    ///     - term: A search term
+    ///     - offset: An integer offset to load content after the primary results (useful when you reach the end of a scrolling list)
+    ///     - limit: The number of games to return
+    ///     - completionHandler: A closure providing results and an error (both optionals) to be executed once the request completes
     static func getGamesWithSearchTerm(term: String, offset : Int, limit : Int, completionHandler: (games: [TwitchGame]?, error: ServiceError?) -> ()) {
         //First we build the url according to the game we desire to get infos
         let searchUrlString = "https://api.twitch.tv/kraken/search/games"
@@ -162,6 +187,13 @@ class TwitchApi {
         }
     }
     
+    ///This is a method to retrieve Twitch streams based on a search term
+    ///
+    /// - parameters:
+    ///     - term: A search term
+    ///     - offset: An integer offset to load content after the primary results (useful when you reach the end of a scrolling list)
+    ///     - limit: The number of streams to return
+    ///     - completionHandler: A closure providing results and an error (both optionals) to be executed once the request completes
     static func getStreamsWithSearchTerm(term : String, offset : Int, limit : Int, completionHandler: (streams: [TwitchStream]?, error: ServiceError?) -> ()) {
         //First we build the url according to the game we desire to get infos
         let streamsUrlString = "https://api.twitch.tv/kraken/streams"
@@ -197,6 +229,13 @@ class TwitchApi {
         }
     }
     
+    ///This is a method to retrieve Twitch streams that a user is following
+    ///
+    /// - parameters:
+    ///     - term: A search term
+    ///     - offset: An integer offset to load content after the primary results (useful when you reach the end of a scrolling list)
+    ///     - limit: The number of games to return
+    ///     - completionHandler: A closure providing results and an error (both optionals) to be executed once the request completes
     static func getStreamsThatUserIsFollowing(offset : Int, limit : Int, completionHandler: (streams: [TwitchStream]?, error: ServiceError?) -> ()) {
         
         guard let token = TokenHelper.getTwitchToken() else {

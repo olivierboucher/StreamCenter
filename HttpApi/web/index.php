@@ -107,10 +107,10 @@ $app->post('/customurl', function(Request $request) use ($app) {
             ));
 
         } else {
-            return $app->json(array(
-                "error" => "Bad request",
-                "message" => "Provided data is invalid"
-            ), 400);
+	        return $app['twig']->render('displayError.twig', array(
+		    	"message" => "Provided url is invalid",
+                "backUrl" => "/customurl",
+			));
         }
     }
     else {
@@ -145,7 +145,7 @@ $app->get('/customurl/{code}', function(Request $request, $code) use($app) {
 
 $app->get('/oauth/twitch/{uuid}', function($uuid) use($app) {
 
-    return $app->redirect('https://api.twitch.tv/kraken/oauth2/authorize?response_type=code&client_id='. getenv('TWITCH_CLIENT_ID') .'&redirect_uri=http://streamcenterapp.com/oauth/redirect/twitch&scope=user_read channel_subscriptions user_subscriptions chat_login&state='. $uuid);
+    return $app->redirect('https://api.twitch.tv/kraken/oauth2/authorize?response_type=code&client_id='. getenv('TWITCH_CLIENT_ID') .'&redirect_uri=http://streamcenterapp.com/oauth/redirect/twitch&scope=user_read channel_subscriptions user_subscriptions chat_login user_follows_edit&state='. $uuid);
 });
 
 $app->get('/oauth/twitch/{uuid}/{access_code}', function(Request $request, $uuid, $access_code) use($app) {
@@ -247,6 +247,19 @@ $app->get('/oauth/redirect/twitch', function(Request $request) use($app) {
     return $app['twig']->render('displayCode.twig', array(
         'accessCode' => $accessCode,
     ));
+});
+
+$app->error(function (\Exception $e, $code) use ($app) {
+    switch ($code) {
+        case 404:
+            return $app['twig']->render('display404.twig');
+            break;
+        default:
+            return $app['twig']->render('displayError.twig', array(
+                "message" => "We are sorry, an unknown error happened.",
+                "backUrl" => "/",
+            ));
+    }
 });
 
 
