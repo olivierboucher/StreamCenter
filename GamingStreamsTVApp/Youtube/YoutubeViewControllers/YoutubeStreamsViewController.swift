@@ -9,17 +9,39 @@
 import UIKit
 
 class YoutubeStreamsViewController : LoadingViewController {
-    private let LOADING_BUFFER = 20;
-    private let TOP_BAR_HEIGHT : CGFloat = 100;
-    private let NUM_COLUMNS = 3;
-    private let ITEMS_INSETS_X : CGFloat = 45;
-    private let ITEMS_INSETS_Y : CGFloat = 30;
-    private let PREVIEW_IMG_HEIGHT_RATIO : CGFloat = 1.777777777;
+    private let LOADING_BUFFER = 20
     
-    private var streams : Array<YoutubeStream>?
+    override var NUM_COLUMNS: Int {
+        get {
+            return 5
+        }
+    }
+    
+    override var ITEMS_INSETS_X : CGFloat {
+        get {
+            return 25
+        }
+    }
+    
+    override var HEIGHT_RATIO: CGFloat {
+        get {
+            return 1.777777777
+        }
+    }
+    
+    private var streams = [YoutubeStream]()
     
     convenience init(){
-        self.init(nibName: nil, bundle: nil);
+        self.init(nibName: nil, bundle: nil)
+        title = "YouTube"
+        YoutubeGaming.setAPIKey("AIzaSyAFLrfWAIk9gdaBbC3h7ymNpAtp9gLiWkY")
+    }
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        // Do any additional setup after loading the view, typically from a nib.
+        configureViews()
     }
     
     /*
@@ -31,32 +53,48 @@ class YoutubeStreamsViewController : LoadingViewController {
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
         
-        if (self.collectionView == nil) {
-            self.displayLoadingView()
+        if self.streams.count == 0 {
+            loadContent()
         }
+    }
+    
+    func loadContent() {
+        self.removeErrorView()
+        self.displayLoadingView("Loading Games...")
         
         YoutubeGaming.streamsWithPageToken(nil) { (streams, error) -> Void in
             
-            guard let streams = streams where error == nil else {
+            guard let streams = streams else {
                 dispatch_async(dispatch_get_main_queue(), {
-                    
-                    if (self.errorView == nil) {
-                        self.removeLoadingView()
-                        self.displayErrorView("Error loading game list.\nPlease check your internet connection.")
-                    }
-                });
-                
+                    self.removeLoadingView()
+                    self.displayErrorView("Error loading streams list.\nPlease check your internet connection.")
+                })
                 return
             }
             
             self.streams = streams
-            
             dispatch_async(dispatch_get_main_queue(), {
+                
                 self.removeLoadingView()
-                self.removeErrorView()
-                self.displayCollectionView();
+                self.collectionView.reloadData()
             })
         }
+    }
+    
+    func configureViews() {
+        
+        //then do the search bar
+//        self.searchField = UITextField(frame: CGRectZero)
+//        self.searchField.translatesAutoresizingMaskIntoConstraints = false
+//        self.searchField.placeholder = "Search Games"
+//        self.searchField.delegate = self
+//        self.searchField.textAlignment = .Center
+//        
+//        let imageView = UIImageView(image: UIImage(named: "hitbox"))
+//        imageView.contentMode = .ScaleAspectFit
+        
+        super.configureViews("Youtube", centerView: nil, leftView: nil, rightView: nil)
+        
     }
     
     // MARK: - Private
@@ -89,14 +127,26 @@ class YoutubeStreamsViewController : LoadingViewController {
             collectionView?.reloadData()
         }
     }
+    
+    
+    
+    override var itemCount: Int {
+        get {
+            return streams.count
+        }
+    }
+    
+    override func getItemAtIndex(index: Int) -> CellItem {
+        return streams[index]
+    }
 }
 
 // MARK - UICollectionViewDelegate interface
 
-extension YoutubeStreamsViewController : UICollectionViewDelegate {
+extension YoutubeStreamsViewController {
     
     func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
-        let selectedStream = streams![(indexPath.section * NUM_COLUMNS) +  indexPath.row]
+        let selectedStream = streams[(indexPath.section * NUM_COLUMNS) +  indexPath.row]
         let videoViewController = YoutubeVideoViewController(stream: selectedStream)
         
         self.presentViewController(videoViewController, animated: true, completion: nil)
@@ -114,7 +164,7 @@ extension YoutubeStreamsViewController : UICollectionViewDelegate {
                     return
                 }
                 
-                var sections = Array<NSIndexSet>()
+                var sections = [NSIndexSet]()
                 
                 for var i = 0; i < streams.count / self.NUM_COLUMNS; i++ {
                     let section = self.collectionView!.numberOfSections() + i
@@ -134,52 +184,4 @@ extension YoutubeStreamsViewController : UICollectionViewDelegate {
         }
     }
     */
-}
-
-// MARK: - UICollectionViewDelegateFlowLayout interface
-
-extension YoutubeStreamsViewController : UICollectionViewDelegateFlowLayout {
-    
-    func collectionView(collectionView: UICollectionView,
-        layout collectionViewLayout: UICollectionViewLayout,
-        sizeForItemAtIndexPath indexPath: NSIndexPath) -> CGSize {
-            let width = self.view.bounds.width / CGFloat(NUM_COLUMNS) - CGFloat(ITEMS_INSETS_X * 2);
-            let height = width / PREVIEW_IMG_HEIGHT_RATIO + (ItemCellView.LABEL_HEIGHT * 2); //There 2 labels, top & bottom
-            
-            return CGSize(width: width, height: height)
-    }
-    
-    func collectionView(collectionView: UICollectionView,
-        layout collectionViewLayout: UICollectionViewLayout,
-        insetForSectionAtIndex section: Int) -> UIEdgeInsets {
-            let topInset = (section == 0) ? TOP_BAR_HEIGHT : ITEMS_INSETS_X
-            return UIEdgeInsets(top: topInset, left: ITEMS_INSETS_X, bottom: ITEMS_INSETS_Y, right: ITEMS_INSETS_X);
-    }
-}
-
-// MARK: - UICollectionViewDataSource interface
-
-extension YoutubeStreamsViewController : UICollectionViewDataSource {
-    
-    func numberOfSectionsInCollectionView(collectionView: UICollectionView) -> Int {
-        //The number of possible rows
-        return Int(ceil(Double(streams!.count) / Double(NUM_COLUMNS)));
-    }
-    
-    func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        // If the count of streams allows the current row to be full
-        if((section+1) * NUM_COLUMNS <= streams!.count){
-            return NUM_COLUMNS;
-        }
-            // the row cannot be full so we return the difference
-        else {
-            return streams!.count - ((section) * NUM_COLUMNS)
-        }
-    }
-    
-    func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
-        let cell : ItemCellView = collectionView.dequeueReusableCellWithReuseIdentifier(ItemCellView.CELL_IDENTIFIER, forIndexPath: indexPath) as! ItemCellView
-        cell.setRepresentedItem(streams![(indexPath.section * NUM_COLUMNS) +  indexPath.row])
-        return cell;
-    }
 }

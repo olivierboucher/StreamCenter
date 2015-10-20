@@ -7,16 +7,19 @@
 //
 
 import Foundation
+import UIKit
 
-struct YoutubeStream : CellItem {
+class YoutubeStream : CellItem {
     private(set) var channelId: String = ""
     private(set) var channelName: String = ""
     private(set) var description: String = ""
     private(set) var title: String = ""
-    private(set) var thumbnails : Dictionary<YoutubeThumbnailResolution, String>?
+    private(set) var thumbnails : [YoutubeThumbnailResolution : String]?
     private(set) var id : String = ""
     
-    init(id : String, title : String, channelId : String, channelName : String, description : String, thumbnails : Dictionary<YoutubeThumbnailResolution, String>?) {
+    private var mImage: UIImage?
+    
+    init(id : String, title : String, channelId : String, channelName : String, description : String, thumbnails : [YoutubeThumbnailResolution : String]?) {
         self.id = id;
         self.title = title;
         self.channelId = channelId;
@@ -25,8 +28,10 @@ struct YoutubeStream : CellItem {
         self.thumbnails = thumbnails;
     }
     
-    func streamURL() -> NSURL {
-        return NSURL(string: String(format: "http://www.youtube.com/embed/%@?autoplay=1", id))!
+    var streamURL: NSURL {
+        get {
+            return NSURL(string: "http://www.youtube.com/embed/\(id)?autoplay=1")!
+        }
     }
     
     var urlTemplate: String? {
@@ -44,6 +49,22 @@ struct YoutubeStream : CellItem {
         get {
             return description
         }
+    }
+    
+    var bannerString: String? {
+        get {
+            return nil
+        }
+    }
+    
+    var image: UIImage? {
+        get {
+            return mImage
+        }
+    }
+    
+    func setImage(image: UIImage) {
+        mImage = image
     }
 
 }

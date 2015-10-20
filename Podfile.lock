@@ -1,20 +1,30 @@
 PODS:
   - Alamofire (3.0.0-beta.3)
+  - CocoaAsyncSocket (7.4.2)
 
 DEPENDENCIES:
   - Alamofire (from `https://github.com/Alamofire/Alamofire.git`, branch `tvOS`)
+  - CocoaAsyncSocket (from `https://github.com/robbiehanson/CocoaAsyncSocket`, branch
+    `master`)
 
 EXTERNAL SOURCES:
   Alamofire:
     :branch: tvOS
     :git: https://github.com/Alamofire/Alamofire.git
+  CocoaAsyncSocket:
+    :branch: master
+    :git: https://github.com/robbiehanson/CocoaAsyncSocket
 
 CHECKOUT OPTIONS:
   Alamofire:
     :commit: d0d43f4e4bb612baf155a2079fa9fa624f0ad6c8
     :git: https://github.com/Alamofire/Alamofire.git
+  CocoaAsyncSocket:
+    :commit: 6e018ddf7c456106f898efae66ea5e5c94737a96
+    :git: https://github.com/robbiehanson/CocoaAsyncSocket
 
 SPEC CHECKSUMS:
   Alamofire: 5b9633a734bbd438e23615e5c202800df7e76b86
+  CocoaAsyncSocket: 9a291421ca6c4e66ab063c19dbc7c22e911a0a68
 
-COCOAPODS: 0.39.0
+COCOAPODS: 0.39.0.rc.1

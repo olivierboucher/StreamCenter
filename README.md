@@ -24,8 +24,8 @@ Since we're not including the /Pods directory in the git, you must run `pod inst
 Make sure you open GamingStreamsTVApp.xcworkspace to include the generated Pods or you will run into compile errors.  
 
 # Screenshots
-![Imgur](http://i.imgur.com/1Dipzvs.jpg)
-![Imgur](http://i.imgur.com/DMmZw4M.jpg)
+![Imgur](http://i.imgur.com/V2v5FND.png)
+![Imgur](http://i.imgur.com/HvWh6PI.png)
 ![Imgur](http://i.imgur.com/PhUoqOB.jpg)
 
 This is more of a MVP. I am looking for contributors to achieve various tasks:

@@ -11,17 +11,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
 
-
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
+        let window = UIWindow.init(frame: UIScreen.mainScreen().bounds)
+        window.rootViewController = SourceTabController()
+        window.makeKeyAndVisible()
+        self.window = window
         
-        YoutubeGaming.setAPIKey("AIzaSyAFLrfWAIk9gdaBbC3h7ymNpAtp9gLiWkY")
-        
-        let window = UIWindow.init(frame: UIScreen.mainScreen().bounds);
-        window.rootViewController = YoutubeStreamsViewController() // GamesViewController()
-        window.makeKeyAndVisible();
-        self.window = window;
-        
-        return true;
+        return true
     }
 
     func applicationWillResignActive(application: UIApplication) {
@@ -35,7 +31,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 
     func applicationWillEnterForeground(application: UIApplication) {
-        // Called as part of the transition from the background to the inactive state; here you can undo many of the changes made on entering the background.
+        // Called as part of the transition from the background to the inactive state here you can undo many of the changes made on entering the background.
     }
 
     func applicationDidBecomeActive(application: UIApplication) {
@@ -45,7 +41,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func applicationWillTerminate(application: UIApplication) {
         // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
     }
-
 
 }
 
