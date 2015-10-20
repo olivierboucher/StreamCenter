@@ -87,7 +87,7 @@ class ModalMenuView : UIView {
 
 class MenuItemView : UIView {
     var option : MenuOption
-    var title : UILabel? = nil
+    var title : UILabel!
     var gestureRecognizer : UITapGestureRecognizer?
     
     init(frame: CGRect, option: MenuOption) {
@@ -101,10 +101,10 @@ class MenuItemView : UIView {
         
         self.title = UILabel(frame: self.bounds)
         
-        self.title!.text = self.option.isEnabled ? self.option.enabledTitle : self.option.disabledTitle
-        self.title!.textAlignment = NSTextAlignment.Center
-        self.title!.font = UIFont.systemFontOfSize(self.bounds.height * 0.7, weight: 0)
-        self.title!.textColor = UIColor.whiteColor()
+        self.title.text = self.option.isEnabled ? self.option.enabledTitle : self.option.disabledTitle
+        self.title.textAlignment = NSTextAlignment.Center
+        self.title.font = UIFont.systemFontOfSize(self.bounds.height * 0.7, weight: 0)
+        self.title.textColor = UIColor.whiteColor()
         
         self.userInteractionEnabled = true
         
@@ -193,19 +193,22 @@ struct MenuOption {
     let disabledTitle : String
     var isEnabled : Bool
     var clickCallback : (sender: MenuItemView?)->()
+    var parameters : [String : AnyObject]?
     
-    init(enabledTitle : String, disabledTitle : String, enabled : Bool, onClick : (sender :MenuItemView?)->()) {
+    init(enabledTitle : String, disabledTitle : String, enabled : Bool, parameters: [String : AnyObject]? = nil, onClick : (sender : MenuItemView?)->()) {
         self.enabledTitle = enabledTitle
         self.disabledTitle = disabledTitle
         self.isEnabled = enabled
         self.clickCallback = onClick
+        self.parameters = parameters
     }
     
-    init(title : String, enabled : Bool, onClick : (sender : MenuItemView?)->()) {
+    init(title : String, enabled : Bool, parameters: [String : AnyObject]? = nil, onClick : (sender : MenuItemView?)->()) {
         self.enabledTitle = title
         self.disabledTitle = title
         self.isEnabled = enabled
         self.clickCallback = onClick
+        self.parameters = parameters
     }
     
 }

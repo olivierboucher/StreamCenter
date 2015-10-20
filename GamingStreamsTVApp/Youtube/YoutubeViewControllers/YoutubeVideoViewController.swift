@@ -13,7 +13,7 @@ import AVKit
 class YoutubeVideoViewController : UIViewController {
     private var videoView : VideoView?
     private var videoPlayer : AVPlayer?
-    private var currentStream : YoutubeStream?
+    private var currentStream : YoutubeStream!
  
     /*
     * init(stream : YoutubeStream)
@@ -27,7 +27,7 @@ class YoutubeVideoViewController : UIViewController {
         
         self.view.backgroundColor = UIColor.blackColor()
         
-        let streamAsset = AVURLAsset(URL: currentStream!.streamURL())
+        let streamAsset = AVURLAsset(URL: currentStream.streamURL)
         let streamItem = AVPlayerItem(asset: streamAsset)
         
         self.videoPlayer = AVPlayer(playerItem: streamItem)

@@ -1,5 +1,5 @@
 //
-//  VideoViewController.swift
+//  TwitchVideoViewController.swift
 //  GamingStreamsTVApp
 //
 //  Created by Olivier Boucher on 2015-09-14.
@@ -10,17 +10,18 @@ import UIKit
 import Foundation
 
 enum StreamSourceQuality: String {
-    case Source = "Source"
+    case Source
     case High
     case Medium
     case Low
 }
 
-class VideoViewController : UIViewController {
+class TwitchVideoViewController : UIViewController {
     private var videoView : VideoView?
     private var videoPlayer : AVPlayer?
     private var streams : [TwitchStreamVideo]?
     private var currentStream : TwitchStream?
+    private var currentStreamVideo: TwitchStreamVideo?
     private var chatView : TwitchChatView?
     private var modalMenu : ModalMenuView?
     private var modalMenuOptions : [String : [MenuOption]]?
@@ -36,7 +37,7 @@ class VideoViewController : UIViewController {
     */
     convenience init(stream : TwitchStream){
         self.init(nibName: nil, bundle: nil)
-        self.currentStream = stream;
+        self.currentStream = stream
         
         self.view.backgroundColor = UIColor.blackColor()
         
@@ -46,7 +47,7 @@ class VideoViewController : UIViewController {
         self.view.addGestureRecognizer(longPressRecognizer)
         
         let tapRecognizer = UITapGestureRecognizer(target: self, action: "pause")
-        tapRecognizer.allowedPressTypes = [NSNumber(integer: UIPressType.PlayPause.rawValue)];
+        tapRecognizer.allowedPressTypes = [NSNumber(integer: UIPressType.PlayPause.rawValue)]
         self.view.addGestureRecognizer(tapRecognizer)
         
         let gestureRecognizer = UITapGestureRecognizer(target: self, action: "handleMenuPress")
@@ -63,8 +64,6 @@ class VideoViewController : UIViewController {
         rightSwipe.enabled = false
         self.view.addGestureRecognizer(rightSwipe)
             
-        
-        
         //Modal menu options
         self.modalMenuOptions = [
             "Live Chat" : [
@@ -77,19 +76,17 @@ class VideoViewController : UIViewController {
                 MenuOption(title: StreamSourceQuality.Low.rawValue, enabled: false, onClick: self.handleQualityChange)
             ]
         ]
-        
+    }
+    
+    override func viewDidAppear(animated: Bool) {
+        super.viewDidAppear(animated)
         TwitchApi.getStreamsForChannel(self.currentStream!.channel.name) {
             (streams, error) in
             
-            if(error != nil) {
-                print("Error getting stream video data")
-                print(error)
-            }
-            
-            if let streams = streams {
+            if let streams = streams where streams.count > 0 {
                 self.streams = streams
-                let streamObject = streams[0]
-                let streamAsset = AVURLAsset(URL: streamObject.url!)
+                self.currentStreamVideo = streams[0]
+                let streamAsset = AVURLAsset(URL: self.currentStreamVideo!.url)
                 let streamItem = AVPlayerItem(asset: streamAsset)
                 
                 self.videoPlayer = AVPlayer(playerItem: streamItem)
@@ -97,15 +94,18 @@ class VideoViewController : UIViewController {
                 dispatch_async(dispatch_get_main_queue(),{
                     self.initializePlayerView()
                 })
+            } else {
+                let alert = UIAlertController(title: "Uh-Oh!", message: "There seems to be an issue with the stream. We're very sorry about that.", preferredStyle: .Alert)
                 
+                alert.addAction(UIAlertAction(title: "Ok", style: .Cancel, handler: { (action) -> Void in
+                    self.dismissViewControllerAnimated(true, completion: nil)
+                }))
+                
+                dispatch_async(dispatch_get_main_queue(), { () -> Void in
+                    self.presentViewController(alert, animated: true, completion: nil)
+                })
             }
         }
-    }
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        // Do any additional setup after loading the view, typically from a nib.
-        
     }
     
     /*
@@ -116,14 +116,12 @@ class VideoViewController : UIViewController {
     */
     override func viewWillDisappear(animated: Bool) {
         
-        if self.chatView != nil && self.view.subviews.contains(self.chatView!) {
-            self.chatView!.stopDisplayingMessages()
-            self.chatView!.removeFromSuperview()
-            self.chatView = nil
-        }
+        self.chatView?.stopDisplayingMessages()
+        self.chatView?.removeFromSuperview()
+        self.chatView = nil
         
-        self.videoView!.removeFromSuperview()
-        self.videoView!.setPlayer(nil)
+        self.videoView?.removeFromSuperview()
+        self.videoView?.setPlayer(nil)
         self.videoView = nil
         self.videoPlayer = nil
 
@@ -247,10 +245,10 @@ class VideoViewController : UIViewController {
     
     func showChat() {
         //Resize video view
-        var frame = self.videoView!.frame
-        frame.size.width -= 400
-        frame.size.height -= 225
-        frame.origin.y += (225/2)
+        var frame = self.videoView?.frame
+        frame?.size.width -= 400
+        frame?.size.height -= 225
+        frame?.origin.y += (225/2)
         
         
         
@@ -270,7 +268,9 @@ class VideoViewController : UIViewController {
         //animate the showing of the chat view
         UIView.animateWithDuration(0.5) { () -> Void in
             self.chatView!.frame = CGRect(x: self.view.bounds.width - 400, y: 0, width: 400, height: self.view!.bounds.height)
-            self.videoView!.frame = frame
+            if let videoView = self.videoView, frame = frame {
+                videoView.frame = frame
+            }
         }
     }
     
@@ -307,10 +307,12 @@ class VideoViewController : UIViewController {
             if let streams = self.streams {
                 for stream in streams {
                     if stream.quality == qualityIdentifier {
-                        let streamAsset = AVURLAsset(URL: stream.url!)
+                        currentStreamVideo = stream
+                        let streamAsset = AVURLAsset(URL: stream.url)
                         let streamItem = AVPlayerItem(asset: streamAsset)
                         self.videoPlayer?.replaceCurrentItemWithPlayerItem(streamItem)
                         dismissMenu()
+                        return
                     }
                 }
             }
@@ -322,6 +324,12 @@ class VideoViewController : UIViewController {
             if player.rate == 1 {
                 player.pause()
             } else {
+                if let currentVideo = currentStreamVideo {
+                    //do this to bring it back in sync
+                    let streamAsset = AVURLAsset(URL: currentVideo.url)
+                    let streamItem = AVPlayerItem(asset: streamAsset)
+                    player.replaceCurrentItemWithPlayerItem(streamItem)
+                }
                 player.play()
             }
         }

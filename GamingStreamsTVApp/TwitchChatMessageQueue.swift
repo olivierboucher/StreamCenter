@@ -9,7 +9,7 @@ import UIKit
 import Foundation
 
 protocol TwitchChatMessageQueueDelegate {
-    func handleProcessedTwitchMessage(message: TwitchChatMessage)
+    func handleProcessedAttributedString(message: NSAttributedString)
     func handleNewEmoteDownloaded(id: String, data : NSData)
     func hasEmoteInCache(id: String) -> Bool
     func getEmoteDataFromCache(id: String) -> NSData?
@@ -20,7 +20,7 @@ class TwitchChatMessageQueue {
     var processTimer : dispatch_source_t?
     var timerPaused : Bool = true
     let delegate : TwitchChatMessageQueueDelegate
-    let messageQueue : NSQueue<TwitchChatMessage>
+    let messageQueue : Queue<IRCMessage>
     let mqMutex : dispatch_semaphore_t
     
     
@@ -29,12 +29,12 @@ class TwitchChatMessageQueue {
         let queueAttr = dispatch_queue_attr_make_with_qos_class(DISPATCH_QUEUE_SERIAL, QOS_CLASS_BACKGROUND, 0)
         self.opQueue = dispatch_queue_create("com.twitch.chatmq", queueAttr)
         self.delegate = delegate
-        self.messageQueue = NSQueue<TwitchChatMessage>()
+        self.messageQueue = Queue<IRCMessage>()
     }
     
-    func addNewMessage(message : TwitchChatMessage) {
+    func addNewMessage(message : IRCMessage) {
         // For the data integrity - multiple threads can be accessing at the same time
-        dispatch_semaphore_wait(self.mqMutex, DISPATCH_TIME_FOREVER);
+        dispatch_semaphore_wait(self.mqMutex, DISPATCH_TIME_FOREVER)
         messageQueue.offer(message)
         dispatch_semaphore_signal(self.mqMutex)
         
@@ -44,12 +44,12 @@ class TwitchChatMessageQueue {
     }
     
     func processAvailableMessages() {
-        var messagesArray = [TwitchChatMessage]()
+        var messagesArray = [IRCMessage]()
         // For data integrity - We do not want any thread adding messages as
         // we are polling from the queue
-        dispatch_semaphore_wait(self.mqMutex, DISPATCH_TIME_FOREVER);
+        dispatch_semaphore_wait(self.mqMutex, DISPATCH_TIME_FOREVER)
         while(true){
-            if let message = self.messageQueue.poll() as! TwitchChatMessage? {
+            if let message = self.messageQueue.poll() {
                 messagesArray.append(message)
             }
             else {
@@ -65,81 +65,32 @@ class TwitchChatMessageQueue {
             return
         }
         
-        for message : TwitchChatMessage in messagesArray {
-            let metaByLine = message.rawMetadata.componentsSeparatedByString(";");
-            
-            for singleMeta in metaByLine {
-                // key = [0] and value = [1]
-                let keyValue = singleMeta.componentsSeparatedByString("=")
-                
-                if keyValue[0] == "emotes" && !keyValue[1].isEmpty  {
-                    let emotesById = keyValue[1].containsString("/") ? keyValue[1].componentsSeparatedByString("/") : [keyValue[1]]
-                    
-                    let downloadGroup = dispatch_group_create()
-                    
-                    for emote in emotesById {
-                        // id = [0] and values = [1]
-                        let rangesById = emote.componentsSeparatedByString(":")
-                        let emoteId = rangesById[0]
-                        let emoteRawRanges = rangesById[1].componentsSeparatedByString(",")
-                        
-                        for rawRange in emoteRawRanges {
-                            let startEnd = rawRange.componentsSeparatedByString("-")
-                            let start = Int(startEnd[0])
-                            let end = Int(startEnd[1])
-                            
-                            let range = NSMakeRange(start!, end! - start! + 1)
-                            if message.emotes[emoteId] == nil {
-                                message.emotes[emoteId] = [range]
+        for ircMessage : IRCMessage in messagesArray {
+            if let twitchMessage = ircMessage.toTwitchChatMessage() {
+                let downloadGroup = dispatch_group_create()
+                for emote in twitchMessage.emotes {
+                    if !self.delegate.hasEmoteInCache(emote.0){
+                        dispatch_group_enter(downloadGroup)
+                        Alamofire.request(.GET, TwitchApi.getEmoteUrlStringFromId(emote.0)).response() {
+                            (_, _, data, error) in
+                            if error != nil {
+                                NSLog("Error downloading emote image")
                             }
                             else {
-                                message.emotes[emoteId]?.append(range)
+                                self.delegate.handleNewEmoteDownloaded(emote.0, data: data!)
                             }
-                            
-                        }
-
-                        if !self.delegate.hasEmoteInCache(emoteId){
-                            dispatch_group_enter(downloadGroup)
-                            Alamofire.request(.GET, TwitchApi.getEmoteUrlStringFromId(emoteId)).response() {
-                                (_, _, data, error) in
-                                if error != nil {
-                                    NSLog("Error downloading emote image")
-                                }
-                                else {
-                                    self.delegate.handleNewEmoteDownloaded(emoteId, data: data!)
-                                }
-                                dispatch_group_leave(downloadGroup)
-                            }
+                            dispatch_group_leave(downloadGroup)
                         }
                     }
-                    dispatch_group_wait(downloadGroup, DISPATCH_TIME_FOREVER)
                 }
-                else if keyValue[0] == "display-name" && !keyValue[1].isEmpty  {
-                    message.sender = self.sanitizedIRCString(keyValue[1])
-                }
-                else if keyValue[0] == "@color" && !keyValue[1].isEmpty  {
-                    message.senderDisplayColor = keyValue[1]
-                }
+                dispatch_group_wait(downloadGroup, DISPATCH_TIME_FOREVER)
+                
+                delegate.handleProcessedAttributedString(self.getAttributedStringForMessage(twitchMessage))
             }
-            
-            //SAFE CHECKS
-            if message.sender == nil {
-                message.sender = message.rawSender.componentsSeparatedByString("!")[0]
-            }
-            
-            if message.senderDisplayColor == nil {
-                message.senderDisplayColor = "#555555"
-            }
-            
-            message.completeMessage = self.getAttributedStringForMessage(message)
-            
-            self.delegate.handleProcessedTwitchMessage(message)
         }
-        
     }
     
     func startProcessing() {
-        
         if self.processTimer == nil && self.timerPaused {
             self.timerPaused = false
             self.processTimer = ConcurrencyHelpers.createDispatchTimer((1 * NSEC_PER_SEC)/2, leeway: (1 * NSEC_PER_SEC)/2, queue: opQueue, block: {
@@ -161,52 +112,32 @@ class TwitchChatMessageQueue {
     
     private func getAttributedStringForMessage(message : TwitchChatMessage) -> NSAttributedString {
         
-        let attrMsg = NSMutableAttributedString(string: message.sender! + ": " + message.rawMessage)
+        let attrMsg = NSMutableAttributedString(string: message.message)
         
-        
-        if(message.emotes.count > 0) {
-            var removedChars = -(message.sender!.characters.count + 2); //Because ranges are based on rawMessage
-            for emote in message.emotes {
-                let attachment = NSTextAttachment()
-                let emoteImage = UIImage(data: self.delegate.getEmoteDataFromCache(emote.0)!)
-                attachment.image = emoteImage
+        for emote in message.emotes {
+            let attachment = NSTextAttachment()
+            let emoteImage = UIImage(data: self.delegate.getEmoteDataFromCache(emote.0)!)
+            attachment.image = emoteImage
+            let emoteString = NSAttributedString(attachment: attachment)
+
+            while true {
+                let range = attrMsg.mutableString.rangeOfString(emote.1)
                 
-                let attachString = NSAttributedString(attachment: attachment)
-                for range in emote.1{
-                    var fixedRange = range
-                    fixedRange.location -= removedChars
-                    
-                    let string = attrMsg.string
-                    
-                    let rmCount = string.substringWithRange(string.rangeFromNSRange(range)!).characters.count - attachString.length
-                    if fixedRange.location + fixedRange.length <= attrMsg.length {
-                        removedChars += rmCount
-                        if attachString != "\\U0000fffc" {
-                            attrMsg.replaceCharactersInRange(fixedRange, withAttributedString: attachString)
-                        } else {
-                            print("didn't add")
-                        }
-                    }
+                guard range.location != NSNotFound else {
+                    break;
                 }
+                
+                attrMsg.replaceCharactersInRange(range, withAttributedString: emoteString)
             }
         }
         
-        attrMsg.addAttribute(NSForegroundColorAttributeName, value: UIColor.blackColor(), range: NSMakeRange(0, attrMsg.length))
-        attrMsg.addAttribute(NSForegroundColorAttributeName, value: message.senderDisplayColor!.toUIColorFromHex()!, range: NSMakeRange(0, message.sender!.characters.count))
+        attrMsg.insertAttributedString(NSAttributedString(string: "\(message.senderName): "), atIndex: 0)
+        
+        attrMsg.addAttribute(NSForegroundColorAttributeName, value: UIColor.lightGrayColor(), range: NSMakeRange(0, attrMsg.length))
+        attrMsg.addAttribute(NSForegroundColorAttributeName, value: message.senderDisplayColor.toUIColorFromHex()!, range: NSMakeRange(0, message.senderName.characters.count))
         attrMsg.addAttribute(NSFontAttributeName, value: UIFont.systemFontOfSize(18), range: NSMakeRange(0, attrMsg.length))
+        
         
         return attrMsg
     }
-    
-    private func sanitizedIRCString(string: String) -> String {
-        //https://github.com/ircv3/ircv3-specifications/blob/master/core/message-tags-3.2.md#escaping-values
-        
-        return string.stringByReplacingOccurrencesOfString("\\:", withString: ";")
-                .stringByReplacingOccurrencesOfString("\\s", withString: "")
-                .stringByReplacingOccurrencesOfString("\\\\", withString: "\\")
-                .stringByReplacingOccurrencesOfString("\\r", withString: "\r")
-                .stringByReplacingOccurrencesOfString("\\n", withString: "\n")
-        
-    }
-    
 }

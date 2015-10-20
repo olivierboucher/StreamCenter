@@ -6,7 +6,7 @@
 
 import Foundation
 
-class NSQueue<T : AnyObject> {
+class Queue<T : Any> {
     private var array : [T]
     
     init() {
@@ -17,8 +17,8 @@ class NSQueue<T : AnyObject> {
         array.append(element)
     }
     
-    func poll() -> AnyObject? {
-        var element : AnyObject? = nil
+    func poll() -> T? {
+        var element : T? = nil
         if array.count > 0 {
             element = array.first
             array.removeFirst()
