@@ -16,11 +16,11 @@ class HitboxChatView : UIView {
     var messageViews = [ChatMessageView]()
     
     
-    init(frame: CGRect, channel: HitboxMedia) {
+    init(frame: CGRect, socketURL: NSURL, channel: HitboxMedia) {
         self.channel = channel
         super.init(frame: frame)
         
-        self.chatMgr = HitboxChatManager(consumer: self)
+        self.chatMgr = HitboxChatManager(consumer: self, url: socketURL)
         
         self.backgroundColor = "#2E2E2E".toUIColorFromHex()
         

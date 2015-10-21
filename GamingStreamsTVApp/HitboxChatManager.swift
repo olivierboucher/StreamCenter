@@ -24,7 +24,7 @@ class HitboxChatManager {
     private var credentials : HitboxChatCredentials?
     private var currentChannel : String?
     
-    init(consumer : ChatManagerConsumer) {
+    init(consumer : ChatManagerConsumer, url: NSURL) {
         status = .Disconnected
         self.consumer = consumer
         let queueAttr = dispatch_queue_attr_make_with_qos_class(DISPATCH_QUEUE_SERIAL, QOS_CLASS_BACKGROUND, 0)
@@ -32,24 +32,10 @@ class HitboxChatManager {
         
         messageQueue = HitboxChatMessageQueue(delegate: self)
         
-        HitboxChatAPI.getFirstAvailableWebSocket(){ socketURL, error in
-            guard error != nil else {
-                print(error!.developerSuggestion)
-                return
-            }
-            
-            guard let socketURL = socketURL as String! else {
-                print("Socket url is nil")
-                return
-            }
-            
-            if let URI = NSURL(string: socketURL) {
-                self.status = .Connecting
-                self.chatConnection = WebSocket(url: URI)
-                self.chatConnection!.delegate = self
-                self.chatConnection!.queue = self.opQueue
-            }
-        }
+        self.status = .Connecting
+        self.chatConnection = WebSocket(url: url)
+        self.chatConnection!.delegate = self
+        self.chatConnection!.queue = self.opQueue
     }
     
     func connectAnonymously(channel : String) {
