@@ -13,8 +13,7 @@ class ChatMessageView : UIView {
     
     init(message: NSAttributedString, width : CGFloat, position : CGPoint) {
         let maxSize = CGSize(width: width, height: 10000)
-        let drawingOptions = NSStringDrawingOptions.UsesLineFragmentOrigin.union(NSStringDrawingOptions.UsesFontLeading)
-        let size = message.boundingRectWithSize(maxSize, options: drawingOptions, context: nil)
+        let size = message.boundingRectWithSize(maxSize, options: [.UsesLineFragmentOrigin, .UsesFontLeading], context: nil)
         self.message = message
         
         super.init(frame: CGRect(origin: position, size: CGSize(width: width, height: size.height+10)))
