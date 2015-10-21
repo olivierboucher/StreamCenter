@@ -38,7 +38,7 @@ class HitboxChatAPI {
                 if let responseSocket = response.result.value {
                     if let colonRange = responseSocket.rangeOfString(":") {
                         let connectionID = responseSocket.substringToIndex(colonRange.startIndex)
-                        let compiledString = "ws://\(serverURL)/socket.io/1/\(connectionID)"
+                        let compiledString = "ws://\(serverURL)/socket.io/1/websocket/\(connectionID)"
                         completionHandler(result: compiledString, error: nil)
                         return
                     }
@@ -55,12 +55,12 @@ class HitboxChatAPI {
                 return
             }
             
-            guard let serverURls = serverURLs where serverURls.count > 0 else {
+            guard let serverURLs = serverURLs where serverURLs.count > 0 else {
                 completionHandler(result: nil, error: .OtherError("Invalid url array"))
                 return
             }
             
-            HitboxChatAPI.compileWebSocket(serverURls[0]){ socketURL, error in
+            HitboxChatAPI.compileWebSocket(serverURLs[0]){ socketURL, error in
                 guard error == nil else {
                     completionHandler(result: nil, error: error!)
                     return
