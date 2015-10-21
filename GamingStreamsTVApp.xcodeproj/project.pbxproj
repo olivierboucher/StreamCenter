@@ -50,6 +50,8 @@
 		09F106131BD6A5CE00DE0126 /* HitboxChatManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09F106121BD6A5CE00DE0126 /* HitboxChatManager.swift */; };
 		09F106151BD6AD8700DE0126 /* HitboxChatMessageQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09F106141BD6AD8700DE0126 /* HitboxChatMessageQueue.swift */; };
 		09F106181BD6B2AA00DE0126 /* SwiftyJSON.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09F106171BD6B2AA00DE0126 /* SwiftyJSON.swift */; };
+		09F1061A1BD7100C00DE0126 /* HitboxChatMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09F106191BD7100C00DE0126 /* HitboxChatMessage.swift */; };
+		09F1061D1BD7151200DE0126 /* HitboxChatView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09F1061C1BD7151200DE0126 /* HitboxChatView.swift */; };
 		A5E7DC008D2754CA1EC6CFC5 /* Pods_GamingStreamsTVApp.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 73B61525F92468AED0A0EE8C /* Pods_GamingStreamsTVApp.framework */; };
 		B44A44671BC6CAB800F399EC /* ItemCellView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B44A44661BC6CAB800F399EC /* ItemCellView.swift */; };
 		B4A2E6CD1BCFC84E0094AECA /* HitboxSearchResultsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4A2E6CC1BCFC84E0094AECA /* HitboxSearchResultsViewController.swift */; };
@@ -147,6 +149,8 @@
 		09F106121BD6A5CE00DE0126 /* HitboxChatManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HitboxChatManager.swift; sourceTree = "<group>"; };
 		09F106141BD6AD8700DE0126 /* HitboxChatMessageQueue.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HitboxChatMessageQueue.swift; sourceTree = "<group>"; };
 		09F106171BD6B2AA00DE0126 /* SwiftyJSON.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwiftyJSON.swift; sourceTree = "<group>"; };
+		09F106191BD7100C00DE0126 /* HitboxChatMessage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HitboxChatMessage.swift; sourceTree = "<group>"; };
+		09F1061C1BD7151200DE0126 /* HitboxChatView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HitboxChatView.swift; sourceTree = "<group>"; };
 		73B61525F92468AED0A0EE8C /* Pods_GamingStreamsTVApp.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_GamingStreamsTVApp.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		90FBC40A14CD24160B58953A /* Pods-GamingStreamsTVApp.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-GamingStreamsTVApp.release.xcconfig"; path = "Pods/Target Support Files/Pods-GamingStreamsTVApp/Pods-GamingStreamsTVApp.release.xcconfig"; sourceTree = "<group>"; };
 		B44A44661BC6CAB800F399EC /* ItemCellView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ItemCellView.swift; sourceTree = "<group>"; };
@@ -383,6 +387,8 @@
 				09F106121BD6A5CE00DE0126 /* HitboxChatManager.swift */,
 				09F106141BD6AD8700DE0126 /* HitboxChatMessageQueue.swift */,
 				091277AE1BD6EABE0003036D /* HitboxChatCredentials.swift */,
+				09F106191BD7100C00DE0126 /* HitboxChatMessage.swift */,
+				09F1061B1BD714F900DE0126 /* Views */,
 			);
 			name = Chat;
 			sourceTree = "<group>";
@@ -393,6 +399,14 @@
 				09F106171BD6B2AA00DE0126 /* SwiftyJSON.swift */,
 			);
 			name = JSON;
+			sourceTree = "<group>";
+		};
+		09F1061B1BD714F900DE0126 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				09F1061C1BD7151200DE0126 /* HitboxChatView.swift */,
+			);
+			name = Views;
 			sourceTree = "<group>";
 		};
 		334A70E19B5807FD4AAD28B4 /* Frameworks */ = {
@@ -645,6 +659,8 @@
 				09199A1D1BBAC67F00B10543 /* LoadingViewController.swift in Sources */,
 				09D6E7E21BD2D25400E88371 /* IRCConnection.swift in Sources */,
 				090AB9221BB3699700CDB05D /* TwitchChatView.swift in Sources */,
+				09F1061A1BD7100C00DE0126 /* HitboxChatMessage.swift in Sources */,
+				09F1061D1BD7151200DE0126 /* HitboxChatView.swift in Sources */,
 				B4A67BBE1BCBE4CB003E3B6F /* TwitchSearchResultsViewController.swift in Sources */,
 				09D6E7E41BD3065200E88371 /* NSData.swift in Sources */,
 				091277721BD66C1C0003036D /* HitboxChatAPI.swift in Sources */,

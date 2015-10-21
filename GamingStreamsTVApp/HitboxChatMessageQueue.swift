@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import UIKit
 
 protocol HitboxChatMessageQueueDelegate {
     func handleProcessedAttributedString(message: NSAttributedString)
@@ -61,11 +62,35 @@ class HitboxChatMessageQueue {
             return
         }
         
-        //TODO(Olivier): Process messages by removing ":::5" and parsing the rest as JSON
-        //TODO(Olivier): Switch based on message type and process accordingly
-        //NOTE(Olivier): We may need to add delegate methods to notify control messages etc
-        
-        
+        for message in messagesArray {
+            guard let data = message[3..<message.characters.count].dataUsingEncoding(NSUTF8StringEncoding) else {
+                return
+            }
+            
+            let msgJSON = JSON(data)
+            
+            if let name = msgJSON["name"].string where name == "message" {
+                if let arg = msgJSON["args"].array where arg.count > 0 {
+                    if let method = arg[0]["method"].string {
+                        
+                        switch method {
+                            case "chatMsg" :
+
+                                if let senderName = arg[0]["params"]["name"].string,
+                                   let text = arg[0]["params"]["text"].string {
+                                   let senderColor = arg[0]["params"]["nameColor"].string
+                                    
+                                    let attrString = getAttributedStringForMessage(HitboxChatMessage(senderName: senderName, senderDisplayColor: senderColor, message: text))
+                                    delegate.handleProcessedAttributedString(attrString)
+                                }
+                                break
+                            default :
+                                break
+                        }
+                    }
+                }
+            }
+        }  
     }
     
     func startProcessing() {
@@ -88,7 +113,15 @@ class HitboxChatMessageQueue {
         }
     }
     
-    private func getAttributedStringForMessage(message : TwitchChatMessage) -> NSAttributedString {
+    private func getAttributedStringForMessage(message : HitboxChatMessage) -> NSAttributedString {
+        let attrMsg = NSMutableAttributedString(string: "\(message.senderName): \(message.message)")
+        
+        let color = message.senderDisplayColor == nil ? UIColor.whiteColor() : UIColor(hexString: message.senderDisplayColor!)
+        
+        attrMsg.addAttribute(NSForegroundColorAttributeName, value: UIColor.lightGrayColor(), range: NSMakeRange(0, attrMsg.length))
+        attrMsg.addAttribute(NSForegroundColorAttributeName, value: color, range: NSMakeRange(0, message.senderName.characters.count))
+        attrMsg.addAttribute(NSFontAttributeName, value: UIFont.systemFontOfSize(18), range: NSMakeRange(0, attrMsg.length))
+        
         return NSAttributedString()
     }
 
