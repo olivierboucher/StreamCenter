@@ -17,7 +17,7 @@ struct HitboxChatCredentials {
     let token : String?
     
     func getJoinMessage(channel : String) -> String? {
-        guard let username = username as String!, let token = token as String! else {
+        guard let username = username, let token = token else {
             let msg : JSON = [
                 "name" : "message",
                 "args" : [

@@ -29,8 +29,11 @@ class HitboxVideoViewController : UIViewController {
     private var currentStreamVideo: HitboxStreamVideo?
     private var modalMenuOptions : [String : [MenuOption]]?
     
-//    private var leftSwipe: UISwipeGestureRecognizer!
-//    private var rightSwipe: UISwipeGestureRecognizer!
+    
+    private var chatView : HitboxChatView?
+    
+    private var leftSwipe: UISwipeGestureRecognizer!
+    private var rightSwipe: UISwipeGestureRecognizer!
     
     /*
     * init(stream : TwitchStream)
@@ -52,6 +55,15 @@ class HitboxVideoViewController : UIViewController {
         gestureRecognizer.allowedPressTypes = [UIPressType.Menu.rawValue]
         gestureRecognizer.cancelsTouchesInView = true
         self.view.addGestureRecognizer(gestureRecognizer)
+        
+        leftSwipe = UISwipeGestureRecognizer(target: self, action: Selector("swipe:"))
+        leftSwipe.direction = UISwipeGestureRecognizerDirection.Left
+        self.view.addGestureRecognizer(leftSwipe)
+        
+        rightSwipe = UISwipeGestureRecognizer(target: self, action: Selector("swipe:"))
+        rightSwipe.direction = UISwipeGestureRecognizerDirection.Right
+        rightSwipe.enabled = false
+        self.view.addGestureRecognizer(rightSwipe)
     }
     
     override func viewDidAppear(animated: Bool) {
@@ -114,7 +126,11 @@ class HitboxVideoViewController : UIViewController {
             for stream in streams {
                 menuOptions.append(MenuOption(title: stream.label, enabled: false, parameters: ["bitrate" : stream.bitrate], onClick: self.handleQualityChange))
             }
-            self.modalMenuOptions = ["Quality" : menuOptions]
+            self.modalMenuOptions = [
+                "Live Chat" : [
+                MenuOption(enabledTitle: "Turn off", disabledTitle: "Turn on", enabled: false, onClick:self.handleChatOnOff)
+                ],
+                "Quality" : menuOptions]
             //Gestures configuration
             let longPressRecognizer = UILongPressGestureRecognizer(target: self, action: Selector("handleLongPress:"))
             longPressRecognizer.cancelsTouchesInView = true
@@ -205,6 +221,97 @@ class HitboxVideoViewController : UIViewController {
             }
         }
         return false
+    }
+    
+    /*
+    * handleChatOnOff(sender : MenuItemView?)
+    *
+    * Handler for the chat option from the modal menu
+    * Displays or remove the chat view
+    */
+    func handleChatOnOff(sender : MenuItemView?) {
+        //NOTE(Olivier) : 400 width reduction at 16:9 is 225 height reduction
+        dispatch_async(dispatch_get_main_queue(), {
+            if let menuItem = sender {
+                if menuItem.isOptionEnabled() {     //                      Turn chat off
+                    
+                    self.hideChat()
+                    
+                    //Set the menu option accordingly
+                    menuItem.setOptionEnabled(false)
+                }
+                else {                              //                      Turn chat on
+                    
+                    self.showChat()
+                    
+                    //Set the menu option accordingly
+                    menuItem.setOptionEnabled(true)
+                }
+            }
+        })
+    }
+    
+    func showChat() {
+        //Resize video view
+        var frame = self.videoView?.frame
+        frame?.size.width -= 400
+        frame?.size.height -= 225
+        frame?.origin.y += (225/2)
+        
+        HitboxChatAPI.getFirstAvailableWebSocket(){ socketURL, error in
+            guard error == nil else {
+                print(error!.developerSuggestion)
+                return
+            }
+            
+            guard let socketURL = socketURL else {
+                print("Socket url is nil")
+                return
+            }
+            
+            if let url = NSURL(string: socketURL) {
+                //The chat view
+                self.chatView = HitboxChatView(frame: CGRect(x: self.view.bounds.width, y: 0, width: 400, height: self.view!.bounds.height), socketURL: url, channel: self.media)
+                self.chatView!.startDisplayingMessages()
+                dispatch_async(dispatch_get_main_queue(), { () -> Void in
+                    if let modalMenu = self.modalMenu {
+                        self.view.insertSubview(self.chatView!, belowSubview: modalMenu)
+                    } else {
+                        self.view.addSubview(self.chatView!)
+                    }
+                    
+                    self.rightSwipe.enabled = true
+                    self.leftSwipe.enabled = false
+                    
+                    //animate the showing of the chat view
+                    UIView.animateWithDuration(0.5) { () -> Void in
+                        self.chatView!.frame = CGRect(x: self.view.bounds.width - 400, y: 0, width: 400, height: self.view!.bounds.height)
+                        if let videoView = self.videoView, frame = frame {
+                            videoView.frame = frame
+                        }
+                    }
+                })
+            }
+        }
+        
+        
+    }
+    
+    func hideChat() {
+        
+        rightSwipe.enabled = false
+        leftSwipe.enabled = true
+        
+        //animate the hiding of the chat view
+        UIView.animateWithDuration(0.5, animations: { () -> Void in
+            self.videoView!.frame = self.view.frame
+            self.chatView!.frame.origin.x = CGRectGetMaxX(self.view.frame)
+            }) { (finished) -> Void in
+                //The chat view
+                self.chatView!.stopDisplayingMessages()
+                self.chatView!.removeFromSuperview()
+                self.chatView = nil
+        }
     }
     
     func handleQualityChange(sender : MenuItemView?) {
