@@ -10,6 +10,6 @@ import Foundation
 
 struct HitboxChatMessage {
     var senderName : String
-    var senderDisplayColor : String?
+    var senderDisplayColor : String
     var message : String
 }

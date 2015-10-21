@@ -64,32 +64,38 @@ class HitboxChatMessageQueue {
         
         for message in messagesArray {
             //We need to remove ":::5"
-            guard let data = message[3..<message.characters.count].dataUsingEncoding(NSUTF8StringEncoding) else {
+            guard let data = message[4..<message.characters.count].dataUsingEncoding(NSUTF8StringEncoding) else {
                 return
             }
             
-            let msgJSON = JSON(data)
-            
-            if let name = msgJSON["name"].string where name == "message" {
-                if let arg = msgJSON["args"].array where arg.count > 0 {
-                    if let method = arg[0]["method"].string {
-                        
+            do {
+                guard let msgJSON = try NSJSONSerialization.JSONObjectWithData(data, options: .AllowFragments) as? [String : AnyObject] else {
+                    return
+                }
+                
+                if let name = msgJSON["name"] as? String, rawArgs = msgJSON["args"] as? [String] where name == "message" {
+                    
+                    guard let argsData = rawArgs[0].dataUsingEncoding(NSUTF8StringEncoding), args = try NSJSONSerialization.JSONObjectWithData(argsData, options: .AllowFragments) as? [String : AnyObject] else {
+                        return
+                    }
+                    
+                    if let method = args["method"] as? String {
                         switch method {
-                            case "chatMsg" :
-
-                                if let senderName = arg[0]["params"]["name"].string,
-                                   let text = arg[0]["params"]["text"].string {
-                                   let senderColor = arg[0]["params"]["nameColor"].string
-                                    
+                        case "chatMsg" :
+                            if let params = args["params"] as? [String : AnyObject] {
+                                if let senderName = params["name"] as? String, text = params["text"] as? String, senderColor = params["nameColor"] as? String {
                                     let attrString = getAttributedStringForMessage(HitboxChatMessage(senderName: senderName, senderDisplayColor: senderColor, message: text))
                                     delegate.handleProcessedAttributedString(attrString)
                                 }
-                                break
-                            default :
-                                break
+                            }
+                            break
+                        default:
+                            break
                         }
                     }
                 }
+            } catch {
+                print(error)
             }
         }  
     }
@@ -117,13 +123,13 @@ class HitboxChatMessageQueue {
     private func getAttributedStringForMessage(message : HitboxChatMessage) -> NSAttributedString {
         let attrMsg = NSMutableAttributedString(string: "\(message.senderName): \(message.message)")
         
-        let color = message.senderDisplayColor == nil ? UIColor.whiteColor() : UIColor(hexString: message.senderDisplayColor!)
-        
+        let color = UIColor(hexString: "#\(message.senderDisplayColor)")
+    
         attrMsg.addAttribute(NSForegroundColorAttributeName, value: UIColor.lightGrayColor(), range: NSMakeRange(0, attrMsg.length))
         attrMsg.addAttribute(NSForegroundColorAttributeName, value: color, range: NSMakeRange(0, message.senderName.characters.count))
         attrMsg.addAttribute(NSFontAttributeName, value: UIFont.systemFontOfSize(18), range: NSMakeRange(0, attrMsg.length))
         
-        return NSAttributedString()
+        return attrMsg
     }
 
 }

@@ -14,9 +14,10 @@ class HitboxChatView : UIView {
     var chatMgr : HitboxChatManager? = nil
     var shouldConsume = false
     var messageViews = [ChatMessageView]()
+    let isCapableOfSendingMessages = TokenHelper.getHitboxToken() != nil
     
     
-    init(frame: CGRect, socketURL: NSURL, channel: HitboxMedia) {
+    init(frame: CGRect, socketURL: NSURL, channel: HitboxMedia, textFieldDelegate: UITextFieldDelegate) {
         self.channel = channel
         super.init(frame: frame)
         
@@ -44,6 +45,14 @@ class HitboxChatView : UIView {
         topLayer.shadowPath = shadowPath.CGPath
         
         self.layer.addSublayer(topLayer)
+        
+        if isCapableOfSendingMessages {
+            let textField = UITextField(frame: CGRect(x: 0, y: frame.height - 60, width: frame.width, height: 60))
+            textField.delegate = textFieldDelegate
+            textField.placeholder = "Enter Text"
+            self.addSubview(textField)
+        }
+        
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -72,7 +81,7 @@ extension HitboxChatView : ChatManagerConsumer {
                 let view = ChatMessageView(message: message, width: self.bounds.width-40, position: CGPoint(x: 20, y: 0))
                 
                 var newFrame = view.frame
-                newFrame.origin.y = self.frame.height - view.frame.height
+                newFrame.origin.y = self.frame.height - view.frame.height - (self.isCapableOfSendingMessages ? 60 : 0)
                 
                 view.frame = newFrame
                 

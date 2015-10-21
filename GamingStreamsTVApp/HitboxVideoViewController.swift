@@ -271,7 +271,7 @@ class HitboxVideoViewController : UIViewController {
             
             if let url = NSURL(string: socketURL) {
                 //The chat view
-                self.chatView = HitboxChatView(frame: CGRect(x: self.view.bounds.width, y: 0, width: 400, height: self.view!.bounds.height), socketURL: url, channel: self.media)
+                self.chatView = HitboxChatView(frame: CGRect(x: self.view.bounds.width, y: 0, width: 400, height: self.view!.bounds.height), socketURL: url, channel: self.media, textFieldDelegate: self)
                 self.chatView!.startDisplayingMessages()
                 dispatch_async(dispatch_get_main_queue(), { () -> Void in
                     if let modalMenu = self.modalMenu {
@@ -314,6 +314,16 @@ class HitboxVideoViewController : UIViewController {
         }
     }
     
+    func swipe(recognizer: UISwipeGestureRecognizer) {
+        if recognizer.state == .Ended {
+            if recognizer.direction == .Left {
+                showChat()
+            } else {
+                hideChat()
+            }
+        }
+    }
+    
     func handleQualityChange(sender : MenuItemView?) {
         
         if let bitrate = sender?.option.parameters?["bitrate"] as? Int {
@@ -331,4 +341,17 @@ class HitboxVideoViewController : UIViewController {
             }
         }
     }
+}
+
+extension HitboxVideoViewController : UITextFieldDelegate {
+    
+    func textFieldDidEndEditing(textField: UITextField) {
+        print(textField.text)
+        guard let text = textField.text else {
+            return
+        }
+        textField.text = nil
+        self.chatView?.chatMgr?.sendMessage(text)
+    }
+    
 }
