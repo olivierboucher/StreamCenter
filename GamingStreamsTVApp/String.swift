@@ -53,7 +53,7 @@ extension String {
 }
 
 extension String {
-    func toUIColorFromHex() -> UIColor? {
+    func toUIColorFromHex() -> UIColor {
         return UIColor(hexString: self)
     }
 }
