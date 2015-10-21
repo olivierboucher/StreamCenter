@@ -56,11 +56,11 @@ class HitboxChatManager {
 extension HitboxChatManager : WebSocketDelegate {
     func websocketDidConnect(socket: WebSocket) {
         status = .Connected
-        guard let joinMsg = credentials!.getJoinMessage(currentChannel!) else {
+        guard let joinMsg = credentials?.getJoinMessage(currentChannel!) else {
             print("Impossible to generate join message from credentials")
             return
         }
-        socket.writeString(joinMsg)
+        socket.writeString("5:::\(joinMsg)")
     }
     
     func websocketDidDisconnect(socket: WebSocket, error: NSError?) {
