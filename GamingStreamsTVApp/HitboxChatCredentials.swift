@@ -16,40 +16,12 @@ struct HitboxChatCredentials {
     let username : String?
     let token : String?
     
-    func getJoinMessage(channel : String) -> String? {
+    func getJoinMessage(channel : String) -> String {
         guard let username = username, let token = token else {
-            let msg : JSON = [
-                "name" : "message",
-                "args" : [
-                    [
-                        "method" : "joinChannel",
-                        "params" : [
-                            "channel" : channel,
-                            "isAdmin" : false
-                        ]
-                    ]
-                ]
-            ]
-            
-            return msg.string
+            return "5:::{\"name\":\"message\",\"args\":[{\"method\":\"joinChannel\",\"params\":{\"channel\":\"\(channel)\",\"isAdmin\":false}}]}"
         }
         
-        let msg : JSON = [
-            "name" : "message",
-            "args" : [
-                [
-                    "method" : "joinChannel",
-                    "params" : [
-                        "channel"   : channel,
-                        "name"      : username,
-                        "token"     : token,
-                        "isAdmin"   : false
-                    ]
-                ]
-            ]
-        ]
-        
-        return msg.string
+        return "5:::{\"name\":\"message\",\"args\":[{\"method\":\"joinChannel\",\"params\":{\"channel\":\"\(channel)\",\"name\":\"\(username)\",\"token\":\"\(token)\",\"isAdmin\":false}}]}"
     }
     
 }

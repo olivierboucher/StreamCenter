@@ -56,11 +56,6 @@ class HitboxChatManager {
 extension HitboxChatManager : WebSocketDelegate {
     func websocketDidConnect(socket: WebSocket) {
         status = .Connected
-        guard let joinMsg = credentials?.getJoinMessage(currentChannel!) else {
-            print("Impossible to generate join message from credentials")
-            return
-        }
-        socket.writeString("5:::\(joinMsg)")
     }
     
     func websocketDidDisconnect(socket: WebSocket, error: NSError?) {
@@ -73,6 +68,10 @@ extension HitboxChatManager : WebSocketDelegate {
         }
         else if text.hasPrefix("2::") { //This is the way hitbox sends a ping request
             socket.writeString("2::")
+        }
+        else if text.hasPrefix("1::") {
+            let msg : String = credentials!.getJoinMessage(currentChannel!)
+            socket.writeString(msg)
         }
     }
     
