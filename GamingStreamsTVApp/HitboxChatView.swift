@@ -1,30 +1,40 @@
 //
-//  TwitchChatView.swift
+//  HitboxChatView.swift
 //  GamingStreamsTVApp
 //
-//  Created by Olivier Boucher on 2015-09-23.
+//  Created by Olivier Boucher on 2015-10-20.
+//  Copyright © 2015 Rivus Media Inc. All rights reserved.
+//
 
-import UIKit
 import Foundation
+import UIKit
 
-
-class TwitchChatView : UIView {
-    let channel : TwitchChannel!
-    var chatMgr : TwitchChatManager? = nil
+class HitboxChatView : UIView {
+    let channel : HitboxMedia!
+    var chatMgr : HitboxChatManager? = nil
     var shouldConsume = false
     var messageViews = [ChatMessageView]()
+    let isCapableOfSendingMessages = TokenHelper.getHitboxToken() != nil
     
     
-    init(frame: CGRect, channel: TwitchChannel) {
+    init(frame: CGRect, socketURL: NSURL, channel: HitboxMedia, chatMessageDelegate: UITextFieldDelegate) {
         self.channel = channel
         super.init(frame: frame)
         
-        self.chatMgr = TwitchChatManager(consumer: self)
+        self.chatMgr = HitboxChatManager(consumer: self, url: socketURL)
         
         self.backgroundColor = "#2E2E2E".toUIColorFromHex()
         
         let topView = ChatTopView(frame: CGRect(x: 0, y: 0, width: self.bounds.width, height: 75), title: "#\(self.channel.name)")
         self.addSubview(topView)
+        
+        if isCapableOfSendingMessages {
+            let textField = UITextField(frame: CGRect(x: 0, y: frame.height - 60, width: frame.width, height: 60))
+            textField.delegate = chatMessageDelegate
+            textField.placeholder = "Enter Text"
+            self.addSubview(textField)
+        }
+        
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -36,8 +46,7 @@ class TwitchChatView : UIView {
     
     func startDisplayingMessages() {
         self.shouldConsume = true
-        self.chatMgr!.connectAnonymously()
-        self.chatMgr!.joinTwitchChannel(self.channel)
+        self.chatMgr!.connectAnonymously(channel.name)
     }
     
     func stopDisplayingMessages() {
@@ -47,14 +56,14 @@ class TwitchChatView : UIView {
     
 }
 
-extension TwitchChatView : ChatManagerConsumer {
+extension HitboxChatView : ChatManagerConsumer {
     func messageReadyForDisplay(message: NSAttributedString) {
         if self.shouldConsume {
             dispatch_async(dispatch_get_main_queue(),{
                 let view = ChatMessageView(message: message, width: self.bounds.width-40, position: CGPoint(x: 20, y: 0))
                 
                 var newFrame = view.frame
-                newFrame.origin.y = self.frame.height - view.frame.height
+                newFrame.origin.y = self.frame.height - view.frame.height - (self.isCapableOfSendingMessages ? 60 : 0)
                 
                 view.frame = newFrame
                 
