@@ -194,6 +194,10 @@ class HitboxAPI {
             if response.result.isSuccess {
                 if let baseDict = response.result.value as? [String : AnyObject] {
                     if let dataDict = baseDict["data"] as? [String : AnyObject], token = dataDict["authToken"] as? String {
+                        if let username = dataDict["user_name"] as? String {
+                            TokenHelper.storeHitboxUsername(username)
+                        }
+                        
                         TokenHelper.storeHitboxToken(token)
                         completionHandler(success: true, error: nil)
                         return

@@ -18,10 +18,11 @@ struct HitboxChatCredentials {
     
     func getJoinMessage(channel : String) -> String {
         guard let username = username, let token = token else {
-            return "5:::{\"name\":\"message\",\"args\":[{\"method\":\"joinChannel\",\"params\":{\"channel\":\"\(channel)\",\"isAdmin\":false}}]}"
+//            return "5:::{\"name\":\"message\",\"args\":[{\"method\":\"joinChannel\",\"params\":{\"channel\":\"\(channel.lowercaseString)\",\"isAdmin\":false}}]}"
+            return "5:::{\"name\":\"message\",\"args\":[{\"method\":\"joinChannel\",\"params\":{\"channel\":\"\(channel.lowercaseString)\",\"name\":\"unknown\",\"token\":\"\",\"isAdmin\":false}}]}"
         }
         
-        return "5:::{\"name\":\"message\",\"args\":[{\"method\":\"joinChannel\",\"params\":{\"channel\":\"\(channel)\",\"name\":\"\(username)\",\"token\":\"\(token)\",\"isAdmin\":false}}]}"
+        return "5:::{\"name\":\"message\",\"args\":[{\"method\":\"joinChannel\",\"params\":{\"channel\":\"\(channel.lowercaseString)\",\"name\":\"\(username)\",\"token\":\"\(token)\",\"isAdmin\":false}}]}"
     }
     
 }

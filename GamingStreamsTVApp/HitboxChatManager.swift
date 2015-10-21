@@ -16,7 +16,7 @@ class HitboxChatManager {
         case Disconnected
     }
     
-    private var chatConnection : WebSocket?
+    private var chatConnection : WebSocket
     private var status : ConnectionStatus
     private let consumer : ChatManagerConsumer
     private let opQueue : dispatch_queue_t
@@ -30,17 +30,24 @@ class HitboxChatManager {
         let queueAttr = dispatch_queue_attr_make_with_qos_class(DISPATCH_QUEUE_SERIAL, QOS_CLASS_BACKGROUND, 0)
         opQueue = dispatch_queue_create("com.hitbox.chatmgr", queueAttr)
         
-        messageQueue = HitboxChatMessageQueue(delegate: self)
-        
         self.status = .Connecting
         self.chatConnection = WebSocket(url: url)
-        self.chatConnection!.delegate = self
-        self.chatConnection!.queue = self.opQueue
+        self.chatConnection.delegate = self
+        self.chatConnection.queue = self.opQueue
+        
+        messageQueue = HitboxChatMessageQueue(delegate: self)
+        
+        
     }
     
     func connectAnonymously(channel : String) {
         if let socket = chatConnection as WebSocket! {
-            credentials = HitboxChatCredentials.anonymous()
+            if let token = TokenHelper.getHitboxToken(), username = TokenHelper.getHitboxUsername() {
+                credentials = HitboxChatCredentials(username: username, token: token)
+            } else {
+                credentials = HitboxChatCredentials.anonymous()
+            }
+            
             currentChannel = channel.lowercaseString
             socket.connect()
         }
@@ -50,6 +57,14 @@ class HitboxChatManager {
         if let socket = chatConnection as WebSocket!  where socket.isConnected {
             socket.disconnect()
         }
+    }
+    
+    func sendMessage(text: String) {
+        guard let username = credentials?.username, token = credentials?.token, currentChannel = currentChannel else {
+            return
+        }
+        let formattedMessage = "5:::{\"name\":\"message\",\"args\":[{\"method\":\"chatMsg\",\"params\":{\"channel\":\"\(currentChannel.lowercaseString)\",\"name\":\"\(username)\",\"token\":\"\(token)\",\"text\":\"\(text)\",\"nameColor\":\"FFFFFF\"}}]}"
+        self.chatConnection.writeString(formattedMessage)
     }
 }
 
@@ -70,7 +85,7 @@ extension HitboxChatManager : WebSocketDelegate {
             socket.writeString("2::")
         }
         else if text.hasPrefix("1::") {
-            let msg : String = credentials!.getJoinMessage(currentChannel!)
+            let msg = credentials!.getJoinMessage(currentChannel!)
             socket.writeString(msg)
         }
     }
