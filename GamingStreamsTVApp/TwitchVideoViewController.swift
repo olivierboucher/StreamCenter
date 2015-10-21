@@ -170,14 +170,20 @@ class TwitchVideoViewController : UIViewController {
                     size: CGSize(width: self.view.bounds.width/3, height: self.view.bounds.height/1.5))
                 
                 modalMenu!.center = self.view.center
-                
-                modalMenu?.alpha = 0
+            }
+            
+            guard let modalMenu = self.modalMenu else {
+                return
+            }
+            
+            if modalMenu.isDescendantOfView(self.view) {
+                dismissMenu()
+            } else {
+                modalMenu.alpha = 0
                 self.view.addSubview(self.modalMenu!)
                 UIView.animateWithDuration(0.5, animations: { () -> Void in
                     self.modalMenu?.alpha = 1
                 })
-            } else {
-                dismissMenu()
             }
         }
     }
@@ -206,7 +212,6 @@ class TwitchVideoViewController : UIViewController {
                     if finished {
                         modalMenu.removeFromSuperview()
                     }
-                    self.modalMenu = nil
                 })
 //                modalMenu.removeFromSuperview()
                 return true

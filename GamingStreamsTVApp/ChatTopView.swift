@@ -15,6 +15,8 @@ class ChatTopView: UILabel {
         
         text = title
         
+        adjustsFontSizeToFitWidth = true
+        
         textColor = UIColor.whiteColor()
         backgroundColor = UIColor(hexString: "#555555")
         textAlignment = .Center
