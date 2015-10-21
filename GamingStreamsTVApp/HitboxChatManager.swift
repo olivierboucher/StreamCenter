@@ -59,6 +59,12 @@ class HitboxChatManager {
             socket.connect()
         }
     }
+    
+    func disconnect() {
+        if let socket = chatConnection as WebSocket!  where socket.isConnected {
+            socket.disconnect()
+        }
+    }
 }
 
 extension HitboxChatManager : WebSocketDelegate {

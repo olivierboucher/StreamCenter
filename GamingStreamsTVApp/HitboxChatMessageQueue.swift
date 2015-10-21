@@ -63,6 +63,7 @@ class HitboxChatMessageQueue {
         }
         
         for message in messagesArray {
+            //We need to remove ":::5"
             guard let data = message[3..<message.characters.count].dataUsingEncoding(NSUTF8StringEncoding) else {
                 return
             }
