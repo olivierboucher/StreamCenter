@@ -17,7 +17,7 @@ class HitboxChatView : UIView {
     let isCapableOfSendingMessages = TokenHelper.getHitboxToken() != nil
     
     
-    init(frame: CGRect, socketURL: NSURL, channel: HitboxMedia, textFieldDelegate: UITextFieldDelegate) {
+    init(frame: CGRect, socketURL: NSURL, channel: HitboxMedia, chatMessageDelegate: UITextFieldDelegate) {
         self.channel = channel
         super.init(frame: frame)
         
@@ -30,7 +30,7 @@ class HitboxChatView : UIView {
         
         if isCapableOfSendingMessages {
             let textField = UITextField(frame: CGRect(x: 0, y: frame.height - 60, width: frame.width, height: 60))
-            textField.delegate = textFieldDelegate
+            textField.delegate = chatMessageDelegate
             textField.placeholder = "Enter Text"
             self.addSubview(textField)
         }

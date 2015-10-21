@@ -277,7 +277,7 @@ class HitboxVideoViewController : UIViewController {
             
             if let url = NSURL(string: socketURL) {
                 //The chat view
-                self.chatView = HitboxChatView(frame: CGRect(x: self.view.bounds.width, y: 0, width: 400, height: self.view!.bounds.height), socketURL: url, channel: self.media, textFieldDelegate: self)
+                self.chatView = HitboxChatView(frame: CGRect(x: self.view.bounds.width, y: 0, width: 400, height: self.view!.bounds.height), socketURL: url, channel: self.media, chatMessageDelegate: self)
                 self.chatView!.startDisplayingMessages()
                 dispatch_async(dispatch_get_main_queue(), { () -> Void in
                     if let modalMenu = self.modalMenu {
