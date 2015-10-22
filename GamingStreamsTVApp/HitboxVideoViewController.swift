@@ -192,6 +192,7 @@ class HitboxVideoViewController : UIViewController {
                 self.view.addSubview(self.modalMenu!)
                 UIView.animateWithDuration(0.5, animations: { () -> Void in
                     self.modalMenu?.alpha = 1
+                    self.view.setNeedsFocusUpdate()
                 })
             }
             
