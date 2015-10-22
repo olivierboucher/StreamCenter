@@ -58,6 +58,9 @@
 		B4A67BBC1BCBDF8B003E3B6F /* UIColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4A67BBB1BCBDF8B003E3B6F /* UIColor.swift */; };
 		B4A67BBE1BCBE4CB003E3B6F /* TwitchSearchResultsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4A67BBD1BCBE4CB003E3B6F /* TwitchSearchResultsViewController.swift */; };
 		B4BDA2581BCD282C000DD1C8 /* ScrollingLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4BDA2571BCD282C000DD1C8 /* ScrollingLabel.swift */; };
+		B4CDBC5A1BD8957F0035176C /* LivestreamAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4CDBC591BD8957F0035176C /* LivestreamAPI.swift */; };
+		B4CDBC5C1BD8959E0035176C /* LivestreamChannel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4CDBC5B1BD8959E0035176C /* LivestreamChannel.swift */; };
+		B4CDBC5E1BD89A860035176C /* LivestreamPlaylist.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4CDBC5D1BD89A860035176C /* LivestreamPlaylist.swift */; };
 		B4D15C7C1BCDCBA2006FFB5D /* QRCodeGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4D15C7B1BCDCBA2006FFB5D /* QRCodeGenerator.swift */; };
 		B4D15C7E1BCDCCB3006FFB5D /* QRCodeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4D15C7D1BCDCCB3006FFB5D /* QRCodeViewController.swift */; };
 		B4D15C801BCDD3E3006FFB5D /* TokenHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4D15C7F1BCDD3E3006FFB5D /* TokenHelper.swift */; };
@@ -158,6 +161,9 @@
 		B4A67BBB1BCBDF8B003E3B6F /* UIColor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIColor.swift; sourceTree = "<group>"; };
 		B4A67BBD1BCBE4CB003E3B6F /* TwitchSearchResultsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TwitchSearchResultsViewController.swift; sourceTree = "<group>"; };
 		B4BDA2571BCD282C000DD1C8 /* ScrollingLabel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ScrollingLabel.swift; sourceTree = "<group>"; };
+		B4CDBC591BD8957F0035176C /* LivestreamAPI.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LivestreamAPI.swift; sourceTree = "<group>"; };
+		B4CDBC5B1BD8959E0035176C /* LivestreamChannel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LivestreamChannel.swift; sourceTree = "<group>"; };
+		B4CDBC5D1BD89A860035176C /* LivestreamPlaylist.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LivestreamPlaylist.swift; sourceTree = "<group>"; };
 		B4D15C7B1BCDCBA2006FFB5D /* QRCodeGenerator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QRCodeGenerator.swift; sourceTree = "<group>"; };
 		B4D15C7D1BCDCCB3006FFB5D /* QRCodeViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QRCodeViewController.swift; sourceTree = "<group>"; };
 		B4D15C7F1BCDD3E3006FFB5D /* TokenHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TokenHelper.swift; sourceTree = "<group>"; };
@@ -222,6 +228,7 @@
 			children = (
 				09D098231BA7663A00E7E6FC /* ViewControllers */,
 				090AB9051BA6366500CDB05D /* Views */,
+				B4CDBC571BD894D40035176C /* LivestreamAPI */,
 				B4DFFA311BCCB21100D177AE /* HitboxAPI */,
 				090AB8F01BA5C7EC00CDB05D /* TwitchAPI */,
 				09CE59831BAE456D0054EB71 /* Helpers */,
@@ -327,6 +334,7 @@
 				B4E9F7F91BCF385A0026708F /* SourceTabController.swift */,
 				B4542FE01BCD9BCE0099D14B /* Hitbox */,
 				B4FB52AF1BCF27E600C57B0B /* Twitch */,
+				B4CDBC581BD894DF0035176C /* Livestream */,
 				B4FB52B01BCF280900C57B0B /* Custom */,
 				09199A1E1BBAD0D000B10543 /* Abstract */,
 			);
@@ -426,6 +434,23 @@
 				B4E9F7FB1BCF600C0026708F /* HitboxVideoViewController.swift */,
 			);
 			name = Hitbox;
+			sourceTree = "<group>";
+		};
+		B4CDBC571BD894D40035176C /* LivestreamAPI */ = {
+			isa = PBXGroup;
+			children = (
+				B4CDBC591BD8957F0035176C /* LivestreamAPI.swift */,
+				B4CDBC5B1BD8959E0035176C /* LivestreamChannel.swift */,
+				B4CDBC5D1BD89A860035176C /* LivestreamPlaylist.swift */,
+			);
+			name = LivestreamAPI;
+			sourceTree = "<group>";
+		};
+		B4CDBC581BD894DF0035176C /* Livestream */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Livestream;
 			sourceTree = "<group>";
 		};
 		B4DFFA311BCCB21100D177AE /* HitboxAPI */ = {
@@ -623,6 +648,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				B4A2E6CD1BCFC84E0094AECA /* HitboxSearchResultsViewController.swift in Sources */,
+				B4CDBC5E1BD89A860035176C /* LivestreamPlaylist.swift in Sources */,
 				090AB8FD1BA616A900CDB05D /* TwitchApi.swift in Sources */,
 				B4E9F8001BCF83CC0026708F /* TwitchAuthViewController.swift in Sources */,
 				B4D3103B1BD154320091448F /* UIView.swift in Sources */,
@@ -643,11 +669,13 @@
 				090AB9091BA8454500CDB05D /* TopBarView.swift in Sources */,
 				090AB90D1BA9B0F100CDB05D /* LoadingView.swift in Sources */,
 				B4D88D2E1BCF35E500C1DF87 /* HitboxStreamsViewController.swift in Sources */,
+				B4CDBC5C1BD8959E0035176C /* LivestreamChannel.swift in Sources */,
 				09F106151BD6AD8700DE0126 /* HitboxChatMessageQueue.swift in Sources */,
 				B4D88D2C1BCF35DD00C1DF87 /* HitboxGamesViewController.swift in Sources */,
 				09CE59881BAF55CE0054EB71 /* TwitchChatMessageQueue.swift in Sources */,
 				090AB9241BB36BC100CDB05D /* ChatMessageView.swift in Sources */,
 				090AB9001BA616A900CDB05D /* TwitchStream.swift in Sources */,
+				B4CDBC5A1BD8957F0035176C /* LivestreamAPI.swift in Sources */,
 				B4E75B1F1BD74E8F00C1E6BA /* ChatTopView.swift in Sources */,
 				09CE598A1BAF5F870054EB71 /* Queue.swift in Sources */,
 				09EB6D3E1BB484F7003EB244 /* String.swift in Sources */,
