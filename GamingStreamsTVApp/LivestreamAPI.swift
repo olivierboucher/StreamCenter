@@ -87,5 +87,19 @@ class LivestreamAPI {
             }
         }
     }
+    
+    static func getLiveStreamURL(forChannel channel: String, completionHandler: (streamResponse: (isLive: Bool, isMobileCompatible: Bool, url: NSURL)?, error: ServiceError?) -> ()) {
+        let reformattedChannel = channel.stringByReplacingOccurrencesOfString("_", withString: "-") //per livestream API http://original.livestream.com/userguide/index.php?title=Main_Page&title=Mobile_API
+        let urlString = "http://x\(reformattedChannel)x.api.channel.livestream.com/2.0/getstream?platform=http"
+        Alamofire.request(.GET, urlString, parameters: ["platform" : "http"], encoding: .PropertyList(.XMLFormat_v1_0, 0)).responsePropertyList { response in
+            if response.result.isSuccess {
+                if let dictionary = response.result.value as? [String : AnyObject] {
+                    print(dictionary)
+                }
+            } else {
+                completionHandler(streamResponse: nil, error: .URLError)
+            }
+        }
+    }
 
 }
