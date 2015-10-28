@@ -10,18 +10,6 @@ import Foundation
 import Alamofire
 
 class Mixpanel {
-    
-    class Event {
-        let name : String
-        var properties : [String : AnyObject]
-        
-        init(name : String, properties : [String : AnyObject]) {
-            self.name = name
-            self.properties = properties
-            self.properties["time"] = NSDate().timeIntervalSince1970
-        }
-    }
-    
     private static let EVENTS_ENDPOINT = "https://api.mixpanel.com/track/"
     private static var instance : Mixpanel? = nil
     
@@ -62,7 +50,8 @@ class Mixpanel {
             let base64 = json.base64EncodedStringWithOptions([]).stringByReplacingOccurrencesOfString("\n", withString: "")
             
             Alamofire.request(.GET, Mixpanel.EVENTS_ENDPOINT, parameters :
-                ["data" : base64]
+                ["data" : base64,
+                 "ip"   : 1]
             ).responseString { response in
                 
                 if response.result.isSuccess && response.result.value! == "1" {
@@ -119,6 +108,9 @@ class Mixpanel {
     func trackEvents(events : [Event]) {
         print("MIXPANEL: new event added to queue")
         dispatch_async(opQueue){
+            for event in events {
+                event.properties["token"] = self.token
+            }
             dispatch_semaphore_wait(self.eventsMutex, DISPATCH_TIME_FOREVER)
             self.eventsBuffer.appendContentsOf(events)
             dispatch_semaphore_signal(self.eventsMutex)
