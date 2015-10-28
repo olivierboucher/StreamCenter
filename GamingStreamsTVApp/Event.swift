@@ -8,7 +8,9 @@
 
 import Foundation
 
-class Event {
+
+
+struct Event {
     let name : String
     var properties : [String : AnyObject]
     
@@ -18,5 +20,30 @@ class Event {
         self.properties["time"] = NSDate().timeIntervalSince1970
     }
     
+    mutating func signedSelf(token : String) -> Event {
+        self.properties["token"] = token
+        return self
+    }
     
+    static func InitializeEvent() -> Event {
+        return Event(name: "App start", properties: [:])
+    }
+}
+
+//Little hack to get the array extension to work
+protocol EventType {}
+extension Event : EventType {}
+
+extension Array where Element : EventType {
+    func getJSONConvertible() -> [[String : AnyObject]] {
+        var dictArray = [[String : AnyObject]]()
+        for element in self {
+            let event = element as! Event
+            dictArray.append([
+                "event" : event.name,
+                "properties" : event.properties
+            ])
+        }
+        return dictArray
+    }
 }

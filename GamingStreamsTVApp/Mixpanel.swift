@@ -46,21 +46,30 @@ class Mixpanel {
         dispatch_semaphore_signal(eventsMutex)
         do {
             let events = Array(eventsBuffer[0..<count])
-            let json = try NSJSONSerialization.dataWithJSONObject(events, options: [])
+            let json = try NSJSONSerialization.dataWithJSONObject(events.getJSONConvertible(), options: [])
+            print("MIXPANEL: Payload -> \(String(data: json, encoding: NSUTF8StringEncoding)!)")
             let base64 = json.base64EncodedStringWithOptions([]).stringByReplacingOccurrencesOfString("\n", withString: "")
             
             Alamofire.request(.GET, Mixpanel.EVENTS_ENDPOINT, parameters :
                 ["data" : base64,
-                 "ip"   : 1]
-            ).responseString { response in
+                 "ip"   : 1,
+                 "verbose" : 1]
+            ).responseJSON { response in
                 
-                if response.result.isSuccess && response.result.value! == "1" {
-                    //Sucess, let's remove events from buffer
-                    dispatch_semaphore_wait(self.eventsMutex, DISPATCH_TIME_FOREVER)
-                    self.eventsBuffer.removeRange(0..<count)
-                    dispatch_semaphore_signal(self.eventsMutex)
-                    print("MIXPANEL: Sent \(count) events correctly")
-                    return
+                if response.result.isSuccess {
+                    if let responseJSON = response.result.value! as? [String : AnyObject] {
+                        if let status = responseJSON["status"] as? Int where status == 1 {
+                            //Sucess, let's remove events from buffer
+                            dispatch_semaphore_wait(self.eventsMutex, DISPATCH_TIME_FOREVER)
+                            self.eventsBuffer.removeRange(0..<count)
+                            dispatch_semaphore_signal(self.eventsMutex)
+                            print("MIXPANEL: Sent \(count) events correctly")
+                            return
+                        }
+                        else if let error = responseJSON["error"] as? String {
+                            print("MIXPANEL ERROR: \(error)")
+                        }
+                    }
                 }
                 
                 print("MIXPANEL: Error sending data or mixpanel error")
@@ -73,7 +82,7 @@ class Mixpanel {
     }
     
     private func sendBuffer() {
-        guard eventsBuffer.count == 0 else {
+        guard eventsBuffer.count > 0  else {
             print("MIXPANEL: no new events, stopping process")
             stopProcessing()
             return
@@ -105,14 +114,16 @@ class Mixpanel {
         }
     }
     
+    
     func trackEvents(events : [Event]) {
         print("MIXPANEL: new event added to queue")
         dispatch_async(opQueue){
-            for event in events {
-                event.properties["token"] = self.token
+            var mutableEvents = [Event]()
+            for var event in events {
+                mutableEvents.append(event.signedSelf(self.token))
             }
             dispatch_semaphore_wait(self.eventsMutex, DISPATCH_TIME_FOREVER)
-            self.eventsBuffer.appendContentsOf(events)
+            self.eventsBuffer.appendContentsOf(mutableEvents)
             dispatch_semaphore_signal(self.eventsMutex)
             self.startProcessing()
         }
