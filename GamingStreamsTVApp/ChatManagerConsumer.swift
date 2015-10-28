@@ -8,6 +8,6 @@
 
 import Foundation
 
-protocol TwitchChatConsumer {
+protocol ChatManagerConsumer {
     func messageReadyForDisplay(message: NSAttributedString)
 }

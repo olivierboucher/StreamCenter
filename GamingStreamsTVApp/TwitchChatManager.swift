@@ -20,9 +20,9 @@ class TwitchChatManager {
     private var capabilities = IRCCapabilities(capabilities: ["twitch.tv/tags"])
     private var messageQueue : TwitchChatMessageQueue?
     private var emotesDictionnary = [String : NSData]() //Dictionnary that holds all the emotes (Acts as cache)
-    private var consumer : TwitchChatConsumer?
+    private var consumer : ChatManagerConsumer?
     
-    init(consumer : TwitchChatConsumer) {
+    init(consumer : ChatManagerConsumer) {
         self.consumer = consumer
         self.messageQueue = TwitchChatMessageQueue(delegate: self)
         connection = IRCConnection(delegate: self)
