@@ -103,7 +103,7 @@ class IRCConnection {
     
     init (delegate : IRCConnectionDelegate) {
         let queueAttr = dispatch_queue_attr_make_with_qos_class(DISPATCH_QUEUE_SERIAL, QOS_CLASS_BACKGROUND, 0)
-        connectionQueue = dispatch_queue_create("com.twitch.ircchatconnection", queueAttr)
+        connectionQueue = dispatch_queue_create("com.irc.connection", queueAttr)
         status = .Disconnected
         sendQueue = [NSData]()
         sendQueueLock = dispatch_semaphore_create(1)
@@ -119,8 +119,10 @@ class IRCConnection {
     func connect(endpoint : IRCEndpoint, credentials : IRCCredentials, capabilities : IRCCapabilities) {
         if status != .Disconnected &&
            status != .ServerDisconnected &&
-           status != .Suspended
-        { return }
+           status != .Suspended {
+            Logger.Warning("Current status does not allow connection")
+            return
+        }
         
         self.credentials = credentials
         self.capabilities = capabilities
@@ -137,6 +139,7 @@ class IRCConnection {
         let dispatchTime: dispatch_time_t = dispatch_time(DISPATCH_TIME_NOW, Int64(1 * Double(NSEC_PER_SEC)))
         dispatch_after(dispatchTime, dispatch_get_main_queue(), {
             self.chatConnection!.disconnectAfterWriting()
+            Logger.Debug("Disconnected")
         })
     }
 ////////////////////////////////////////
@@ -160,6 +163,7 @@ class IRCConnection {
     }
     
     private func didConnect() {
+        Logger.Debug("Connected")
         status = .Connected
         connectedDate = NSDate()
         queueWait = NSDate(timeIntervalSinceNow: 0.5)
@@ -168,10 +172,12 @@ class IRCConnection {
     }
     
     private func didNotConnect() {
+        Logger.Error("Could not connect to host")
         delegate.IRCConnectionDidNotConnect()
     }
     
     private func didDisconnect() {
+        Logger.Warning("Did disconnect from host")
         delegate.IRCConnectionDidDisconnect()
     }
     
@@ -189,13 +195,17 @@ class IRCConnection {
     }
     
     private func startSendQueue() {
-        if sendQueueProcessing { return }
+        if sendQueueProcessing {
+            Logger.Warning("Send queue is already processing")
+            return
+        }
         
         sendQueueProcessing = true
 
         let timeInterval = (queueWait != nil && queueWait!.timeIntervalSinceNow > 0) ? queueWait!.timeIntervalSinceNow : minimumSendQueueDelay
         let dispatchTime: dispatch_time_t = dispatch_time(DISPATCH_TIME_NOW, Int64(timeInterval * Double(NSEC_PER_SEC)))
         dispatch_after(dispatchTime, dispatch_get_main_queue(), {
+            Logger.Debug("Starting to process send queue")
             self.treatSendQueue()
         })
     }
@@ -207,6 +217,7 @@ class IRCConnection {
     private func treatSendQueue() {
         dispatch_semaphore_wait(sendQueueLock, DISPATCH_TIME_FOREVER)
         if (self.sendQueue.count <= 0){
+            Logger.Debug("Send queue is empty, stopping to process")
             sendQueueProcessing = false
             return
         }
@@ -235,6 +246,7 @@ class IRCConnection {
             })
         }
         else {
+            Logger.Debug("Send queue is empty, stopping to process")
             sendQueueProcessing = false
         }
         
@@ -277,7 +289,7 @@ class IRCConnection {
         
         chatConnection!.writeData(vdata, withTimeout: -1, tag: 0)
         
-        //print("WROTE: \(String(data: vdata, encoding: NSUTF8StringEncoding))")
+        Logger.Info("Wrote: \(String(data: vdata, encoding: NSUTF8StringEncoding))")
     }
     
     func sendStringMessage(message : String, immedtiately now : Bool) {
@@ -285,7 +297,8 @@ class IRCConnection {
     }
     
     func sendRawMessage(raw : NSData, immeditately now : Bool) {
-        //print("QUEING: \(String(data: raw, encoding: NSUTF8StringEncoding)!)")
+        Logger.Info("Queing: \(String(data: raw, encoding: NSUTF8StringEncoding)!)")
+        
         var nnow = now
         if !nnow {
             dispatch_semaphore_wait(sendQueueLock, DISPATCH_TIME_FOREVER)
@@ -294,9 +307,9 @@ class IRCConnection {
         }
         
         if nnow {
-            //print("Queue wait time internal since now: \(queueWait!.timeIntervalSinceNow)")
             nnow = queueWait == nil || queueWait!.timeIntervalSinceNow <= 0
         }
+        
         if nnow {
             nnow = lastCommand == nil || lastCommand?.timeIntervalSinceNow <= (-minimumSendQueueDelay)
         }
@@ -370,8 +383,10 @@ class IRCConnection {
     
     private func pingServerAfterInterval() {
         if status != .Connecting &&
-           status != .Connected
-        { return }
+           status != .Connected {
+            Logger.Warning("Could not ping since we're not connected")
+            return
+        }
         
         nextPingTimeInterval = NSDate(timeIntervalSinceReferenceDate: NSDate.timeIntervalSinceReferenceDate().advancedBy(PING_SERVER_INTERVAL))
         let delayInSeconds = UInt64(PING_SERVER_INTERVAL + 1)
@@ -531,11 +546,15 @@ class IRCConnection {
                 let msg = IRCMessage(sender: sender, user: user, host: host, command: command, intentOrTags: intentOrTagDict, parameters: parameters)
                 handler(message: msg)
             }
+            else {
+                Logger.Warning("No handler found for command: \(command!)")
+            }
             
             pingServerAfterInterval()
         }
         else {
             //Could not convert data to utf8 string
+            Logger.Error("Could not convert data to UTF8 String")
         }
     }
     
@@ -552,8 +571,6 @@ class IRCConnection {
 extension IRCConnection : GCDAsyncSocketDelegate {
     @objc
     func socket(sock: GCDAsyncSocket!, didConnectToHost host: String!, port: UInt16) {
-
-        
         
         if credentials?.password?.characters.count > 0 {
             sendStringMessage("PASS \(credentials!.password!)", immedtiately: true)
@@ -581,7 +598,6 @@ extension IRCConnection : GCDAsyncSocketDelegate {
     
     @objc
     func socket(sock: GCDAsyncSocket!, didReadData data: NSData!, withTag tag: Int) {
-        //print("READ: \(String(data: data, encoding: NSUTF8StringEncoding))")
         processIncomingMessage(data, fromServer: true)
         readNextMessageFromServer()
     }
