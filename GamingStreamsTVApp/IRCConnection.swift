@@ -289,7 +289,7 @@ class IRCConnection {
         
         chatConnection!.writeData(vdata, withTimeout: -1, tag: 0)
         
-        Logger.Info("Wrote: \(String(data: vdata, encoding: NSUTF8StringEncoding))")
+        Logger.Info("Wrote: \(String(data: vdata, encoding: NSUTF8StringEncoding)!)")
     }
     
     func sendStringMessage(message : String, immedtiately now : Bool) {
