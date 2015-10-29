@@ -71,6 +71,9 @@ class StreamCenterService {
                         }
                         print(date)
                         //date is formatted: '2015-10-13 20:35:12'
+                        
+                        Mixpanel.tracker()?.trackEvents([Event.ServiceAuthenticationEvent("Twitch")])
+                        
                         completionHandler(token: token, error: nil)
                     }
                 } else {

@@ -17,7 +17,6 @@ class Mixpanel {
         if instance == nil {
             instance = Mixpanel(token: token)
         }
-        
         return instance!
     }
     
@@ -108,7 +107,7 @@ class Mixpanel {
     
     private func stopProcessing() {
         if processTimer != nil && !self.timerPaused {
-            Logger.Debug("Stopping process timr")
+            Logger.Debug("Stopping process timer")
             dispatch_suspend(self.processTimer!)
             self.timerPaused = true
         }
