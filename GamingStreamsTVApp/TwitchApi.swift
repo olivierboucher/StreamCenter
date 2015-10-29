@@ -37,12 +37,22 @@ class TwitchApi {
                                     "sig"               : sig])
                                 .responseString { response in
                                     if response.result.isSuccess {
-                                        let streams = M3UParser.parseToDict(response.result.value!)
-                                        completionHandler(streams: streams, error: nil)
-                                        return
+                                        if let streams = M3UParser.parseToDict(response.result.value!) {
+                                            Logger.Debug("Returned \(streams.count) results")
+                                            completionHandler(streams: streams, error: nil)
+                                            return
+                                        }
+                                        else {
+                                            //Error parsing the .m3u8
+                                            Logger.Error("Could not parse the .m3u8 file")
+                                            completionHandler(streams: nil, error: .OtherError("Parser error"))
+                                            return
+                                        }
+                                        
                                     }
                                     else {
-                                        //Error with the .m3u8
+                                        //Error retrieving the .m3u8
+                                        Logger.Error("Could not get the .m3u8 file")
                                         completionHandler(streams: nil, error: .URLError)
                                         return
                                     }
@@ -52,12 +62,14 @@ class TwitchApi {
                     }
                 }
                 //Error with the access token json response
+                Logger.Error("Could not parse the access token response as JSON")
                 completionHandler(streams: nil, error: .JSONError)
                 return
                 
             }
             else {
                 //Error with access token request
+                Logger.Error("Could not request the access token")
                 completionHandler(streams: nil, error: .URLError)
                 return
                 
@@ -90,14 +102,17 @@ class TwitchApi {
                                 games.append(game)
                             }
                         }
+                        Logger.Debug("Returned \(games.count) results")
                         completionHandler(games: games, error: nil)
                         return
                     }
                 }
+                Logger.Error("Could not parse response as JSON")
                 completionHandler(games: nil, error: .JSONError)
                 return
             }
             else {
+                Logger.Error("Could not request top games")
                 completionHandler(games: nil, error: .URLError)
                 return
             }
@@ -133,14 +148,17 @@ class TwitchApi {
                                 }
                             }
                         }
+                        Logger.Debug("Returned \(streams.count) results")
                         completionHandler(streams: streams, error: nil)
                         return
                     }
                 }
+                Logger.Error("Could not parse response as JSON")
                 completionHandler(streams: nil, error: .JSONError)
                 return
             }
             else {
+                Logger.Error("Could not request top streams")
                 completionHandler(streams: nil, error: .URLError)
                 return
             }
@@ -173,14 +191,17 @@ class TwitchApi {
                                 games.append(game)
                             }
                         }
+                        Logger.Debug("Returned \(games.count) results")
                         completionHandler(games: games, error: nil)
                         return
                     }
                 }
+                Logger.Error("Could not parse response as JSON")
                 completionHandler(games: nil, error: .JSONError)
                 return
             }
             else {
+                Logger.Error("Could not request games with search term")
                 completionHandler(games: nil, error: .URLError)
                 return
             }
@@ -215,14 +236,17 @@ class TwitchApi {
                                 }
                             }
                         }
+                        Logger.Debug("Returned \(streams.count) results")
                         completionHandler(streams: streams, error: nil)
                         return
                     }
                 }
+                Logger.Error("Could not parse response as JSON")
                 completionHandler(streams: nil, error: .JSONError)
                 return
             }
             else {
+                Logger.Error("Could not request streams with search term")
                 completionHandler(streams: nil, error: .URLError)
                 return
             }
@@ -262,14 +286,17 @@ class TwitchApi {
                                     }
                                 }
                             }
+                            Logger.Debug("Returned \(streams.count) results")
                             completionHandler(streams: streams, error: nil)
                             return
                         }
                     }
+                    Logger.Error("Could not parse response as JSON")
                     completionHandler(streams: nil, error: .JSONError)
                     return
                 }
                 else {
+                    Logger.Error("Could not request followed streams by user")
                     completionHandler(streams: nil, error: .URLError)
                     return
                 }
