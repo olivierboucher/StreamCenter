@@ -45,7 +45,7 @@ class Mixpanel {
         dispatch_semaphore_signal(eventsMutex)
         do {
             let events = Array(eventsBuffer[0..<count])
-            let json = try NSJSONSerialization.dataWithJSONObject(events.getJSONConvertible(), options: [])
+            let json = try NSJSONSerialization.dataWithJSONObject(events.map({ $0.jsonDictionary }), options: [])
             let base64 = json.base64EncodedStringWithOptions([]).stringByReplacingOccurrencesOfString("\n", withString: "")
             
             Alamofire.request(.GET, Mixpanel.EVENTS_ENDPOINT, parameters :

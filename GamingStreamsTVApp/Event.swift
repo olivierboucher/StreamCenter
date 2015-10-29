@@ -36,22 +36,13 @@ struct Event {
     static func ServiceAuthenticationEvent(serviceName: String) -> Event {
         return Event(name: "Service Authentication", properties: ["service" : serviceName])
     }
-}
-
-//Little hack to get the array extension to work
-protocol EventType {}
-extension Event : EventType {}
-
-extension Array where Element : EventType {
-    func getJSONConvertible() -> [[String : AnyObject]] {
-        var dictArray = [[String : AnyObject]]()
-        for element in self {
-            let event = element as! Event
-            dictArray.append([
-                "event" : event.name,
-                "properties" : event.properties
-            ])
+    
+    var jsonDictionary: [String : AnyObject] {
+        get {
+            return [
+                "event" : self.name,
+                "properties" : self.properties
+            ]
         }
-        return dictArray
     }
 }
