@@ -54,7 +54,7 @@ struct Logger {
             let prefix = self.getPrefix(file, function: function, line: line)
             let text = escapeAndPrettify(object)
             print(ColorLog.infoColor(prefix), terminator: "")
-            print(ColorLog.orange("\t>> \(text))\n"), terminator: "")
+            print(ColorLog.orange("\t>> \(text)\n"), terminator: "")
         }
     }
     

@@ -37,6 +37,11 @@ class TwitchApi {
                                     "sig"               : sig])
                                 .responseString { response in
                                     if response.result.isSuccess {
+                                        guard let responseString = response.result.value else {
+                                            Logger.Error("Response had no value")
+                                            completionHandler(streams: nil, error: .DataError)
+                                            return
+                                        }
                                         if let streams = M3UParser.parseToDict(response.result.value!) {
                                             Logger.Debug("Returned \(streams.count) results")
                                             completionHandler(streams: streams, error: nil)
@@ -53,9 +58,8 @@ class TwitchApi {
                                     else {
                                         //Error retrieving the .m3u8
                                         Logger.Error("Could not get the .m3u8 file")
-                                        completionHandler(streams: nil, error: .URLError)
-                                        return
-                                    }
+                                    completionHandler(streams: nil, error: .URLError)
+                                    return
                             }
                             return
                         }

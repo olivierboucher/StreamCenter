@@ -232,7 +232,7 @@ extension HitboxGamesViewController : UITextFieldDelegate {
             return
         }
         
-        let searchViewController = HitboxSearchResultsViewController(seatchTerm: term)
+        let searchViewController = HitboxSearchResultsViewController(searchTerm: term)
         presentViewController(searchViewController, animated: true, completion: nil)
     }
 }

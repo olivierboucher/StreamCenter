@@ -191,7 +191,7 @@ extension TwitchGamesViewController : UITextFieldDelegate {
             return
         }
         
-        let searchViewController = TwitchSearchResultsViewController(seatchTerm: term)
+        let searchViewController = TwitchSearchResultsViewController(searchTerm: term)
         presentViewController(searchViewController, animated: true, completion: nil)
     }
 }

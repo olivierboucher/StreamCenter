@@ -15,8 +15,9 @@ I only support **Twitch** at the moment, features are :
 # Running the Project
 
 ###Things you need:
-* A version of XCode that supports tvOS
-* A version of Cocoapods that supports tvos (i.e. `sudo gem install cocoapods -pre` )
+* XCode 7.1+
+* Cocoapods 0.39+ (i.e. `sudo gem install cocoapods` or `sudo gem update cocoapods`)
+* The XCodeColors plugin [available here](https://github.com/robbiehanson/XcodeColors). Otherwise the logging system will output color tags
 
 ### Installing Dependencies	
 Since we're not including the /Pods directory in the git, you must run `pod install` inside the project directory to install dependencies
@@ -28,13 +29,3 @@ Make sure you open GamingStreamsTVApp.xcworkspace to include the generated Pods 
 ![Imgur](http://i.imgur.com/HvWh6PI.png)
 ![Imgur](http://i.imgur.com/PhUoqOB.jpg)
 
-This is more of a MVP. I am looking for contributors to achieve various tasks:
-
-- some of the code was written before I knew about Swift standards.
-- design changes ?
-- some of the structure can be abstracted
-- better exception handling
-- new cool features like a search bar, twitch login etc.
-- tests
-
-I would like to see this app on the market on Apple TV launch day.**If this project interests you, please contact me :)**
