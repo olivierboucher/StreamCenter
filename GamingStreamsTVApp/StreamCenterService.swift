@@ -61,11 +61,11 @@ class StreamCenterService {
         let urlString = "http://streamcenterapp.com/oauth/twitch/\(UUID)/\(code)"
         Alamofire.request(.GET, urlString)
             .responseJSON { response in
-                //sup
                 
                 if response.result.isSuccess {
                     if let dictionary = response.result.value as? [String : AnyObject] {
                         guard let token = dictionary["access_token"] as? String, date = dictionary["generated_date"] as? String else {
+                            Logger.Error("Could not retrieve desired information from response:\naccess_token\ngenerated_date")
                             completionHandler(token: nil, error: .NoAuthTokenError)
                             return
                         }
@@ -73,10 +73,15 @@ class StreamCenterService {
                         //date is formatted: '2015-10-13 20:35:12'
                         
                         Mixpanel.tracker()?.trackEvents([Event.ServiceAuthenticationEvent("Twitch")])
-                        
+                        Logger.Debug("User sucessfully retrieved Oauth token")
                         completionHandler(token: token, error: nil)
                     }
+                    else {
+                        Logger.Error("Could not parse response as JSON")
+                        completionHandler(token: nil, error: .JSONError)
+                    }
                 } else {
+                    Logger.Error("Could not request Twitch Oauth service")
                     completionHandler(token: nil, error: .URLError)
                     return
                 }
@@ -96,16 +101,20 @@ class StreamCenterService {
             if response.result.isSuccess {
                 if let dictionary = response.result.value as? [String : AnyObject] {
                     if let urlString = dictionary["url"] as? String {
+                        Logger.Debug("Returned: \(urlString)")
                         completionHandler(url: urlString, error: nil)
                         return
                     }
                     if let errorMessage = dictionary["message"] as? String {
+                        Logger.Error("Custom url service returned an error:\n\(errorMessage)")
                         completionHandler(url: nil, error: .OtherError(errorMessage))
                         return
                     }
                 }
+                Logger.Error("Could not parse response as JSON")
                 completionHandler(url: nil, error: .JSONError)
             } else {
+                Logger.Error("Could not request the custom url service")
                 completionHandler(url: nil, error: .URLError)
             }
         }

@@ -32,7 +32,7 @@ class TokenHelper: NSObject {
         do {
             try keychain.remove(TokenHelper.TWITCH_TOKEN_KEY)
         } catch {
-            print("error removing twitch token: \(error)")
+            Logger.Error("Could not remove twitch token:\n\(error)")
         }
     }
     
@@ -51,7 +51,7 @@ class TokenHelper: NSObject {
         do {
             try keychain.remove(TokenHelper.HITBOX_TOKEN_KEY)
         } catch {
-            print("error removing hitbox token: \(error)")
+            Logger.Error("Could not remove hitbox token:\n\(error)")
         }
     }
     
