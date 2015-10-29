@@ -107,7 +107,7 @@ class HitboxGamesViewController : LoadingViewController {
         let imageView = UIImageView(image: UIImage(named: "hitbox"))
         imageView.contentMode = .ScaleAspectFit
         
-        super.configureViews("Top Games", centerView: imageView, leftView: self.searchField, rightView: self.authButton)
+        super.configureViews("Top Games", centerView: imageView, leftView: self.searchField, rightView: nil)
         
     }
     
