@@ -116,7 +116,8 @@ class Mixpanel {
     
     
     func trackEvents(events : [Event]) {
-        print("MIXPANEL: new event added to queue")
+        Logger.Info("MIXPANEL: new event added to queue")
+        Logger.Info("MIXPANEL: new event added to queue\n sdfsd \n sdfdsf")
         dispatch_async(opQueue){
             var mutableEvents = [Event]()
             for var event in events {
