@@ -25,6 +25,10 @@
 		091277701BD461DF0003036D /* IRCMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0912776F1BD461DF0003036D /* IRCMessage.swift */; };
 		091277721BD66C1C0003036D /* HitboxChatAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 091277711BD66C1C0003036D /* HitboxChatAPI.swift */; };
 		091277AF1BD6EABE0003036D /* HitboxChatCredentials.swift in Sources */ = {isa = PBXBuildFile; fileRef = 091277AE1BD6EABE0003036D /* HitboxChatCredentials.swift */; };
+		091277B21BE13E350003036D /* Mixpanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 091277B11BE13E350003036D /* Mixpanel.swift */; };
+		091277B61BE150B90003036D /* Event.swift in Sources */ = {isa = PBXBuildFile; fileRef = 091277B51BE150B90003036D /* Event.swift */; };
+		091277B91BE180820003036D /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 091277B81BE180820003036D /* Logger.swift */; };
+		091277BB1BE187E10003036D /* NSDateFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 091277BA1BE187E10003036D /* NSDateFormatter.swift */; };
 		09199A1D1BBAC67F00B10543 /* LoadingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09199A1C1BBAC67F00B10543 /* LoadingViewController.swift */; };
 		09CE59861BAF55BD0054EB71 /* TwitchChatMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09CE59851BAF55BD0054EB71 /* TwitchChatMessage.swift */; };
 		09CE59881BAF55CE0054EB71 /* TwitchChatMessageQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09CE59871BAF55CE0054EB71 /* TwitchChatMessageQueue.swift */; };
@@ -121,6 +125,10 @@
 		0912776F1BD461DF0003036D /* IRCMessage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IRCMessage.swift; sourceTree = "<group>"; };
 		091277711BD66C1C0003036D /* HitboxChatAPI.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HitboxChatAPI.swift; sourceTree = "<group>"; };
 		091277AE1BD6EABE0003036D /* HitboxChatCredentials.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HitboxChatCredentials.swift; sourceTree = "<group>"; };
+		091277B11BE13E350003036D /* Mixpanel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Mixpanel.swift; sourceTree = "<group>"; };
+		091277B51BE150B90003036D /* Event.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Event.swift; sourceTree = "<group>"; };
+		091277B81BE180820003036D /* Logger.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Logger.swift; sourceTree = "<group>"; };
+		091277BA1BE187E10003036D /* NSDateFormatter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NSDateFormatter.swift; sourceTree = "<group>"; };
 		09199A1C1BBAC67F00B10543 /* LoadingViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoadingViewController.swift; sourceTree = "<group>"; };
 		09CE59851BAF55BD0054EB71 /* TwitchChatMessage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TwitchChatMessage.swift; sourceTree = "<group>"; };
 		09CE59871BAF55CE0054EB71 /* TwitchChatMessageQueue.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TwitchChatMessageQueue.swift; sourceTree = "<group>"; };
@@ -270,6 +278,23 @@
 			name = Views;
 			sourceTree = "<group>";
 		};
+		091277B01BE13E270003036D /* Analytics */ = {
+			isa = PBXGroup;
+			children = (
+				091277B11BE13E350003036D /* Mixpanel.swift */,
+				091277B51BE150B90003036D /* Event.swift */,
+			);
+			name = Analytics;
+			sourceTree = "<group>";
+		};
+		091277B71BE180770003036D /* Logging */ = {
+			isa = PBXGroup;
+			children = (
+				091277B81BE180820003036D /* Logger.swift */,
+			);
+			name = Logging;
+			sourceTree = "<group>";
+		};
 		09199A1B1BBABC9100B10543 /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
@@ -278,6 +303,7 @@
 				B4A67BBB1BCBDF8B003E3B6F /* UIColor.swift */,
 				B4D3103A1BD154320091448F /* UIView.swift */,
 				09D6E7E31BD3065200E88371 /* NSData.swift */,
+				091277BA1BE187E10003036D /* NSDateFormatter.swift */,
 			);
 			name = Extensions;
 			sourceTree = "<group>";
@@ -294,6 +320,8 @@
 		09CE59831BAE456D0054EB71 /* Helpers */ = {
 			isa = PBXGroup;
 			children = (
+				091277B71BE180770003036D /* Logging */,
+				091277B01BE13E270003036D /* Analytics */,
 				09F106161BD6B28E00DE0126 /* JSON */,
 				09F1060C1BD6988600DE0126 /* Websockets */,
 				09D6E7E51BD30E4100E88371 /* IRC */,
@@ -631,6 +659,7 @@
 				090AB9271BB579A300CDB05D /* ModalMenuView.swift in Sources */,
 				09F106131BD6A5CE00DE0126 /* HitboxChatManager.swift in Sources */,
 				B4A67BBC1BCBDF8B003E3B6F /* UIColor.swift in Sources */,
+				091277B61BE150B90003036D /* Event.swift in Sources */,
 				B4D88D331BCF35F100C1DF87 /* HitboxGame.swift in Sources */,
 				B4BDA2581BCD282C000DD1C8 /* ScrollingLabel.swift in Sources */,
 				091277701BD461DF0003036D /* IRCMessage.swift in Sources */,
@@ -656,6 +685,7 @@
 				09D6E7F11BD400C000E88371 /* IRCEndpoint.swift in Sources */,
 				09D6E7E71BD30E7D00E88371 /* IRCCredentials.swift in Sources */,
 				09F106101BD6992200DE0126 /* SSLSecurity.swift in Sources */,
+				091277BB1BE187E10003036D /* NSDateFormatter.swift in Sources */,
 				09199A1D1BBAC67F00B10543 /* LoadingViewController.swift in Sources */,
 				09D6E7E21BD2D25400E88371 /* IRCConnection.swift in Sources */,
 				090AB9221BB3699700CDB05D /* TwitchChatView.swift in Sources */,
@@ -677,8 +707,10 @@
 				B4D15C801BCDD3E3006FFB5D /* TokenHelper.swift in Sources */,
 				B4D88D341BCF35F100C1DF87 /* HitboxMedia.swift in Sources */,
 				09D6E7F31BD401E700E88371 /* ChatManagerConsumer.swift in Sources */,
+				091277B21BE13E350003036D /* Mixpanel.swift in Sources */,
 				B4E9F7FA1BCF385A0026708F /* SourceTabController.swift in Sources */,
 				09D6E7EF1BD3FD5100E88371 /* TwitchChatManager.swift in Sources */,
+				091277B91BE180820003036D /* Logger.swift in Sources */,
 				09D098251BA7666200E7E6FC /* TwitchStreamsViewController.swift in Sources */,
 				090AB9041BA616A900CDB05D /* TwitchGamesViewController.swift in Sources */,
 				091277AF1BD6EABE0003036D /* HitboxChatCredentials.swift in Sources */,

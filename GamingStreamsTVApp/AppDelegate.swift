@@ -12,6 +12,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var window: UIWindow?
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
+        let mixpanel = Mixpanel.tracker(withToken: "xxxx")
+        mixpanel.trackEvents([Event.InitializeEvent()])
         let window = UIWindow.init(frame: UIScreen.mainScreen().bounds)
         window.rootViewController = SourceTabController()
         window.makeKeyAndVisible()

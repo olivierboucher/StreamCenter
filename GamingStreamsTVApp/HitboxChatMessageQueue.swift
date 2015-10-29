@@ -84,7 +84,9 @@ class HitboxChatMessageQueue {
                         case "chatMsg" :
                             if let params = args["params"] as? [String : AnyObject] {
                                 if let senderName = params["name"] as? String, text = params["text"] as? String, senderColor = params["nameColor"] as? String {
-                                    let attrString = getAttributedStringForMessage(HitboxChatMessage(senderName: senderName, senderDisplayColor: senderColor, message: text))
+                                    
+                                    let sanitizedText = text.stringByReplacingOccurrencesOfString("<[^>]+>", withString: "", options: .RegularExpressionSearch, range: nil)
+                                    let attrString = getAttributedStringForMessage(HitboxChatMessage(senderName: senderName, senderDisplayColor: senderColor, message: sanitizedText))
                                     delegate.handleProcessedAttributedString(attrString)
                                 }
                             }
