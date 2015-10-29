@@ -344,7 +344,7 @@ class IRCConnection {
     private func sendEndCapabilityCommandAfterTimeout() {
         cancelScheduledSendEndCapabilityCommand()
         
-        sendEndCapabilityCommandAtTime = NSDate(timeIntervalSinceReferenceDate: NSDate.timeIntervalSinceReferenceDate().advancedBy(END_CAPABILITY_TIMEOUT_DELAY))
+        sendEndCapabilityCommandAtTime = NSDate(timeIntervalSinceNow: END_CAPABILITY_TIMEOUT_DELAY)
         
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, Int64((UInt64(END_CAPABILITY_TIMEOUT_DELAY) * NSEC_PER_SEC))), connectionQueue, {
             self.sendEndCapabilityCommand(forcefully: false)
@@ -355,7 +355,7 @@ class IRCConnection {
     private func sendEndCapabilityCommandSoon() {
         cancelScheduledSendEndCapabilityCommand()
         
-        sendEndCapabilityCommandAtTime = NSDate(timeIntervalSinceReferenceDate: NSDate.timeIntervalSinceReferenceDate().advancedBy(1))
+        sendEndCapabilityCommandAtTime = NSDate(timeIntervalSinceNow: 1)
         
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, Int64((UInt64(END_CAPABILITY_TIMEOUT_DELAY) * NSEC_PER_SEC))), connectionQueue, {
             self.sendEndCapabilityCommand(forcefully: false)
@@ -388,7 +388,7 @@ class IRCConnection {
             return
         }
         
-        nextPingTimeInterval = NSDate(timeIntervalSinceReferenceDate: NSDate.timeIntervalSinceReferenceDate().advancedBy(PING_SERVER_INTERVAL))
+        nextPingTimeInterval = NSDate(timeIntervalSinceNow: PING_SERVER_INTERVAL)
         let delayInSeconds = UInt64(PING_SERVER_INTERVAL + 1)
         
         let popTime = dispatch_time(DISPATCH_TIME_NOW, Int64(delayInSeconds * NSEC_PER_SEC))
@@ -397,7 +397,7 @@ class IRCConnection {
             let nowTimeInterval = NSDate.timeIntervalSinceReferenceDate()
             
             if self.nextPingTimeInterval!.timeIntervalSinceReferenceDate < nowTimeInterval {
-                self.nextPingTimeInterval = NSDate(timeIntervalSinceReferenceDate: nowTimeInterval.advancedBy(self.PING_SERVER_INTERVAL))
+                self.nextPingTimeInterval = NSDate(timeIntervalSinceNow: self.PING_SERVER_INTERVAL)
                 self.pingServer()
             }
         })
