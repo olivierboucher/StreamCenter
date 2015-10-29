@@ -47,7 +47,6 @@ class Mixpanel {
         do {
             let events = Array(eventsBuffer[0..<count])
             let json = try NSJSONSerialization.dataWithJSONObject(events.getJSONConvertible(), options: [])
-            print("MIXPANEL: Payload -> \(String(data: json, encoding: NSUTF8StringEncoding)!)")
             let base64 = json.base64EncodedStringWithOptions([]).stringByReplacingOccurrencesOfString("\n", withString: "")
             
             Alamofire.request(.GET, Mixpanel.EVENTS_ENDPOINT, parameters :
@@ -63,44 +62,45 @@ class Mixpanel {
                             dispatch_semaphore_wait(self.eventsMutex, DISPATCH_TIME_FOREVER)
                             self.eventsBuffer.removeRange(0..<count)
                             dispatch_semaphore_signal(self.eventsMutex)
-                            print("MIXPANEL: Sent \(count) events correctly")
+                            Logger.Debug("Sent \(count) events correctly")
                             return
                         }
                         else if let error = responseJSON["error"] as? String {
-                            print("MIXPANEL ERROR: \(error)")
+                            Logger.Error("Error from mixpanel: \(error)")
                         }
                     }
                 }
-                
-                print("MIXPANEL: Error sending data or mixpanel error")
+                else {
+                    Logger.Error("Could not reach Mixpanel's endpoint")
+                }
             }
 
         }
-        catch {
-            print("MIXPANEL: Error encoding events")
+        catch let err as NSError {
+            Logger.Error("Error encoding events : \(err)")
         }
     }
     
     private func sendBuffer() {
         guard eventsBuffer.count > 0  else {
-            print("MIXPANEL: no new events, stopping process")
+            Logger.Debug("No new events, stopping process")
             stopProcessing()
             return
         }
-        print("MIXPANEL: Processing events buffer")
+        Logger.Debug("Processing events buffer")
         sendEventsBuffer()
     }
     
     private func startProcessing() {
         if self.processTimer == nil && self.timerPaused {
-            print("MIXPANEL: creating a new process timer")
+            Logger.Debug("Creating a new process timer")
             self.timerPaused = false
             self.processTimer = ConcurrencyHelpers.createDispatchTimer((20 * NSEC_PER_SEC), leeway: (1 * NSEC_PER_SEC)/2, queue: opQueue, block: {
                 self.sendBuffer()
             })
         }
         else if self.processTimer != nil && self.timerPaused {
-            print("MIXPANEL: resuming the process timer")
+            Logger.Debug("Resuming the process timer")
             self.timerPaused = false
             dispatch_resume(self.processTimer!)
         }
@@ -108,16 +108,13 @@ class Mixpanel {
     
     private func stopProcessing() {
         if processTimer != nil && !self.timerPaused {
-            print("MIXPANEL: stopping to process")
+            Logger.Debug("Stopping process timr")
             dispatch_suspend(self.processTimer!)
             self.timerPaused = true
         }
     }
     
-    
     func trackEvents(events : [Event]) {
-        Logger.Info("MIXPANEL: new event added to queue")
-        Logger.Info("MIXPANEL: new event added to queue\n sdfsd \n sdfdsf")
         dispatch_async(opQueue){
             var mutableEvents = [Event]()
             for var event in events {
@@ -126,6 +123,7 @@ class Mixpanel {
             dispatch_semaphore_wait(self.eventsMutex, DISPATCH_TIME_FOREVER)
             self.eventsBuffer.appendContentsOf(mutableEvents)
             dispatch_semaphore_signal(self.eventsMutex)
+            Logger.Debug("New event added to queue")
             self.startProcessing()
         }
     }
