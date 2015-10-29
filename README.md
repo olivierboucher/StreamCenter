@@ -17,6 +17,7 @@ I only support **Twitch** at the moment, features are :
 ###Things you need:
 * A version of XCode that supports tvOS
 * A version of Cocoapods that supports tvos (i.e. `sudo gem install cocoapods -pre` )
+* The XCodeColors plugin [available here](https://github.com/robbiehanson/XcodeColors). Otherwise the logging system will output color tags
 
 ### Installing Dependencies	
 Since we're not including the /Pods directory in the git, you must run `pod install` inside the project directory to install dependencies
