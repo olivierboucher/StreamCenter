@@ -86,20 +86,20 @@ class Mixpanel {
             stopProcessing()
             return
         }
-        Logger.Debug("Processing events buffer")
+        Logger.Info("Processing events buffer")
         sendEventsBuffer()
     }
     
     private func startProcessing() {
         if self.processTimer == nil && self.timerPaused {
-            Logger.Debug("Creating a new process timer")
+            Logger.Info("Creating a new process timer")
             self.timerPaused = false
             self.processTimer = ConcurrencyHelpers.createDispatchTimer((20 * NSEC_PER_SEC), leeway: (1 * NSEC_PER_SEC)/2, queue: opQueue, block: {
                 self.sendBuffer()
             })
         }
         else if self.processTimer != nil && self.timerPaused {
-            Logger.Debug("Resuming the process timer")
+            Logger.Info("Resuming the process timer")
             self.timerPaused = false
             dispatch_resume(self.processTimer!)
         }
@@ -107,7 +107,7 @@ class Mixpanel {
     
     private func stopProcessing() {
         if processTimer != nil && !self.timerPaused {
-            Logger.Debug("Stopping process timer")
+            Logger.Info("Stopping process timer")
             dispatch_suspend(self.processTimer!)
             self.timerPaused = true
         }
@@ -122,7 +122,7 @@ class Mixpanel {
             dispatch_semaphore_wait(self.eventsMutex, DISPATCH_TIME_FOREVER)
             self.eventsBuffer.appendContentsOf(mutableEvents)
             dispatch_semaphore_signal(self.eventsMutex)
-            Logger.Debug("New event added to queue")
+            Logger.Info("New event added to queue")
             self.startProcessing()
         }
     }
