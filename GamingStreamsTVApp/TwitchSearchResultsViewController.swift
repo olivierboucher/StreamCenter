@@ -56,7 +56,7 @@ class TwitchSearchResultsViewController: LoadingViewController {
     
     private var searchTypeControl: UISegmentedControl!
     
-    convenience init(seatchTerm term: String) {
+    convenience init(searchTerm term: String) {
         self.init(nibName: nil, bundle: nil)
         self.searchTerm = term
     }

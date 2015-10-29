@@ -37,15 +37,17 @@ class TwitchApi {
                                     "sig"               : sig])
                                 .responseString { response in
                                     if response.result.isSuccess {
-                                        let streams = M3UParser.parseToDict(response.result.value!)
+                                        guard let responseString = response.result.value else {
+                                            completionHandler(streams: nil, error: .DataError)
+                                            return
+                                        }
+                                        let streams = M3UParser.parseToDict(responseString)
                                         completionHandler(streams: streams, error: nil)
                                         return
                                     }
-                                    else {
-                                        //Error with the .m3u8
-                                        completionHandler(streams: nil, error: .URLError)
-                                        return
-                                    }
+                                    //Error with the .m3u8
+                                    completionHandler(streams: nil, error: .URLError)
+                                    return
                             }
                             return
                         }

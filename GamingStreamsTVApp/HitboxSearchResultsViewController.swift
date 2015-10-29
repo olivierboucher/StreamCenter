@@ -26,7 +26,7 @@ class HitboxSearchResultsViewController: LoadingViewController {
     private var searchTerm: String!
     private var games = [HitboxGame]()
     
-    convenience init(seatchTerm term: String) {
+    convenience init(searchTerm term: String) {
         self.init(nibName: nil, bundle: nil)
         self.searchTerm = term
     }
@@ -64,7 +64,7 @@ class HitboxSearchResultsViewController: LoadingViewController {
             guard let games = games else {
                 dispatch_async(dispatch_get_main_queue(), {
                     self.removeLoadingView()
-                    self.displayErrorView("Error loading game list.\nPlease check your internet connection.")
+                    self.displayErrorView("Error loading search results.\nPlease check your internet connection.")
                 })
                 return
             }

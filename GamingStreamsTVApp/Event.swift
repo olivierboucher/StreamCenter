@@ -14,9 +14,13 @@ struct Event {
     let name : String
     var properties : [String : AnyObject]
     
-    init(name : String, properties : [String : AnyObject]) {
+    init(name : String, properties : [String : AnyObject]?) {
         self.name = name
-        self.properties = properties
+        if let properties = properties {
+            self.properties = properties
+        } else {
+            self.properties = [ : ]
+        }
         self.properties["time"] = NSDate().timeIntervalSince1970
     }
     
@@ -26,24 +30,19 @@ struct Event {
     }
     
     static func InitializeEvent() -> Event {
-        return Event(name: "App start", properties: [:])
+        return Event(name: "App start", properties: nil)
     }
-}
-
-//Little hack to get the array extension to work
-protocol EventType {}
-extension Event : EventType {}
-
-extension Array where Element : EventType {
-    func getJSONConvertible() -> [[String : AnyObject]] {
-        var dictArray = [[String : AnyObject]]()
-        for element in self {
-            let event = element as! Event
-            dictArray.append([
-                "event" : event.name,
-                "properties" : event.properties
-            ])
+    
+    static func ServiceAuthenticationEvent(serviceName: String) -> Event {
+        return Event(name: "Service Authentication", properties: ["service" : serviceName])
+    }
+    
+    var jsonDictionary: [String : AnyObject] {
+        get {
+            return [
+                "event" : self.name,
+                "properties" : self.properties
+            ]
         }
-        return dictArray
     }
 }

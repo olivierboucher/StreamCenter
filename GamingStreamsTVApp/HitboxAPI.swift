@@ -199,6 +199,7 @@ class HitboxAPI {
                         }
                         
                         TokenHelper.storeHitboxToken(token)
+                        Mixpanel.tracker()?.trackEvents([Event.ServiceAuthenticationEvent("Hitbox")])
                         completionHandler(success: true, error: nil)
                         return
                     }
