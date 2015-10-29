@@ -135,7 +135,7 @@ class TwitchChatMessageQueue {
         }
         
         attrMsg.insertAttributedString(NSAttributedString(string: "\(message.senderName): "), atIndex: 0)
-        
+        attrMsg.addAttribute(NSForegroundColorAttributeName, value: UIColor(hexString: "#AAAAAA"), range: NSMakeRange(0, attrMsg.length))
         attrMsg.addAttribute(NSForegroundColorAttributeName, value: UIColor(hexString: message.senderDisplayColor), range: NSMakeRange(0, message.senderName.characters.count))
         attrMsg.addAttribute(NSFontAttributeName, value: UIFont.systemFontOfSize(18), range: NSMakeRange(0, attrMsg.length))
         
