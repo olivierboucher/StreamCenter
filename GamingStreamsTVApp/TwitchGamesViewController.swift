@@ -9,19 +9,32 @@ import UIKit
 class TwitchGamesViewController : LoadingViewController {
 
     private let LOADING_BUFFER = 20
-    private let NUM_COLUMNS = 5
+    
+    override var NUM_COLUMNS: Int {
+        get {
+            return 5
+        }
+    }
+    
     override var ITEMS_INSETS_X : CGFloat {
         get {
             return 25
         }
     }
     
+    override var HEIGHT_RATIO: CGFloat {
+        get {
+            return 1.39705882353
+        }
+    }
+    
     private var searchField: UITextField!
     private var games = [TwitchGame]()
-    private var authButton: UIButton?
+    private var twitchButton: UIButton?
     
     convenience init(){
         self.init(nibName: nil, bundle: nil)
+        title = "Twitch"
     }
     
     override func viewDidLoad() {
@@ -81,17 +94,20 @@ class TwitchGamesViewController : LoadingViewController {
         self.searchField.delegate = self
         self.searchField.textAlignment = .Center
         
+        
+        
         if TokenHelper.getTwitchToken() == nil {
-            self.authButton = UIButton(type: .System)
-            self.authButton?.translatesAutoresizingMaskIntoConstraints = false
-            self.authButton?.setTitle("Authenticate", forState: .Normal)
-            self.authButton?.addTarget(self, action: Selector("authorizeUser"), forControlEvents: .PrimaryActionTriggered)
+            self.twitchButton = UIButton(type: .System)
+            self.twitchButton?.translatesAutoresizingMaskIntoConstraints = false
+            self.twitchButton?.setTitleColor(UIColor.darkGrayColor(), forState: .Normal)
+            self.twitchButton?.setTitle("Authenticate", forState: .Normal)
+            self.twitchButton?.addTarget(self, action: Selector("authorizeUser"), forControlEvents: .PrimaryActionTriggered)
         }
         
         let imageView = UIImageView(image: UIImage(named: "twitch"))
         imageView.contentMode = .ScaleAspectFit
         
-        super.configureViews("Top Games", centerView: imageView, leftView: self.searchField, rightView: self.authButton)
+        super.configureViews("Top Games", centerView: imageView, leftView: self.searchField, rightView: nil)
         
     }
     
@@ -104,6 +120,47 @@ class TwitchGamesViewController : LoadingViewController {
     override func reloadContent() {
         loadContent()
         super.reloadContent()
+    }
+    
+    override func loadMore() {
+        TwitchApi.getTopGamesWithOffset(games.count, limit: LOADING_BUFFER) {
+            (games, error) in
+            
+            guard let games = games where games.count > 0 else {
+                return
+            }
+            
+            var paths = [NSIndexPath]()
+            
+            let filteredGames = games.filter({
+                let gameId = $0.id
+                if let _ = self.games.indexOf({$0.id == gameId}) {
+                    return false
+                }
+                return true
+            })
+            
+            for i in 0..<filteredGames.count {
+                paths.append(NSIndexPath(forItem: i + self.games.count, inSection: 0))
+            }
+            
+            self.collectionView.performBatchUpdates({
+                self.games.appendContentsOf(filteredGames)
+                
+                self.collectionView.insertItemsAtIndexPaths(paths)
+                
+                }, completion: nil)
+        }
+    }
+    
+    override var itemCount: Int {
+        get {
+            return games.count
+        }
+    }
+    
+    override func getItemAtIndex(index: Int) -> CellItem {
+        return games[index]
     }
 }
 
@@ -121,87 +178,6 @@ extension TwitchGamesViewController {
         self.presentViewController(streamsViewController, animated: true, completion: nil)
     }
     
-    func collectionView(collectionView: UICollectionView, willDisplayCell cell: UICollectionViewCell, forItemAtIndexPath indexPath: NSIndexPath) {
-        if(indexPath.row == self.games.count - 1){
-            TwitchApi.getTopGamesWithOffset(games.count, limit: LOADING_BUFFER) {
-                (games, error) in
-                
-                if(error != nil || games == nil){
-                    NSLog("Error loading more games")
-                }
-                guard let games = games where games.count > 0 else {
-                    return
-                }
-                
-                var paths = [NSIndexPath]()
-                
-                let filteredGames = games.filter({
-                    let gameId = $0.id
-                    if let _ = self.games.indexOf({$0.id == gameId}) {
-                        return false
-                    }
-                    return true
-                })
-                
-                for i in 0..<filteredGames.count {
-                    paths.append(NSIndexPath(forItem: i + self.games.count, inSection: 0))
-                }
-                
-                self.collectionView.performBatchUpdates({
-                    self.games.appendContentsOf(filteredGames)
-                    
-                    self.collectionView.insertItemsAtIndexPaths(paths)
-                    
-                    }, completion: nil)
-            }
-        }
-    }
-}
-
-//////////////////////////////////////////////////////
-// MARK - UICollectionViewDelegateFlowLayout interface
-//////////////////////////////////////////////////////
-
-extension TwitchGamesViewController : UICollectionViewDelegateFlowLayout {
-    
-    func collectionView(collectionView: UICollectionView,
-        layout collectionViewLayout: UICollectionViewLayout,
-        sizeForItemAtIndexPath indexPath: NSIndexPath) -> CGSize {
-            let width = collectionView.bounds.width / CGFloat(NUM_COLUMNS) - CGFloat(ITEMS_INSETS_X * 2)
-            //Computed using the ratio from sampled from
-            let height = (width * GAME_IMG_HEIGHT_RATIO) + ItemCellView.LABEL_HEIGHT * 2 //There 2 labels, top & bottom
-            
-            return CGSize(width: width, height: height)
-    }
-    
-    func collectionView(collectionView: UICollectionView,
-        layout collectionViewLayout: UICollectionViewLayout,
-        insetForSectionAtIndex section: Int) -> UIEdgeInsets {
-            return UIEdgeInsets(top: TOP_BAR_HEIGHT + ITEMS_INSETS_Y, left: ITEMS_INSETS_X, bottom: ITEMS_INSETS_Y, right: ITEMS_INSETS_X)
-    }
-}
-
-//////////////////////////////////////////////
-// MARK - UICollectionViewDataSource interface
-//////////////////////////////////////////////
-
-extension TwitchGamesViewController {
-    
-    override func numberOfSectionsInCollectionView(collectionView: UICollectionView) -> Int {
-        //The number of sections
-        return 1
-    }
-    
-    override func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        // If the count of games allows the current row to be full
-        return games.count
-    }
-    
-    override func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
-        let cell : ItemCellView = collectionView.dequeueReusableCellWithReuseIdentifier(ItemCellView.CELL_IDENTIFIER, forIndexPath: indexPath) as! ItemCellView
-        cell.setRepresentedItem(games[indexPath.row])
-        return cell
-    }
 }
 
 //////////////////////////////////////////////
@@ -215,7 +191,7 @@ extension TwitchGamesViewController : UITextFieldDelegate {
             return
         }
         
-        let searchViewController = TwitchSearchResultsViewController(seatchTerm: term)
+        let searchViewController = TwitchSearchResultsViewController(searchTerm: term)
         presentViewController(searchViewController, animated: true, completion: nil)
     }
 }
@@ -229,11 +205,9 @@ extension TwitchGamesViewController: QRCodeDelegate {
     func qrCodeViewControllerFinished(success: Bool, data: [String : AnyObject]?) {
         dispatch_async(dispatch_get_main_queue()) { () -> Void in
             if success {
-                self.authButton?.removeFromSuperview()
-                self.authButton = nil
+                self.twitchButton?.removeFromSuperview()
             }
             self.dismissViewControllerAnimated(true, completion: nil)
         }
     }
-    
 }

@@ -20,12 +20,27 @@ extension String {
 }
 
 extension String {
+    subscript (r : NSRange) -> String {
+        get {
+            return self[rangeFromNSRange(r)!]
+        }
+    }
+}
+
+extension String {
     subscript (r: Range<Int>) -> String {
         get {
             let subStart = self.startIndex.advancedBy(r.startIndex, limit: self.endIndex)
             let subEnd = subStart.advancedBy(r.endIndex - r.startIndex, limit: self.endIndex)
             return self.substringWithRange(Range(start: subStart, end: subEnd))
         }
+    }
+    subscript (i: Int) -> Character {
+        return self[self.startIndex.advancedBy(i)]
+    }
+    
+    subscript (i: Int) -> String {
+        return String(self[i] as Character)
     }
     func substring(from: Int) -> String {
         let end = self.characters.count
@@ -38,7 +53,7 @@ extension String {
 }
 
 extension String {
-    func toUIColorFromHex() -> UIColor? {
+    func toUIColorFromHex() -> UIColor {
         return UIColor(hexString: self)
     }
 }
@@ -67,5 +82,17 @@ extension String {
         }
         
         return randomString
+    }
+}
+
+extension String {
+    func sanitizedIRCString() -> String {
+        //https://github.com/ircv3/ircv3-specifications/blob/master/core/message-tags-3.2.md#escaping-values
+        return self
+            .stringByReplacingOccurrencesOfString("\\:", withString: ";")
+            .stringByReplacingOccurrencesOfString("\\s", withString: "")
+            .stringByReplacingOccurrencesOfString("\\\\", withString: "\\")
+            .stringByReplacingOccurrencesOfString("\\r", withString: "\r")
+            .stringByReplacingOccurrencesOfString("\\n", withString: "\n")
     }
 }

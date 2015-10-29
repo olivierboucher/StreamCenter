@@ -8,58 +8,50 @@ import UIKit
 import Foundation
 
 
-class TwitchChatView : UIView, TwitchChatHandlerConsumer {
+class TwitchChatView : UIView {
     let channel : TwitchChannel!
-    let chatHandler = TwitchChatHandler()
+    var chatMgr : TwitchChatManager? = nil
     var shouldConsume = false
-    var messageViews = [TwitchChatMessageView]()
+    var messageViews = [ChatMessageView]()
     
     
     init(frame: CGRect, channel: TwitchChannel) {
         self.channel = channel
         super.init(frame: frame)
         
-        self.chatHandler.consumer = self
+        self.chatMgr = TwitchChatManager(consumer: self)
         
         self.backgroundColor = UIColor(hexString: "#19191F")
         
-        let topLayer = CATextLayerVC()
-        topLayer.frame = CGRect(x: 0, y: 0, width: self.bounds.width, height: 75)
-        topLayer.foregroundColor = UIColor.whiteColor().CGColor
-        topLayer.backgroundColor = UIColor(hexString: "#19191F")?.CGColor
-        topLayer.alignmentMode = kCAAlignmentCenter
-        topLayer.font = CGFontCreateWithFontName(UIFont.systemFontOfSize(30).fontName as NSString)
-        topLayer.fontSize = 30
-        topLayer.contentsScale = UIScreen.mainScreen().scale
-        topLayer.string = "#" + self.channel.name
-        topLayer.zPosition = 999999999
-        
-        self.layer.addSublayer(topLayer)
+        let topView = ChatTopView(frame: CGRect(x: 0, y: 0, width: self.bounds.width, height: 75), title: "#\(self.channel.name)")
+        self.addSubview(topView)
     }
     
     required init?(coder aDecoder: NSCoder) {
         self.channel = nil
+        self.chatMgr = nil
         super.init(coder: aDecoder)
     }
     
     
     func startDisplayingMessages() {
         self.shouldConsume = true
-        self.chatHandler.anonymousConnect()
-        self.chatHandler.startLoop()
-        self.chatHandler.joinTwitchChannel(self.channel)
+        self.chatMgr!.connectAnonymously()
+        self.chatMgr!.joinTwitchChannel(self.channel)
     }
     
     func stopDisplayingMessages() {
         self.shouldConsume = false
-        self.chatHandler.stopLoop()
-        self.chatHandler.disconnect()
+        self.chatMgr!.disconnect()
     }
     
-    func messageReadyForDisplay(message: TwitchChatMessage) {
+}
+
+extension TwitchChatView : ChatManagerConsumer {
+    func messageReadyForDisplay(message: NSAttributedString) {
         if self.shouldConsume {
             dispatch_async(dispatch_get_main_queue(),{
-                let view = TwitchChatMessageView(message: message, width: self.bounds.width-40, position: CGPoint(x: 20, y: 0))
+                let view = ChatMessageView(message: message, width: self.bounds.width-40, position: CGPoint(x: 20, y: 0))
                 
                 var newFrame = view.frame
                 newFrame.origin.y = self.frame.height - view.frame.height
@@ -78,7 +70,7 @@ class TwitchChatView : UIView, TwitchChatHandlerConsumer {
                 }
                 self.messageViews.append(view)
                 
-                self.addSubview(view)
+                self.insertSubview(view, atIndex: 0)
             })
         }
     }

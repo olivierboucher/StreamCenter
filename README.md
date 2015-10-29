@@ -7,8 +7,9 @@ StreamCenter is a tvOS project that aims at providing various video feeds to the
 # Running the Project
 
 ###Things you need:
-* A version of XCode that supports tvOS
-* A version of Cocoapods that supports tvos (i.e. `sudo gem install cocoapods -pre` )
+* XCode 7.1+
+* Cocoapods 0.39+ (i.e. `sudo gem install cocoapods` or `sudo gem update cocoapods`)
+* The XCodeColors plugin [available here](https://github.com/robbiehanson/XcodeColors). Otherwise the logging system will output color tags
 
 ### Installing Dependencies	
 Since we're not including the /Pods directory in the git, you must run `pod install` inside the project directory to install dependencies
@@ -22,4 +23,3 @@ Make sure you open GamingStreamsTVApp.xcworkspace to include the generated Pods 
 # Contributing
 Huge thanks to @waterskier2007 for the support.  
 If anyone wishes to contribute, just email us for info.
-
