@@ -144,10 +144,10 @@ class HitboxAPI {
     ///     - completionHandler: A closure providing results and an error (both optionals) to be executed once the request completes
     static func getStreamInfo(forMediaId mediaId: String, completionHandler: (streamVideos: [HitboxStreamVideo]?, error: HitboxError?) -> ()) {
         let urlString = "http://www.hitbox.tv/api/player/config/live/\(mediaId)"
-        print("getting stream info for: \(urlString)")
+        Logger.Debug("getting stream info for: \(urlString)")
         Alamofire.request(.GET, urlString)
             .responseJSON { (response) -> Void in
-                //do the stuff
+
                 if(response.result.isSuccess) {
                     if let baseDict = response.result.value as? [String : AnyObject] {
                         if let playlist = baseDict["playlist"] as? [[String : AnyObject]], bitrates = playlist.first?["bitrates"] as? [[String : AnyObject]] {
