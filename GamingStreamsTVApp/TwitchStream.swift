@@ -29,12 +29,15 @@ struct TwitchStream: CellItem {
         guard let id = dict["_id"] as? Int else {
             return nil
         }
+        
         guard let gameName = dict["game"] as? String else {
             return nil
         }
+        
         guard let preview = dict["preview"] as? [String : String] else {
             return nil
         }
+        
         self.id = id
         self.gameName = gameName
         self.preview = preview
