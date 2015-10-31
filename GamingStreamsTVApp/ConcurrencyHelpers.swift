@@ -6,7 +6,7 @@
 
 import Foundation
 
-class ConcurrencyHelpers {
+struct ConcurrencyHelpers {
     static func createDispatchTimer(interval: UInt64, leeway: UInt64, queue: dispatch_queue_t, block: dispatch_block_t) -> dispatch_source_t
     {
         let timer : dispatch_source_t = dispatch_source_create(DISPATCH_SOURCE_TYPE_TIMER, 0, 0, queue)
