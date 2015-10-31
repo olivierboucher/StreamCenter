@@ -7,14 +7,14 @@
 import Foundation
 import UIKit
 
-class TwitchStream: CellItem {
-    private(set) var id : Int!
-    private(set) var gameName : String!
-    private(set) var viewers = 0
-    private(set) var videoHeight = 0
-    private(set) var preview : [String : String]!
-    private(set) var channel : TwitchChannel!
-    private(set) var mImage: UIImage?
+struct TwitchStream: CellItem {
+    let id : Int!
+    let gameName : String!
+    let viewers : Int!
+    let videoHeight : Int!
+    let preview : [String : String]!
+    let channel : TwitchChannel!
+    var mImage: UIImage?
     
     init(id : Int, gameName : String, viewers : Int, videoHeight : Int, preview : [String : String], channel : TwitchChannel) {
         self.id = id
@@ -42,9 +42,15 @@ class TwitchStream: CellItem {
         if let viewers = dict["viewers"] as? Int {
             self.viewers = viewers
         }
+        else {
+            self.viewers = 0
+        }
         
         if let videoHeight = dict["video_height"] as? Int {
             self.videoHeight = videoHeight
+        }
+        else {
+            self.videoHeight = 0
         }
         
         self.channel = channel
@@ -80,7 +86,7 @@ class TwitchStream: CellItem {
         }
     }
     
-    func setImage(image: UIImage) {
+    mutating func setImage(image: UIImage) {
         mImage = image
     }
 }

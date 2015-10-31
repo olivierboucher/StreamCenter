@@ -37,7 +37,7 @@ class TwitchApi {
                                         "sig"               : sig])
                                     .responseString { response in
                                         if response.result.isSuccess {
-                                            guard let responseString = response.result.value else {
+                                            guard let _ = response.result.value else {
                                                 Logger.Error("Response had no value")
                                                 completionHandler(streams: nil, error: .DataError)
                                                 return
