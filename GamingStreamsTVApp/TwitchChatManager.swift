@@ -62,11 +62,12 @@ class TwitchChatManager {
         }
         
         messageQueue?.addNewMessage(message)
-        //print("Recieved msg")
     }
     
     private func handle433(message : IRCMessage) -> () {
-        print("Recieved 433")
+        Logger.Warning("Recieved 433 from server, invalid nick")
+        credentials = TwitchChatManager.generateAnonymousIRCCredentials()
+        connection?.sendStringMessage("NICK \(credentials!.nick)", immedtiately: true)
     }
 }
 
@@ -75,7 +76,6 @@ class TwitchChatManager {
 /////////////////////////////////////////
 
 extension TwitchChatManager : TwitchChatMessageQueueDelegate {
-    
     func handleProcessedAttributedString(message: NSAttributedString) {
         self.consumer!.messageReadyForDisplay(message)
     }
