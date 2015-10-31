@@ -7,7 +7,7 @@
 import Foundation
 import Alamofire
 
-class TwitchApi {
+struct TwitchApi {
     
     ///This is a method to retrieve Twitch streams for a provided channel
     ///
