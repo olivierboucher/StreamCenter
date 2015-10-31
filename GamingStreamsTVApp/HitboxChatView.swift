@@ -43,13 +43,14 @@ class HitboxChatView : UIView {
         super.init(coder: aDecoder)
     }
     
-    
     func startDisplayingMessages() {
+        Logger.Debug("Attempting to connect and display chat messages")
         self.shouldConsume = true
         self.chatMgr!.connectAnonymously(channel.name)
     }
     
     func stopDisplayingMessages() {
+        Logger.Debug("Disconnecting from chat")
         self.shouldConsume = false
         self.chatMgr!.disconnect()
     }
