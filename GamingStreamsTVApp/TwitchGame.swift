@@ -7,21 +7,21 @@
 import Foundation
 import UIKit
 
-class TwitchGame: CellItem {
-    
-    private(set) var id : Int!
-    private(set) var viewers = 0
-    private(set) var popularity = 0
-    private(set) var channels = 0
-    private(set) var name : String!
-    private(set) var thumbnails : [String : String]!
-    private(set) var logos : [String : String]!
+struct TwitchGame: CellItem {
+    let id : Int!
+    let viewers : Int!
+    let popularity : Int!
+    let channels : Int!
+    let name : String!
+    let thumbnails : [String : String]!
+    let logos : [String : String]!
     private var mImage: UIImage?
     
     init(id : Int, viewers : Int, channels : Int, name : String, thumbnails : [String : String], logos : [String : String]) {
         self.id = id
         self.viewers = viewers
         self.channels = channels
+        self.popularity = 0
         self.name = name
         self.thumbnails = thumbnails
         self.logos = logos
@@ -41,11 +41,13 @@ class TwitchGame: CellItem {
             guard let logos = gameDict["logo"] as? [String : String] else {
                 return nil
             }
+            
             self.id = id
             self.name = name
             self.thumbnails = thumbs
             self.logos = logos
-        } else {
+        }
+        else {
             guard let id = dict["_id"] as? Int else {
                 return nil
             }
@@ -58,6 +60,7 @@ class TwitchGame: CellItem {
             guard let logos = dict["logo"] as? [String : String] else {
                 return nil
             }
+            
             self.id = id
             self.name = name
             self.thumbnails = thumbs
@@ -67,11 +70,22 @@ class TwitchGame: CellItem {
         if let viewers = dict["viewers"] as? Int {
             self.viewers = viewers
         }
+        else {
+            self.viewers = 0
+        }
+        
         if let channels = dict["channels"] as? Int {
             self.channels = channels
         }
+        else {
+            self.channels = 0
+        }
+        
         if let popularity = dict["popularity"] as? Int {
             self.popularity = popularity
+        }
+        else {
+            self.popularity = 0
         }
     }
     
@@ -113,7 +127,7 @@ class TwitchGame: CellItem {
         }
     }
     
-    func setImage(image: UIImage) {
+    mutating func setImage(image: UIImage) {
         mImage = image
     }
 }
