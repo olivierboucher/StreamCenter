@@ -8,17 +8,17 @@
 
 import UIKit
 
-class HitboxMedia: CellItem {
+struct HitboxMedia: CellItem {
     
-    private(set) var id : Int!
-    private(set) var name : String!
-    private(set) var displayName : String?
-    private(set) var views : Int!
-    private(set) var thumbnail : String!
-    private(set) var userMediaId : String!
-    private(set) var countries : [String]?
-    private(set) var chatEnabled = false
-    private(set) var transcoding = -1
+    let id : Int!
+    let name : String!
+    let displayName : String?
+    let views : Int!
+    let thumbnail : String!
+    let userMediaId : String!
+    let countries : [String]?
+    var chatEnabled = false
+    let transcoding : Int!
     
     private var mImage: UIImage?
     
@@ -48,14 +48,8 @@ class HitboxMedia: CellItem {
         self.thumbnail = thumb
         self.views = intViews
         self.userMediaId = userMediaId
-        
-        if let countries = dict["media_countries"] as? [String] {
-            self.countries = countries
-        }
-        
-        if let displayName = dict["media_display_name"] as? String {
-            self.displayName = displayName
-        }
+        self.countries = dict["media_countries"] as? [String]
+        self.displayName = dict["media_display_name"] as? String
         
         if let chat = dict["media_chat_enabled"] as? String where chat == "1" {
             self.chatEnabled = true
@@ -63,6 +57,9 @@ class HitboxMedia: CellItem {
         
         if let strTranscoding = dict["media_transcoding"] as? String, transcoding = Int(strTranscoding) {
             self.transcoding = transcoding
+        }
+        else {
+            self.transcoding = -1
         }
     }
     
@@ -100,7 +97,7 @@ class HitboxMedia: CellItem {
         }
     }
     
-    func setImage(image: UIImage) {
+    mutating func setImage(image: UIImage) {
         mImage = image
     }
 

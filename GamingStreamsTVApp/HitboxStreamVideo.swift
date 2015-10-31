@@ -46,7 +46,9 @@ struct HitboxStreamVideo {
         }
         
         guard let realURL = url where realURL.host != nil && !["", "rtmp"].contains(realURL.scheme) && url?.pathExtension == "m3u8" else {
+            Logger.Error("Url is invalid: \(url?.absoluteString)")
             return nil
+            
         }
         
         self.url = url
