@@ -21,6 +21,9 @@ class Mixpanel {
     }
     
     static func tracker() -> Mixpanel? {
+        if instance == nil {
+            Logger.Warning("Returned an uninitialized mixpanel tracker")
+        }
         return instance
     }
     
