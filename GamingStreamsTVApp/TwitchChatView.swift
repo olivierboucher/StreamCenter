@@ -35,12 +35,14 @@ class TwitchChatView : UIView {
     
     
     func startDisplayingMessages() {
+        Logger.Debug("Attempting to connect and display chat messages")
         self.shouldConsume = true
         self.chatMgr!.connectAnonymously()
         self.chatMgr!.joinTwitchChannel(self.channel)
     }
     
     func stopDisplayingMessages() {
+        Logger.Debug("Disconnecting from chat")
         self.shouldConsume = false
         self.chatMgr!.disconnect()
     }
