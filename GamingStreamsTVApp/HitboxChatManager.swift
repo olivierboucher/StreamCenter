@@ -40,10 +40,15 @@ class HitboxChatManager {
     
     func connectAnonymously(channel : String) {
         if let socket = chatConnection as WebSocket! {
-            if let token = TokenHelper.getHitboxToken(), username = TokenHelper.getHitboxUsername() {
-                credentials = HitboxChatCredentials(username: username, token: token)
-            } else {
-                credentials = HitboxChatCredentials.anonymous()
+            if status != .Connected && status != .Connecting {
+                if let token = TokenHelper.getHitboxToken(), username = TokenHelper.getHitboxUsername() {
+                    credentials = HitboxChatCredentials(username: username, token: token)
+                } else {
+                    credentials = HitboxChatCredentials.anonymous()
+                }
+            }
+            else {
+                Logger.Warning("Already connected")
             }
             
             currentChannel = channel.lowercaseString

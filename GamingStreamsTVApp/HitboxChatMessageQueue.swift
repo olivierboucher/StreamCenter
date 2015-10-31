@@ -65,6 +65,7 @@ class HitboxChatMessageQueue {
         for message in messagesArray {
             //We need to remove ":::5"
             guard let data = message[4..<message.characters.count].dataUsingEncoding(NSUTF8StringEncoding) else {
+                Logger.Warning("Could not remove the first 4 characters from the message\nThe message is probably corrupted\n\(message)")
                 return
             }
             
