@@ -32,9 +32,8 @@ class QRCustomVideoViewController: QRCodeViewController {
     }
     
     override func processCode() {
-        //implement this
         guard let code = codeField.text else {
-            print("no code")
+            Logger.Error("No code")
             return
         }
         StreamCenterService.getCustomURL(fromCode: code) { (url, error) -> () in
