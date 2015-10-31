@@ -40,7 +40,7 @@ class M3UParser {
             }
         }
         else {
-            NSLog("Data is not a valid M3U file")
+            Logger.Error("Data is not a valid M3U file")
         }
     
         return resultArray
