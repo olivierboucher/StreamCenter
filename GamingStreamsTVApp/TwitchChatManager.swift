@@ -96,12 +96,9 @@ extension TwitchChatManager : TwitchChatMessageQueueDelegate {
 
 extension TwitchChatManager : IRCConnectionDelegate {
     func IRCConnectionDidConnect() {
-        print("DID CONNECT")
     }
     func IRCConnectionDidDisconnect() {
-        print("DID DISCONNECT")
     }
     func IRCConnectionDidNotConnect() {
-        print("DID NOT CONNECT")
     }
 }
