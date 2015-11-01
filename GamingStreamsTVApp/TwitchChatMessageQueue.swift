@@ -96,8 +96,8 @@ class TwitchChatMessageQueue {
             self.timerPaused = false
             self.processTimer = ConcurrencyHelpers.createDispatchTimer((1 * NSEC_PER_SEC)/2, leeway: (1 * NSEC_PER_SEC)/2, queue: opQueue, block: {
                 self.processAvailableMessages()
-                return
             })
+            return
         }
         else if self.processTimer != nil && self.timerPaused {
             Logger.Debug("Resuming existing process timer")
@@ -113,6 +113,7 @@ class TwitchChatMessageQueue {
             Logger.Debug("Suspending process timer")
             dispatch_suspend(self.processTimer!)
             self.timerPaused = true
+            return
         }
         Logger.Error("Could not stop processing since timer is either nil or already paused")
     }
