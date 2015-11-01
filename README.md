@@ -9,6 +9,13 @@ StreamCenter is a tvOS project that aims at providing various video feeds to the
 * Hitbox
 * Custom urls
 
+# Planned on next release
+* Authentication and access to personal content
+  * followed/subscribed content on Twitch & Hitbox  
+
+# Got ideas?
+Fill an issue with tag "enhancement"
+
 # Running the Project
 
 ###Things you need:
