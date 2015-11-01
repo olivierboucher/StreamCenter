@@ -209,7 +209,7 @@ class TwitchVideoViewController : UIViewController {
                 UIView.animateWithDuration(0.5, animations: { () -> Void in
                     modalMenu.alpha = 0
                 }, completion: { (finished) -> Void in
-                    print("finished: \(finished)")
+                    Logger.Debug("Fade away animation finished: \(finished)")
                     if finished {
                         modalMenu.removeFromSuperview()
                     }

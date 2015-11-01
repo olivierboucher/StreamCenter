@@ -1,16 +1,20 @@
-# GamingStreams-tvOS-App
+# StreamCenter
 
-This is a cool app I built to learn more on tvOS. The goal is to offer an aggregation of streams from different networks like:
+StreamCenter is a tvOS project that aims at providing various video feeds to the AppleTV.
 
-- twitch.tv
-- youtube gaming
-- hitbox.tv
+**NOTE:** Our web api is currently in dev mode, you may see non-critial error messages.
 
-I only support **Twitch** at the moment, features are :
+# Supported platforms
+* Twitch
+* Hitbox
+* Custom urls
 
-- Browse by game and streamer
-- Live chat with emoticons
-- Change video quality
+# Planned on next release
+* Authentication and access to personal content
+  * followed/subscribed content on Twitch & Hitbox  
+
+# Got ideas?
+Fill an issue with tag "enhancement"
 
 # Running the Project
 
@@ -23,9 +27,12 @@ I only support **Twitch** at the moment, features are :
 Since we're not including the /Pods directory in the git, you must run `pod install` inside the project directory to install dependencies
 
 Make sure you open GamingStreamsTVApp.xcworkspace to include the generated Pods or you will run into compile errors.  
-
 # Screenshots
 ![Imgur](http://i.imgur.com/V2v5FND.png)
 ![Imgur](http://i.imgur.com/HvWh6PI.png)
 ![Imgur](http://i.imgur.com/PhUoqOB.jpg)
 
+# Contributing
+Huge thanks to @waterskier2007 for the support.  
+If anyone wishes to contribute, just email us for info.
+We're looking for contributors to integrate other platforms

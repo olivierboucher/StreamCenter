@@ -74,7 +74,7 @@ class TwitchChatMessageQueue {
                         Alamofire.request(.GET, TwitchApi.getEmoteUrlStringFromId(emote.0)).response() {
                             (_, _, data, error) in
                             if error != nil {
-                                NSLog("Error downloading emote image")
+                                Logger.Error("Could not download emote image for id: \(emote.0)")
                             }
                             else {
                                 self.delegate.handleNewEmoteDownloaded(emote.0, data: data!)
@@ -92,22 +92,30 @@ class TwitchChatMessageQueue {
     
     func startProcessing() {
         if self.processTimer == nil && self.timerPaused {
+            Logger.Debug("Creating a new process timer")
             self.timerPaused = false
             self.processTimer = ConcurrencyHelpers.createDispatchTimer((1 * NSEC_PER_SEC)/2, leeway: (1 * NSEC_PER_SEC)/2, queue: opQueue, block: {
                 self.processAvailableMessages()
             })
+            return
         }
         else if self.processTimer != nil && self.timerPaused {
+            Logger.Debug("Resuming existing process timer")
             self.timerPaused = false
             dispatch_resume(self.processTimer!)
+            return
         }
+        Logger.Error("Conditions not met, could not start processing")
     }
     
     func stopProcessing() {
         if processTimer != nil && !self.timerPaused {
+            Logger.Debug("Suspending process timer")
             dispatch_suspend(self.processTimer!)
             self.timerPaused = true
+            return
         }
+        Logger.Error("Could not stop processing since timer is either nil or already paused")
     }
     
     private func getAttributedStringForMessage(message : TwitchChatMessage) -> NSAttributedString {
@@ -117,6 +125,7 @@ class TwitchChatMessageQueue {
         for (emoteID, emote) in message.emotes {
             let attachment = NSTextAttachment()
             guard let emoteData = self.delegate.getEmoteDataFromCache(emoteID) else {
+                Logger.Warning("Could not find \(emoteID) in emote cache")
                 continue
             }
             let emoteImage = UIImage(data: emoteData)
@@ -135,8 +144,7 @@ class TwitchChatMessageQueue {
         }
         
         attrMsg.insertAttributedString(NSAttributedString(string: "\(message.senderName): "), atIndex: 0)
-        
-        attrMsg.addAttribute(NSForegroundColorAttributeName, value: UIColor.lightGrayColor(), range: NSMakeRange(0, attrMsg.length))
+        attrMsg.addAttribute(NSForegroundColorAttributeName, value: UIColor(hexString: "#AAAAAA"), range: NSMakeRange(0, attrMsg.length))
         attrMsg.addAttribute(NSForegroundColorAttributeName, value: UIColor(hexString: message.senderDisplayColor), range: NSMakeRange(0, message.senderName.characters.count))
         attrMsg.addAttribute(NSFontAttributeName, value: UIFont.systemFontOfSize(18), range: NSMakeRange(0, attrMsg.length))
         

@@ -15,7 +15,7 @@ protocol CellItem {
     var subtitle: String { get }
     var bannerString: String? { get }
     var image: UIImage? { get }
-    func setImage(image: UIImage)
+    mutating func setImage(image: UIImage)
 }
 
 class ItemCellView: UICollectionViewCell {

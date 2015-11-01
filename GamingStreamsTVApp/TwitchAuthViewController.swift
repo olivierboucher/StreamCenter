@@ -32,12 +32,12 @@ class TwitchAuthViewController: QRCodeViewController {
     
     override func processCode() {
         guard let code = codeField.text else {
-            print("no code")
+            Logger.Error("No code")
             return
         }
         
         StreamCenterService.authenticateTwitch(withCode: code, andUUID: UUID) { (token, error) -> () in
-            print(token)
+            Logger.Debug("Token: \(token)")
             guard let token = token else {
                 dispatch_async(dispatch_get_main_queue(), { () -> Void in
                     self.titleLabel.textColor = UIColor.redColor()

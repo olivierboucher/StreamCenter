@@ -7,15 +7,7 @@
 import Foundation
 
 struct TwitchStreamVideo {
-    
-    private(set) var quality : String
-    private(set) var url : NSURL
-    private(set) var codecs : String
-    
-    //we actually don't need this initializer because swift structs have automatically generated initializers
-    init(quality : String, url : NSURL, codecs : String) {
-        self.quality = quality
-        self.url = url
-        self.codecs = codecs
-    }
+    let quality : String
+    let url : NSURL
+    let codecs : String
 }

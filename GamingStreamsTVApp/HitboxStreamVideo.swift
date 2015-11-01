@@ -9,10 +9,10 @@
 import UIKit
 
 struct HitboxStreamVideo {
-    private(set) var url: NSURL!
-    private(set) var bitrate: Int!
-    private(set) var label: String!
-    private(set) var isDefault: Bool!
+    let url: NSURL!
+    let bitrate: Int!
+    let label: String!
+    let isDefault: Bool!
     
     init?(dict: [String : AnyObject]) {
         guard let urlString = dict["url"] as? String else {
@@ -46,7 +46,9 @@ struct HitboxStreamVideo {
         }
         
         guard let realURL = url where realURL.host != nil && !["", "rtmp"].contains(realURL.scheme) && url?.pathExtension == "m3u8" else {
+            Logger.Error("Url is invalid: \(url?.absoluteString)")
             return nil
+            
         }
         
         self.url = url

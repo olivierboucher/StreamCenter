@@ -43,7 +43,7 @@ extension UIColor {
                     blue  = CGFloat((hexValue & 0x0000FF00) >> 8)  / 255.0
                     alpha = CGFloat(hexValue & 0x000000FF)         / 255.0
                 default:
-                    NSLog("Invalid RGB Hex string, number of characters after '#' should be either 3, 4, 6 or 8")
+                    Logger.Error("Invalid RGB Hex string, number of characters after '#' should be either 3, 4, 6 or 8")
                     self.init(red: 1, green: 1, blue: 1, alpha: 1)
                     return
                 }
