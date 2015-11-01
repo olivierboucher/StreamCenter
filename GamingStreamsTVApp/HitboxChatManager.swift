@@ -36,27 +36,35 @@ class HitboxChatManager {
         self.chatConnection.queue = self.opQueue
         
         messageQueue = HitboxChatMessageQueue(delegate: self)
-        
-        
     }
     
     func connectAnonymously(channel : String) {
         if let socket = chatConnection as WebSocket! {
-            if let token = TokenHelper.getHitboxToken(), username = TokenHelper.getHitboxUsername() {
-                credentials = HitboxChatCredentials(username: username, token: token)
-            } else {
-                credentials = HitboxChatCredentials.anonymous()
+            if status != .Connected && status != .Connecting {
+                if let token = TokenHelper.getHitboxToken(), username = TokenHelper.getHitboxUsername() {
+                    credentials = HitboxChatCredentials(username: username, token: token)
+                } else {
+                    credentials = HitboxChatCredentials.anonymous()
+                }
+            }
+            else {
+                Logger.Warning("Already connected")
             }
             
             currentChannel = channel.lowercaseString
             socket.connect()
+            return
         }
+        Logger.Error("No chat connection")
     }
     
     func disconnect() {
         if let socket = chatConnection as WebSocket!  where socket.isConnected {
+            Logger.Debug("Disconnecting from chat server")
             socket.disconnect()
+            return
         }
+        Logger.Warning("Already disconnected")
     }
     
     func sendMessage(text: String) {
@@ -91,9 +99,9 @@ extension HitboxChatManager : WebSocketDelegate {
     }
     
     func websocketDidReceiveData(socket: WebSocket, data: NSData) {
-        print("We recieved data from websocket, that's weird..")
-        print(String(data: data, encoding: NSUTF8StringEncoding))
+        Logger.Warning("Recieved data in an unexpected format (Binary)")
     }
+    
 }
 
 extension HitboxChatManager : HitboxChatMessageQueueDelegate {

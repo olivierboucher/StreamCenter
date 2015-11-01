@@ -16,7 +16,6 @@ struct TwitchChatMessage {
 
 extension IRCMessage {
     func toTwitchChatMessage() -> TwitchChatMessage? {
-        //print("\nMutating IRCMessage to TwitchChatMessage") //DEBUG
         guard parameters.count == 2 else {
             return nil
         }
@@ -32,7 +31,6 @@ extension IRCMessage {
         
         if let emoteString = self.intentOrTags["emotes"] {
             if emoteString.characters.count > 0 {
-                //print("Emote string: \(emoteString)") //DEBUG
                 let emotesById = emoteString.containsString("/") ? emoteString.componentsSeparatedByString("/") : [emoteString]
                 
                 for emote in emotesById {
@@ -56,9 +54,7 @@ extension IRCMessage {
         
         if let displayNameString = self.intentOrTags["display-name"] {
             if displayNameString.characters.count > 0 {
-                //print("Display name: \(displayNameString)") //DEBUG
                 senderName = displayNameString.sanitizedIRCString()
-                //print("Sanitized name: \(senderName)") //DEBUG
             }
         }
         
@@ -67,7 +63,6 @@ extension IRCMessage {
                 senderDisplayColor = colorString
             }
         }
-        //print("\n") //DEBUG
         return TwitchChatMessage(senderName: senderName, message: message, emotes: emotes, senderDisplayColor: senderDisplayColor)
     }
 }

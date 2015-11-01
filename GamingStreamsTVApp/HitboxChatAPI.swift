@@ -22,13 +22,16 @@ class HitboxChatAPI {
                             urls.append(url)
                         }
                     }
+                    Logger.Debug("Returned \(urls.count) results")
                     completionHandler(serverURLS: urls, error: nil)
                     return
                 }
+                Logger.Error("Could not parse server list as JSON")
                 completionHandler(serverURLS: nil, error: .JSONError)
-            } else {
-                completionHandler(serverURLS: nil, error: .URLError)
             }
+            Logger.Error("Could not request chat server list")
+            completionHandler(serverURLS: nil, error: .URLError)
+            
         }
     }
     
@@ -39,11 +42,13 @@ class HitboxChatAPI {
                     if let colonRange = responseSocket.rangeOfString(":") {
                         let connectionID = responseSocket.substringToIndex(colonRange.startIndex)
                         let compiledString = "ws://\(serverURL)/socket.io/1/websocket/\(connectionID)"
+                        Logger.Debug("Compiled websocket url: \(compiledString)")
                         completionHandler(result: compiledString, error: nil)
                         return
                     }
                 }
             }
+            Logger.Error("Could not request a websocket URL")
             completionHandler(result: nil, error: .URLError)
         }
     }
@@ -56,6 +61,7 @@ class HitboxChatAPI {
             }
             
             guard let serverURLs = serverURLs where serverURLs.count > 0 else {
+                Logger.Error("Invalid server list")
                 completionHandler(result: nil, error: .OtherError("Invalid url array"))
                 return
             }
@@ -67,10 +73,11 @@ class HitboxChatAPI {
                 }
                 
                 guard let socketURL = socketURL else {
+                    Logger.Error("Invalid socket URL");
                     completionHandler(result: nil, error: .OtherError("Invalid socket URL"))
                     return
                 }
-                
+                Logger.Debug("Returning websocket url: \(socketURL)")
                 completionHandler(result: socketURL, error: nil)
             }
         }

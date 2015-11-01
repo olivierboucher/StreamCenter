@@ -69,8 +69,7 @@ class StreamCenterService {
                             completionHandler(token: nil, error: .NoAuthTokenError)
                             return
                         }
-                        print(date)
-                        //date is formatted: '2015-10-13 20:35:12'
+                        //NOTE: date is formatted: '2015-10-13 20:35:12'
                         
                         Mixpanel.tracker()?.trackEvents([Event.ServiceAuthenticationEvent("Twitch")])
                         Logger.Debug("User sucessfully retrieved Oauth token")

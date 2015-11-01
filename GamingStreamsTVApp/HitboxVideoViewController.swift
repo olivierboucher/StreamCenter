@@ -68,7 +68,7 @@ class HitboxVideoViewController : UIViewController {
     
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(animated)
-        print("media transcoding: \(media.transcoding)")
+        Logger.Debug("Media transcoding: \(media.transcoding)")
         HitboxAPI.getStreamInfo(forMediaId: self.media.userMediaId) { (streamVideos, error) -> () in
             
             if let streamVideos = streamVideos where streamVideos.count > 0 {
@@ -162,7 +162,7 @@ class HitboxVideoViewController : UIViewController {
     }
     
     func itemFailed(notification: NSNotification) {
-        print("shit: \(notification)")
+        Logger.Error("Item failed: \(notification)")
     }
     
     /*
@@ -219,7 +219,7 @@ class HitboxVideoViewController : UIViewController {
                 UIView.animateWithDuration(0.5, animations: { () -> Void in
                     modalMenu.alpha = 0
                     }, completion: { (finished) -> Void in
-                        print("finished: \(finished)")
+                        Logger.Debug("Fade away animation finished: \(finished)")
                         if finished {
                             modalMenu.removeFromSuperview()
                         }
@@ -267,12 +267,12 @@ class HitboxVideoViewController : UIViewController {
         
         HitboxChatAPI.getFirstAvailableWebSocket(){ socketURL, error in
             guard error == nil else {
-                print(error!.developerSuggestion)
+                Logger.Error(error!.developerSuggestion)
                 return
             }
             
             guard let socketURL = socketURL else {
-                print("Socket url is nil")
+                Logger.Error("Could not get a chat server socket url")
                 return
             }
             
@@ -353,7 +353,7 @@ class HitboxVideoViewController : UIViewController {
 extension HitboxVideoViewController : UITextFieldDelegate {
     
     func textFieldDidEndEditing(textField: UITextField) {
-        print(textField.text)
+        Logger.Debug("Value: \(textField.text)")
         guard let text = textField.text else {
             return
         }

@@ -8,7 +8,7 @@
 
 import UIKit
 
-class QRCodeGenerator: NSObject {
+struct QRCodeGenerator {
     
     static func generateQRCode(withString qrString: String, clearBackground clearBg: Bool = false) -> UIImage? {
         let data = qrString.dataUsingEncoding(NSUTF8StringEncoding)

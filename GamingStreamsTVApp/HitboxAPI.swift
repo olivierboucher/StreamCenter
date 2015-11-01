@@ -83,14 +83,17 @@ class HitboxAPI {
                                     games.append(game)
                                 }
                             }
+                            Logger.Debug("Returned \(games.count) results")
                             completionHandler(games: games, error: nil)
                             return
                         }
                     }
+                    Logger.Error("Could not parse the response as JSON")
                     completionHandler(games: nil, error: .JSONError)
                     return
                 }
                 else {
+                    Logger.Error("Could not request top games")
                     completionHandler(games: nil, error: .URLError)
                     return
                 }
@@ -123,14 +126,17 @@ class HitboxAPI {
                                 streams.append(stream)
                             }
                         }
+                        Logger.Debug("Returned \(streams.count) results")
                         completionHandler(streams: streams, error: nil)
                         return
                     }
                 }
+                Logger.Error("Could not parse the response as JSON")
                 completionHandler(streams: nil, error: .JSONError)
                 return
             }
             else {
+                Logger.Error("Could not request top streams")
                 completionHandler(streams: nil, error: .URLError)
                 return
             }
@@ -144,10 +150,10 @@ class HitboxAPI {
     ///     - completionHandler: A closure providing results and an error (both optionals) to be executed once the request completes
     static func getStreamInfo(forMediaId mediaId: String, completionHandler: (streamVideos: [HitboxStreamVideo]?, error: HitboxError?) -> ()) {
         let urlString = "http://www.hitbox.tv/api/player/config/live/\(mediaId)"
-        print("getting stream info for: \(urlString)")
+        Logger.Debug("getting stream info for: \(urlString)")
         Alamofire.request(.GET, urlString)
             .responseJSON { (response) -> Void in
-                //do the stuff
+
                 if(response.result.isSuccess) {
                     if let baseDict = response.result.value as? [String : AnyObject] {
                         if let playlist = baseDict["playlist"] as? [[String : AnyObject]], bitrates = playlist.first?["bitrates"] as? [[String : AnyObject]] {
@@ -163,14 +169,17 @@ class HitboxAPI {
 //                                //rtmp://edge.live.hitbox.tv/live/youplay
 //                                streamVideos += HitboxStreamVideo.alternativeCreation(playlist.first)
 //                            }
+                            Logger.Debug("Returned \(streamVideos.count) results")
                             completionHandler(streamVideos: streamVideos, error: nil)
                             return
                         }
                     }
+                    Logger.Error("Could not parse the response as JSON")
                     completionHandler(streamVideos: nil, error: .JSONError)
                     return
                 }
                 else {
+                    Logger.Error("Could not request stream info")
                     completionHandler(streamVideos: nil, error: .URLError)
                     return
                 }
@@ -200,12 +209,16 @@ class HitboxAPI {
                         
                         TokenHelper.storeHitboxToken(token)
                         Mixpanel.tracker()?.trackEvents([Event.ServiceAuthenticationEvent("Hitbox")])
+                        Logger.Debug("Successfully authenticated")
                         completionHandler(success: true, error: nil)
                         return
                     }
                 }
+                Logger.Error("Could not parse the response as JSON")
                 completionHandler(success: false, error: .NoAuthTokenError)
-            } else {
+            }
+            else {
+                Logger.Error("Could not request for authentication")
                 completionHandler(success: false, error: .URLError)
             }
         }

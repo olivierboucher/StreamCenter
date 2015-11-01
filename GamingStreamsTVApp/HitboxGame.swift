@@ -8,13 +8,13 @@
 
 import UIKit
 
-class HitboxGame: CellItem {
+struct HitboxGame: CellItem {
     
-    private(set) var id : Int!
-    private(set) var name : String!
-    private(set) var shortName : String?
-    private(set) var viewers : Int!
-    private(set) var thumbnail : String!
+    let id : Int!
+    let name : String!
+    let shortName : String?
+    let viewers : Int!
+    let thumbnail : String!
     
     private var mImage: UIImage?
     
@@ -36,10 +36,7 @@ class HitboxGame: CellItem {
         self.name = name
         self.thumbnail = thumb
         self.viewers = intViewers
-        
-        if let shortName = dict["category_name_short"] as? String {
-            self.shortName = shortName
-        }
+        self.shortName = dict["category_name_short"] as? String
     }
     
     var urlTemplate: String? {
@@ -76,7 +73,7 @@ class HitboxGame: CellItem {
         }
     }
     
-    func setImage(image: UIImage) {
+    mutating func setImage(image: UIImage) {
         mImage = image
     }
 }

@@ -7,19 +7,19 @@
 import Foundation
 
 struct TwitchChannel {
-    private(set) var id : Int
-    private(set) var name : String
-    private(set) var displayName : String
-    private(set) var links : [String : String]
-    private(set) var broadcasterLanguage : String?
-    private(set) var language : String
-    private(set) var gameName : String
-    private(set) var logo : String?
-    private(set) var status : String
-    private(set) var videoBanner : String?
-    private(set) var lastUpdate = NSDate()
-    private(set) var followers = 0
-    private(set) var views = 0
+    let id : Int!
+    let name : String!
+    let displayName : String!
+    let links : [String : String]!
+    let broadcasterLanguage : String?
+    let language : String!
+    let gameName : String!
+    let logo : String?
+    let status : String!
+    let videoBanner : String?
+    let lastUpdate : NSDate!
+    let followers : Int!
+    let views : Int!
     
     init(id : Int, name : String, displayName : String, links : [String : String], broadcasterLanguage : String?,
         language : String, gameName : String, logo : String?, status : String, videoBanner : String?,
@@ -61,6 +61,7 @@ struct TwitchChannel {
         guard let status = dict["status"] as? String else {
             return nil
         }
+        
         self.id = id
         self.name = name
         self.displayName = displayName
@@ -74,21 +75,27 @@ struct TwitchChannel {
         if let updateDateString = dict["updated_at"] as? String, updateDate = dateFormatter.dateFromString(updateDateString) {
             self.lastUpdate = updateDate
         }
+        else {
+            self.lastUpdate = NSDate()
+        }
+        
         if let followers = dict["followers"] as? Int {
             self.followers = followers
         }
+        else {
+            self.followers = 0
+        }
+        
         if let views = dict["views"] as? Int {
             self.views = views
         }
-        if let broadcasterLanguage = dict["broadcaster_language"] as? String {
-            self.broadcasterLanguage = broadcasterLanguage
+        else {
+            self.views = 0
         }
-        if let videoBanner = dict["video_banner"] as? String  {
-            self.videoBanner = videoBanner
-        }
-        if let logo = dict["logo"] as? String {
-            self.logo = logo
-        }
+        
+        self.broadcasterLanguage = dict["broadcaster_language"] as? String
+        self.videoBanner = dict["video_banner"] as? String
+        self.logo = dict["logo"] as? String
     }
     
     var displayLanguage: String? {

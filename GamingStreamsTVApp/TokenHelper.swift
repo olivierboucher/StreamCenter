@@ -8,7 +8,7 @@
 
 import UIKit
 
-class TokenHelper: NSObject {
+struct TokenHelper {
     
     static let TWITCH_SERVICE = "com.StreamCenter.Twitch.SERVICE"
     static let TWITCH_TOKEN_KEY = "com.StreamCenter.Twitch.TOKEN_KEY"

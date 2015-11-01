@@ -21,7 +21,7 @@ class TwitchChatView : UIView {
         
         self.chatMgr = TwitchChatManager(consumer: self)
         
-        self.backgroundColor = "#2E2E2E".toUIColorFromHex()
+        self.backgroundColor = UIColor(hexString: "#19191F")
         
         let topView = ChatTopView(frame: CGRect(x: 0, y: 0, width: self.bounds.width, height: 75), title: "#\(self.channel.name)")
         self.addSubview(topView)
@@ -35,12 +35,14 @@ class TwitchChatView : UIView {
     
     
     func startDisplayingMessages() {
+        Logger.Debug("Attempting to connect and display chat messages")
         self.shouldConsume = true
         self.chatMgr!.connectAnonymously()
         self.chatMgr!.joinTwitchChannel(self.channel)
     }
     
     func stopDisplayingMessages() {
+        Logger.Debug("Disconnecting from chat")
         self.shouldConsume = false
         self.chatMgr!.disconnect()
     }

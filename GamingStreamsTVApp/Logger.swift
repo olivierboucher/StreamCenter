@@ -77,7 +77,15 @@ struct Logger {
     }
     
     private static func escapeAndPrettify<Object>(object : Object) -> String {
-        let s = "\(object)"
+        var s = "\(object)"
+        
+        if s.hasSuffix("\r\n"){
+            s = s[0..<s.characters.count - 1]
+        }
+        
+        if s.hasSuffix("\n"){
+            s = s[0..<s.characters.count]
+        }
         
         return s.stringByReplacingOccurrencesOfString("\n", withString: "\n\t>> ")
     }

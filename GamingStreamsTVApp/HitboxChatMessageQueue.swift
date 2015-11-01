@@ -65,17 +65,20 @@ class HitboxChatMessageQueue {
         for message in messagesArray {
             //We need to remove ":::5"
             guard let data = message[4..<message.characters.count].dataUsingEncoding(NSUTF8StringEncoding) else {
+                Logger.Warning("Could not remove the first 4 characters from the message\nThe message is probably corrupted\n\(message)")
                 return
             }
             
             do {
                 guard let msgJSON = try NSJSONSerialization.JSONObjectWithData(data, options: .AllowFragments) as? [String : AnyObject] else {
+                    Logger.Error("JSON object could not be casted as [String : AnyObject]")
                     return
                 }
                 
                 if let name = msgJSON["name"] as? String, rawArgs = msgJSON["args"] as? [String] where name == "message" {
                     
                     guard let argsData = rawArgs[0].dataUsingEncoding(NSUTF8StringEncoding), args = try NSJSONSerialization.JSONObjectWithData(argsData, options: .AllowFragments) as? [String : AnyObject] else {
+                        Logger.Error("JSON object could not be casted as [String : AnyObject]")
                         return
                     }
                     
@@ -97,29 +100,37 @@ class HitboxChatMessageQueue {
                     }
                 }
             } catch {
-                print(error)
+                Logger.Error("Could not process message, JSON deserialization failed")
             }
         }  
     }
     
     func startProcessing() {
         if self.processTimer == nil && self.timerPaused {
+            Logger.Debug("Creating a new process timer")
             self.timerPaused = false
             self.processTimer = ConcurrencyHelpers.createDispatchTimer((1 * NSEC_PER_SEC)/2, leeway: (1 * NSEC_PER_SEC)/2, queue: opQueue, block: {
                 self.processAvailableMessages()
             })
+            return
         }
         else if self.processTimer != nil && self.timerPaused {
+            Logger.Debug("Resuming existing process timer")
             self.timerPaused = false
             dispatch_resume(self.processTimer!)
+            return
         }
+        Logger.Error("Conditions not met, could not start processing")
     }
     
     func stopProcessing() {
         if processTimer != nil && !self.timerPaused {
+            Logger.Debug("Suspending process timer")
             dispatch_suspend(self.processTimer!)
             self.timerPaused = true
+            return
         }
+        Logger.Error("Could not stop processing since timer is either nil or already paused")
     }
     
     private func getAttributedStringForMessage(message : HitboxChatMessage) -> NSAttributedString {

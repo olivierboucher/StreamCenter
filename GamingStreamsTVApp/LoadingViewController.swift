@@ -168,7 +168,7 @@ class LoadingViewController : UIViewController, LoadController {
     *
     */
     func reloadContent() {
-        print("we are reloading the content now: \(self)")
+        Logger.Debug("We are reloading the content now")
     }
     
     /*
