@@ -4,6 +4,11 @@ StreamCenter is a tvOS project that aims at providing various video feeds to the
 
 **NOTE:** Our web api is currently in dev mode, you may see non-critial error messages.
 
+# Supported platforms
+* Twitch
+* Hitbox
+* Custom urls
+
 # Running the Project
 
 ###Things you need:
@@ -23,3 +28,4 @@ Make sure you open GamingStreamsTVApp.xcworkspace to include the generated Pods 
 # Contributing
 Huge thanks to @waterskier2007 for the support.  
 If anyone wishes to contribute, just email us for info.
+We're looking for contributors to integrate other platforms
