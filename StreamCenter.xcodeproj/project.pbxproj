@@ -829,7 +829,6 @@
 		};
 		090AB8EE1BA5BFDF00CDB05D /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = DC2A8ED48462858490AD4901 /* Pods-GamingStreamsTVApp.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = "App Icon & Top Shelf Image";
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
@@ -844,7 +843,6 @@
 		};
 		090AB8EF1BA5BFDF00CDB05D /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 90FBC40A14CD24160B58953A /* Pods-GamingStreamsTVApp.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = "App Icon & Top Shelf Image";
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
