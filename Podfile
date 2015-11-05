@@ -7,7 +7,7 @@ use_frameworks!
 
 target 'StreamCenter' do
 
-pod 'Alamofire', :git => 'https://github.com/Alamofire/Alamofire.git', :branch => 'tvOS'
+pod 'Alamofire', :git => 'https://github.com/Alamofire/Alamofire.git', :branch => 'master'
 pod 'CocoaAsyncSocket', :git => 'https://github.com/robbiehanson/CocoaAsyncSocket', :branch => 'master'
 #TODO: Activate these 2 when we're granted tvOS support
 #pod 'Fabric'
