@@ -105,7 +105,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		090AB8DE1BA5BFDF00CDB05D /* GamingStreamsTVApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GamingStreamsTVApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		090AB8DE1BA5BFDF00CDB05D /* StreamCenter.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = StreamCenter.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		090AB8E11BA5BFDF00CDB05D /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		090AB8E31BA5BFDF00CDB05D /* TwitchGamesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TwitchGamesViewController.swift; sourceTree = "<group>"; };
 		090AB8E81BA5BFDF00CDB05D /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -137,7 +137,7 @@
 		09D098241BA7666200E7E6FC /* TwitchStreamsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TwitchStreamsViewController.swift; sourceTree = "<group>"; };
 		09D098281BA77FAB00E7E6FC /* TwitchVideoViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TwitchVideoViewController.swift; sourceTree = "<group>"; };
 		09D0982A1BA782C800E7E6FC /* VideoView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VideoView.swift; sourceTree = "<group>"; };
-		09D6E7D11BD2A3B300E88371 /* GamingStreamsTVAppTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = GamingStreamsTVAppTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		09D6E7D11BD2A3B300E88371 /* StreamCenter.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = StreamCenter.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		09D6E7D51BD2A3B300E88371 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		09D6E7DE1BD2C38000E88371 /* GamingStreamsTVAppTests-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "GamingStreamsTVAppTests-Bridging-Header.h"; sourceTree = "<group>"; };
 		09D6E7DF1BD2C38100E88371 /* TwitchChatMessageQueueTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TwitchChatMessageQueueTest.swift; sourceTree = "<group>"; };
@@ -219,8 +219,8 @@
 		090AB8DF1BA5BFDF00CDB05D /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				090AB8DE1BA5BFDF00CDB05D /* GamingStreamsTVApp.app */,
-				09D6E7D11BD2A3B300E88371 /* GamingStreamsTVAppTests.xctest */,
+				090AB8DE1BA5BFDF00CDB05D /* StreamCenter.app */,
+				09D6E7D11BD2A3B300E88371 /* StreamCenter.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -502,9 +502,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		090AB8DD1BA5BFDF00CDB05D /* GamingStreamsTVApp */ = {
+		090AB8DD1BA5BFDF00CDB05D /* StreamCenter */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 090AB8ED1BA5BFDF00CDB05D /* Build configuration list for PBXNativeTarget "GamingStreamsTVApp" */;
+			buildConfigurationList = 090AB8ED1BA5BFDF00CDB05D /* Build configuration list for PBXNativeTarget "StreamCenter" */;
 			buildPhases = (
 				39804CB7D1311A3FA2A181BA /* Check Pods Manifest.lock */,
 				090AB8DA1BA5BFDF00CDB05D /* Sources */,
@@ -518,14 +518,14 @@
 			);
 			dependencies = (
 			);
-			name = GamingStreamsTVApp;
+			name = StreamCenter;
 			productName = TestTVApp;
-			productReference = 090AB8DE1BA5BFDF00CDB05D /* GamingStreamsTVApp.app */;
+			productReference = 090AB8DE1BA5BFDF00CDB05D /* StreamCenter.app */;
 			productType = "com.apple.product-type.application";
 		};
-		09D6E7D01BD2A3B300E88371 /* GamingStreamsTVAppTests */ = {
+		09D6E7D01BD2A3B300E88371 /* StreamCenterTests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 09D6E7D81BD2A3B300E88371 /* Build configuration list for PBXNativeTarget "GamingStreamsTVAppTests" */;
+			buildConfigurationList = 09D6E7D81BD2A3B300E88371 /* Build configuration list for PBXNativeTarget "StreamCenterTests" */;
 			buildPhases = (
 				09D6E7CD1BD2A3B300E88371 /* Sources */,
 				09D6E7CE1BD2A3B300E88371 /* Frameworks */,
@@ -536,9 +536,9 @@
 			dependencies = (
 				09D6E7D71BD2A3B300E88371 /* PBXTargetDependency */,
 			);
-			name = GamingStreamsTVAppTests;
+			name = StreamCenterTests;
 			productName = GamingStreamsTVAppTests;
-			productReference = 09D6E7D11BD2A3B300E88371 /* GamingStreamsTVAppTests.xctest */;
+			productReference = 09D6E7D11BD2A3B300E88371 /* StreamCenter.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
 /* End PBXNativeTarget section */
@@ -553,6 +553,7 @@
 				TargetAttributes = {
 					090AB8DD1BA5BFDF00CDB05D = {
 						CreatedOnToolsVersion = 7.1;
+						DevelopmentTeam = XB8QMQPY2M;
 					};
 					09D6E7D01BD2A3B300E88371 = {
 						CreatedOnToolsVersion = 7.1;
@@ -560,7 +561,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 090AB8D91BA5BFDF00CDB05D /* Build configuration list for PBXProject "GamingStreamsTVApp" */;
+			buildConfigurationList = 090AB8D91BA5BFDF00CDB05D /* Build configuration list for PBXProject "StreamCenter" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
@@ -573,8 +574,8 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				090AB8DD1BA5BFDF00CDB05D /* GamingStreamsTVApp */,
-				09D6E7D01BD2A3B300E88371 /* GamingStreamsTVAppTests */,
+				090AB8DD1BA5BFDF00CDB05D /* StreamCenter */,
+				09D6E7D01BD2A3B300E88371 /* StreamCenterTests */,
 			);
 		};
 /* End PBXProject section */
@@ -735,7 +736,7 @@
 /* Begin PBXTargetDependency section */
 		09D6E7D71BD2A3B300E88371 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 090AB8DD1BA5BFDF00CDB05D /* GamingStreamsTVApp */;
+			target = 090AB8DD1BA5BFDF00CDB05D /* StreamCenter */;
 			targetProxy = 09D6E7D61BD2A3B300E88371 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
@@ -828,11 +829,12 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = "App Icon & Top Shelf Image";
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				EMBEDDED_CONTENT_CONTAINS_SWIFT = "$(inherited)";
 				INFOPLIST_FILE = GamingStreamsTVApp/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.rivusmedia.GamingStreamsTVApp;
-				PRODUCT_NAME = GamingStreamsTVApp;
+				PRODUCT_BUNDLE_IDENTIFIER = com.olivierboucher.StreamCenter;
+				PRODUCT_NAME = StreamCenter;
 			};
 			name = Debug;
 		};
@@ -842,11 +844,12 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = "App Icon & Top Shelf Image";
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				EMBEDDED_CONTENT_CONTAINS_SWIFT = "$(inherited)";
 				INFOPLIST_FILE = GamingStreamsTVApp/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.rivusmedia.GamingStreamsTVApp;
-				PRODUCT_NAME = GamingStreamsTVApp;
+				PRODUCT_BUNDLE_IDENTIFIER = com.olivierboucher.StreamCenter;
+				PRODUCT_NAME = StreamCenter;
 			};
 			name = Release;
 		};
@@ -858,10 +861,10 @@
 				INFOPLIST_FILE = GamingStreamsTVAppTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.rivusmedia.GamingStreamsTVAppTests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = StreamCenter;
 				SWIFT_OBJC_BRIDGING_HEADER = "GamingStreamsTVAppTests/GamingStreamsTVAppTests-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/GamingStreamsTVApp.app/GamingStreamsTVApp";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/StreamCenter.app/StreamCenter";
 			};
 			name = Debug;
 		};
@@ -873,16 +876,16 @@
 				INFOPLIST_FILE = GamingStreamsTVAppTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.rivusmedia.GamingStreamsTVAppTests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = StreamCenter;
 				SWIFT_OBJC_BRIDGING_HEADER = "GamingStreamsTVAppTests/GamingStreamsTVAppTests-Bridging-Header.h";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/GamingStreamsTVApp.app/GamingStreamsTVApp";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/StreamCenter.app/StreamCenter";
 			};
 			name = Release;
 		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		090AB8D91BA5BFDF00CDB05D /* Build configuration list for PBXProject "GamingStreamsTVApp" */ = {
+		090AB8D91BA5BFDF00CDB05D /* Build configuration list for PBXProject "StreamCenter" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				090AB8EB1BA5BFDF00CDB05D /* Debug */,
@@ -891,7 +894,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		090AB8ED1BA5BFDF00CDB05D /* Build configuration list for PBXNativeTarget "GamingStreamsTVApp" */ = {
+		090AB8ED1BA5BFDF00CDB05D /* Build configuration list for PBXNativeTarget "StreamCenter" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				090AB8EE1BA5BFDF00CDB05D /* Debug */,
@@ -900,7 +903,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		09D6E7D81BD2A3B300E88371 /* Build configuration list for PBXNativeTarget "GamingStreamsTVAppTests" */ = {
+		09D6E7D81BD2A3B300E88371 /* Build configuration list for PBXNativeTarget "StreamCenterTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				09D6E7D91BD2A3B300E88371 /* Debug */,
