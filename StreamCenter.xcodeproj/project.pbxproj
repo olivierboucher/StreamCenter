@@ -208,8 +208,8 @@
 		090AB8D51BA5BFDF00CDB05D = {
 			isa = PBXGroup;
 			children = (
-				090AB8E01BA5BFDF00CDB05D /* GamingStreamsTVApp */,
-				09D6E7D21BD2A3B300E88371 /* GamingStreamsTVAppTests */,
+				090AB8E01BA5BFDF00CDB05D /* StreamCenter */,
+				09D6E7D21BD2A3B300E88371 /* StreamCenterTests */,
 				090AB8DF1BA5BFDF00CDB05D /* Products */,
 				F869E16742CCA364171847D9 /* Pods */,
 				334A70E19B5807FD4AAD28B4 /* Frameworks */,
@@ -225,7 +225,7 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		090AB8E01BA5BFDF00CDB05D /* GamingStreamsTVApp */ = {
+		090AB8E01BA5BFDF00CDB05D /* StreamCenter */ = {
 			isa = PBXGroup;
 			children = (
 				09D098231BA7663A00E7E6FC /* ViewControllers */,
@@ -237,6 +237,7 @@
 				090AB8E81BA5BFDF00CDB05D /* Assets.xcassets */,
 				090AB8EA1BA5BFDF00CDB05D /* Info.plist */,
 			);
+			name = StreamCenter;
 			path = GamingStreamsTVApp;
 			sourceTree = "<group>";
 		};
@@ -361,12 +362,13 @@
 			name = ViewControllers;
 			sourceTree = "<group>";
 		};
-		09D6E7D21BD2A3B300E88371 /* GamingStreamsTVAppTests */ = {
+		09D6E7D21BD2A3B300E88371 /* StreamCenterTests */ = {
 			isa = PBXGroup;
 			children = (
 				09D6E7DC1BD2A3E700E88371 /* TwitchAPI */,
 				09D6E7D51BD2A3B300E88371 /* Info.plist */,
 			);
+			name = StreamCenterTests;
 			path = GamingStreamsTVAppTests;
 			sourceTree = "<group>";
 		};
