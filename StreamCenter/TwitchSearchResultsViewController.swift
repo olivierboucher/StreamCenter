@@ -143,12 +143,12 @@ class TwitchSearchResultsViewController: LoadingViewController {
     
     func changedSearchType(control: UISegmentedControl) {
         switch control.selectedSegmentIndex {
-        case 0:
-            searchType = .Game
-        case 1:
-            searchType = .Stream
-        default:
-            return
+            case 0:
+                searchType = .Game
+            case 1:
+                searchType = .Stream
+            default:
+                return
         }
         collectionView.reloadData()
     }
@@ -185,12 +185,22 @@ class TwitchSearchResultsViewController: LoadingViewController {
     
     override var itemCount: Int {
         get {
-            return games.count
+            switch searchType {
+                case .Game:
+                    return games.count
+                case .Stream:
+                    return streams.count
+                }
         }
     }
     
     override func getItemAtIndex(index: Int) -> CellItem {
-        return games[index]
+        switch searchType {
+            case .Game:
+                return games[index]
+            case .Stream:
+                return streams[index]
+            }
     }
 
 }
