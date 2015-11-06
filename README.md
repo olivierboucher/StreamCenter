@@ -1,9 +1,15 @@
 ### Important: Someone has published this application under another name and is asking for money.
 Please do not use the app called Any Stream, we are coming soon and we'll get rid of them.
 
+
+
 # StreamCenter
 
-StreamCenter is a tvOS project that aims at providing various video feeds to the AppleTV.
+StreamCenter is a tvOS project that aims at providing various video feeds to the AppleTV.  
+  
+We were forced into releasing the app because someone ripped the source code and is selling for $0.99. Our intentions always were to release it for free. However, if you wish to support us, you can go ahead using gratipay.
+
+[![Support via Gratipay](https://cdn.rawgit.com/gratipay/gratipay-badge/2.3.0/dist/gratipay.svg)](https://gratipay.com/OlivierBoucher/)
 
 **NOTE:** Our web api is currently in dev mode, you may see non-critial error messages.
 
