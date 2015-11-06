@@ -110,7 +110,7 @@ class TwitchSearchResultsViewController: LoadingViewController {
             guard let streams = streams else {
                 dispatch_async(dispatch_get_main_queue(), {
                     self.removeLoadingView()
-                    self.displayErrorView("Error loading game list.\nPlease check your internet connection.")
+                    self.displayErrorView("Error loading stream list.\nPlease check your internet connection.")
                 })
                 return
             }
