@@ -1,3 +1,6 @@
+### Important: Someone has published this application under another name and is asking for money.
+Please do not use the app called Any Stream, we are coming soon and we'll get rid of them.
+
 # StreamCenter
 
 StreamCenter is a tvOS project that aims at providing various video feeds to the AppleTV.
