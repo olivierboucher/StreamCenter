@@ -9,7 +9,7 @@ StreamCenter is a tvOS project that aims at providing various video feeds to the
   
 We were forced into releasing the app because someone ripped the source code and is selling for $0.99. Our intentions always were to release it for free. However, if you wish to support us, you can go ahead using gratipay.
 
-[![Support via Gratipay](https://cdn.rawgit.com/gratipay/gratipay-badge/2.3.0/dist/gratipay.svg)](https://gratipay.com/OlivierBoucher/)
+<span class="badge-paypal"><a href="https://www.paypal.me/OlivierBoucher" title="Donate to this project using Paypal"><img src="https://img.shields.io/badge/paypal-donate-yellow.svg" alt="PayPal donate button" /></a></span>
 
 **NOTE:** Our web api is currently in dev mode, you may see non-critial error messages.
 
