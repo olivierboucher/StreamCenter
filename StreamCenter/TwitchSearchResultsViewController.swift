@@ -103,7 +103,7 @@ class TwitchSearchResultsViewController: LoadingViewController {
             dispatch_async(dispatch_get_main_queue(), {
                 
                 self.removeLoadingView()
-                self.collectionView.reloadData()
+                if(self.searchType == .Game) { self.collectionView.reloadData() }
             })
         }
         TwitchApi.getStreamsWithSearchTerm(searchTerm, offset: 0, limit: LOADING_BUFFER) { (streams, error) -> () in
@@ -119,7 +119,7 @@ class TwitchSearchResultsViewController: LoadingViewController {
             dispatch_async(dispatch_get_main_queue(), {
                 
                 self.removeLoadingView()
-                self.collectionView.reloadData()
+                if(self.searchType == .Stream) { self.collectionView.reloadData() }
             })
         }
     }
