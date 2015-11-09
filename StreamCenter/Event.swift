@@ -33,6 +33,10 @@ struct Event {
         return Event(name: "App start", properties: nil)
     }
     
+    static func ActiveEvent() -> Event {
+        return Event(name: "App active", properties: nil)
+    }
+    
     static func ServiceAuthenticationEvent(serviceName: String) -> Event {
         return Event(name: "Service Authentication", properties: ["service" : serviceName])
     }

@@ -30,6 +30,7 @@ class Mixpanel {
     private var token : String
     private var opQueue : dispatch_queue_t
     private var eventsBuffer : [Event]
+    private var timeEventsBuffer : [String : NSDate]
     private let eventsMutex : dispatch_semaphore_t
     private var processTimer : dispatch_source_t?
     private var timerPaused : Bool = true
@@ -39,6 +40,7 @@ class Mixpanel {
         let queueAttr = dispatch_queue_attr_make_with_qos_class(DISPATCH_QUEUE_SERIAL, QOS_CLASS_BACKGROUND, 0)
         opQueue = dispatch_queue_create("com.mixpanel.tracker", queueAttr)
         eventsBuffer = [Event]()
+        timeEventsBuffer = [String : Event]()
         eventsMutex = dispatch_semaphore_create(1)
     }
     
@@ -116,11 +118,50 @@ class Mixpanel {
         }
     }
     
+    func timeEvent(eventName : String) {
+        dispatch_async(opQueue){
+            self.timeEventsBuffer[eventName] = NSDate()
+        }
+    }
+    
+    func trackEvent(event : Event) {
+        dispatch_async(opQueue){
+            var mutableEvent = event;
+            mutableEvent.signedSelf(self.token)
+            
+            if let timedEvent = timeEventsBuffer.removeValueForKey(event.name) {
+                let timeInterval = NSDate.timeIntervalSinceDate(timedEvent)
+                mutableEvent.properties["$duration"] = timeInterval
+            }
+        }
+    }
+    
+    func trackEventImmediately(event : Event) {
+        dispatch_sync(dispatch_get_main_queue()){
+            self.stopProcessing()
+            var mutableEvent = event;
+            mutableEvent.signedSelf(self.token)
+            
+            if let timedEvent = timeEventsBuffer.removeValueForKey(event.name) {
+                let timeInterval = NSDate.timeIntervalSinceDate(timedEvent)
+                mutableEvent.properties["$duration"] = timeInterval
+            }
+            self.sendEventsBuffer()
+            self.startProcessing()
+        }
+    }
+    
     func trackEvents(events : [Event]) {
         dispatch_async(opQueue){
             var mutableEvents = [Event]()
             for var event in events {
-                mutableEvents.append(event.signedSelf(self.token))
+               var mutableEvent = event.signedSelf(self.token)
+                
+                if let timedEvent = timeEventsBuffer.removeValueForKey(event.name) {
+                    let timeInterval = NSDate.timeIntervalSinceDate(timedEvent)
+                    mutableEvent.properties["$duration"] = timeInterval
+                }
+                mutableEvents.append(mutableEvent)
             }
             dispatch_semaphore_wait(self.eventsMutex, DISPATCH_TIME_FOREVER)
             self.eventsBuffer.appendContentsOf(mutableEvents)
