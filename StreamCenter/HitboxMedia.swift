@@ -78,7 +78,14 @@ struct HitboxMedia: CellItem {
     var subtitle: String {
         get {
             if views > 0 {
-                return "\(views) views"
+                let formatter = NSNumberFormatter()
+                formatter.numberStyle = .DecimalStyle
+                
+                if let formattedViews = formatter.stringFromNumber(views) {
+                    return "\(formattedViews) viewers"
+                } else {
+                    return "\(views) viewers"
+                }
             } else {
                 return " "
             }
