@@ -5,9 +5,9 @@ platform :tvos, '9.0'
 #Required for Swift
 use_frameworks!
 
-target 'GamingStreamsTVApp' do
+target 'StreamCenter' do
 
-pod 'Alamofire', :git => 'https://github.com/Alamofire/Alamofire.git', :branch => 'tvOS'
+pod 'Alamofire', :git => 'https://github.com/Alamofire/Alamofire.git', :branch => 'master'
 pod 'CocoaAsyncSocket', :git => 'https://github.com/robbiehanson/CocoaAsyncSocket', :branch => 'master'
 #TODO: Activate these 2 when we're granted tvOS support
 #pod 'Fabric'
