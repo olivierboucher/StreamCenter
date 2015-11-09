@@ -104,7 +104,14 @@ struct TwitchGame: CellItem {
     var subtitle: String {
         get {
             if viewers > 0 {
-                return "\(viewers) viewers"
+                let formatter = NSNumberFormatter()
+                formatter.numberStyle = .DecimalStyle
+                
+                if let formattedViewers = formatter.stringFromNumber(viewers) {
+                    return "\(formattedViewers) viewers"
+                } else {
+                    return "\(viewers) viewers"
+                }
             } else {
                 if popularity > 0 {
                     return "popularity: \(popularity)"
