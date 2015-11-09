@@ -73,6 +73,14 @@ struct TwitchStream: CellItem {
     
     var subtitle: String {
         get {
+            if viewers > 0 {
+                let formatter = NSNumberFormatter()
+                formatter.numberStyle = .DecimalStyle
+                
+                if let formattedViewers = formatter.stringFromNumber(viewers) {
+                    return "\(formattedViewers) viewers on \(channel.name)"
+                }
+            }
             return "\(viewers) viewers on \(channel.name)"
         }
     }
