@@ -40,14 +40,18 @@ class Mixpanel {
         let queueAttr = dispatch_queue_attr_make_with_qos_class(DISPATCH_QUEUE_SERIAL, QOS_CLASS_BACKGROUND, 0)
         opQueue = dispatch_queue_create("com.mixpanel.tracker", queueAttr)
         eventsBuffer = [Event]()
-        timeEventsBuffer = [String : Event]()
+        timeEventsBuffer = [String : NSDate]()
         eventsMutex = dispatch_semaphore_create(1)
     }
     
     private func sendEventsBuffer() {
         dispatch_semaphore_wait(eventsMutex, DISPATCH_TIME_FOREVER)
         let count = eventsBuffer.count
-        dispatch_semaphore_signal(eventsMutex)
+        
+        guard count > 0 else  {
+            return
+        }
+        
         do {
             let events = Array(eventsBuffer[0..<count])
             let json = try NSJSONSerialization.dataWithJSONObject(events.map({ $0.jsonDictionary }), options: [])
@@ -63,7 +67,6 @@ class Mixpanel {
                     if let responseJSON = response.result.value! as? [String : AnyObject] {
                         if let status = responseJSON["status"] as? Int where status == 1 {
                             //Sucess, let's remove events from buffer
-                            dispatch_semaphore_wait(self.eventsMutex, DISPATCH_TIME_FOREVER)
                             self.eventsBuffer.removeRange(0..<count)
                             dispatch_semaphore_signal(self.eventsMutex)
                             Logger.Debug("Sent \(count) events correctly")
@@ -77,10 +80,11 @@ class Mixpanel {
                 else {
                     Logger.Error("Could not reach Mixpanel's endpoint")
                 }
+                dispatch_semaphore_signal(self.eventsMutex)
             }
-
         }
         catch let err as NSError {
+            dispatch_semaphore_signal(eventsMutex)
             Logger.Error("Error encoding events : \(err)")
         }
     }
@@ -121,6 +125,7 @@ class Mixpanel {
     func timeEvent(eventName : String) {
         dispatch_async(opQueue){
             self.timeEventsBuffer[eventName] = NSDate()
+            Logger.Debug("Timed \(eventName) start = \(self.timeEventsBuffer[eventName])")
         }
     }
     
@@ -129,26 +134,35 @@ class Mixpanel {
             var mutableEvent = event;
             mutableEvent.signedSelf(self.token)
             
-            if let timedEvent = timeEventsBuffer.removeValueForKey(event.name) {
-                let timeInterval = NSDate.timeIntervalSinceDate(timedEvent)
+            if let timedEvent = self.timeEventsBuffer.removeValueForKey(event.name) {
+                let timeInterval = NSDate().timeIntervalSinceDate(timedEvent)
                 mutableEvent.properties["$duration"] = timeInterval
             }
+            
+            dispatch_semaphore_wait(self.eventsMutex, DISPATCH_TIME_FOREVER)
+            self.eventsBuffer.append(mutableEvent)
+            dispatch_semaphore_signal(self.eventsMutex)
         }
     }
     
     func trackEventImmediately(event : Event) {
-        dispatch_sync(dispatch_get_main_queue()){
+        //dispatch_sync(dispatch_get_main_queue()){
             self.stopProcessing()
             var mutableEvent = event;
             mutableEvent.signedSelf(self.token)
             
-            if let timedEvent = timeEventsBuffer.removeValueForKey(event.name) {
-                let timeInterval = NSDate.timeIntervalSinceDate(timedEvent)
+            if let timedEvent = self.timeEventsBuffer.removeValueForKey(event.name) {
+                let timeInterval = NSDate().timeIntervalSinceDate(timedEvent)
                 mutableEvent.properties["$duration"] = timeInterval
             }
+            
+            dispatch_semaphore_wait(self.eventsMutex, DISPATCH_TIME_FOREVER)
+            self.eventsBuffer.append(mutableEvent)
+            dispatch_semaphore_signal(self.eventsMutex)
+            
             self.sendEventsBuffer()
             self.startProcessing()
-        }
+        //}
     }
     
     func trackEvents(events : [Event]) {
@@ -157,8 +171,8 @@ class Mixpanel {
             for var event in events {
                var mutableEvent = event.signedSelf(self.token)
                 
-                if let timedEvent = timeEventsBuffer.removeValueForKey(event.name) {
-                    let timeInterval = NSDate.timeIntervalSinceDate(timedEvent)
+                if let timedEvent = self.timeEventsBuffer.removeValueForKey(event.name) {
+                    let timeInterval = NSDate().timeIntervalSinceDate(timedEvent)
                     mutableEvent.properties["$duration"] = timeInterval
                 }
                 mutableEvents.append(mutableEvent)
