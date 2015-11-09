@@ -103,14 +103,14 @@ class TwitchSearchResultsViewController: LoadingViewController {
             dispatch_async(dispatch_get_main_queue(), {
                 
                 self.removeLoadingView()
-                self.collectionView.reloadData()
+                if(self.searchType == .Game) { self.collectionView.reloadData() }
             })
         }
         TwitchApi.getStreamsWithSearchTerm(searchTerm, offset: 0, limit: LOADING_BUFFER) { (streams, error) -> () in
             guard let streams = streams else {
                 dispatch_async(dispatch_get_main_queue(), {
                     self.removeLoadingView()
-                    self.displayErrorView("Error loading game list.\nPlease check your internet connection.")
+                    self.displayErrorView("Error loading stream list.\nPlease check your internet connection.")
                 })
                 return
             }
@@ -119,7 +119,7 @@ class TwitchSearchResultsViewController: LoadingViewController {
             dispatch_async(dispatch_get_main_queue(), {
                 
                 self.removeLoadingView()
-                self.collectionView.reloadData()
+                if(self.searchType == .Stream) { self.collectionView.reloadData() }
             })
         }
     }
@@ -143,12 +143,12 @@ class TwitchSearchResultsViewController: LoadingViewController {
     
     func changedSearchType(control: UISegmentedControl) {
         switch control.selectedSegmentIndex {
-        case 0:
-            searchType = .Game
-        case 1:
-            searchType = .Stream
-        default:
-            return
+            case 0:
+                searchType = .Game
+            case 1:
+                searchType = .Stream
+            default:
+                return
         }
         collectionView.reloadData()
     }
@@ -185,12 +185,22 @@ class TwitchSearchResultsViewController: LoadingViewController {
     
     override var itemCount: Int {
         get {
-            return games.count
+            switch searchType {
+                case .Game:
+                    return games.count
+                case .Stream:
+                    return streams.count
+                }
         }
     }
     
     override func getItemAtIndex(index: Int) -> CellItem {
-        return games[index]
+        switch searchType {
+            case .Game:
+                return games[index]
+            case .Stream:
+                return streams[index]
+            }
     }
 
 }
