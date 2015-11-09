@@ -54,10 +54,16 @@ struct HitboxGame: CellItem {
     var subtitle: String {
         get {
             if viewers > 0 {
-                return "\(viewers) viewers"
-            } else {
-                return " "
+                let formatter = NSNumberFormatter()
+                formatter.numberStyle = .DecimalStyle
+                
+                if let formattedViewers = formatter.stringFromNumber(viewers) {
+                    return "\(formattedViewers) viewers"
+                } else {
+                    return "\(viewers) viewers"
+                }
             }
+            return " "
         }
     }
     
