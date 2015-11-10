@@ -15,7 +15,7 @@ class TwitchAuthViewController: QRCodeViewController {
     convenience init() {
         let title = "Scan the QR code below or go to the link provided.\nOnce you have received your authentication code, enter it below."
         let uuid = String.randomStringWithLength(12)
-        self.init(title: title, url: "http://streamcenterapp.com/oauth/twitch/\(uuid)")
+        self.init(title: title, url: "http://streamcenterapp.com/oauth/twitch/\(uuid)?token=\(AppDelegate.STREAMCENTER_TOKEN)")
         UUID = uuid
     }
 

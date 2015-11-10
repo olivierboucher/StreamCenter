@@ -9,10 +9,14 @@ import UIKit
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
+    static let MIXPANEL_TOKEN = ""
+    static let STREAMCENTER_TOKEN = ""
+    
     var window: UIWindow?
+    
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
-        Mixpanel.tracker(withToken: "xxxx").timeEvent(Event.InitializeEvent().name)
+        Mixpanel.tracker(withToken: AppDelegate.MIXPANEL_TOKEN).timeEvent(Event.InitializeEvent().name)
         let window = UIWindow.init(frame: UIScreen.mainScreen().bounds)
         window.rootViewController = SourceTabController()
         window.makeKeyAndVisible()

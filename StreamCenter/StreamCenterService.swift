@@ -59,7 +59,9 @@ class StreamCenterService {
     
     static func authenticateTwitch(withCode code: String, andUUID UUID: String, completionHandler: (token: String?, error: ServiceError?) -> ()) {
         let urlString = "http://streamcenterapp.com/oauth/twitch/\(UUID)/\(code)"
-        Alamofire.request(.GET, urlString)
+        Alamofire.request(.GET, urlString, parameters: [
+                "token" : AppDelegate.STREAMCENTER_TOKEN
+            ])
             .responseJSON { response in
                 
                 if response.result.isSuccess {
@@ -90,7 +92,9 @@ class StreamCenterService {
     
     static func getCustomURL(fromCode code: String, completionHandler: (url: String?, error: ServiceError?) -> ()) {
         let urlString = "http://streamcenterapp.com/customurl/\(code)"
-        Alamofire.request(.GET, urlString)
+        Alamofire.request(.GET, urlString,  parameters: [
+            "token" : AppDelegate.STREAMCENTER_TOKEN
+            ])
         .responseJSON { response in
             
             //here's a test url
