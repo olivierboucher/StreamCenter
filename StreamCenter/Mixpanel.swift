@@ -42,6 +42,35 @@ class Mixpanel {
         eventsBuffer = [Event]()
         timeEventsBuffer = [String : NSDate]()
         eventsMutex = dispatch_semaphore_create(1)
+        
+        setupListeners()
+    }
+    
+    private func setupListeners() {
+        let center = NSNotificationCenter.defaultCenter()
+        
+        center.addObserver(self, selector: Selector("applicationWillTerminate"), name: UIApplicationWillTerminateNotification, object: nil)
+        center.addObserver(self, selector: Selector("applicationDidBecomeActive"), name: UIApplicationDidBecomeActiveNotification, object: nil)
+        center.addObserver(self, selector: Selector("applicationWillResignActive"), name: UIApplicationWillResignActiveNotification, object: nil)
+    }
+    
+    @objc
+    private func applicationWillResignActive() {
+        Logger.Info("Mixpanel suspending")
+        stopProcessing()
+    }
+    
+    @objc
+    private func applicationDidBecomeActive() {
+        Logger.Info("Mixpanel resuming")
+        startProcessing()
+    }
+    
+    @objc
+    private func applicationWillTerminate() {
+        Logger.Debug("App termination detected, about to flush all events")
+        stopProcessing()
+        sendEventsBuffer()
     }
     
     private func sendEventsBuffer() {
