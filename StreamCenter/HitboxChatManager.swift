@@ -99,7 +99,7 @@ extension HitboxChatManager : WebSocketDelegate {
     }
     
     func websocketDidReceiveData(socket: WebSocket, data: NSData) {
-        Logger.Warning("Recieved data in an unexpected format (Binary)")
+        Logger.Warning("Received data in an unexpected format (Binary)")
     }
     
 }

@@ -65,7 +65,7 @@ class TwitchChatManager {
     }
     
     private func handle433(message : IRCMessage) -> () {
-        Logger.Warning("Recieved 433 from server, invalid nick")
+        Logger.Warning("Received 433 from server, invalid nick")
         credentials = TwitchChatManager.generateAnonymousIRCCredentials()
         connection?.sendStringMessage("NICK \(credentials!.nick)", immedtiately: true)
     }

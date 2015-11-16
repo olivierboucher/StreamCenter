@@ -56,7 +56,7 @@ class HitboxChatMessageQueue {
         dispatch_semaphore_signal(self.mqMutex)
         
         // We stop if there's not message to process, it will be reactivated when
-        // we recieve a new message
+        // we receive a new message
         if messagesArray.count == 0 {
             self.stopProcessing()
             return
