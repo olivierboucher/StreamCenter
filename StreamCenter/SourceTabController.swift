@@ -20,8 +20,10 @@ class SourceTabController: UITabBarController {
         let twitch = TwitchGamesViewController()
         let hitbox = HitboxGamesViewController()
         let custom = QRCustomVideoViewController()
+        let videoGroup = CustomVideoGroupViewController()
         
-        setViewControllers([twitch, hitbox, custom], animated: false)
+        setViewControllers([twitch, hitbox, custom, videoGroup
+            ], animated: false)
         
         self.tabBar.barTintColor = UIColor.blackColor()
     }

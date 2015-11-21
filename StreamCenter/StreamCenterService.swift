@@ -101,6 +101,7 @@ class StreamCenterService {
                 if let dictionary = response.result.value as? [String : AnyObject] {
                     if let urlString = dictionary["url"] as? String {
                         Logger.Debug("Returned: \(urlString)")
+                        saveCustomURL(urlString)
                         completionHandler(url: urlString, error: nil)
                         return
                     }
@@ -119,4 +120,15 @@ class StreamCenterService {
         }
     }
     
+    static func saveCustomURL(url: String) {
+        let defaults = NSUserDefaults.standardUserDefaults()
+        let key = "urls"
+        var newUrls:[String] = []
+        if let urls = defaults.stringArrayForKey(key) {
+            newUrls = urls
+        }
+        newUrls.append(url)
+        defaults.setObject(newUrls, forKey: key)
+        defaults.synchronize()
+    }
 }
