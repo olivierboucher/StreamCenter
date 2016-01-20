@@ -1,6 +1,4 @@
-### Important: Someone has published this application under another name and is asking for money.
-Please do not use the app called Any Stream. We are finally [here](https://itunes.apple.com/us/app/stream-center-your-favorite/id1056417612?l=fr&ls=1&mt=8)
-
+### Unmaintained. 
 
 
 # StreamCenter
